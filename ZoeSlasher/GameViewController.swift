@@ -12,7 +12,7 @@ import MetalKit
 // Our iOS specific view controller
 class GameViewController: UIViewController {
 
-    var renderer: Renderer!
+    var renderer: MainRenderer!
     var mtkView: MTKView!
 
     override func viewDidLoad() {
@@ -32,7 +32,7 @@ class GameViewController: UIViewController {
         mtkView.device = defaultDevice
         mtkView.backgroundColor = UIColor.black
 
-        guard let newRenderer = Renderer(metalKitView: mtkView) else {
+        guard let newRenderer = MainRenderer(metalKitView: mtkView) else {
             print("Renderer cannot be initialized")
             return
         }
@@ -42,5 +42,19 @@ class GameViewController: UIViewController {
         renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
 
         mtkView.delegate = renderer
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        mtkView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc func didTap(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: view)
+        
+        var normalizedLocation = vector_float2(Float(location.x) / Float(view.frame.width),
+                                               1 - Float(location.y) / Float(view.frame.height))
+        
+        // Map [0;1] to [-.5;.5]
+        normalizedLocation -= [0.5, 0.5]
+        renderer.didTap(at: normalizedLocation)
     }
 }

@@ -7,26 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393023C32C41001A6CAE /* MathLibrary.swift */; };
+		2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393423C465B0001A6CAE /* SpriteRenderer.swift */; };
+		2469393723C4A544001A6CAE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393623C4A544001A6CAE /* Node.swift */; };
+		2469393923C5D126001A6CAE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393823C5D126001A6CAE /* Player.swift */; };
+		2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393A23C5D867001A6CAE /* SceneRenderer.swift */; };
+		2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393C23C5EB1E001A6CAE /* Scene.swift */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
-		24D9E85F23C1C8B500CB6638 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* Renderer.swift */; };
+		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
 		24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86223C1C8B500CB6638 /* Shaders.metal */; };
 		24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86423C1C8B500CB6638 /* Main.storyboard */; };
 		24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86723C1C8B600CB6638 /* Assets.xcassets */; };
 		24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */; };
+		24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2469393023C32C41001A6CAE /* MathLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathLibrary.swift; sourceTree = "<group>"; };
+		2469393423C465B0001A6CAE /* SpriteRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRenderer.swift; sourceTree = "<group>"; };
+		2469393623C4A544001A6CAE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		2469393823C5D126001A6CAE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		2469393A23C5D867001A6CAE /* SceneRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRenderer.swift; sourceTree = "<group>"; };
+		2469393C23C5EB1E001A6CAE /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		24D9E85E23C1C8B500CB6638 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRenderer.swift; sourceTree = "<group>"; };
 		24D9E86023C1C8B500CB6638 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		24D9E86223C1C8B500CB6638 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		24D9E86523C1C8B500CB6638 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		24D9E86723C1C8B600CB6638 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		24D9E86A23C1C8B600CB6638 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24D9E86C23C1C8B600CB6638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferFormats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +54,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2469392F23C32C31001A6CAE /* Utlity */ = {
+			isa = PBXGroup;
+			children = (
+				2469393023C32C41001A6CAE /* MathLibrary.swift */,
+			);
+			path = Utlity;
+			sourceTree = "<group>";
+		};
+		2469393E23C5EC96001A6CAE /* Renderers */ = {
+			isa = PBXGroup;
+			children = (
+				24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */,
+				24D9E86223C1C8B500CB6638 /* Shaders.metal */,
+				24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */,
+				24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */,
+				2469393A23C5D867001A6CAE /* SceneRenderer.swift */,
+				2469393423C465B0001A6CAE /* SpriteRenderer.swift */,
+			);
+			path = Renderers;
+			sourceTree = "<group>";
+		};
 		24D9E84F23C1C8B500CB6638 = {
 			isa = PBXGroup;
 			children = (
@@ -59,15 +94,17 @@
 		24D9E85A23C1C8B500CB6638 /* ZoeSlasher */ = {
 			isa = PBXGroup;
 			children = (
+				2469393E23C5EC96001A6CAE /* Renderers */,
+				2469392F23C32C31001A6CAE /* Utlity */,
 				24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */,
-				24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */,
-				24D9E85E23C1C8B500CB6638 /* Renderer.swift */,
 				24D9E86023C1C8B500CB6638 /* GameViewController.swift */,
-				24D9E86223C1C8B500CB6638 /* Shaders.metal */,
 				24D9E86423C1C8B500CB6638 /* Main.storyboard */,
 				24D9E86723C1C8B600CB6638 /* Assets.xcassets */,
 				24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */,
 				24D9E86C23C1C8B600CB6638 /* Info.plist */,
+				2469393623C4A544001A6CAE /* Node.swift */,
+				2469393823C5D126001A6CAE /* Player.swift */,
+				2469393C23C5EB1E001A6CAE /* Scene.swift */,
 			);
 			path = ZoeSlasher;
 			sourceTree = "<group>";
@@ -143,10 +180,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
+				2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */,
+				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
-				24D9E85F23C1C8B500CB6638 /* Renderer.swift in Sources */,
+				2469393723C4A544001A6CAE /* Node.swift in Sources */,
+				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
+				2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */,
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
+				2469393923C5D126001A6CAE /* Player.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
+				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,7 +343,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.nikolabozhkov.ZoeSlasher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/ShaderTypes.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/Renderers/ShaderTypes.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -318,7 +362,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.nikolabozhkov.ZoeSlasher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/ShaderTypes.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(TARGET_NAME)/Renderers/ShaderTypes.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
