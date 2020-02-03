@@ -12,9 +12,10 @@ class Player: Node {
     private let chargeSpeed: Float = 900
     private let pierceSpeed: Float = 4500
     private let energyUsagePerUnit: Float = 0.025
-    private let corruptionCleansePerUnit: Float = 0.002
+    private let corruptionCleansePerUnit: Float = 0.005
     private let corruptionCleansePerSecond: Float = 3
     private let energyRechargePerSecond: Float = 8
+    private let energyUsagePerShot: Float = 25
     
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
@@ -51,17 +52,17 @@ class Player: Node {
         let deltaTime = Float(deltaTime)
         
         corruption -= corruptionCleansePerSecond * deltaTime
+        energy += energyRechargePerSecond * deltaTime
         
         // Recharge energy if not piercing
         if stage != .piercing {
-            energy += energyRechargePerSecond * deltaTime
         }
         
         if stage == .charging, let shot = shot {
             let delta = deltaTime * chargeSpeed * chargeDirection
             shot.position += delta
             
-            energy -= length(delta) * energyUsagePerUnit
+//            energy -= length(delta) * energyUsagePerUnit
             
             if distance(chargeInitial, shot.position) >= chargeDistance {
                 // Prevent overshooting
@@ -76,7 +77,7 @@ class Player: Node {
             let delta = deltaTime * pierceSpeed * pierceDirection
             shot.position += delta
             
-            energy -= length(delta) * energyUsagePerUnit
+//            energy -= length(delta) * energyUsagePerUnit
             corruption -= length(delta) * corruptionCleansePerUnit
             
             let didTravelDistance = distance(pierceInitial, shot.position) >= pierceDistance
@@ -97,7 +98,7 @@ class Player: Node {
     }
     
     func move(to target: vector_float2) {
-        if stage == .idle {
+        if stage == .idle && energy >= energyUsagePerShot {
             // Spawn shot
             let shot = Node()
             shot.size = [30, 30]
@@ -116,6 +117,7 @@ class Player: Node {
             
             chargeDistance = length(chargeDelta)
             
+            energy -= energyUsagePerShot
             stage = .charging
         } else if stage == .charging || stage == .charged {
             pierceInitial = shot!.position

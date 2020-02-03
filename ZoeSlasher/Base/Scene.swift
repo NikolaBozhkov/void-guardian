@@ -16,6 +16,10 @@ class Scene: Node {
         return -size.x / 2 + Float(safeAreaInsets.left)
     }
     
+    var safeBottom: Float {
+        return -size.y / 2 + Float(safeAreaInsets.bottom)
+    }
+    
     var left: Float {
         return -size.x / 2
     }

@@ -55,8 +55,15 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     float s = smoothstep(p - 0.05, p, in.uv.y);
     f *= s;
     
-    float3 col = f * color.xyz;
-    col += (1.0 - f) * s * float3(0.35) * color.xyz;
+    float w = 0.005;
+    float stops = 0.0;
+    for (int i = 1; i <= 3; i++) {
+        stops += step(0.25 * i - w, in.uv.x) - step(0.25 * i + w, in.uv.x);
+    }
+    
+    float3 col = f * (1.0 - stops) * color.xyz;
+    col += stops * float3(0.0, 0.0, 1.0);
+    col += (1.0 - f) * (1.0 - stops) * s * float3(0.35) * color.xyz;
     
     return float4(col, col.x);
 }

@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import GameplayKit
 
 class GameScene: Scene {
     
-    private let energyRechargePerEnemy: Float = 15
+    private let energyRechargePerEnemy: Float = 0
     
     // UI Elements
     let energyBar = Node()
@@ -64,6 +65,14 @@ class GameScene: Scene {
         player.update(deltaTime: deltaTime)
         
         for enemy in enemies {
+            // Boundary check
+            if (enemy.position.x < 0 && -safeLeft + enemy.position.x <= enemy.size.x / 2)
+                || (enemy.position.x > 0 && size.x / 2 - enemy.position.x <= enemy.size.x / 2)
+                || (enemy.position.y < 0 && -safeBottom + enemy.position.y <= enemy.size.x / 2)
+                || (enemy.position.y > 0 && size.y / 2 - enemy.position.y <= enemy.size.x / 2) {
+                enemy.angle -= .pi
+            }
+            
             enemy.update(deltaTime: deltaTime)
             
             if enemy.attackReady && player.stage != .piercing {

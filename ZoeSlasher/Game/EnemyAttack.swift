@@ -10,7 +10,7 @@ import Foundation
 
 class EnemyAttack: Node {
     
-    private let speed: Float = 1200
+    private let speed: Float = 2000
     
     private let targetPosition: vector_float2
     private var progress: Float = 0
@@ -29,7 +29,7 @@ class EnemyAttack: Node {
         color = [1, 0, 0, 1]
         position = enemy.position
         tipPoint = position
-        size = [0, 12]
+        size = [0, 8]
         
         renderFunction = { [unowned self] in
             $0.renderEnemyAttack(modelMatrix: self.modelMatrix, color: self.color)

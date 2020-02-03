@@ -10,7 +10,7 @@ import Foundation
 
 class Spawner {
     
-    private let spawnEnemyInterval: TimeInterval = 1.0
+    private let spawnEnemyInterval: TimeInterval = 0.85
     
     unowned var scene: GameScene!
     
