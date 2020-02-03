@@ -13,6 +13,11 @@
 		2469393923C5D126001A6CAE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393823C5D126001A6CAE /* Player.swift */; };
 		2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393A23C5D867001A6CAE /* SceneRenderer.swift */; };
 		2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393C23C5EB1E001A6CAE /* Scene.swift */; };
+		247D704423E1D2CD00480199 /* Player.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247D704323E1D2CD00480199 /* Player.metal */; };
+		247D704823E6B20B00480199 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D704723E6B20B00480199 /* GameScene.swift */; };
+		247D705123E6CE0F00480199 /* Spawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705023E6CE0F00480199 /* Spawner.swift */; };
+		247D705323E70FAA00480199 /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705223E70FAA00480199 /* Enemy.swift */; };
+		247D705523E7173500480199 /* EnemyAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705423E7173500480199 /* EnemyAttack.swift */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
 		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
@@ -30,6 +35,12 @@
 		2469393823C5D126001A6CAE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		2469393A23C5D867001A6CAE /* SceneRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRenderer.swift; sourceTree = "<group>"; };
 		2469393C23C5EB1E001A6CAE /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		247D704323E1D2CD00480199 /* Player.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Player.metal; sourceTree = "<group>"; };
+		247D704623E1D4BC00480199 /* SpriteRendererShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpriteRendererShared.h; sourceTree = "<group>"; };
+		247D704723E6B20B00480199 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		247D705023E6CE0F00480199 /* Spawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spawner.swift; sourceTree = "<group>"; };
+		247D705223E70FAA00480199 /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
+		247D705423E7173500480199 /* EnemyAttack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyAttack.swift; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
@@ -67,12 +78,35 @@
 			children = (
 				24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */,
 				24D9E86223C1C8B500CB6638 /* Shaders.metal */,
+				247D704323E1D2CD00480199 /* Player.metal */,
 				24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */,
 				24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */,
 				2469393A23C5D867001A6CAE /* SceneRenderer.swift */,
 				2469393423C465B0001A6CAE /* SpriteRenderer.swift */,
+				247D704623E1D4BC00480199 /* SpriteRendererShared.h */,
 			);
 			path = Renderers;
+			sourceTree = "<group>";
+		};
+		247D704923E6CD3100480199 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				2469393823C5D126001A6CAE /* Player.swift */,
+				247D705223E70FAA00480199 /* Enemy.swift */,
+				247D705423E7173500480199 /* EnemyAttack.swift */,
+				247D704723E6B20B00480199 /* GameScene.swift */,
+				247D705023E6CE0F00480199 /* Spawner.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		247D704A23E6CD7D00480199 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				2469393623C4A544001A6CAE /* Node.swift */,
+				2469393C23C5EB1E001A6CAE /* Scene.swift */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 		24D9E84F23C1C8B500CB6638 = {
@@ -94,6 +128,8 @@
 		24D9E85A23C1C8B500CB6638 /* ZoeSlasher */ = {
 			isa = PBXGroup;
 			children = (
+				247D704A23E6CD7D00480199 /* Base */,
+				247D704923E6CD3100480199 /* Game */,
 				2469393E23C5EC96001A6CAE /* Renderers */,
 				2469392F23C32C31001A6CAE /* Utlity */,
 				24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */,
@@ -102,9 +138,6 @@
 				24D9E86723C1C8B600CB6638 /* Assets.xcassets */,
 				24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */,
 				24D9E86C23C1C8B600CB6638 /* Info.plist */,
-				2469393623C4A544001A6CAE /* Node.swift */,
-				2469393823C5D126001A6CAE /* Player.swift */,
-				2469393C23C5EB1E001A6CAE /* Scene.swift */,
 			);
 			path = ZoeSlasher;
 			sourceTree = "<group>";
@@ -180,14 +213,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
+				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */,
+				247D704423E1D2CD00480199 /* Player.metal in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
 				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
 				2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */,
+				247D704823E6B20B00480199 /* GameScene.swift in Sources */,
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
+				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,

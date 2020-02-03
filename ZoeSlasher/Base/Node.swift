@@ -26,6 +26,10 @@ class Node: Renderable, Hashable {
     var parent: Node?
     var children = [Node]()
     
+    lazy var renderFunction: (SceneRenderer) -> Void = { [unowned self] renderer in
+        renderer.renderDefault(modelMatrix: self.modelMatrix, color: self.color)
+    }
+    
     private var uniformsDirty = true
     private var _modelMatrix = matrix_identity_float4x4
     var modelMatrix: matrix_float4x4 {
@@ -80,15 +84,12 @@ class Node: Renderable, Hashable {
         hasher.combine(uuid)
     }
     
-    func update(for deltaTime: CFTimeInterval) {
-    }
-    
     func removeFromParent() {
         guard let parent = parent else { return }
         parent.remove(childNode: self)
     }
     
     func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderDefault(modelMatrix: modelMatrix, color: color)
+        renderFunction(renderer)
     }
 }

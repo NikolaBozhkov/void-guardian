@@ -45,6 +45,13 @@ class GameViewController: UIViewController {
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
         mtkView.addGestureRecognizer(tapGestureRecognizer)
+        
+        self.mtkView = mtkView
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        renderer.safeAreaInsets = view.safeAreaInsets
+        renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
     }
     
     @objc func didTap(_ sender: UITapGestureRecognizer) {

@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, BufferIndex)
 struct Uniforms
 {
     matrix_float4x4 projectionMatrix;
+    float time;
 };
 
 //typedef struct
