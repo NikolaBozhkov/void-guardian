@@ -9,12 +9,20 @@
 import CoreGraphics
 
 class Player: Node {
+    
+    enum Stage {
+        case charging, charged, piercing, idle
+    }
+    
+    static let energyRechargePerEnemy: Float = 1.8
+    static let corruptionCleansePerEnemy: Float = 1.8
+    
     private let chargeSpeed: Float = 900
-    private let pierceSpeed: Float = 4500
+    private let pierceSpeed: Float = 7500
     private let energyUsagePerUnit: Float = 0.025
-    private let corruptionCleansePerUnit: Float = 0.005
-    private let corruptionCleansePerSecond: Float = 3
-    private let energyRechargePerSecond: Float = 8
+    private let corruptionCleansePerUnit: Float = 0.0025
+    private let corruptionCleansePerSecond: Float = 6
+    private let energyRechargePerSecond: Float = 6.6
     private let energyUsagePerShot: Float = 25
     
     private var chargeInitial = vector_float2.zero
@@ -27,9 +35,7 @@ class Player: Node {
     private var pierceDirection = vector_float2.zero
     private var pierceDistance: Float = 0
     
-    enum Stage {
-        case charging, charged, piercing, idle
-    }
+    private var moveStage = 0
     
     private(set) var stage: Stage = .idle
     private(set) var shot: Node?
@@ -45,7 +51,7 @@ class Player: Node {
     override init() {
         super.init()
         name = "Player"
-        size = [150, 150]
+        size = [160, 160]
     }
     
     func update(deltaTime: CFTimeInterval) {
@@ -68,31 +74,26 @@ class Player: Node {
                 // Prevent overshooting
                 shot.position = chargeInitial + chargeDelta
                 stage = .charged
-            } else if energy == 0 {
-                shot.removeFromParent()
-                self.shot = nil
-                stage = .idle
             }
         } else if stage == .piercing, let shot = shot {
-            let delta = deltaTime * pierceSpeed * pierceDirection
-            shot.position += delta
+            let direction = moveStage == 0 ? chargeDirection : pierceDirection
+            let delta = deltaTime * pierceSpeed * direction
+            position += delta
             
-//            energy -= length(delta) * energyUsagePerUnit
-            corruption -= length(delta) * corruptionCleansePerUnit
+//            corruption -= length(delta) * corruptionCleansePerUnit
             
-            let didTravelDistance = distance(pierceInitial, shot.position) >= pierceDistance
-            if didTravelDistance || energy == 0 {
-                position = shot.position
-                
-                // Prevent overshooting
-                if didTravelDistance {
-                    position = pierceInitial + pierceDelta
-                }
+            if moveStage == 0 && distance(chargeInitial, position) >= chargeDistance {
+                position = chargeInitial + chargeDelta
+                moveStage = 1
+            } else if moveStage == 1 && distance(pierceInitial, position) >= pierceDistance {
+                position = pierceInitial + pierceDelta
                 
                 shot.removeFromParent()
                 self.shot = nil
                 
                 stage = .idle
+                moveStage = 0
+//                print(Float(GameScene.totalKills) / Float(GameScene.totalMoves))
             }
         }
     }
@@ -120,6 +121,9 @@ class Player: Node {
             energy -= energyUsagePerShot
             stage = .charging
         } else if stage == .charging || stage == .charged {
+            chargeDelta = shot!.position - position
+            chargeDistance = length(chargeDelta)
+            
             pierceInitial = shot!.position
             pierceDelta = target - shot!.position
             pierceDirection = normalize(pierceDelta)
@@ -130,6 +134,7 @@ class Player: Node {
             pierceDistance = length(pierceDelta)
             
             stage = .piercing
+            GameScene.totalMoves += 1
         }
     }
     

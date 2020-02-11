@@ -18,6 +18,7 @@ class Node: Renderable, Hashable {
     
     var name = "untitled"
     
+    var zPosition = 0 { didSet { uniformsDirty = true } }
     var position = vector_float2.zero { didSet { uniformsDirty = true } }
     var size = vector_float2.zero { didSet { uniformsDirty = true } }
     var rotation: Float = 0 { didSet { uniformsDirty = true } }
@@ -35,7 +36,7 @@ class Node: Renderable, Hashable {
     var modelMatrix: matrix_float4x4 {
         get {
             if uniformsDirty {
-                _modelMatrix = float4x4.makeTranslation(vector_float3(position, 0))
+                _modelMatrix = float4x4.makeTranslation(vector_float3(position, Float(zPosition)))
                 _modelMatrix.rotateAroundZ(by: rotation)
                 _modelMatrix.scale(by: vector_float3(size, 1))
                 uniformsDirty = false

@@ -120,53 +120,61 @@ float fbmr(float3 q) {
     return v;
 }
 
+//fragment float4 playerShader(VertexOut in [[stage_in]],
+//                             constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+//                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]])
+//{
+//    float2 st = in.uv * 2.0 - 1.0;
+//
+//    float3 col = float3(0.0);
+//    float d = length(st);
+//
+//    float a = 0.0;
+//    float3 core = float3(0.302,0.814,0.985);
+//    core = float3(1.);
+//
+//    // Core pulsation
+//    float steepness = 7.;
+//    float offset = 0.025;
+//    float damp = 0.0;
+//    float c = 1. / ((d + offset) * steepness) - damp;
+//    c *= 0.700 + sin(uniforms.time) * .07;
+//    a += c;
+//    col += float3(c) * core;
+//
+//    // Background
+//    float circleFade = 1.0 - smoothstep(0., 1.4, d);
+//    float n = fbm(float3(st * 1.024, mod(uniforms.time * .2, 1000.)));
+//    n = pow(n, 3.);
+//    circleFade *= n;
+//    circleFade *= 0.808;
+//    a += circleFade;
+//    col += float3(circleFade) * core;
+//
+//    // Ridges
+//    float r = fbmr(float3(st * 1.024, mod(uniforms.time * .2, 1000.)));
+//    r = pow(1. - r, 5.);
+//    // r = 0.05 / r;
+//    a += r;
+//    col += float3(r) * core;
+//
+//    // color += 0.015 / r;
+//    // color += 0.003 / (r * (smoothstep(0., 0.3, d)));
+//    // color = float3(fbm(float3(st * 4., 1.)));
+//    // color = float3(noise(float3(st * 10., 1.016)));
+//
+//    // Circular fade
+//    float f = 1. - smoothstep(0., 1., d);
+//    col *= f;
+//    a *= f;
+//
+//    return float4(col.xyz, col.x);
+//}
+
 fragment float4 playerShader(VertexOut in [[stage_in]],
-                             constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]])
+                             constant float4 &color [[buffer(BufferIndexSpriteColor)]])
 {
-    float2 st = in.uv * 2.0 - 1.0;
-    
-    float3 col = float3(0.0);
-    float d = length(st);
-    
-    float a = 0.0;
-    float3 core = float3(0.302,0.814,0.985);
-    core = float3(1.);
-    
-    // Core pulsation
-    float steepness = 7.;
-    float offset = 0.025;
-    float damp = 0.0;
-    float c = 1. / ((d + offset) * steepness) - damp;
-    c *= 0.700 + sin(uniforms.time) * .07;
-    a += c;
-    col += float3(c) * core;
-    
-    // Background
-    float circleFade = 1.0 - smoothstep(0., 1.4, d);
-    float n = fbm(float3(st * 1.024, mod(uniforms.time * .2, 1000.)));
-    n = pow(n, 3.);
-    circleFade *= n;
-    circleFade *= 0.808;
-    a += circleFade;
-    col += float3(circleFade) * core;
-    
-    // Ridges
-    float r = fbmr(float3(st * 1.024, mod(uniforms.time * .2, 1000.)));
-    r = pow(1. - r, 5.);
-    // r = 0.05 / r;
-    a += r;
-    col += float3(r) * core;
-    
-    // color += 0.015 / r;
-    // color += 0.003 / (r * (smoothstep(0., 0.3, d)));
-    // color = float3(fbm(float3(st * 4., 1.)));
-    // color = float3(noise(float3(st * 10., 1.016)));
-    
-    // Circular fade
-    float f = 1. - smoothstep(0., 1., d);
-    col *= f;
-    a *= f;
-    
-    return float4(col.xyz, col.x);
+    float d = distance(0.5, in.uv);
+    float alpha = 1.0 - smoothstep(0.4, 0.5, d);
+    return float4(color.xyz, alpha);
 }

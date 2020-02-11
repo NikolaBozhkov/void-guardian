@@ -9,11 +9,15 @@
 import UIKit
 import GameplayKit
 
+enum SceneConstants {
+    static var size: vector_float2 = .zero
+    static var safeAreaInsets: UIEdgeInsets = .zero
+}
+
 class GameScene: Scene {
     
-    private let energyRechargePerEnemy: Float = 0
-    
     // UI Elements
+    let skGameScene: SKGameScene
     let energyBar = Node()
     let corruptionBar = Node()
     
@@ -28,12 +32,21 @@ class GameScene: Scene {
     
     var prevShotPosition: vector_float2?
     
+    static var totalKills = 0
+    static var totalMoves = 0
+    
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
+        skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
         super.init()
+        
         self.size = size
         self.safeAreaInsets = safeAreaInsets
         
+        SceneConstants.size = size
+        SceneConstants.safeAreaInsets = safeAreaInsets
+        
         spawner.scene = self
+        skGameScene.gameScene = self
         
         energyBar.size = [size.x / 3, 50]
         energyBar.position = [left + energyBar.size.x / 2 + 70, top - energyBar.size.y / 2]
@@ -56,20 +69,19 @@ class GameScene: Scene {
         add(childNode: energyBar)
         add(childNode: corruptionBar)
         
-        loadScene()
+        reloadScene()
     }
     
     func update(deltaTime: CFTimeInterval) {
-        prevShotPosition = player.shot?.position
+//        return
+        prevShotPosition = player.position
         
+        let wasPiercing = player.stage == .piercing
         player.update(deltaTime: deltaTime)
         
         for enemy in enemies {
             // Boundary check
-            if (enemy.position.x < 0 && -safeLeft + enemy.position.x <= enemy.size.x / 2)
-                || (enemy.position.x > 0 && size.x / 2 - enemy.position.x <= enemy.size.x / 2)
-                || (enemy.position.y < 0 && -safeBottom + enemy.position.y <= enemy.size.x / 2)
-                || (enemy.position.y > 0 && size.y / 2 - enemy.position.y <= enemy.size.x / 2) {
+            if isOutsideBoundary(node: enemy) {
                 enemy.angle -= .pi
             }
             
@@ -86,15 +98,19 @@ class GameScene: Scene {
             attack.update(deltaTime: deltaTime)
         }
         
-        testPlayerEnemyCollision()
+        testPlayerEnemyCollision(wasPiercing: wasPiercing)
         testPlayerEnemyAttackCollision()
         
         // Check for game over
         if player.corruption == 100 {
             spawner.isActive = false
+            spawner.reset()
+            
             enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
+            
             isGameOver = true
+            skGameScene.didGameOver()
         }
         
         // Execute buffered attacks
@@ -105,19 +121,31 @@ class GameScene: Scene {
             }
         }
         
+        // Split
+        for enemy in enemies where enemy.splitReady {
+            var position: vector_float2
+            repeat {
+                let angle = Float.random(in: -.pi...(.pi))
+                position = enemy.position + vector_float2(cos(angle), sin(angle)) * 200
+            } while isOutsideBoundary(position: position, size: 75)
+            
+            spawner.spawnEnemy(withPosition: position)
+            enemy.didSplit()
+        }
+        
         spawner.update(deltaTime: deltaTime)
     }
     
     func didTap(at location: vector_float2) {
-        guard !isGameOver else {
-            loadScene()
-            return
-        }
+        let consumed = skGameScene.didTap(at: CGPoint(x: CGFloat(location.x), y: CGFloat(location.y)))
         
+        guard !isGameOver, !consumed else { return }
         player.move(to: location)
     }
     
-    private func loadScene() {
+    func reloadScene() {
+        player.interruptCharging()
+        player.zPosition = -1
         player.position = .zero
         player.energy = 100
         player.corruption = 0
@@ -125,6 +153,13 @@ class GameScene: Scene {
         
         spawner.isActive = true
         isGameOver = false
+        
+        GameScene.totalKills = 0
+        GameScene.totalMoves = 0
+        
+//        for _ in 0..<10 {
+//            spawner.spawnEnemy()
+//        }
     }
     
     private func spawnAttack(fromEnemy enemy: Enemy) {
@@ -134,44 +169,54 @@ class GameScene: Scene {
         enemy.unreadyAttack()
     }
     
-    private func testPlayerEnemyCollision() {
-        if let shot = player.shot, let prevShotPosition = prevShotPosition {
-            let deltaShot = shot.position - prevShotPosition
-            let direction = normalize(deltaShot)
-            let maxDistance = length(deltaShot)
-            var distanceTravelled: Float = 0
-            var minDistance: Float = .infinity
-            
-            // Cast ray
-            while distanceTravelled < maxDistance {
-                let position = prevShotPosition + distanceTravelled * direction
-                for enemy in enemies {
-                    let d = distance(position, enemy.position)
+    private func isOutsideBoundary(node: Node) -> Bool {
+        node.position.x < 0 && -safeLeft + node.position.x <= node.size.x / 2
+            || node.position.x > 0 && size.x / 2 - node.position.x <= node.size.x / 2
+            || node.position.y < 0 && -safeBottom + node.position.y <= node.size.x / 2
+            || node.position.y > 0 && size.y / 2 - node.position.y <= node.size.x / 2
+    }
+    
+    private func isOutsideBoundary(position: vector_float2, size: Float) -> Bool {
+        position.x < 0 && -safeLeft + position.x <= size
+            || position.x > 0 && self.size.x / 2 - position.x <= size
+            || position.y < 0 && -safeBottom + position.y <= size
+            || position.y > 0 && self.size.y / 2 - position.y <= size
+    }
+    
+    private func testPlayerEnemyCollision(wasPiercing: Bool) {
+        guard player.stage == .piercing || wasPiercing,
+            let prevShotPosition = prevShotPosition else { return }
+        
+        let deltaShot = player.position - prevShotPosition
+        let direction = normalize(deltaShot)
+        let maxDistance = length(deltaShot)
+        var distanceTravelled: Float = 0
+        var minDistance: Float = .infinity
+        
+        // Cast ray
+        while distanceTravelled < maxDistance {
+            let position = prevShotPosition + distanceTravelled * direction
+            for enemy in enemies {
+                let d = distance(position, enemy.position)
+                
+                // Intersection logic
+                if d <= (player.size.x / 2 + enemy.size.x / 2) {
+                    removeEnemy(enemy)
                     
-                    // Intersection logic
-                    let shotRadius = player.stage == .piercing ? player.size.x / 2 : shot.size.x / 2
-                    if d <= (shotRadius + enemy.size.x / 2) {
-                        removeEnemy(enemy)
-                        
-                        // Recharge energy
-                        player.energy += energyRechargePerEnemy
-                        
-                        if player.stage == .charging {
-                            player.interruptCharging()
-                            
-                            // Break loops
-                            distanceTravelled = maxDistance
-                            break
-                        }
-                    }
+                    // Recharge energy
+                    player.energy += Player.energyRechargePerEnemy
+                    player.corruption -= Player.corruptionCleansePerEnemy
+                    GameScene.totalKills += 1
                     
-                    if d < minDistance {
-                        minDistance = d
-                    }
+                    skGameScene.didKillEnemy()
                 }
                 
-                distanceTravelled += minDistance
+                if d < minDistance {
+                    minDistance = d
+                }
             }
+            
+            distanceTravelled += minDistance
         }
     }
     
@@ -179,7 +224,7 @@ class GameScene: Scene {
         for attack in attacks {
             var shouldRemoveAttack = false
             if distance(attack.tipPoint, player.position) <= player.size.x / 2 {
-                player.corruption += 5
+                player.corruption += 6
                 shouldRemoveAttack = true
             }
             

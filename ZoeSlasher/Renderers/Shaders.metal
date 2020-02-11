@@ -30,19 +30,19 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
     return out;
 }
 
-fragment float4 fragmentSprite(VertexOut in [[stage_in]],
-                               constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                               constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]])
-{
-    return float4(0, 1, 0, 1);
-}
-
 fragment float4 enemyShader(VertexOut in [[stage_in]],
-                            constant float4 &color [[buffer(BufferIndexSpriteColor)]])
+                            constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                            constant float &splitProgress [[buffer(4)]])
 {
     float d = distance(0.5, in.uv);
     float alpha = 1.0 - smoothstep(0.4, 0.5, d);
-    return float4(color.xyz, 1) * alpha;
+    
+    float p = splitProgress / 2.0;
+    float s = 1.0 - smoothstep(p - 0.05, p, d);
+    
+    float3 col = (1.0 - s) * color.xyz + s * float3(0.0, 0.0, 1.0);
+    
+    return float4(col, alpha * (1.0 - s) + s);
 }
 
 fragment float4 energyBarShader(VertexOut in [[stage_in]],
@@ -53,7 +53,6 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     float p = (in.uv.x - 0.7) / 0.3;
     p = pow(p, 5.) - 20.0 * step(0, -p);
     float s = smoothstep(p - 0.05, p, in.uv.y);
-    f *= s;
     
     float w = 0.005;
     float stops = 0.0;
@@ -62,10 +61,10 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     }
     
     float3 col = f * (1.0 - stops) * color.xyz;
-    col += stops * float3(0.0, 0.0, 1.0);
-    col += (1.0 - f) * (1.0 - stops) * s * float3(0.35) * color.xyz;
+    col += stops * float3(0.0, 0.0, 0.0);
+    col += (1.0 - f) * (1.0 - stops) * float3(0.35) * color.xyz;
     
-    return float4(col, col.x);
+    return float4(col, s);
 }
 
 fragment float4 enemyAttackShader(VertexOut in [[stage_in]],

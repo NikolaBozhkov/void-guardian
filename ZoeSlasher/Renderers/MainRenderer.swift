@@ -10,6 +10,7 @@
 
 import Metal
 import MetalKit
+import SpriteKit
 import simd
 
 let alignedUniformsSize = (MemoryLayout<Uniforms>.size & ~0xFF) + 0x100
@@ -45,6 +46,8 @@ class MainRenderer: NSObject {
     let energyBarRenderer: SpriteRenderer
     let enemyAttackRenderer: SpriteRenderer
     
+    let skRenderer: SKRenderer
+    
     var scene: GameScene!
     
     init?(metalKitView: MTKView) {
@@ -60,7 +63,7 @@ class MainRenderer: NSObject {
         metalKitView.depthStencilPixelFormat = BufferFormats.depthStencil
         metalKitView.colorPixelFormat = BufferFormats.color
         metalKitView.sampleCount = BufferFormats.sampleCount
-//        metalKitView.framebufferOnly = false
+        metalKitView.framebufferOnly = false
         
         self.device = device
         self.library = library
@@ -77,11 +80,13 @@ class MainRenderer: NSObject {
         
         let depthStateDesciptor = MTLDepthStencilDescriptor()
         depthStateDesciptor.depthCompareFunction = .less
-        depthStateDesciptor.isDepthWriteEnabled = true
+        depthStateDesciptor.isDepthWriteEnabled = false
         guard let depthState = device.makeDepthStencilState(descriptor:depthStateDesciptor) else {
             return nil
         }
         self.depthState = depthState
+        
+        skRenderer = SKRenderer(device: device)
         
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
@@ -120,7 +125,9 @@ extension MainRenderer: SceneRenderer {
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4) {
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float) {
+        var splitProgress = splitProgress
+        renderEncoder.setFragmentBytes(&splitProgress, length: MemoryLayout<Float>.size, index: 4)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -139,7 +146,7 @@ extension MainRenderer: SceneRenderer {
     }
     
     func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4) {
-        enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
 }
 
@@ -155,10 +162,11 @@ extension MainRenderer: MTKViewDelegate {
                                           bottom: (safeAreaInsets.bottom / view.frame.size.height) * CGFloat(sceneSize.y),
                                           right: (safeAreaInsets.right / view.frame.size.width) * CGFloat(sceneSize.x))
         scene = GameScene(size: sceneSize, safeAreaInsets: adjustedInsets)
+        skRenderer.scene = scene.skGameScene
         
         projectionMatrix = float4x4.makeOrtho(left: -scene.size.x / 2, right:   scene.size.x / 2,
                                               top:   scene.size.y / 2, bottom: -scene.size.y / 2,
-                                              near: -1, far: 1)
+                                              near: -100, far: 100)
     }
     
     func draw(in view: MTKView) {
@@ -177,6 +185,8 @@ extension MainRenderer: MTKViewDelegate {
         updateDynamicBufferState()
         updateGameState()
         
+        skRenderer.update(atTime: CACurrentMediaTime())
+        
         guard
             let renderPassDescriptor = view.currentRenderPassDescriptor,
             let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
@@ -193,6 +203,10 @@ extension MainRenderer: MTKViewDelegate {
         
         drawNodes(scene.children)
         
+        let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
+        skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,
+                          renderPassDescriptor: renderPassDescriptor, commandQueue: commandQueue)
+        
         renderEncoder.endEncoding()
         
         commandBuffer.present(drawable)
@@ -200,6 +214,7 @@ extension MainRenderer: MTKViewDelegate {
     }
     
     func drawNodes(_ nodes: [Node]) {
+        let nodes = nodes.sorted(by: { $0.zPosition > $1.zPosition })
         for node in nodes {
             node.acceptRenderer(self)
             

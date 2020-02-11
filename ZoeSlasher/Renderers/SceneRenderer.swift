@@ -10,7 +10,7 @@ import Metal
 
 protocol SceneRenderer {
     func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4)
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4)
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float)
     func renderShot(modelMatrix: matrix_float4x4, color: vector_float4)
     func renderEnergyBar(modelMatrix: matrix_float4x4, color: vector_float4, energyPct: Float)
     func renderEnemyAttack(modelMatrix: matrix_float4x4, color: vector_float4)
