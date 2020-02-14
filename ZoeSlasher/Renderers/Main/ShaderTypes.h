@@ -33,6 +33,10 @@ struct Uniforms
 {
     matrix_float4x4 projectionMatrix;
     float time;
+    float aspectRatio;
+    simd_float2 size;
+    float playerSize;
+    float enemySize;
 };
 
 //typedef struct

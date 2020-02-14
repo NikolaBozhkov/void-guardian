@@ -12,8 +12,9 @@
 #include <simd/simd.h>
 
 // Including header shared between this Metal shader code and Swift/C code executing Metal API commands
-#import "ShaderTypes.h"
+#import "Main/ShaderTypes.h"
 #import "SpriteRendererShared.h"
+#import "Main/Common.h"
 
 using namespace metal;
 
@@ -30,19 +31,43 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
     return out;
 }
 
+fragment float4 backgroundShader(VertexOut in [[stage_in]],
+                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                                 constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                 texture2d<float> noiseMap [[texture(0)]])
+{
+    float2 st = in.uv * 2.0 - 1.0;
+    st.x *= uniforms.aspectRatio;
+    
+    constexpr sampler s(filter::linear, address::repeat);
+    
+    float f = fbm(float3(st * 2.0, uniforms.time * 0.12));
+    f += max(f - 0.5, 0.0) * 2.;
+    f *= 0.05;
+//    f = pow(1 - fbmr(float3(st * 10.8, 0.0)), 3.0);
+//    f *= 0.5;
+    return float4(float3(color.xyz), f);
+}
+
 fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                            constant float &splitProgress [[buffer(4)]])
+                            constant float &splitProgress [[buffer(4)]],
+                            constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                            constant float2 &worldPosNorm [[buffer(5)]])
 {
-    float d = distance(0.5, in.uv);
-    float alpha = 1.0 - smoothstep(0.4, 0.5, d);
+//    float d = distance(0.5, in.uv);
+//    float alpha = 1.0 - smoothstep(0.4, 0.5, d);
+//
+//    float p = splitProgress / 2.0;
+//    float s = 1.0 - smoothstep(p - 0.05, p, d);
+//
+//    float3 col = (1.0 - s) * color.xyz + s * float3(0.0, 0.0, 1.0);
+//
+//    return float4(col, alpha * (1.0 - s) + s);
     
-    float p = splitProgress / 2.0;
-    float s = 1.0 - smoothstep(p - 0.05, p, d);
-    
-    float3 col = (1.0 - s) * color.xyz + s * float3(0.0, 0.0, 1.0);
-    
-    return float4(col, alpha * (1.0 - s) + s);
+    float2 st = in.uv * 2.0 - 1.0;
+    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms);
+    return float4(float3(1.0, 0.0, 0.0), enemy);
 }
 
 fragment float4 energyBarShader(VertexOut in [[stage_in]],

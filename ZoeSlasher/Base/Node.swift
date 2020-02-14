@@ -23,6 +23,7 @@ class Node: Renderable, Hashable {
     var size = vector_float2.zero { didSet { uniformsDirty = true } }
     var rotation: Float = 0 { didSet { uniformsDirty = true } }
     var color = vector_float4.one
+    var physicsSize = vector_float2.zero
     
     var parent: Node?
     var children = [Node]()

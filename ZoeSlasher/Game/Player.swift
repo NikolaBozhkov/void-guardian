@@ -51,7 +51,12 @@ class Player: Node {
     override init() {
         super.init()
         name = "Player"
-        size = [160, 160]
+        size = vector_float2(repeating: 800)
+        physicsSize = vector_float2(repeating: 160)
+    }
+    
+    override func acceptRenderer(_ renderer: SceneRenderer) {
+        renderer.renderPlayer(modelMatrix: modelMatrix, color: color, position: position)
     }
     
     func update(deltaTime: CFTimeInterval) {

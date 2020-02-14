@@ -39,14 +39,18 @@ class MainRenderer: NSObject {
     
     var safeAreaInsets = UIEdgeInsets.zero
     
-    var prevTime: CFTimeInterval = 0
+    var runningTime: TimeInterval = 0
+    var prevTime: TimeInterval = 0
     
+    let backgroundRenderer: SpriteRenderer
     let playerRenderer: SpriteRenderer
     let enemyRenderer: SpriteRenderer
     let energyBarRenderer: SpriteRenderer
     let enemyAttackRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
+    
+    let noiseTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -88,10 +92,13 @@ class MainRenderer: NSObject {
         
         skRenderer = SKRenderer(device: device)
         
+        backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
+        
+        noiseTexture = createTexture(withDevice: device, filePath: "noise-lut", sRGB: true)
         
         super.init()
     }
@@ -109,11 +116,16 @@ class MainRenderer: NSObject {
     private func updateGameState() {
         let currentTime = CACurrentMediaTime()
         let deltaTime = prevTime == 0 ? 0 : currentTime - prevTime
+        runningTime += deltaTime
         
         scene.update(deltaTime: deltaTime)
         
         uniforms[0].projectionMatrix = projectionMatrix
-        uniforms[0].time = Float(currentTime)
+        uniforms[0].time = Float(runningTime)
+        uniforms[0].aspectRatio = scene.size.x / scene.size.y
+        uniforms[0].playerSize = scene.player.physicsSize.x / scene.player.size.x
+        uniforms[0].enemySize = 150.0 / 750.0
+        uniforms[0].size = scene.size
         
         prevTime = currentTime
     }
@@ -121,13 +133,22 @@ class MainRenderer: NSObject {
 
 // MARK: - SceneRenderer
 extension MainRenderer: SceneRenderer {
-    func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4) {
+    
+    func renderBackground(modelMatrix: matrix_float4x4, color: vector_float4) {
+        backgroundRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    }
+    
+    func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2) {
+        var position = normalizeWorldPosition(position)
+        renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float) {
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float, position: vector_float2) {
         var splitProgress = splitProgress
+        var position = normalizeWorldPosition(position)
         renderEncoder.setFragmentBytes(&splitProgress, length: MemoryLayout<Float>.size, index: 4)
+        renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -147,6 +168,12 @@ extension MainRenderer: SceneRenderer {
     
     func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4) {
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    }
+    
+    private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {
+        var worldPos = 2 * pos / scene.size
+        worldPos.x *= scene.size.x / scene.size.y
+        return worldPos
     }
 }
 
@@ -200,6 +227,7 @@ extension MainRenderer: MTKViewDelegate {
         
         renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
         renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
+        renderEncoder.setFragmentTexture(noiseTexture, index: 0)
         
         drawNodes(scene.children)
         

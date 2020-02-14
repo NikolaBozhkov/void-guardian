@@ -12,5 +12,5 @@ enum BufferFormats {
     
     static let sampleCount = 1
     static let depthStencil = MTLPixelFormat.depth32Float_stencil8
-    static let color = MTLPixelFormat.bgra8Unorm_srgb
+    static let color = MTLPixelFormat.bgra8Unorm
 }

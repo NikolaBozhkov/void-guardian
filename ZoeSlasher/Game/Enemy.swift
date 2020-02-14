@@ -22,16 +22,17 @@ class Enemy: Node {
     var splitCharging = false
     var splitReady = false
     var attackReady = false
-    var attackInProgress = false
+    var attackInProgress = true // revert
     
     let seed = Float.random(in: 0..<1000)
     var angle = Float.random(in: -.pi...(.pi))
-    var speed = Float.random(in: 50...200)
+    var speed = Float.random(in: 80...200)
     
     override init() {
         super.init()
         name = "Enemy"
-        size = [150, 150]
+        size = [750, 750]
+        physicsSize = [150, 150]
         color = [1, 0, 0, 1]
     }
     
@@ -39,7 +40,7 @@ class Enemy: Node {
         timeAlive += Float(deltaTime)
         
         if !splitCharging {
-            timeSinceLastSplit += deltaTime
+//            timeSinceLastSplit += deltaTime
         } else {
             splitDurationPassed += deltaTime
         }
@@ -99,6 +100,6 @@ class Enemy: Node {
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
         let splitProgress = splitDuration == 0 ? 0 : splitDurationPassed / splitDuration
-        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress))
+        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress), position: position)
     }
 }
