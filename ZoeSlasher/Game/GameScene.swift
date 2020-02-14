@@ -166,7 +166,7 @@ class GameScene: Scene {
         GameScene.totalMoves = 0
         
         for _ in 0..<15 {
-            spawner.spawnEnemy()
+//            spawner.spawnEnemy()
         }
     }
     

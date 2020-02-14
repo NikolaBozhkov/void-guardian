@@ -13,6 +13,7 @@
 		2469393923C5D126001A6CAE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393823C5D126001A6CAE /* Player.swift */; };
 		2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393A23C5D867001A6CAE /* SceneRenderer.swift */; };
 		2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393C23C5EB1E001A6CAE /* Scene.swift */; };
+		246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */ = {isa = PBXBuildFile; fileRef = 246ACBB823F7270500C947C9 /* NoiseLib.metal */; };
 		247D704423E1D2CD00480199 /* Player.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247D704323E1D2CD00480199 /* Player.metal */; };
 		247D704823E6B20B00480199 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D704723E6B20B00480199 /* GameScene.swift */; };
 		247D705123E6CE0F00480199 /* Spawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705023E6CE0F00480199 /* Spawner.swift */; };
@@ -39,6 +40,7 @@
 		2469393823C5D126001A6CAE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		2469393A23C5D867001A6CAE /* SceneRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRenderer.swift; sourceTree = "<group>"; };
 		2469393C23C5EB1E001A6CAE /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		246ACBB823F7270500C947C9 /* NoiseLib.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = NoiseLib.metal; sourceTree = "<group>"; };
 		247D704323E1D2CD00480199 /* Player.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Player.metal; sourceTree = "<group>"; };
 		247D704623E1D4BC00480199 /* SpriteRendererShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpriteRendererShared.h; sourceTree = "<group>"; };
 		247D704723E6B20B00480199 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				247D705F23F52F2900480199 /* Common.h */,
 				247D705D23F52D8B00480199 /* Common.metal */,
 				24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */,
+				246ACBB823F7270500C947C9 /* NoiseLib.metal */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,

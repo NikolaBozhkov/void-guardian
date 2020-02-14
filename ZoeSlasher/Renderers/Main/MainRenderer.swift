@@ -50,7 +50,11 @@ class MainRenderer: NSObject {
     
     let skRenderer: SKRenderer
     
+    let noiseComputePipelineState: MTLComputePipelineState
+    let threadsPerGroup: MTLSize
+    let threadsPerGrid: MTLSize
     let noiseTexture: MTLTexture
+    var noiseNeedsComputing = true
     
     var scene: GameScene!
     
@@ -90,6 +94,13 @@ class MainRenderer: NSObject {
         }
         self.depthState = depthState
         
+        guard let noiseFunction = library.makeFunction(name: "noiseKernel"),
+            let computeState = try? device.makeComputePipelineState(function: noiseFunction) else {
+            return nil
+        }
+
+        noiseComputePipelineState = computeState
+        
         skRenderer = SKRenderer(device: device)
         
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
@@ -98,7 +109,20 @@ class MainRenderer: NSObject {
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
         
-        noiseTexture = createTexture(withDevice: device, filePath: "noise-lut", sRGB: true)
+        let textureDescriptor = MTLTextureDescriptor()
+        textureDescriptor.pixelFormat = .bgra8Unorm
+        let size = 1024
+        textureDescriptor.width = 256
+        textureDescriptor.height = 128
+        textureDescriptor.usage = [.shaderWrite, .shaderRead]
+
+        let texture = device.makeTexture(descriptor: textureDescriptor)!
+        noiseTexture = texture
+
+        threadsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
+        let w = computeState.threadExecutionWidth
+        let h = computeState.maxTotalThreadsPerThreadgroup / w
+        threadsPerGroup = MTLSize(width: w, height: h, depth: 1)
         
         super.init()
     }
@@ -209,6 +233,20 @@ extension MainRenderer: MTKViewDelegate {
             semaphore?.signal()
         }
         
+        if noiseNeedsComputing {
+            guard let computeEncoder = commandBuffer.makeComputeCommandEncoder() else { return }
+
+            computeEncoder.setComputePipelineState(noiseComputePipelineState)
+
+            computeEncoder.setTexture(noiseTexture, index: 0)
+
+            computeEncoder.dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerGroup)
+
+            computeEncoder.endEncoding()
+
+            noiseNeedsComputing = false
+        }
+        
         updateDynamicBufferState()
         updateGameState()
         
@@ -226,7 +264,9 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setDepthStencilState(depthState)
         
         renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
+       
         renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
+        
         renderEncoder.setFragmentTexture(noiseTexture, index: 0)
         
         drawNodes(scene.children)

@@ -32,20 +32,25 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 }
 
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
-                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                                 constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                 texture2d<float> noiseMap [[texture(0)]])
+                                constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                                constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                texture2d<float> noiseTexture [[texture(0)]])
 {
-    float2 st = in.uv * 2.0 - 1.0;
-    st.x *= uniforms.aspectRatio;
+    float2 st = in.uv;
+    st.x *= (uniforms.size.x * 2. - uniforms.size.y * 2) / uniforms.size.x;
     
     constexpr sampler s(filter::linear, address::repeat);
     
-    float f = fbm(float3(st * 2.0, uniforms.time * 0.12));
-    f += max(f - 0.5, 0.0) * 2.;
-    f *= 0.05;
-//    f = pow(1 - fbmr(float3(st * 10.8, 0.0)), 3.0);
-//    f *= 0.5;
+    float2 q;
+    q.x = noiseTexture.sample(s, st + uniforms.time * 0.002).x;
+    q.y = noiseTexture.sample(s, st * 3.3 + float2(2.0, 3.4) - uniforms.time * 0.0019).x;
+    
+    float f = noiseTexture.sample(s, st * 2.0 + q * .2 - float2(1.0, 0.2) * uniforms.time * 0.008).x;
+    float f2 = noiseTexture.sample(s, st * 3.1 + float2(0.3, 1.0) * uniforms.time * 0.01 + q * .3).x;
+    
+    f = pow(f * f2, 2);
+    f *= 0.2;
+    
     return float4(float3(color.xyz), f);
 }
 

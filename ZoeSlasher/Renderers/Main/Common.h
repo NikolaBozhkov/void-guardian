@@ -14,6 +14,7 @@
 
 using namespace metal;
 
+//template<typename T> T mod(T x, float y);
 float fbm5(float3 _st, texture2d<float> noiseMap, sampler s);
 float fbm4(float3 _st, texture2d<float> noiseMap, sampler s);
 float fbm3(float3 _st, texture2d<float> noiseMap, sampler s);

@@ -11,6 +11,11 @@ using namespace metal;
 
 #import "Common.h"
 
+template<typename T>
+T mod(T x, float y) {
+    return x - y * floor(x / y);
+}
+
 float hash(float3 p)  // replace this by something better
 {
     p  = fract( p*0.3183099+.1 );
@@ -88,10 +93,6 @@ float fbm3(float3 _st, texture2d<float> noiseMap, sampler s) {
 //    Simplex 3D Noise
 //    by Ian McEwan, Ashima Arts
 //
-template<typename T>
-T mod(T x, float y) {
-    return x - y * floor(x / y);
-}
 float4 permute(float4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 float4 taylorInvSqrt(float4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 
