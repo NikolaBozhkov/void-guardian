@@ -50,10 +50,16 @@ class MainRenderer: NSObject {
     
     let skRenderer: SKRenderer
     
-    let noiseComputePipelineState: MTLComputePipelineState
-    let threadsPerGroup: MTLSize
-    let threadsPerGrid: MTLSize
-    let noiseTexture: MTLTexture
+    var backgroundFbmPipelineState: MTLComputePipelineState!
+    var backgroundFbmThreadsPerGroup: MTLSize!
+    var backgroundFbmThreadsPerGrid: MTLSize!
+    var backgroundFbmTexture: MTLTexture!
+    
+    var gradientFbmrPipelineState: MTLComputePipelineState!
+    var gradFbmrThreadsPerGroup: MTLSize!
+    var gradFbmrThreadsPerGrid: MTLSize!
+    var gradientFbmrTexture: MTLTexture!
+    
     var noiseNeedsComputing = true
     
     var scene: GameScene!
@@ -94,12 +100,15 @@ class MainRenderer: NSObject {
         }
         self.depthState = depthState
         
-        guard let noiseFunction = library.makeFunction(name: "noiseKernel"),
-            let computeState = try? device.makeComputePipelineState(function: noiseFunction) else {
+        guard let backgroundFbmFunction = library.makeFunction(name: "backgroundFbmKernel"),
+            let gradientFbmrFunction = library.makeFunction(name: "gradientFbmrKernel"),
+            let backgroundFbmPipelineState = try? device.makeComputePipelineState(function: backgroundFbmFunction),
+            let gradientFbmrComputeState = try? device.makeComputePipelineState(function: gradientFbmrFunction) else {
             return nil
         }
 
-        noiseComputePipelineState = computeState
+        self.backgroundFbmPipelineState = backgroundFbmPipelineState
+        gradientFbmrPipelineState = gradientFbmrComputeState
         
         skRenderer = SKRenderer(device: device)
         
@@ -108,21 +117,6 @@ class MainRenderer: NSObject {
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
-        
-        let textureDescriptor = MTLTextureDescriptor()
-        textureDescriptor.pixelFormat = .bgra8Unorm
-        let size = 1024
-        textureDescriptor.width = 256
-        textureDescriptor.height = 128
-        textureDescriptor.usage = [.shaderWrite, .shaderRead]
-
-        let texture = device.makeTexture(descriptor: textureDescriptor)!
-        noiseTexture = texture
-
-        threadsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
-        let w = computeState.threadExecutionWidth
-        let h = computeState.maxTotalThreadsPerThreadgroup / w
-        threadsPerGroup = MTLSize(width: w, height: h, depth: 1)
         
         super.init()
     }
@@ -153,6 +147,36 @@ class MainRenderer: NSObject {
         
         prevTime = currentTime
     }
+    
+    private func loadNoiseTextures(forAspectRatio aspectRatio: Float) {
+        var res = 128
+        let textureDescriptor = MTLTextureDescriptor()
+        textureDescriptor.pixelFormat = .bgra8Unorm
+        textureDescriptor.width = Int(Float(res) * aspectRatio)
+        textureDescriptor.height = res
+        textureDescriptor.usage = [.shaderWrite, .shaderRead]
+        backgroundFbmTexture = device.makeTexture(descriptor: textureDescriptor)!
+
+        backgroundFbmThreadsPerGrid = MTLSize(width: backgroundFbmTexture.width,
+                                              height: backgroundFbmTexture.height,
+                                              depth: 1)
+        var w = backgroundFbmPipelineState.threadExecutionWidth
+        var h = backgroundFbmPipelineState.maxTotalThreadsPerThreadgroup / w
+        backgroundFbmThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
+        
+        res = 1024
+        textureDescriptor.width = Int(Float(res) * aspectRatio)
+        textureDescriptor.height = res
+        
+        gradientFbmrTexture = device.makeTexture(descriptor: textureDescriptor)!
+
+        gradFbmrThreadsPerGrid = MTLSize(width: gradientFbmrTexture.width,
+                                        height: gradientFbmrTexture.height,
+                                        depth: 1)
+        w = gradientFbmrPipelineState.threadExecutionWidth
+        h = gradientFbmrPipelineState.maxTotalThreadsPerThreadgroup / w
+        gradFbmrThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
+    }
 }
 
 // MARK: - SceneRenderer
@@ -168,11 +192,14 @@ extension MainRenderer: SceneRenderer {
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float, position: vector_float2) {
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4,
+                     splitProgress: Float, position: vector_float2, seed: Float) {
         var splitProgress = splitProgress
+        var seed = seed
         var position = normalizeWorldPosition(position)
         renderEncoder.setFragmentBytes(&splitProgress, length: MemoryLayout<Float>.size, index: 4)
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
+        renderEncoder.setFragmentBytes(&seed, length: MemoryLayout<Float>.size, index: 6)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -195,9 +222,7 @@ extension MainRenderer: SceneRenderer {
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {
-        var worldPos = 2 * pos / scene.size
-        worldPos.x *= scene.size.x / scene.size.y
-        return worldPos
+        0.5 + pos / scene.size
     }
 }
 
@@ -218,6 +243,8 @@ extension MainRenderer: MTKViewDelegate {
         projectionMatrix = float4x4.makeOrtho(left: -scene.size.x / 2, right:   scene.size.x / 2,
                                               top:   scene.size.y / 2, bottom: -scene.size.y / 2,
                                               near: -100, far: 100)
+        
+        loadNoiseTextures(forAspectRatio: Float(aspectRatio))
     }
     
     func draw(in view: MTKView) {
@@ -233,19 +260,39 @@ extension MainRenderer: MTKViewDelegate {
             semaphore?.signal()
         }
         
+        guard let computeEncoder = commandBuffer.makeComputeCommandEncoder() else { return }
+        
+        computeEncoder.setComputePipelineState(backgroundFbmPipelineState)
+        
+        var octaves = 4
+        var scale: Float = 10.0
+        
+        computeEncoder.setBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: 2)
+        computeEncoder.setBytes(&octaves, length: MemoryLayout<Int>.size, index: 0)
+        computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 1)
+        
+        computeEncoder.setTexture(backgroundFbmTexture, index: 0)
+        
+        computeEncoder.dispatchThreads(backgroundFbmThreadsPerGrid,
+                                       threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
+        
         if noiseNeedsComputing {
-            guard let computeEncoder = commandBuffer.makeComputeCommandEncoder() else { return }
+            computeEncoder.setComputePipelineState(gradientFbmrPipelineState)
+            
+            octaves = 4
+            scale = 10.0
+            computeEncoder.setBytes(&octaves, length: MemoryLayout<Int>.size, index: 0)
+            computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 1)
+            
+            computeEncoder.setTexture(gradientFbmrTexture, index: 0)
 
-            computeEncoder.setComputePipelineState(noiseComputePipelineState)
-
-            computeEncoder.setTexture(noiseTexture, index: 0)
-
-            computeEncoder.dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerGroup)
-
-            computeEncoder.endEncoding()
-
+            computeEncoder.dispatchThreads(gradFbmrThreadsPerGrid,
+                                           threadsPerThreadgroup: gradFbmrThreadsPerGroup)
+            
             noiseNeedsComputing = false
         }
+        
+        computeEncoder.endEncoding()
         
         updateDynamicBufferState()
         updateGameState()
@@ -267,7 +314,8 @@ extension MainRenderer: MTKViewDelegate {
        
         renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
         
-        renderEncoder.setFragmentTexture(noiseTexture, index: 0)
+        renderEncoder.setFragmentTexture(backgroundFbmTexture, index: 0)
+        renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
         
         drawNodes(scene.children)
         

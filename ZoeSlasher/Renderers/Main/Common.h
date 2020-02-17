@@ -15,11 +15,10 @@
 using namespace metal;
 
 //template<typename T> T mod(T x, float y);
-float fbm5(float3 _st, texture2d<float> noiseMap, sampler s);
-float fbm4(float3 _st, texture2d<float> noiseMap, sampler s);
-float fbm3(float3 _st, texture2d<float> noiseMap, sampler s);
-float fbm(float3 st);
-float fbmr(float3 st);
-float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms);
+float rand(float x);
+float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms, float clockwise, texture2d<float> fbmr);
+float snoise(float3 v);
+float fbm(float3 q, int octaves);
+float fbmr(float3 q, int octaves);
 
 #endif /* Common_h */

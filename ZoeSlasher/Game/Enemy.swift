@@ -100,6 +100,6 @@ class Enemy: Node {
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
         let splitProgress = splitDuration == 0 ? 0 : splitDurationPassed / splitDuration
-        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress), position: position)
+        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress), position: position, seed: seed)
     }
 }

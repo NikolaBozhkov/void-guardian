@@ -34,23 +34,21 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                 constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                texture2d<float> noiseTexture [[texture(0)]])
+                                texture2d<float> texture [[texture(0)]],
+                                texture2d<float> tex [[texture(1)]])
 {
     float2 st = in.uv;
-    st.x *= (uniforms.size.x * 2. - uniforms.size.y * 2) / uniforms.size.x;
+//    st.x *= uniforms.aspectRatio;
+//    st.x *= (uniforms.size.x * 2. - uniforms.size.y * 2) / uniforms.size.x;
     
     constexpr sampler s(filter::linear, address::repeat);
     
-    float2 q;
-    q.x = noiseTexture.sample(s, st + uniforms.time * 0.002).x;
-    q.y = noiseTexture.sample(s, st * 3.3 + float2(2.0, 3.4) - uniforms.time * 0.0019).x;
+    float f = texture.sample(s, st).x;
+    f = f*0.08;
     
-    float f = noiseTexture.sample(s, st * 2.0 + q * .2 - float2(1.0, 0.2) * uniforms.time * 0.008).x;
-    float f2 = noiseTexture.sample(s, st * 3.1 + float2(0.3, 1.0) * uniforms.time * 0.01 + q * .3).x;
-    
-    f = pow(f * f2, 2);
-    f *= 0.2;
-    
+//    float f = 1.0 - tex.sample(s, st).x;
+//    f = pow(f, 2.0);
+//    f = f * 0.15;
     return float4(float3(color.xyz), f);
 }
 
@@ -58,7 +56,9 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                             constant float &splitProgress [[buffer(4)]],
                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                            constant float2 &worldPosNorm [[buffer(5)]])
+                            constant float2 &worldPosNorm [[buffer(5)]],
+                            constant float &seed [[buffer(6)]],
+                            texture2d<float> fbmr [[texture(1)]])
 {
 //    float d = distance(0.5, in.uv);
 //    float alpha = 1.0 - smoothstep(0.4, 0.5, d);
@@ -71,8 +71,8 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
 //    return float4(col, alpha * (1.0 - s) + s);
     
     float2 st = in.uv * 2.0 - 1.0;
-    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms);
-    return float4(float3(1.0, 0.0, 0.0), enemy);
+    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9 + 0.0 * rand(seed), fbmr);
+    return float4(float3(1., 0.0, 0.0), enemy);
 }
 
 fragment float4 energyBarShader(VertexOut in [[stage_in]],

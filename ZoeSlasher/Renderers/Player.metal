@@ -67,11 +67,12 @@ using namespace metal;
 fragment float4 playerShader(VertexOut in [[stage_in]],
                              constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                             constant float2 &worldPosNorm [[buffer(5)]])
+                             constant float2 &worldPosNorm [[buffer(5)]],
+                             texture2d<float> fbmr [[texture(1)]])
 {
     float2 st = in.uv * 2.0 - 1.0;
     
-    float player = entity(st, uniforms.playerSize, worldPosNorm, 800.0, uniforms);
+    float player = entity(st, uniforms.playerSize, worldPosNorm, 800.0, uniforms, 0.9, fbmr);
     
     return float4(float3(0.431, 1.00, 0.473), player);
 }
