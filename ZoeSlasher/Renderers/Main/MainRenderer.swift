@@ -197,10 +197,7 @@ extension MainRenderer: SceneRenderer {
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4, aspectRatio: Float, anchorRadius: Float) {
-        var aspectRatio = aspectRatio, anchorRadius = anchorRadius
-        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 4)
-        renderEncoder.setFragmentBytes(&anchorRadius, length: MemoryLayout<Float>.size, index: 5)
+    func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4) {
         anchorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     

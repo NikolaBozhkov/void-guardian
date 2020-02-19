@@ -42,7 +42,7 @@ class Player: Node {
     private var moveStage = 0
     
     private(set) var stage: Stage = .idle
-    private(set) var shot: Node?
+    private(set) var anchor: Node?
     
     var anchorPlane: Node?
     
@@ -76,41 +76,30 @@ class Player: Node {
         if stage != .piercing {
         }
         
-        if stage == .charging, let shot = shot {
+        if stage == .charging {
             let delta = deltaTime * chargeSpeed * chargeDirection
-            shot.position += delta
-            anchorPlane?.size.x += length(delta)
-            anchorPlane?.position += delta / 2
+            position += delta
+//            anchorPlane?.size.x += length(delta)
+//            anchorPlane?.position += delta / 2
 //            energy -= length(delta) * energyUsagePerUnit
             
-            if distance(chargeInitial, shot.position) >= chargeDistance {
+            if distance(chargeInitial, position) >= chargeDistance {
                 // Prevent overshooting
-                shot.position = chargeInitial + chargeDelta
-                anchorPlane?.size.x = chargeDistance + anchorRadius * 2
-                anchorPlane?.position = chargeInitial + chargeDelta / 2
+                position = chargeInitial + chargeDelta
+//                anchorPlane?.size.x = chargeDistance + anchorRadius * 2
+//                anchorPlane?.position = chargeInitial + chargeDelta / 2
                 stage = .charged
             }
-        } else if stage == .piercing, let shot = shot {
-            let direction = moveStage == 0 ? chargeDirection : pierceDirection
-            let delta = deltaTime * pierceSpeed * direction
+        } else if stage == .piercing {
+//            let direction = moveStage == 0 ? chargeDirection : pierceDirection
+            let delta = deltaTime * pierceSpeed * pierceDirection
             position += delta
             
 //            corruption -= length(delta) * corruptionCleansePerUnit
             
-            if moveStage == 0 && distance(chargeInitial, position) >= chargeDistance {
-                position = chargeInitial + chargeDelta
-                moveStage = 1
-            } else if moveStage == 1 && distance(pierceInitial, position) >= pierceDistance {
+            if distance(pierceInitial, position) >= pierceDistance {
                 position = pierceInitial + pierceDelta
-                
-                shot.removeFromParent()
-                self.shot = nil
-                
-                anchorPlane?.removeFromParent()
-                
                 stage = .idle
-                moveStage = 0
-//                print(Float(GameScene.totalKills) / Float(GameScene.totalMoves))
             }
         }
     }
@@ -118,26 +107,29 @@ class Player: Node {
     func move(to target: vector_float2) {
         if stage == .idle && energy >= energyUsagePerShot {
             
-            // Spawn shot
-            let shot = Node()
-            shot.size = [60, 60]
-            shot.color = [1, 1, 0, 1]
-            shot.position = position
-            
-            self.shot = shot
-            add(childNode: shot)
-            
-            anchorPlane = Node()
-            anchorPlane?.zPosition = 0
-            anchorPlane?.size = [anchorRadius * 2, anchorPlaneHeight]
-            anchorPlane?.renderFunction = { [unowned self] renderer in
-                renderer.renderAnchor(modelMatrix: self.anchorPlane!.modelMatrix,
-                                      color: self.anchorPlane!.color,
-                                      aspectRatio: self.anchorPlane!.size.x / self.anchorPlane!.size.y,
-                                      anchorRadius: self.anchorRadiusNormalized)
+            // Spawn anchor
+            let anchor = Node()
+            anchor.size = physicsSize * 0.7
+            anchor.color = [1, 1, 0, 1]
+            anchor.position = target
+            anchor.renderFunction = { [unowned self] in
+                $0.renderAnchor(modelMatrix: self.anchor!.modelMatrix, color: self.anchor!.color)
             }
             
-            parent?.add(childNode: anchorPlane!)
+            self.anchor = anchor
+            add(childNode: anchor)
+            
+//            anchorPlane = Node()
+//            anchorPlane?.zPosition = 0
+//            anchorPlane?.size = [anchorRadius * 2, anchorPlaneHeight]
+//            anchorPlane?.renderFunction = { [unowned self] renderer in
+//                renderer.renderAnchor(modelMatrix: self.anchorPlane!.modelMatrix,
+//                                      color: self.anchorPlane!.color,
+//                                      aspectRatio: self.anchorPlane!.size.x / self.anchorPlane!.size.y,
+//                                      anchorRadius: self.anchorRadiusNormalized)
+//            }
+            
+//            parent?.add(childNode: anchorPlane!)
             
             chargeInitial = position
             chargeDelta = target - position
@@ -146,19 +138,22 @@ class Player: Node {
                 chargeDirection = .zero
             }
             
-            anchorPlane?.rotation = atan2(chargeDelta.y, chargeDelta.x)
-            anchorPlane?.position = position
+//            anchorPlane?.rotation = atan2(chargeDelta.y, chargeDelta.x)
+//            anchorPlane?.position = position
             
             chargeDistance = length(chargeDelta)
             
             energy -= energyUsagePerShot
             stage = .charging
         } else if stage == .charging || stage == .charged {
-            chargeDelta = shot!.position - position
-            chargeDistance = length(chargeDelta)
+//            chargeDelta = shot!.position - position
+//            chargeDistance = length(chargeDelta)
             
-            pierceInitial = shot!.position
-            pierceDelta = target - shot!.position
+            anchor?.removeFromParent()
+            anchor = nil
+            
+            pierceInitial = position
+            pierceDelta = target - position
             pierceDirection = normalize(pierceDelta)
             if pierceDirection.x.isNaN {
                 pierceDirection = .zero
@@ -172,8 +167,8 @@ class Player: Node {
     }
     
     func interruptCharging() {
-        shot?.removeFromParent()
-        shot = nil
+        anchor?.removeFromParent()
+        anchor = nil
         stage = .idle
     }
 }

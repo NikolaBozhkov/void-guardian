@@ -31,7 +31,7 @@ class GameScene: Scene {
     
     var isGameOver = false
     
-    var prevShotPosition: vector_float2?
+    var prevPlayerPosition: vector_float2 = .zero
     
     static var totalKills = 0
     static var totalMoves = 0
@@ -81,8 +81,7 @@ class GameScene: Scene {
     }
     
     func update(deltaTime: CFTimeInterval) {
-//        return
-        prevShotPosition = player.position
+        prevPlayerPosition = player.position
         
         let wasPiercing = player.stage == .piercing
         player.update(deltaTime: deltaTime)
@@ -159,7 +158,7 @@ class GameScene: Scene {
         player.corruption = 0
         add(childNode: player)
         
-        spawner.isActive = false
+        spawner.isActive = true
         isGameOver = false
         
         GameScene.totalKills = 0
@@ -192,18 +191,15 @@ class GameScene: Scene {
     }
     
     private func testPlayerEnemyCollision(wasPiercing: Bool) {
-        guard player.stage == .piercing || wasPiercing,
-            let prevShotPosition = prevShotPosition else { return }
-        
-        let deltaShot = player.position - prevShotPosition
-        let direction = normalize(deltaShot)
-        let maxDistance = length(deltaShot)
+        let deltaPlayer = player.position - prevPlayerPosition
+        let direction = normalize(deltaPlayer)
+        let maxDistance = length(deltaPlayer)
         var distanceTravelled: Float = 0
         var minDistance: Float = .infinity
         
         // Cast ray
         while distanceTravelled < maxDistance {
-            let position = prevShotPosition + distanceTravelled * direction
+            let position = prevPlayerPosition + distanceTravelled * direction
             for enemy in enemies {
                 let d = distance(position, enemy.position)
                 
