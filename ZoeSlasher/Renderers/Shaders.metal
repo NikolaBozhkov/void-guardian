@@ -44,11 +44,11 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     constexpr sampler s(filter::linear, address::repeat);
     
     float f = texture.sample(s, st).x;
-    f = f*0.08;
+    f = f*0.1;
     
-//    float f = 1.0 - tex.sample(s, st).x;
-//    f = pow(f, 2.0);
-//    f = f * 0.15;
+//    f = tex.sample(s, st).x;
+//    f *= 0.5;
+    
     return float4(float3(color.xyz), f);
 }
 

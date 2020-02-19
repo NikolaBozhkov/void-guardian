@@ -37,6 +37,9 @@ struct Uniforms
     simd_float2 size;
     float playerSize;
     float enemySize;
+    simd_float2 anchorSize;
+    float anchorRotation;
+    simd_float2 anchorWorldPos;
 };
 
 //typedef struct

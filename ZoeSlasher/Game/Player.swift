@@ -25,6 +25,10 @@ class Player: Node {
     private let energyRechargePerSecond: Float = 6.6
     private let energyUsagePerShot: Float = 25
     
+    private let anchorRadius: Float = 30
+    private let anchorPlaneHeight: Float = 200
+    private let anchorRadiusNormalized: Float
+    
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
     private var chargeDirection = vector_float2.zero
@@ -40,6 +44,8 @@ class Player: Node {
     private(set) var stage: Stage = .idle
     private(set) var shot: Node?
     
+    var anchorPlane: Node?
+    
     var energy: Float = 100 {
         didSet { energy = max(min(energy, 100), 0) }
     }
@@ -49,6 +55,7 @@ class Player: Node {
     }
     
     override init() {
+        anchorRadiusNormalized = anchorRadius / anchorPlaneHeight
         super.init()
         name = "Player"
         size = vector_float2(repeating: 800)
@@ -72,12 +79,15 @@ class Player: Node {
         if stage == .charging, let shot = shot {
             let delta = deltaTime * chargeSpeed * chargeDirection
             shot.position += delta
-            
+            anchorPlane?.size.x += length(delta)
+            anchorPlane?.position += delta / 2
 //            energy -= length(delta) * energyUsagePerUnit
             
             if distance(chargeInitial, shot.position) >= chargeDistance {
                 // Prevent overshooting
                 shot.position = chargeInitial + chargeDelta
+                anchorPlane?.size.x = chargeDistance + anchorRadius * 2
+                anchorPlane?.position = chargeInitial + chargeDelta / 2
                 stage = .charged
             }
         } else if stage == .piercing, let shot = shot {
@@ -96,6 +106,8 @@ class Player: Node {
                 shot.removeFromParent()
                 self.shot = nil
                 
+                anchorPlane?.removeFromParent()
+                
                 stage = .idle
                 moveStage = 0
 //                print(Float(GameScene.totalKills) / Float(GameScene.totalMoves))
@@ -105,14 +117,27 @@ class Player: Node {
     
     func move(to target: vector_float2) {
         if stage == .idle && energy >= energyUsagePerShot {
+            
             // Spawn shot
             let shot = Node()
-            shot.size = [30, 30]
+            shot.size = [60, 60]
             shot.color = [1, 1, 0, 1]
             shot.position = position
             
             self.shot = shot
             add(childNode: shot)
+            
+            anchorPlane = Node()
+            anchorPlane?.zPosition = 0
+            anchorPlane?.size = [anchorRadius * 2, anchorPlaneHeight]
+            anchorPlane?.renderFunction = { [unowned self] renderer in
+                renderer.renderAnchor(modelMatrix: self.anchorPlane!.modelMatrix,
+                                      color: self.anchorPlane!.color,
+                                      aspectRatio: self.anchorPlane!.size.x / self.anchorPlane!.size.y,
+                                      anchorRadius: self.anchorRadiusNormalized)
+            }
+            
+            parent?.add(childNode: anchorPlane!)
             
             chargeInitial = position
             chargeDelta = target - position
@@ -120,6 +145,9 @@ class Player: Node {
             if chargeDirection.x.isNaN {
                 chargeDirection = .zero
             }
+            
+            anchorPlane?.rotation = atan2(chargeDelta.y, chargeDelta.x)
+            anchorPlane?.position = position
             
             chargeDistance = length(chargeDelta)
             

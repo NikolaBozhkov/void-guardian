@@ -47,6 +47,7 @@ class MainRenderer: NSObject {
     let enemyRenderer: SpriteRenderer
     let energyBarRenderer: SpriteRenderer
     let enemyAttackRenderer: SpriteRenderer
+    let anchorRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -117,6 +118,7 @@ class MainRenderer: NSObject {
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
+        anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
         
         super.init()
     }
@@ -142,6 +144,9 @@ class MainRenderer: NSObject {
         uniforms[0].time = Float(runningTime)
         uniforms[0].aspectRatio = scene.size.x / scene.size.y
         uniforms[0].playerSize = scene.player.physicsSize.x / scene.player.size.x
+        uniforms[0].anchorSize = scene.player.anchorPlane?.size ?? [0, 0]
+        uniforms[0].anchorRotation = scene.player.anchorPlane?.rotation ?? 0
+        uniforms[0].anchorWorldPos = (scene.player.anchorPlane?.position ?? [0, 0]) + scene.size / 2
         uniforms[0].enemySize = 150.0 / 750.0
         uniforms[0].size = scene.size
         
@@ -190,6 +195,13 @@ extension MainRenderer: SceneRenderer {
         var position = normalizeWorldPosition(position)
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    }
+    
+    func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4, aspectRatio: Float, anchorRadius: Float) {
+        var aspectRatio = aspectRatio, anchorRadius = anchorRadius
+        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 4)
+        renderEncoder.setFragmentBytes(&anchorRadius, length: MemoryLayout<Float>.size, index: 5)
+        anchorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
     func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4,

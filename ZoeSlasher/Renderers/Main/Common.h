@@ -18,6 +18,7 @@ using namespace metal;
 float rand(float x);
 float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms, float clockwise, texture2d<float> fbmr);
 float snoise(float3 v);
+float snoise(float2 p);
 float fbm(float3 q, int octaves);
 float fbmr(float3 q, int octaves);
 
