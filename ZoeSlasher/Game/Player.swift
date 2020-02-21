@@ -40,6 +40,7 @@ class Player: Node {
     private var pierceDistance: Float = 0
     
     private var moveStage = 0
+    private var positionDelta = vector_float2.zero
     
     private(set) var stage: Stage = .idle
     private(set) var anchor: Node?
@@ -63,11 +64,13 @@ class Player: Node {
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderPlayer(modelMatrix: modelMatrix, color: color, position: position)
+        renderer.renderPlayer(modelMatrix: modelMatrix, color: color, position: position, positionDelta: positionDelta)
     }
     
     func update(deltaTime: CFTimeInterval) {
         let deltaTime = Float(deltaTime)
+        
+        let prevPosition = position
         
         corruption -= corruptionCleansePerSecond * deltaTime
         energy += energyRechargePerSecond * deltaTime
@@ -102,6 +105,8 @@ class Player: Node {
                 stage = .idle
             }
         }
+        
+        positionDelta = position - prevPosition
     }
     
     func move(to target: vector_float2) {

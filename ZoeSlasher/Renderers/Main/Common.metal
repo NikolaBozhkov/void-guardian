@@ -13,7 +13,7 @@ using namespace metal;
 
 float rand(float x) { return fract(sin(x) * 42758.5453123); }
 
-float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms, float clockwise, texture2d<float> fbmr) {
+float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta) {
     constexpr sampler s(filter::linear, address::repeat);
     
     float2 diff = float2(0.0) - st;

@@ -71,7 +71,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
 //    return float4(col, alpha * (1.0 - s) + s);
     
     float2 st = in.uv * 2.0 - 1.0;
-    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9 + 0.0 * rand(seed), fbmr);
+    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9 + 0.0 * rand(seed), fbmr, float2(0.0));
     return float4(float3(1., 0.0, 0.0), enemy);
 }
 
@@ -101,4 +101,12 @@ fragment float4 enemyAttackShader(VertexOut in [[stage_in]],
                                   constant float4 &color [[buffer(BufferIndexSpriteColor)]])
 {
     return color;
+}
+
+fragment float4 textureShader(VertexOut in [[stage_in]],
+                              constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                              texture2d<float> texture [[texture(TextureIndexSprite)]])
+{
+    constexpr sampler s(filter::linear, address::repeat);
+    return float4(color.xyz, texture.sample(s, in.uv).a * color.a);
 }

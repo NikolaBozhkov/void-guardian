@@ -29,6 +29,11 @@ typedef NS_ENUM(NSInteger, BufferIndex)
     BufferIndexSpriteColor = 3
 };
 
+typedef NS_ENUM(NSInteger, TextureIndex)
+{
+    TextureIndexSprite = 2
+};
+
 struct Uniforms
 {
     matrix_float4x4 projectionMatrix;

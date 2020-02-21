@@ -8,7 +8,7 @@
 
 import MetalKit
 
-func createTexture(withDevice device: MTLDevice,
+func createTexture(device: MTLDevice,
                    filePath: String,
                    sRGB: Bool = false,
                    generateMips: Bool = false,

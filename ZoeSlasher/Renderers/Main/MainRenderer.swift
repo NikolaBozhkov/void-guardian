@@ -48,6 +48,7 @@ class MainRenderer: NSObject {
     let energyBarRenderer: SpriteRenderer
     let enemyAttackRenderer: SpriteRenderer
     let anchorRenderer: SpriteRenderer
+    let textureRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -62,6 +63,9 @@ class MainRenderer: NSObject {
     var gradientFbmrTexture: MTLTexture!
     
     var noiseNeedsComputing = true
+    
+    let energySymbolTexture: MTLTexture
+    let trapSymbolTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -119,6 +123,10 @@ class MainRenderer: NSObject {
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
+        textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
+        
+        energySymbolTexture = createTexture(device: device, filePath: "energy-symbol")
+        trapSymbolTexture = createTexture(device: device, filePath: "trap-symbol")
         
         super.init()
     }
@@ -191,9 +199,11 @@ extension MainRenderer: SceneRenderer {
         backgroundRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2) {
+    func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2, positionDelta: vector_float2) {
         var position = normalizeWorldPosition(position)
+        var positionDelta = positionDelta
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
+        renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -228,6 +238,18 @@ extension MainRenderer: SceneRenderer {
     
     func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4) {
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    }
+    
+    func renderTexture(_ textureName: String, modelMatrix: matrix_float4x4, color: vector_float4) {
+        var texture: MTLTexture!
+        if textureName == "energy" {
+            texture = energySymbolTexture
+        } else if textureName == "trap" {
+            texture = trapSymbolTexture
+        }
+        
+        renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
+        textureRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {

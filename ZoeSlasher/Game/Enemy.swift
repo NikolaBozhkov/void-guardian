@@ -28,16 +28,39 @@ class Enemy: Node {
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
-    override init() {
+    var trapAngle = Float.random(in: -.pi...(.pi))
+    var traps = Set<Node>()
+    
+    init(position: vector_float2) {
         super.init()
+        
+        self.position = position
         name = "Enemy"
         size = [750, 750]
         physicsSize = [150, 150]
         color = [1, 0, 0, 1]
+        
+        for i in 0..<3 {
+            let trap = createTrapSymbol(size: [1, 1] * 110)
+            trap.color = [1.0, 0.0, 0.0, 0.5]
+            trap.rotation = trapAngle + Float(i) * .pi * 2.0 / 3
+            updateTrapPosition(trap)
+            traps.insert(trap)
+            add(childNode: trap)
+        }
+    }
+    
+    func updateTrapPosition(_ trap: Node) {
+        trap.position = position + [cos(trap.rotation + .pi / 2), sin(trap.rotation + .pi / 2)] * 140
     }
     
     func update(deltaTime: CFTimeInterval) {
         timeAlive += Float(deltaTime)
+        
+        traps.forEach { [unowned self] in
+            $0.rotation += Float(deltaTime) * 0.2
+            self.updateTrapPosition($0)
+        }
         
         if !splitCharging {
 //            timeSinceLastSplit += deltaTime

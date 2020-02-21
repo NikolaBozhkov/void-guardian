@@ -191,14 +191,16 @@ class GameScene: Scene {
     }
     
     private func testPlayerEnemyCollision(wasPiercing: Bool) {
+//        guard player.stage == .charging || player.stage == .piercing else { return }
+        
         let deltaPlayer = player.position - prevPlayerPosition
-        let direction = normalize(deltaPlayer)
         let maxDistance = length(deltaPlayer)
+        let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)
         var distanceTravelled: Float = 0
         var minDistance: Float = .infinity
         
         // Cast ray
-        while distanceTravelled < maxDistance {
+        while distanceTravelled <= maxDistance {
             let position = prevPlayerPosition + distanceTravelled * direction
             for enemy in enemies {
                 let d = distance(position, enemy.position)
@@ -254,4 +256,28 @@ class GameScene: Scene {
         attacks.remove(attack)
         attack.enemy.didFinishAttack()
     }
+}
+
+// MARK: - Temporary helpers
+
+func createEnergySymbol(size: vector_float2) -> Node {
+    let node = Node()
+    node.size = size
+    node.name = "energySymbol"
+    node.renderFunction = { renderer in
+        renderer.renderTexture("energy", modelMatrix: node.modelMatrix, color: node.color)
+    }
+    
+    return node
+}
+
+func createTrapSymbol(size: vector_float2) -> Node {
+    let node = Node()
+    node.size = size
+    node.name = "trapSymbol"
+    node.renderFunction = { renderer in
+        renderer.renderTexture("trap", modelMatrix: node.modelMatrix, color: node.color)
+    }
+    
+    return node
 }

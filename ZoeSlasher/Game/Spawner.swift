@@ -33,8 +33,7 @@ class Spawner {
     }
     
     func spawnEnemy(withPosition position: vector_float2? = nil) {
-        let enemy = Enemy()
-        enemy.position = position ?? scene.randomPosition(padding: [75, 75])
+        let enemy = Enemy(position: position ?? scene.randomPosition(padding: [75, 75]))
         scene.enemies.insert(enemy)
         scene.add(childNode: enemy)
     }
