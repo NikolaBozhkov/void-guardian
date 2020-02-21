@@ -106,7 +106,9 @@ class Player: Node {
             }
         }
         
-        positionDelta = position - prevPosition
+        let currentPositionDelta = position - prevPosition
+        let deltaDelta = currentPositionDelta - positionDelta
+        positionDelta += deltaDelta * deltaTime * 20.0
     }
     
     func move(to target: vector_float2) {

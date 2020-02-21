@@ -158,14 +158,14 @@ class GameScene: Scene {
         player.corruption = 0
         add(childNode: player)
         
-        spawner.isActive = true
+        spawner.isActive = false
         isGameOver = false
         
         GameScene.totalKills = 0
         GameScene.totalMoves = 0
         
-        for _ in 0..<5 {
-//            spawner.spawnEnemy()
+        for _ in 0..<3 {
+            spawner.spawnEnemy()
         }
     }
     

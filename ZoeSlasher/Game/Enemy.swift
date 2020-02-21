@@ -19,10 +19,12 @@ class Enemy: Node {
     private var splitDurationPassed: TimeInterval = 0
     private var timeAlive: Float = 0
     
+    private var positionDelta = vector_float2.zero
+    
     var splitCharging = false
     var splitReady = false
     var attackReady = false
-    var attackInProgress = true // revert
+    var attackInProgress = false
     
     let seed = Float.random(in: 0..<1000)
     var angle = Float.random(in: -.pi...(.pi))
@@ -42,24 +44,36 @@ class Enemy: Node {
         
         for i in 0..<3 {
             let trap = createTrapSymbol(size: [1, 1] * 110)
-            trap.color = [1.0, 0.0, 0.0, 0.5]
+            trap.color = [1.0, 0.0, 0.0, 0.2]
             trap.rotation = trapAngle + Float(i) * .pi * 2.0 / 3
-            updateTrapPosition(trap)
+            updateTrap(trap)
             traps.insert(trap)
             add(childNode: trap)
         }
     }
     
-    func updateTrapPosition(_ trap: Node) {
+    func expImpulse(x: Float, k: Float) -> Float {
+        let h = k * x;
+        return h * exp(1.0 - h);
+    }
+    
+    func updateTrap(_ trap: Node) {
+        let offset: Double = 1.5
+        let progressAttack = Float(max(timeSinceLastAttack - offset, 0.0) / (attackInterval - offset))
+        let progressCooldown = timeAlive < Float(attackInterval) ? 1.0 : Float(min(timeSinceLastAttack / (attackInterval - 2), 1.0))
+        
+        trap.color.w = 0.3 + (pow(progressAttack, 9) + pow(1.0 - progressCooldown, 3)) * 0.7
         trap.position = position + [cos(trap.rotation + .pi / 2), sin(trap.rotation + .pi / 2)] * 140
     }
     
     func update(deltaTime: CFTimeInterval) {
         timeAlive += Float(deltaTime)
         
+        let prevPosition = position
+        
         traps.forEach { [unowned self] in
             $0.rotation += Float(deltaTime) * 0.2
-            self.updateTrapPosition($0)
+            self.updateTrap($0)
         }
         
         if !splitCharging {
@@ -80,6 +94,7 @@ class Enemy: Node {
         
         if timeSinceLastAttack >= attackInterval {
             attackReady = true
+//            timeSinceLastAttack = 0
         }
         
         if timeSinceLastSplit >= splitCooldown {
@@ -92,6 +107,10 @@ class Enemy: Node {
         if splitDurationPassed >= splitDuration && splitCharging {
             splitReady = true
         }
+        
+        let currentPositionDelta = position - prevPosition
+        let deltaDelta = currentPositionDelta - positionDelta
+        positionDelta += deltaDelta * Float(deltaTime) * 20.0
     }
     
     func unreadyAttack() {
@@ -123,6 +142,7 @@ class Enemy: Node {
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
         let splitProgress = splitDuration == 0 ? 0 : splitDurationPassed / splitDuration
-        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress), position: position, seed: seed)
+        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress),
+                             position: position, positionDelta: positionDelta)
     }
 }

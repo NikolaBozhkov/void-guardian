@@ -10,7 +10,7 @@ import Foundation
 
 class EnemyAttack: Node {
     
-    private let speed: Float = 4500
+    private let speed: Float = 7500
     
     private let targetPosition: vector_float2
     private var progress: Float = 0

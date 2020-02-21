@@ -212,13 +212,13 @@ extension MainRenderer: SceneRenderer {
     }
     
     func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4,
-                     splitProgress: Float, position: vector_float2, seed: Float) {
+                     splitProgress: Float, position: vector_float2, positionDelta: vector_float2) {
         var splitProgress = splitProgress
-        var seed = seed
+        var positionDelta = positionDelta
         var position = normalizeWorldPosition(position)
         renderEncoder.setFragmentBytes(&splitProgress, length: MemoryLayout<Float>.size, index: 4)
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
-        renderEncoder.setFragmentBytes(&seed, length: MemoryLayout<Float>.size, index: 6)
+        renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     

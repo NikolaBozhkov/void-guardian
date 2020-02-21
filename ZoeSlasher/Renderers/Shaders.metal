@@ -57,7 +57,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float &splitProgress [[buffer(4)]],
                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                             constant float2 &worldPosNorm [[buffer(5)]],
-                            constant float &seed [[buffer(6)]],
+                            constant float2 &positionDelta [[buffer(6)]],
                             texture2d<float> fbmr [[texture(1)]])
 {
 //    float d = distance(0.5, in.uv);
@@ -71,7 +71,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
 //    return float4(col, alpha * (1.0 - s) + s);
     
     float2 st = in.uv * 2.0 - 1.0;
-    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9 + 0.0 * rand(seed), fbmr, float2(0.0));
+    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9, fbmr, positionDelta);
     return float4(float3(1., 0.0, 0.0), enemy);
 }
 
