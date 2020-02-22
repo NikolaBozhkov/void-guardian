@@ -158,7 +158,7 @@ class GameScene: Scene {
         player.corruption = 0
         add(childNode: player)
         
-        spawner.isActive = false
+        spawner.isActive = true
         isGameOver = false
         
         GameScene.totalKills = 0

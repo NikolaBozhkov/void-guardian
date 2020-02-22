@@ -13,6 +13,7 @@ class Enemy: Node {
     private let attackInterval: TimeInterval = 5
     private let splitCooldown: TimeInterval = 4
     
+    private var timeSinceLastTrapFlash: TimeInterval = -2.5
     private var timeSinceLastAttack: TimeInterval = 0
     private var timeSinceLastSplit: TimeInterval = 0
     private var splitDuration: TimeInterval = 0
@@ -30,8 +31,12 @@ class Enemy: Node {
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
+    private let angleVelocityGain: Float = 0.85
+    private let angleRecoilImpulse: Float = -.pi
+    private var angleVelocity: Float = -.pi
     var trapAngle = Float.random(in: -.pi...(.pi))
     var traps = Set<Node>()
+    var initialRotations: [Node: Float] = [:]
     
     init(position: vector_float2) {
         super.init()
@@ -46,23 +51,24 @@ class Enemy: Node {
             let trap = createTrapSymbol(size: [1, 1] * 110)
             trap.color = [1.0, 0.0, 0.0, 0.2]
             trap.rotation = trapAngle + Float(i) * .pi * 2.0 / 3
+            initialRotations[trap] = trap.rotation
             updateTrap(trap)
             traps.insert(trap)
             add(childNode: trap)
         }
     }
     
-    func expImpulse(x: Float, k: Float) -> Float {
+    func expImpulse(_ x: Float, _ k: Float) -> Float {
         let h = k * x;
         return h * exp(1.0 - h);
     }
     
     func updateTrap(_ trap: Node) {
-        let offset: Double = 1.5
-        let progressAttack = Float(max(timeSinceLastAttack - offset, 0.0) / (attackInterval - offset))
-        let progressCooldown = timeAlive < Float(attackInterval) ? 1.0 : Float(min(timeSinceLastAttack / (attackInterval - 2), 1.0))
+        let k: Double = 4.0
+        let t = timeSinceLastTrapFlash - attackInterval / 2.0 + 1.0 / k
+        let f = max(expImpulse(Float(t), Float(k)), 0.0)
         
-        trap.color.w = 0.3 + (pow(progressAttack, 9) + pow(1.0 - progressCooldown, 3)) * 0.7
+        trap.color.w = 0.3 + 0.7 * f
         trap.position = position + [cos(trap.rotation + .pi / 2), sin(trap.rotation + .pi / 2)] * 140
     }
     
@@ -72,7 +78,8 @@ class Enemy: Node {
         let prevPosition = position
         
         traps.forEach { [unowned self] in
-            $0.rotation += Float(deltaTime) * 0.2
+            self.angleVelocity += Float(deltaTime) * self.angleVelocityGain
+            $0.rotation += Float(deltaTime) * self.angleVelocity
             self.updateTrap($0)
         }
         
@@ -88,13 +95,18 @@ class Enemy: Node {
         
         position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
         
-        if !attackInProgress {
+        if !attackReady {
             timeSinceLastAttack += deltaTime
+            timeSinceLastTrapFlash += deltaTime
         }
         
         if timeSinceLastAttack >= attackInterval {
             attackReady = true
-//            timeSinceLastAttack = 0
+            timeSinceLastAttack = 0
+        }
+        
+        if timeSinceLastTrapFlash >= attackInterval {
+            timeSinceLastTrapFlash = 0
         }
         
         if timeSinceLastSplit >= splitCooldown {
@@ -110,11 +122,11 @@ class Enemy: Node {
         
         let currentPositionDelta = position - prevPosition
         let deltaDelta = currentPositionDelta - positionDelta
-        positionDelta += deltaDelta * Float(deltaTime) * 20.0
+        positionDelta += deltaDelta * 0.0167 // Fixed delta time 60 fps to prevents jumps
     }
     
     func unreadyAttack() {
-        timeSinceLastAttack = 0
+        angleVelocity = angleRecoilImpulse
         attackReady = false
         attackInProgress = true
     }
