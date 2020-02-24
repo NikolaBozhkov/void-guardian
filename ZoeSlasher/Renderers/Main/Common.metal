@@ -13,7 +13,7 @@ using namespace metal;
 
 float rand(float x) { return fract(sin(x) * 42758.5453123); }
 
-float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta) {
+float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta) {
     constexpr sampler s(filter::linear, address::repeat);
     
     float angle = length(positionDelta) == 0 ? 0 : -atan2(positionDelta.y, positionDelta.x);
@@ -23,17 +23,16 @@ float entity(float2 st, float radius, float2 worldPosNorm, float size, Uniforms 
     
     float inf = 1 - smoothstep(radius - 0.1, 1.0, d);
     
-    float2 stWorldNorm = 0.5 * st * (float2(size) / uniforms.size);
-    
-    float f = fbmr.sample(s, (worldPosNorm + stWorldNorm)).x;
+    float f = fbmr.sample(s, stWorldNorm).x;
     float ridges = pow(1. - f, 2.5);
     
     float2 pos = float2x2(cos(angle), sin(angle), -sin(angle), cos(angle)) * st;
     
+    // Trail
     float w = smoothstep(-radius, 0.0, pos.y) - smoothstep(0.0, radius, pos.y);
     w *= smoothstep(-1.0, -0.0, pos.x) - smoothstep(-radius * 2.0, radius * 0.7, pos.x);
     
-    f = fbmr.sample(s, (worldPosNorm + stWorldNorm) * 3.0).x;
+    f = fbmr.sample(s, stWorldNorm * 3.0).x;
     f = f * f;
     float d1 = d - w * f * length(positionDelta) * 0.25;
     

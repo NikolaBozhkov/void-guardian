@@ -29,6 +29,13 @@ class Player: Node {
     private let anchorPlaneHeight: Float = 200
     private let anchorRadiusNormalized: Float
     
+    private let symbolsSpeedIdle: Float = 0.5
+    private let symbolsSpeedStageOne: Float = 3
+    private let symbolsSpeedStageTwo: Float = 8
+    private let symbolsAlphaIdle: Float = 0.3
+    private let symbolsAlphaStageOne: Float = 0.5
+    private let symbolsAlphaStageTwo: Float = 0.8
+    
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
     private var chargeDirection = vector_float2.zero
@@ -44,6 +51,10 @@ class Player: Node {
     
     private(set) var stage: Stage = .idle
     private(set) var anchor: Node?
+    
+    private var energySymbols = Set<Node>()
+    private var symbolsSpeed: Float = 0.5
+    private var symbolsAlpha: Float = 0.3
     
     var anchorPlane: Node?
     
@@ -61,6 +72,14 @@ class Player: Node {
         name = "Player"
         size = vector_float2(repeating: 800)
         physicsSize = vector_float2(repeating: 160)
+        
+        for i in 0..<3 {
+            let energySymbol = createEnergySymbol(size: [1, 1] * 120)
+            energySymbol.color = [0.431, 1.00, 0.473, 0.3]
+            energySymbol.rotation = Float(i) * .pi * 2.0 / 3
+            energySymbols.insert(energySymbol)
+            add(childNode: energySymbol)
+        }
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
@@ -103,12 +122,22 @@ class Player: Node {
             if distance(pierceInitial, position) >= pierceDistance {
                 position = pierceInitial + pierceDelta
                 stage = .idle
+                
+                // Update symbols
+                symbolsSpeed = symbolsSpeedIdle
+                symbolsAlpha = symbolsAlphaIdle
             }
         }
         
         let currentPositionDelta = position - prevPosition
         let deltaDelta = currentPositionDelta - positionDelta
         positionDelta += deltaDelta * deltaTime * 20.0
+        
+        energySymbols.forEach {
+            $0.color.w = symbolsAlpha
+            $0.rotation -= deltaTime * symbolsSpeed
+            $0.position = position + [cos($0.rotation + .pi / 2), sin($0.rotation + .pi / 2)] * 140
+        }
     }
     
     func move(to target: vector_float2) {
@@ -126,18 +155,6 @@ class Player: Node {
             self.anchor = anchor
             add(childNode: anchor)
             
-//            anchorPlane = Node()
-//            anchorPlane?.zPosition = 0
-//            anchorPlane?.size = [anchorRadius * 2, anchorPlaneHeight]
-//            anchorPlane?.renderFunction = { [unowned self] renderer in
-//                renderer.renderAnchor(modelMatrix: self.anchorPlane!.modelMatrix,
-//                                      color: self.anchorPlane!.color,
-//                                      aspectRatio: self.anchorPlane!.size.x / self.anchorPlane!.size.y,
-//                                      anchorRadius: self.anchorRadiusNormalized)
-//            }
-            
-//            parent?.add(childNode: anchorPlane!)
-            
             chargeInitial = position
             chargeDelta = target - position
             chargeDirection = normalize(chargeDelta)
@@ -145,16 +162,15 @@ class Player: Node {
                 chargeDirection = .zero
             }
             
-//            anchorPlane?.rotation = atan2(chargeDelta.y, chargeDelta.x)
-//            anchorPlane?.position = position
-            
             chargeDistance = length(chargeDelta)
             
             energy -= energyUsagePerShot
             stage = .charging
+            
+            // Update symbols
+            symbolsSpeed = symbolsSpeedStageOne
+            symbolsAlpha = symbolsAlphaStageOne
         } else if stage == .charging || stage == .charged {
-//            chargeDelta = shot!.position - position
-//            chargeDistance = length(chargeDelta)
             
             anchor?.removeFromParent()
             anchor = nil
@@ -169,7 +185,10 @@ class Player: Node {
             pierceDistance = length(pierceDelta)
             
             stage = .piercing
-            GameScene.totalMoves += 1
+            
+            // Update symbols
+            symbolsSpeed = symbolsSpeedStageTwo
+            symbolsAlpha = symbolsAlphaStageTwo
         }
     }
     

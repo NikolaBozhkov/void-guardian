@@ -22,7 +22,10 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
 {
     float2 st = in.uv * 2.0 - 1.0;
     
-    float player = entity(st, uniforms.playerSize, worldPosNorm, 800.0, uniforms, 0.9, fbmr, positionDelta);
+    float2 stWorldNorm = 0.5 * st * (float2(800.0) / uniforms.size);
+    stWorldNorm += worldPosNorm;
+    
+    float player = entity(st, uniforms.playerSize, stWorldNorm, uniforms, 0.9, fbmr, positionDelta);
     
     return float4(float3(0.431, 1.00, 0.473), player);
 }

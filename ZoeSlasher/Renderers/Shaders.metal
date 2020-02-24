@@ -58,6 +58,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                             constant float2 &worldPosNorm [[buffer(5)]],
                             constant float2 &positionDelta [[buffer(6)]],
+                            constant float &timeAlive [[buffer(7)]],
                             texture2d<float> fbmr [[texture(1)]])
 {
 //    float d = distance(0.5, in.uv);
@@ -71,7 +72,21 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
 //    return float4(col, alpha * (1.0 - s) + s);
     
     float2 st = in.uv * 2.0 - 1.0;
-    float enemy = entity(st, uniforms.enemySize, worldPosNorm, 750.0, uniforms, -.9, fbmr, positionDelta);
+    
+    float2 stWorldNorm = 0.5 * st * (float2(750.0) / uniforms.size);
+    stWorldNorm += worldPosNorm;
+    
+    float enemy = entity(st, uniforms.enemySize, stWorldNorm, uniforms, -.9, fbmr, positionDelta);
+    
+    constexpr sampler s(filter::linear, address::repeat);
+    
+    float r = length(st);
+    r += fbmr.sample(s, stWorldNorm).x;
+    float spawnProgress = min(timeAlive * 0.5, 1.0);
+    float visible = 1.0 - smoothstep(spawnProgress, spawnProgress + 0.3, r);
+    
+    enemy *= visible;
+    
     return float4(float3(1., 0.0, 0.0), enemy);
 }
 

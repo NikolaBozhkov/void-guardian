@@ -31,12 +31,11 @@ class Enemy: Node {
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
-    private let angleVelocityGain: Float = 0.85
+    private let angleVelocityGain: Float = 0.55
     private let angleRecoilImpulse: Float = -.pi
     private var angleVelocity: Float = -.pi
     var trapAngle = Float.random(in: -.pi...(.pi))
     var traps = Set<Node>()
-    var initialRotations: [Node: Float] = [:]
     
     init(position: vector_float2) {
         super.init()
@@ -51,7 +50,6 @@ class Enemy: Node {
             let trap = createTrapSymbol(size: [1, 1] * 110)
             trap.color = [1.0, 0.0, 0.0, 0.2]
             trap.rotation = trapAngle + Float(i) * .pi * 2.0 / 3
-            initialRotations[trap] = trap.rotation
             updateTrap(trap)
             traps.insert(trap)
             add(childNode: trap)
@@ -68,11 +66,11 @@ class Enemy: Node {
         let t = timeSinceLastTrapFlash - attackInterval / 2.0 + 1.0 / k
         let f = max(expImpulse(Float(t), Float(k)), 0.0)
         
-        trap.color.w = 0.3 + 0.7 * f
+        trap.color.w = 0.3 * min(timeAlive * 0.5, 1.0) + 0.7 * f
         trap.position = position + [cos(trap.rotation + .pi / 2), sin(trap.rotation + .pi / 2)] * 140
     }
     
-    func update(deltaTime: CFTimeInterval) {
+    func update(deltaTime: TimeInterval) {
         timeAlive += Float(deltaTime)
         
         let prevPosition = position
@@ -155,6 +153,6 @@ class Enemy: Node {
     override func acceptRenderer(_ renderer: SceneRenderer) {
         let splitProgress = splitDuration == 0 ? 0 : splitDurationPassed / splitDuration
         renderer.renderEnemy(modelMatrix: modelMatrix, color: color, splitProgress: Float(splitProgress),
-                             position: position, positionDelta: positionDelta)
+                             position: position, positionDelta: positionDelta, timeAlive: timeAlive)
     }
 }

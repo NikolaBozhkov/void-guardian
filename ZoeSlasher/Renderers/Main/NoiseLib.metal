@@ -22,7 +22,7 @@ float4 permute(float4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 float4 taylorInvSqrt(float4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 
 float snoise(float3 v){
-    const float2  C = float2(1.0/6.0, 1.0/3.0) ;
+    const float2  C = float2(1.0/6.0, 1.0/3.0);
     const float4  D = float4(0.0, 0.5, 1.0, 2.0);
     
     // First corner
@@ -156,15 +156,10 @@ kernel void gradientFbmrKernel(texture2d<half, access::write> outTexture [[textu
                                constant int &octaves [[buffer(0)]],
                                constant float &scale [[buffer(1)]],
                                uint2 gid [[thread_position_in_grid]],
-                               uint2 tpg [[threads_per_grid]],
-                               uint2 tptg [[threads_per_threadgroup]],
-                               uint2 tgid [[thread_position_in_threadgroup]])
+                               uint2 tpg [[threads_per_grid]])
 {
     float aspectRatio = outTexture.get_width() / outTexture.get_height();
     float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
-    
     float value = fbmr(float3(st * 10., 2.0), 4.0);
-    
-//    value = fmod(st.x, 32.0) / 32.0;
     outTexture.write(half4(half3(value), 1.0), gid);
 }
