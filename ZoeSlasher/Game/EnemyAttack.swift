@@ -16,17 +16,19 @@ class EnemyAttack: Node {
     private var progress: Float = 0
     
     let enemy: Enemy
+    let corruption: Int
     var tipPoint: vector_float2 = .zero
     
     var didReachTarget = false
     
-    init(enemy: Enemy, targetPosition: vector_float2) {
+    init(enemy: Enemy, targetPosition: vector_float2, corruption: Int) {
         self.enemy = enemy
         self.targetPosition = targetPosition
+        self.corruption = corruption
         
         super.init()
         
-        color = [1, 0, 0, 1]
+        color.xyz = enemy.ability.color
         position = enemy.position
         tipPoint = position
         size = [0, 8]

@@ -11,8 +11,8 @@ import Foundation
 class Spawner {
     
     private let spawnIntervalReductionPerSecond: TimeInterval = 0.004
-    private var spawnEnemyInterval: TimeInterval = 1.1 {
-        didSet { spawnEnemyInterval = max(spawnEnemyInterval, 0.34) }
+    private var spawnEnemyInterval: TimeInterval = 1.5 {
+        didSet { spawnEnemyInterval = max(spawnEnemyInterval, 0.64) }
     }
     
     unowned var scene: GameScene!
@@ -33,12 +33,23 @@ class Spawner {
     }
     
     func spawnEnemy(withPosition position: vector_float2? = nil) {
-        let enemy = Enemy(position: position ?? scene.randomPosition(padding: [75, 75]))
+        let ability: Ability
+        
+        if Float.random(in: 0..<1) < 0.7 {
+            ability = BasicAttackAbility(scene: scene, stage: 1)
+        } else if Float.random(in: 0..<1) < 0.5 {
+            ability = CannonAbility(scene: scene, stage: 1)
+        } else {
+            ability = MachineGunAbility(scene: scene, stage: 1)
+        }
+        
+        let enemy = Enemy(position: position ?? scene.randomPosition(padding: [75, 75]),
+                          ability: ability)
         scene.enemies.insert(enemy)
         scene.add(childNode: enemy)
     }
     
     func reset() {
-        spawnEnemyInterval = 1.1
+        spawnEnemyInterval = 1.5
     }
 }

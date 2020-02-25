@@ -46,9 +46,9 @@ class MainRenderer: NSObject {
     let playerRenderer: SpriteRenderer
     let enemyRenderer: SpriteRenderer
     let energyBarRenderer: SpriteRenderer
-    let enemyAttackRenderer: SpriteRenderer
     let anchorRenderer: SpriteRenderer
     let textureRenderer: SpriteRenderer
+    let clearColorRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -64,8 +64,11 @@ class MainRenderer: NSObject {
     
     var noiseNeedsComputing = true
     
-    let energySymbolTexture: MTLTexture
-    let trapSymbolTexture: MTLTexture
+    let playerSymbolTexture: MTLTexture
+    let basicSymbolTexture: MTLTexture
+    let machineGunSymbolTexture: MTLTexture
+    let cannonSymbolTexture: MTLTexture
+    let splitterSymbolTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -121,12 +124,15 @@ class MainRenderer: NSObject {
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
-        enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
         textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
+        clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
         
-        energySymbolTexture = createTexture(device: device, filePath: "energy-symbol")
-        trapSymbolTexture = createTexture(device: device, filePath: "trap-symbol")
+        playerSymbolTexture = createTexture(device: device, filePath: "player")
+        basicSymbolTexture = createTexture(device: device, filePath: "basic")
+        machineGunSymbolTexture = createTexture(device: device, filePath: "machine-gun")
+        cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
+        splitterSymbolTexture = createTexture(device: device, filePath: "splitter")
         
         super.init()
     }
@@ -211,13 +217,11 @@ extension MainRenderer: SceneRenderer {
         anchorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float,
-                     position: vector_float2, positionDelta: vector_float2, timeAlive: Float) {
-        var splitProgress = splitProgress
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2,
+                     positionDelta: vector_float2, timeAlive: Float) {
         var positionDelta = positionDelta
         var timeAlive = timeAlive
         var position = normalizeWorldPosition(position)
-        renderEncoder.setFragmentBytes(&splitProgress, length: MemoryLayout<Float>.size, index: 4)
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         renderEncoder.setFragmentBytes(&timeAlive, length: MemoryLayout<Float>.size, index: 7)
@@ -235,19 +239,25 @@ extension MainRenderer: SceneRenderer {
     }
     
     func renderEnemyAttack(modelMatrix: matrix_float4x4, color: vector_float4) {
-        enemyAttackRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        clearColorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
     func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4) {
-        playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        clearColorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
     func renderTexture(_ textureName: String, modelMatrix: matrix_float4x4, color: vector_float4) {
         var texture: MTLTexture!
-        if textureName == "energy" {
-            texture = energySymbolTexture
-        } else if textureName == "trap" {
-            texture = trapSymbolTexture
+        if textureName == "player" {
+            texture = playerSymbolTexture
+        } else if textureName == "basic" {
+            texture = basicSymbolTexture
+        } else if textureName == "machine-gun" {
+            texture = machineGunSymbolTexture
+        } else if textureName == "cannon" {
+            texture = cannonSymbolTexture
+        } else if textureName == "splitter" {
+            texture = splitterSymbolTexture
         }
         
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
@@ -362,7 +372,7 @@ extension MainRenderer: MTKViewDelegate {
         commandBuffer.commit()
     }
     
-    func drawNodes(_ nodes: [Node]) {
+    func drawNodes(_ nodes: Set<Node>) {
         let nodes = nodes.sorted(by: { $0.zPosition > $1.zPosition })
         for node in nodes {
             node.acceptRenderer(self)

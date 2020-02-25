@@ -6,7 +6,7 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-import Foundation
+import Metal
 
 protocol Renderable {
     func acceptRenderer(_ renderer: SceneRenderer)
@@ -18,18 +18,27 @@ class Node: Renderable, Hashable {
     
     var name = "untitled"
     
-    var zPosition = 0 { didSet { uniformsDirty = true } }
+    var textureName: String?
+    
     var position = vector_float2.zero { didSet { uniformsDirty = true } }
+    var zPosition = 0 { didSet { uniformsDirty = true } }
+    
     var size = vector_float2.zero { didSet { uniformsDirty = true } }
-    var rotation: Float = 0 { didSet { uniformsDirty = true } }
-    var color = vector_float4.one
     var physicsSize = vector_float2.zero
     
+    var rotation: Float = 0 { didSet { uniformsDirty = true } }
+    
+    var color = vector_float4.one
+    
     var parent: Node?
-    var children = [Node]()
+    var children = Set<Node>()
     
     lazy var renderFunction: (SceneRenderer) -> Void = { [unowned self] renderer in
-        renderer.renderDefault(modelMatrix: self.modelMatrix, color: self.color)
+        if let textureName = self.textureName {
+            renderer.renderTexture(textureName, modelMatrix: self.modelMatrix, color: self.color)
+        } else {
+            renderer.renderDefault(modelMatrix: self.modelMatrix, color: self.color)
+        }
     }
     
     private var uniformsDirty = true
@@ -59,27 +68,34 @@ class Node: Renderable, Hashable {
         return modelMatrix
     }
     
+    init() {
+    }
+    
+    init(size: vector_float2, textureName: String? = nil) {
+        self.size = size
+        self.textureName = textureName
+    }
+    
     static func == (lhs: Node, rhs: Node) -> Bool {
         return lhs === rhs
     }
     
     final func add(childNode: Node) {
-        children.append(childNode)
+        children.insert(childNode)
         childNode.parent = self
     }
     
     final func remove(childNode: Node, transferChildren: Bool = false) {
-        guard let index = children.firstIndex(where: { $0 === childNode }) else {
+        guard let _ = children.remove(childNode) else {
             return
         }
         
-        children.remove(at: index)
         childNode.parent = nil
         
         if transferChildren {
             for child in childNode.children {
                 child.parent = self
-                children.append(child)
+                children.insert(child)
             }
             
             childNode.children = []

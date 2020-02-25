@@ -31,6 +31,11 @@
 		24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86723C1C8B600CB6638 /* Assets.xcassets */; };
 		24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */; };
 		24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */; };
+		24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */; };
+		24E7D8B024056330007A66D2 /* SplitterAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8AF24056330007A66D2 /* SplitterAbility.swift */; };
+		24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */; };
+		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
+		24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B5240588CF007A66D2 /* Ability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +68,11 @@
 		24D9E86A23C1C8B600CB6638 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24D9E86C23C1C8B600CB6638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferFormats.swift; sourceTree = "<group>"; };
+		24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAttackAbility.swift; sourceTree = "<group>"; };
+		24E7D8AF24056330007A66D2 /* SplitterAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitterAbility.swift; sourceTree = "<group>"; };
+		24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineGunAbility.swift; sourceTree = "<group>"; };
+		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
+		24E7D8B5240588CF007A66D2 /* Ability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,8 +110,8 @@
 		247D704923E6CD3100480199 /* Game */ = {
 			isa = PBXGroup;
 			children = (
-				2469393823C5D126001A6CAE /* Player.swift */,
-				247D705223E70FAA00480199 /* Enemy.swift */,
+				24E7D8AA24054592007A66D2 /* Abilities */,
+				24E7D8A324050A47007A66D2 /* Entities */,
 				247D705423E7173500480199 /* EnemyAttack.swift */,
 				247D704723E6B20B00480199 /* GameScene.swift */,
 				247D705923F009DD00480199 /* SKGameScene.swift */,
@@ -173,6 +183,27 @@
 				24D9E86C23C1C8B600CB6638 /* Info.plist */,
 			);
 			path = ZoeSlasher;
+			sourceTree = "<group>";
+		};
+		24E7D8A324050A47007A66D2 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				2469393823C5D126001A6CAE /* Player.swift */,
+				247D705223E70FAA00480199 /* Enemy.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		24E7D8AA24054592007A66D2 /* Abilities */ = {
+			isa = PBXGroup;
+			children = (
+				24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */,
+				24E7D8AF24056330007A66D2 /* SplitterAbility.swift */,
+				24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */,
+				24E7D8B324057E36007A66D2 /* CannonAbility.swift */,
+				24E7D8B5240588CF007A66D2 /* Ability.swift */,
+			);
+			path = Abilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,18 +284,23 @@
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
+				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
 				247D705A23F009DD00480199 /* SKGameScene.swift in Sources */,
+				24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */,
 				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
 				2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */,
+				24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */,
+				24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */,
 				247D704823E6B20B00480199 /* GameScene.swift in Sources */,
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
+				24E7D8B024056330007A66D2 /* SplitterAbility.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
 			);

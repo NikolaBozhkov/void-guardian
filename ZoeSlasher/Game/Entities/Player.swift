@@ -15,13 +15,13 @@ class Player: Node {
     }
     
     static let energyRechargePerEnemy: Float = 1.8
-    static let corruptionCleansePerEnemy: Float = 1.8
+    static let corruptionCleansePerEnemy: Float = 3.8
     
     private let chargeSpeed: Float = 900
     private let pierceSpeed: Float = 7500
     private let energyUsagePerUnit: Float = 0.025
     private let corruptionCleansePerUnit: Float = 0.0025
-    private let corruptionCleansePerSecond: Float = 6
+    private let corruptionCleansePerSecond: Float = 1
     private let energyRechargePerSecond: Float = 6.6
     private let energyUsagePerShot: Float = 25
     
@@ -33,7 +33,7 @@ class Player: Node {
     private let symbolsSpeedStageOne: Float = 3
     private let symbolsSpeedStageTwo: Float = 8
     private let symbolsAlphaIdle: Float = 0.3
-    private let symbolsAlphaStageOne: Float = 0.5
+    private let symbolsAlphaStageOne: Float = 0.6
     private let symbolsAlphaStageTwo: Float = 0.8
     
     private var chargeInitial = vector_float2.zero
@@ -74,8 +74,8 @@ class Player: Node {
         physicsSize = vector_float2(repeating: 160)
         
         for i in 0..<3 {
-            let energySymbol = createEnergySymbol(size: [1, 1] * 120)
-            energySymbol.color = [0.431, 1.00, 0.473, 0.3]
+            let energySymbol = Node(size: [1, 1] * 120, textureName: "player")
+            energySymbol.color = [0.431, 1.00, 0.473, 0.4]
             energySymbol.rotation = Float(i) * .pi * 2.0 / 3
             energySymbols.insert(energySymbol)
             add(childNode: energySymbol)

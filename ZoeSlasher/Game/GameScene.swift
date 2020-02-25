@@ -93,12 +93,6 @@ class GameScene: Scene {
             }
             
             enemy.update(deltaTime: deltaTime)
-            
-            if enemy.attackReady && player.stage != .piercing {
-                spawnAttack(fromEnemy: enemy)
-            } else if enemy.attackReady {
-                bufferedEnemyAttacks.insert(enemy)
-            }
         }
         
         for attack in attacks {
@@ -120,25 +114,17 @@ class GameScene: Scene {
             skGameScene.didGameOver()
         }
         
-        // Execute buffered attacks
-        if player.stage != .piercing {
-            for enemy in bufferedEnemyAttacks {
-                spawnAttack(fromEnemy: enemy)
-                bufferedEnemyAttacks.remove(enemy)
-            }
-        }
-        
         // Split
-        for enemy in enemies where enemy.splitReady {
-            var position: vector_float2
-            repeat {
-                let angle = Float.random(in: -.pi...(.pi))
-                position = enemy.position + vector_float2(cos(angle), sin(angle)) * 200
-            } while isOutsideBoundary(position: position, size: 75)
-            
-            spawner.spawnEnemy(withPosition: position)
-            enemy.didSplit()
-        }
+//        for enemy in enemies where enemy.splitReady {
+//            var position: vector_float2
+//            repeat {
+//                let angle = Float.random(in: -.pi...(.pi))
+//                position = enemy.position + vector_float2(cos(angle), sin(angle)) * 200
+//            } while isOutsideBoundary(position: position, size: 75)
+//
+//            spawner.spawnEnemy(withPosition: position)
+//            enemy.didSplit()
+//        }
         
         spawner.update(deltaTime: deltaTime)
     }
@@ -170,10 +156,7 @@ class GameScene: Scene {
     }
     
     private func spawnAttack(fromEnemy enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: player.position)
-        attacks.insert(attack)
-        add(childNode: attack)
-        enemy.unreadyAttack()
+        
     }
     
     private func isOutsideBoundary(node: Node) -> Bool {
@@ -230,7 +213,7 @@ class GameScene: Scene {
         for attack in attacks {
             var shouldRemoveAttack = false
             if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 {
-                player.corruption += 6
+                player.corruption += Float(attack.corruption)
                 shouldRemoveAttack = true
             }
             
@@ -240,10 +223,9 @@ class GameScene: Scene {
         }
     }
     
-    private func removeEnemy(_ enemy: Enemy) {
+    func removeEnemy(_ enemy: Enemy) {
         enemy.removeFromParent()
         enemies.remove(enemy)
-        bufferedEnemyAttacks.remove(enemy)
         
         // Remove attack related to enemy
         if let attack = attacks.first(where: { $0.enemy === enemy }) {
@@ -254,7 +236,6 @@ class GameScene: Scene {
     private func removeEnemyAttack(_ attack: EnemyAttack) {
         attack.removeFromParent()
         attacks.remove(attack)
-        attack.enemy.didFinishAttack()
     }
 }
 

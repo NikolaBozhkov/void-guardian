@@ -14,8 +14,8 @@ protocol SceneRenderer {
     func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2, positionDelta: vector_float2)
     func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4)
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, splitProgress: Float,
-                     position: vector_float2, positionDelta: vector_float2, timeAlive: Float)
+    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2,
+                     positionDelta: vector_float2, timeAlive: Float)
     func renderEnemyAttack(modelMatrix: matrix_float4x4, color: vector_float4)
     
     func renderShot(modelMatrix: matrix_float4x4, color: vector_float4)

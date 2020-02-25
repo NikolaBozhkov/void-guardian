@@ -32,9 +32,12 @@ class SpriteRenderer {
         
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.label = "Sprite Pipeline"
+        
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
+        
         descriptor.colorAttachments[0].pixelFormat = BufferFormats.color
+        
         descriptor.colorAttachments[0].isBlendingEnabled = true
         descriptor.colorAttachments[0].rgbBlendOperation = .add
         descriptor.colorAttachments[0].alphaBlendOperation = .add

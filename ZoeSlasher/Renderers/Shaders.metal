@@ -54,7 +54,6 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
 
 fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                            constant float &splitProgress [[buffer(4)]],
                             constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                             constant float2 &worldPosNorm [[buffer(5)]],
                             constant float2 &positionDelta [[buffer(6)]],
@@ -87,7 +86,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     
     enemy *= visible;
     
-    return float4(float3(1., 0.0, 0.0), enemy);
+    return float4(color.xyz, enemy);
 }
 
 fragment float4 energyBarShader(VertexOut in [[stage_in]],
@@ -112,16 +111,16 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     return float4(col, s);
 }
 
-fragment float4 enemyAttackShader(VertexOut in [[stage_in]],
-                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]])
-{
-    return color;
-}
-
 fragment float4 textureShader(VertexOut in [[stage_in]],
                               constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                               texture2d<float> texture [[texture(TextureIndexSprite)]])
 {
     constexpr sampler s(filter::linear, address::repeat);
     return float4(color.xyz, texture.sample(s, in.uv).a * color.a);
+}
+
+fragment float4 clearColorShader(VertexOut in [[stage_in]],
+                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]])
+{
+    return color;
 }
