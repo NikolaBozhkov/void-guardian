@@ -6,50 +6,75 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-import Foundation
-
 class Spawner {
     
-    private let spawnIntervalReductionPerSecond: TimeInterval = 0.004
-    private var spawnEnemyInterval: TimeInterval = 1.5 {
-        didSet { spawnEnemyInterval = max(spawnEnemyInterval, 0.64) }
-    }
+    private let spawnStages = 4
+    private let spawnInterval: TimeInterval = 0.1
+    
+    private let stagesConfig: [(allowance: Float, threshold: Double)] = [
+        (0.20, 0.00),
+        (0.35, 0.20),
+        (0.40, 0.40),
+        (0.75, 0.50),
+        (1.00, 0.75)
+    ]
     
     unowned var scene: GameScene!
     
-    var isActive = true
-    private var timeSinceLastEnemySpawn: TimeInterval = 0
+    private var spawnPeriod: TimeInterval = 0
+    private var currentPeriodTime: TimeInterval = 0
+    
+    private var budget: Float = 0
+    private var allowance: Float = 0
+    private var spent: Float = 0
+    
+    private var stage: Int = 0
+    private var spawnStage: Int = 0
+    
+    private var timeSinceLastSpawn: TimeInterval = .infinity
     
     func update(deltaTime: TimeInterval) {
-        guard isActive else { return }
-        timeSinceLastEnemySpawn += deltaTime
+        currentPeriodTime += deltaTime
+        timeSinceLastSpawn += deltaTime
+        guard currentPeriodTime < spawnPeriod else { return }
         
-        if timeSinceLastEnemySpawn >= spawnEnemyInterval {
-            spawnEnemy()
-            timeSinceLastEnemySpawn = 0
+        for (stage, config) in stagesConfig.enumerated() {
+            if spawnStage == stage && currentPeriodTime > spawnPeriod * config.threshold {
+                allowance = config.allowance
+                spawnStage += 1
+                break
+            }
         }
         
-        spawnEnemyInterval -= spawnIntervalReductionPerSecond * deltaTime
+        let available = allowance * budget - spent
+        if available > 0 && timeSinceLastSpawn >= spawnInterval {
+            
+            for config in Ability.allConfigs {
+                let roll = Float.random(in: 0..<1)
+                if available >= config.cost && roll < config.spawnChance(for: stage) {
+                    spawnEnemy(for: config)
+                    spent += config.cost
+                    timeSinceLastSpawn = 0
+                    break
+                }
+            }
+        }
     }
     
-    func spawnEnemy(withPosition position: vector_float2? = nil) {
-        let ability: Ability
-        
-        if Float.random(in: 0..<1) < 0.7 {
-            ability = BasicAttackAbility(scene: scene, stage: 1)
-        } else if Float.random(in: 0..<1) < 0.5 {
-            ability = CannonAbility(scene: scene, stage: 1)
-        } else {
-            ability = MachineGunAbility(scene: scene, stage: 1)
-        }
-        
+    func setState(stage: Int, budget: Float, spawnPeriod: TimeInterval) {
+        self.stage = stage
+        self.budget = budget
+        self.spawnPeriod = spawnPeriod
+        allowance = 0
+        spent = 0
+        spawnStage = 0
+        currentPeriodTime = 0
+    }
+
+    func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {
         let enemy = Enemy(position: position ?? scene.randomPosition(padding: [75, 75]),
-                          ability: ability)
+                          ability: config.createAbility(for: scene))
         scene.enemies.insert(enemy)
         scene.add(childNode: enemy)
-    }
-    
-    func reset() {
-        spawnEnemyInterval = 1.5
     }
 }

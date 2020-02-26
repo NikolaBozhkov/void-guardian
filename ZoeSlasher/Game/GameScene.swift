@@ -22,6 +22,7 @@ class GameScene: Scene {
     let energyBar = Node()
     let corruptionBar = Node()
     
+    let stageManager: StageManager
     let spawner = Spawner()
     let player = Player()
     
@@ -33,11 +34,12 @@ class GameScene: Scene {
     
     var prevPlayerPosition: vector_float2 = .zero
     
-    static var totalKills = 0
-    static var totalMoves = 0
-    
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
         skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
+        
+        stageManager = StageManager(spawner: spawner)
+        stageManager.delegate = skGameScene
+        
         super.init()
         
         self.size = size
@@ -104,8 +106,8 @@ class GameScene: Scene {
         
         // Check for game over
         if player.corruption == 100 {
-            spawner.isActive = false
-            spawner.reset()
+//            spawner.isActive = false
+//            spawner.reset()
             
             enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
@@ -126,7 +128,11 @@ class GameScene: Scene {
 //            enemy.didSplit()
 //        }
         
-        spawner.update(deltaTime: deltaTime)
+        stageManager.update(deltaTime: deltaTime)
+        
+        if stageManager.spawningEnded && enemies.isEmpty {
+            stageManager.advanceStage()
+        }
     }
     
     func didTap(at location: vector_float2) {
@@ -144,14 +150,11 @@ class GameScene: Scene {
         player.corruption = 0
         add(childNode: player)
         
-        spawner.isActive = true
+//        spawner.isActive = true
         isGameOver = false
         
-        GameScene.totalKills = 0
-        GameScene.totalMoves = 0
-        
         for _ in 0..<3 {
-            spawner.spawnEnemy()
+//            spawner.spawnEnemy()
         }
     }
     
@@ -195,9 +198,6 @@ class GameScene: Scene {
                     // Recharge energy
                     player.energy += Player.energyRechargePerEnemy
                     player.corruption -= Player.corruptionCleansePerEnemy
-                    GameScene.totalKills += 1
-                    
-                    skGameScene.didKillEnemy()
                 }
                 
                 if d < minDistance {

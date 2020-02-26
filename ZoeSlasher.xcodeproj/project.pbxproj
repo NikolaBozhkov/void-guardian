@@ -36,6 +36,7 @@
 		24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */; };
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
 		24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B5240588CF007A66D2 /* Ability.swift */; };
+		24E7D8B824066093007A66D2 /* StageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B724066093007A66D2 /* StageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineGunAbility.swift; sourceTree = "<group>"; };
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
 		24E7D8B5240588CF007A66D2 /* Ability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
+		24E7D8B724066093007A66D2 /* StageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				247D704723E6B20B00480199 /* GameScene.swift */,
 				247D705923F009DD00480199 /* SKGameScene.swift */,
 				247D705023E6CE0F00480199 /* Spawner.swift */,
+				24E7D8B724066093007A66D2 /* StageManager.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 			files = (
 				246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
+				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,

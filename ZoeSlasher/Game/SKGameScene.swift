@@ -26,14 +26,10 @@ class SKGameScene: SKScene {
     override func sceneDidLoad() {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
-        scoreLabel.text = "0"
+        scoreLabel.text = "1"
         scoreLabel.fontSize = 200
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
         addChild(scoreLabel)
-    }
-    
-    func didKillEnemy() {
-        score += 1
     }
     
     func didGameOver() {
@@ -69,5 +65,11 @@ class SKGameScene: SKScene {
         label.text = text
         label.fontSize = fontSize
         return label
+    }
+}
+
+extension SKGameScene: StageManagerDelegate {
+    func didAdvanceStage(to stage: Int) {
+        score = stage
     }
 }
