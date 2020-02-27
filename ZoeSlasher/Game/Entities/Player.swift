@@ -65,10 +65,17 @@ class Player: Node {
     
     private var chargingDamage = Player.baseChargingDamage
     private var piercingDamage = Player.basePiercingDamage
+    private var wasPiercing = false
     
     // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
     var damage: Float {
-        stage == .charging ? chargingDamage : stage == .piercing ? piercingDamage : chargingDamage * 0.5
+        if stage == .charging {
+            return chargingDamage
+        } else if stage == .piercing || wasPiercing {
+            return piercingDamage
+        } else {
+            return chargingDamage * 0.1
+        }
     }
     
     var energy: Float = 100 {
@@ -107,6 +114,8 @@ class Player: Node {
         let prevPosition = position
         
         energy += energyRechargePerSecond * deltaTime
+        
+        wasPiercing = stage == .piercing
         
         if stage == .charging {
             let delta = deltaTime * chargeSpeed * chargeDirection

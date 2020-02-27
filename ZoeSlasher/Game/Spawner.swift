@@ -74,6 +74,7 @@ class Spawner {
     func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {
         let enemy = Enemy(position: position ?? scene.randomPosition(padding: [75, 75]),
                           ability: config.createAbility(for: scene))
+        enemy.delegate = scene
         scene.enemies.insert(enemy)
         scene.add(childNode: enemy)
     }

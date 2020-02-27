@@ -6,17 +6,22 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
+protocol EnemyDelegate {
+    func didDestroy(_ enemy: Enemy)
+}
+
 class Enemy: Node {
     
     private static let recentlyHitInterval: TimeInterval = 0.5
 
-    var isImmune: Bool {
-        get { timeSinceLastHit < Enemy.recentlyHitInterval }
-    }
+    private(set) var isImmune = false
+    private(set) var shouldRemove = false
     
     var health: Float = 0 {
         didSet { health = max(health, 0) }
     }
+    
+    var delegate: EnemyDelegate?
     
     var ability: Ability
     var abilityReady = false
@@ -41,11 +46,17 @@ class Enemy: Node {
     private var symbolsAngleVelocity: Float
     private var symbols = Set<Node>()
     
+    private var lastHealth: Float = 0
+    
+    private var positionBeforeImpact: vector_float2 = .zero
+    private var isImpactLocked = false
+    
     init(position: vector_float2, ability: Ability) {
         self.ability = ability
         
         maxHealth = ability.healthModifier * 1.0
         health = maxHealth
+        lastHealth = health
         
         triggerInterval = ability.interval
         timeSinceLastSymbolFlash = -triggerInterval / 2
@@ -84,17 +95,34 @@ class Enemy: Node {
                              positionDelta: positionDelta,
                              timeAlive: timeAlive,
                              baseColor: ability.color,
-                             health: health / maxHealth)
+                             health: health / maxHealth,
+                             lastHealth: lastHealth / maxHealth,
+                             timeSinceHit: Float(timeSinceLastHit))
     }
     
-    func receiveDamage(_ damage: Float) {
-        guard !isImmune else { return }
+    func receiveDamage(_ damage: Float, impact: vector_float2) {
+        guard !isImmune && timeAlive > 1 else { return }
+        
+        lastHealth = health
         health -= damage
+        
+        positionBeforeImpact = position
+        position += impact
+        isImpactLocked = true
+        
+        symbols.forEach { updateSymbolPosition($0) }
+        
         timeSinceLastHit = 0
+        isImmune = true
     }
     
     func resetHitImmunity() {
-        timeSinceLastHit = Enemy.recentlyHitInterval
+        isImmune = false
+    }
+    
+    func destroy() {
+        timeAlive = -1
+        shouldRemove = true
     }
     
     func update(deltaTime: TimeInterval) {
@@ -103,6 +131,26 @@ class Enemy: Node {
         timeSinceLastTrigger += deltaTime
         timeSinceLastSymbolFlash += deltaTime
         timeSinceLastHit += deltaTime
+        
+        if isImpactLocked && timeSinceLastHit > 0.05 {
+            isImpactLocked = false
+            position = positionBeforeImpact
+        }
+        
+        guard !shouldRemove else {
+            symbols.forEach { $0.color.w = simd_mix(0.5, 0.0, (1 + timeAlive) * 2) }
+            
+            if timeAlive >= 0 {
+                removeFromParent()
+                delegate?.didDestroy(self)
+            }
+            
+            return
+        }
+        
+        if timeSinceLastHit >= Enemy.recentlyHitInterval {
+            isImmune = false
+        }
         
         if timeSinceLastTrigger >= triggerInterval {
             ability.trigger(for: self)
@@ -128,21 +176,27 @@ class Enemy: Node {
             updateSymbol($0, f)
         }
         
-        let prevPosition = position
-        
-        let n = noise(seed + timeAlive * 0.1) * 2.0 - 1.0
-        angle += n * 0.01
-        speed = max(min(speed + n * 2, 200), 0)
-        
-        position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
-        
-        let currentPositionDelta = position - prevPosition
-        let deltaDelta = currentPositionDelta - positionDelta
-        positionDelta += deltaDelta * 0.0167 // Fixed delta time 60 fps to prevents jumps
+        if timeSinceLastHit > 0.15 {
+            let prevPosition = position
+            
+            let n = noise(seed + timeAlive * 0.1) * 2.0 - 1.0
+            angle += n * 0.01
+            speed = max(min(speed + n * 2, 200), 0)
+            
+            position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
+            
+            let currentPositionDelta = position - prevPosition
+            let deltaDelta = currentPositionDelta - positionDelta
+            positionDelta += deltaDelta * 0.0167 // Fixed delta time 60 fps to prevents jumps
+        }
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.4 * min(timeAlive * 0.5, 1.0) + 0.6 * f
+        symbol.color.w = 0.5 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.5 * f
+        updateSymbolPosition(symbol)
+    }
+    
+    private func updateSymbolPosition(_ symbol: Node) {
         symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * 160
     }
     

@@ -107,7 +107,7 @@ class GameScene: Scene {
         testPlayerEnemyAttackCollision()
         
         // Check for game over
-        if player.corruption == 100 {
+        if player.corruption == 100 && !isGameOver {
             
             enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
@@ -120,7 +120,12 @@ class GameScene: Scene {
         
         stageManager.update(deltaTime: deltaTime)
         
-        if stageManager.spawningEnded && enemies.isEmpty {
+//        if enemies.isEmpty {
+//            spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
+//        }
+        
+        // Enemies don't contain an alive enemy
+        if stageManager.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.advanceStage()
             player.corruption = 0
             player.energy = 100
@@ -132,6 +137,12 @@ class GameScene: Scene {
         
         guard !isGameOver, !consumed else { return }
         player.move(to: location)
+//        if let enemy = enemies.first {
+//            enemy.receiveDamage(0.5)
+//            if enemy.health == 0 {
+//                removeEnemy(enemy)
+//            }
+//        }
     }
     
     func reloadScene() {
@@ -176,12 +187,12 @@ class GameScene: Scene {
         // Cast ray
         while distanceTravelled <= maxDistance {
             let position = prevPlayerPosition + distanceTravelled * direction
-            for enemy in enemies {
+            for enemy in enemies where !enemy.shouldRemove {
                 let d = distance(position, enemy.position)
                 
                 // Intersection logic
                 if d <= (player.physicsSize.x / 2 + enemy.physicsSize.x / 2) {
-                    enemy.receiveDamage(player.damage)
+                    enemy.receiveDamage(player.damage, impact: direction * 20)
                     if enemy.health == 0 {
                         removeEnemy(enemy)
                     }
@@ -211,8 +222,7 @@ class GameScene: Scene {
     }
     
     func removeEnemy(_ enemy: Enemy) {
-        enemy.removeFromParent()
-        enemies.remove(enemy)
+        enemy.destroy()
         
         // Remove attack related to enemy
         if let attack = attacks.first(where: { $0.enemy === enemy }) {
@@ -229,5 +239,11 @@ class GameScene: Scene {
 extension GameScene: PlayerDelegate {
     func didChangeStage() {
         enemies.forEach { $0.resetHitImmunity() }
+    }
+}
+
+extension GameScene: EnemyDelegate {
+    func didDestroy(_ enemy: Enemy) {
+        enemies.remove(enemy)
     }
 }

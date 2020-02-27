@@ -25,7 +25,9 @@ protocol SceneRenderer {
                      positionDelta: vector_float2,
                      timeAlive: Float,
                      baseColor: vector_float3,
-                     health: Float)
+                     health: Float,
+                     lastHealth: Float,
+                     timeSinceHit: Float)
     
     func renderEnemyAttack(modelMatrix: matrix_float4x4, color: vector_float4)
     
