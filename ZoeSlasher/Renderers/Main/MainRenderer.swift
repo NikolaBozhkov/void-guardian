@@ -62,6 +62,11 @@ class MainRenderer: NSObject {
     var gradFbmrThreadsPerGrid: MTLSize!
     var gradientFbmrTexture: MTLTexture!
     
+    var simplexPipelineState: MTLComputePipelineState!
+    var entitySimplexThreadsPerGroup: MTLSize!
+    var entitySimplexThreadsPerGrid: MTLSize!
+    var entitySimplexTexture: MTLTexture!
+    
     var noiseNeedsComputing = true
     
     let playerSymbolTexture: MTLTexture
@@ -109,14 +114,17 @@ class MainRenderer: NSObject {
         self.depthState = depthState
         
         guard let backgroundFbmFunction = library.makeFunction(name: "backgroundFbmKernel"),
-            let gradientFbmrFunction = library.makeFunction(name: "gradientFbmrKernel"),
             let backgroundFbmPipelineState = try? device.makeComputePipelineState(function: backgroundFbmFunction),
-            let gradientFbmrComputeState = try? device.makeComputePipelineState(function: gradientFbmrFunction) else {
+            let gradientFbmrFunction = library.makeFunction(name: "gradientFbmrKernel"),
+            let gradientFbmrComputeState = try? device.makeComputePipelineState(function: gradientFbmrFunction),
+            let simplexFunction = library.makeFunction(name: "simplexKernel"),
+            let simplexPipelineState = try? device.makeComputePipelineState(function: simplexFunction) else {
             return nil
         }
 
         self.backgroundFbmPipelineState = backgroundFbmPipelineState
         gradientFbmrPipelineState = gradientFbmrComputeState
+        self.simplexPipelineState = simplexPipelineState
         
         skRenderer = SKRenderer(device: device)
         
@@ -158,9 +166,6 @@ class MainRenderer: NSObject {
         uniforms[0].time = Float(runningTime)
         uniforms[0].aspectRatio = scene.size.x / scene.size.y
         uniforms[0].playerSize = scene.player.physicsSize.x / scene.player.size.x
-        uniforms[0].anchorSize = scene.player.anchorPlane?.size ?? [0, 0]
-        uniforms[0].anchorRotation = scene.player.anchorPlane?.rotation ?? 0
-        uniforms[0].anchorWorldPos = (scene.player.anchorPlane?.position ?? [0, 0]) + scene.size / 2
         uniforms[0].enemySize = 150.0 / 750.0
         uniforms[0].size = scene.size
         
@@ -195,6 +200,19 @@ class MainRenderer: NSObject {
         w = gradientFbmrPipelineState.threadExecutionWidth
         h = gradientFbmrPipelineState.maxTotalThreadsPerThreadgroup / w
         gradFbmrThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
+        
+        res = 1024
+        textureDescriptor.width = res
+        textureDescriptor.height = res
+        
+        entitySimplexTexture = device.makeTexture(descriptor: textureDescriptor)!
+
+        entitySimplexThreadsPerGrid = MTLSize(width: entitySimplexTexture.width,
+                                              height: entitySimplexTexture.height,
+                                              depth: 1)
+        w = simplexPipelineState.threadExecutionWidth
+        h = simplexPipelineState.maxTotalThreadsPerThreadgroup / w
+        entitySimplexThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
     }
 }
 
@@ -217,14 +235,23 @@ extension MainRenderer: SceneRenderer {
         anchorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2,
-                     positionDelta: vector_float2, timeAlive: Float) {
+    func renderEnemy(modelMatrix: matrix_float4x4,
+                     color: vector_float4,
+                     position: vector_float2,
+                     positionDelta: vector_float2,
+                     timeAlive: Float,
+                     baseColor: vector_float3,
+                     health: Float) {
         var positionDelta = positionDelta
         var timeAlive = timeAlive
         var position = normalizeWorldPosition(position)
+        var baseColor = baseColor
+        var health = health
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         renderEncoder.setFragmentBytes(&timeAlive, length: MemoryLayout<Float>.size, index: 7)
+        renderEncoder.setFragmentBytes(&baseColor, length: MemoryLayout<vector_float3>.stride, index: 8)
+        renderEncoder.setFragmentBytes(&health, length: MemoryLayout<Float>.size, index: 9)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -332,6 +359,16 @@ extension MainRenderer: MTKViewDelegate {
             computeEncoder.dispatchThreads(gradFbmrThreadsPerGrid,
                                            threadsPerThreadgroup: gradFbmrThreadsPerGroup)
             
+            computeEncoder.setComputePipelineState(simplexPipelineState)
+            
+            scale = 2.0
+            computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 0)
+            
+            computeEncoder.setTexture(entitySimplexTexture, index: 0)
+
+            computeEncoder.dispatchThreads(entitySimplexThreadsPerGrid,
+                                           threadsPerThreadgroup: entitySimplexThreadsPerGroup)
+            
             noiseNeedsComputing = false
         }
         
@@ -359,6 +396,7 @@ extension MainRenderer: MTKViewDelegate {
         
         renderEncoder.setFragmentTexture(backgroundFbmTexture, index: 0)
         renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
+        renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
         drawNodes(scene.children)
         
@@ -372,14 +410,28 @@ extension MainRenderer: MTKViewDelegate {
         commandBuffer.commit()
     }
     
+    func flattenNodes(_ nodes: Set<Node>, result: inout Set<Node>) {
+        for node in nodes {
+            result.insert(node)
+            
+            if !node.children.isEmpty {
+                flattenNodes(node.children, result: &result)
+            }
+        }
+    }
+    
     func drawNodes(_ nodes: Set<Node>) {
-        let nodes = nodes.sorted(by: { $0.zPosition > $1.zPosition })
+        var flatNodes = Set<Node>()
+//        flatNodes = nodes
+        flattenNodes(nodes, result: &flatNodes)
+        let nodes = flatNodes.sorted(by: { $0.zPosition > $1.zPosition })
+        
         for node in nodes {
             node.acceptRenderer(self)
             
-            if !node.children.isEmpty {
-                drawNodes(node.children)
-            }
+//            if !node.children.isEmpty {
+//                drawNodes(node.children)
+//            }
         }
     }
 }

@@ -34,8 +34,7 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                 constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                texture2d<float> texture [[texture(0)]],
-                                texture2d<float> tex [[texture(1)]])
+                                texture2d<float> texture [[texture(0)]])
 {
     float2 st = in.uv;
 //    st.x *= uniforms.aspectRatio;
@@ -46,9 +45,6 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     float f = texture.sample(s, st).x;
     f = f*0.1;
     
-//    f = tex.sample(s, st).x;
-//    f *= 0.5;
-    
     return float4(float3(color.xyz), f);
 }
 
@@ -58,18 +54,11 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float2 &worldPosNorm [[buffer(5)]],
                             constant float2 &positionDelta [[buffer(6)]],
                             constant float &timeAlive [[buffer(7)]],
-                            texture2d<float> fbmr [[texture(1)]])
+                            constant float3 &baseColor [[buffer(8)]],
+                            constant float &health [[buffer(9)]],
+                            texture2d<float> fbmr [[texture(1)]],
+                            texture2d<float> simplex [[texture(3)]])
 {
-//    float d = distance(0.5, in.uv);
-//    float alpha = 1.0 - smoothstep(0.4, 0.5, d);
-//
-//    float p = splitProgress / 2.0;
-//    float s = 1.0 - smoothstep(p - 0.05, p, d);
-//
-//    float3 col = (1.0 - s) * color.xyz + s * float3(0.0, 0.0, 1.0);
-//
-//    return float4(col, alpha * (1.0 - s) + s);
-    
     float2 st = in.uv * 2.0 - 1.0;
     
     float2 stWorldNorm = 0.5 * st * (float2(750.0) / uniforms.size);
@@ -80,13 +69,41 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     constexpr sampler s(filter::linear, address::repeat);
     
     float r = length(st);
+    float ang = atan2(st.y, st.x);
+    
+    float noiseAng = ang - uniforms.time * 0.2;
+    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F;
+    float2 nPos = 0.5 + 0.5 * float2(cos(noiseAng), sin(noiseAng));
+    float2 nPos1 = 0.5 + 0.5 * float2(cos(noiseAng1), sin(noiseAng1));
+    float n = -1.0 + 2.0 * simplex.sample(s, nPos).x;
+    float n1 = -1.0 + 2.0 * simplex.sample(s, nPos1).x;
+    
+    float r1 = r;
+    float r2 = r;
+    
+    r1 += sin(ang * 5.0) * 0.01 + n * 0.02;
+    r2 += sin(ang * 5.0 + M_PI_F) * 0.01 + n1 * 0.02;
+    
+    const float mid = 2 * 90 / 750.0;
+    const float aa = 0.02;
+    
+    float f = 0.0;
+    f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.5;
+    
+    float v = smoothstep(mid - aa, mid, r1) - smoothstep(mid, mid + aa, r1);
+    v += smoothstep(mid - aa, mid, r2) - smoothstep(mid, mid + aa, r2);
+    
+    f += v * step((1 - health) * M_PI_F * 2, fmod(ang + M_PI_F * 1.5, M_PI_F * 2));
+    enemy += f * 0.5;
+    
     r += fbmr.sample(s, stWorldNorm).x;
-    float spawnProgress = min(timeAlive * 0.5, 1.0);
+    float spawnProgress = min(timeAlive * 0.5, 2.0);
     float visible = 1.0 - smoothstep(spawnProgress, spawnProgress + 0.3, r);
     
     enemy *= visible;
     
-    return float4(color.xyz, enemy);
+    f = min(f, 1.0);
+    return float4(mix(color.xyz, baseColor, f), enemy);
 }
 
 fragment float4 energyBarShader(VertexOut in [[stage_in]],

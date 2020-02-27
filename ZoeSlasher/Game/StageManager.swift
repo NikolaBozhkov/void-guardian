@@ -17,8 +17,11 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
+    static let stageBudgetTargets: [Int: Float] = [1: 10, 5: 15, 10: 23, 20: 46, 30: 60]
+    
     let spawner: Spawner
     var delegate: StageManagerDelegate?
+    var isActive = true
     
     private var budget: Float = Constants.baseBudget
     private var stageDuration: TimeInterval = Constants.baseStageDuration
@@ -35,7 +38,33 @@ class StageManager {
         self.spawner = spawner
     }
     
+    static func getBudget(for stage: Int) -> Float {
+        let keys = stageBudgetTargets.keys.sorted()
+        var lowerStage: Int = keys.first!
+        var higherStage: Int = keys.last!
+        
+        for (s, _) in stageBudgetTargets {
+            if stage >= s && s > lowerStage {
+                lowerStage = s
+            }
+            
+            if stage <= s && s < higherStage {
+                higherStage = s
+            }
+        }
+        
+        let progress: Float
+        if lowerStage != higherStage {
+             progress = Float(stage - lowerStage) / Float(higherStage - lowerStage)
+        } else {
+            progress = 0
+        }
+        
+        return simd_mix(stageBudgetTargets[lowerStage]!, stageBudgetTargets[higherStage]!, progress)
+    }
+    
     func update(deltaTime: TimeInterval) {
+        guard isActive else { return }
         stageTime += deltaTime
         
         if stageTime >= stageDuration {
@@ -47,13 +76,19 @@ class StageManager {
     
     func advanceStage() {
         stage += 1
-        stageDuration = Constants.baseStageDuration + Double((stage - 1) / 5)
+        stageDuration = Constants.baseStageDuration + Double((stage - 1)) * 0.5
         stageTime = 0
         spawnPeriod = stageDuration * 0.34
-        budget = Constants.baseBudget * (1 + pow(Float(stage - 1), 1.1))
+        budget = StageManager.getBudget(for: stage)
         
         spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
         
         delegate?.didAdvanceStage(to: stage)
+    }
+    
+    func reset() {
+        isActive = true
+        stage = 0
+        advanceStage()
     }
 }

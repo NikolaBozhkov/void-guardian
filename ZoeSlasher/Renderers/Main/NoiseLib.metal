@@ -163,3 +163,14 @@ kernel void gradientFbmrKernel(texture2d<half, access::write> outTexture [[textu
     float value = fbmr(float3(st * 10., 2.0), 4.0);
     outTexture.write(half4(half3(value), 1.0), gid);
 }
+
+kernel void simplexKernel(texture2d<half, access::write> outTexture [[texture(0)]],
+                          constant float &scale [[buffer(0)]],
+                          uint2 gid [[thread_position_in_grid]],
+                          uint2 tpg [[threads_per_grid]])
+{
+    float aspectRatio = outTexture.get_width() / outTexture.get_height();
+    float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
+    float value = 0.5 + 0.5 * snoise(float3(st * scale, 3.0));
+    outTexture.write(half4(half3(value), 1.0), gid);
+}

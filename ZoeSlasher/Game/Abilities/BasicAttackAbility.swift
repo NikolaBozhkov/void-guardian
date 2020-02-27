@@ -38,6 +38,7 @@ extension BasicAttackAbility {
         let config = getCoreConfig(stage: 1)
         
         config.interval = 6
+        config.healthModifier = 1
         
         config.symbolVelocityGain = 1.2
         config.symbolVelocityRecoil = -.pi
@@ -53,12 +54,22 @@ extension BasicAttackAbility {
     
     static let stage2Config: BasicAttackAbilityConfig = {
         let config = getCoreConfig(stage: 2)
+        
         config.interval = 6
+        config.healthModifier = 1.5
+        
         config.symbolVelocityGain = 1.3
         config.symbolVelocityRecoil = -.pi
         config.impulseSharpness = 6.0
-        config.corruption = 9
+        
         config.cost = 1.2
+        config.spawnChanceFunction = { gameStage in
+            let startStage: Float = 7
+            return 0.05 * step(gameStage, edge: startStage) + min(0.02 * (gameStage - startStage), 0.75)
+        }
+        
+        config.corruption = 9
+        
         return config
     }()
     

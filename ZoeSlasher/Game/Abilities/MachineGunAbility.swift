@@ -35,7 +35,9 @@ class MachineGunAbility: Ability {
 extension MachineGunAbility {
     static let stage1Config: MachineGunAbilityConfig = {
         let config = getCoreConfig(stage: 1)
+        
         config.interval = 1
+        config.healthModifier = 0.5
         
         config.symbolVelocityGain = 15.0
         config.symbolVelocityRecoil = -.pi

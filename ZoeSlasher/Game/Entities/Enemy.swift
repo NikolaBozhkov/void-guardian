@@ -8,13 +8,15 @@
 
 class Enemy: Node {
     
-    private let triggerInterval: TimeInterval
+    private static let recentlyHitInterval: TimeInterval = 0.5
+
+    var isImmune: Bool {
+        get { timeSinceLastHit < Enemy.recentlyHitInterval }
+    }
     
-    private var timeSinceLastSymbolFlash: TimeInterval
-    private var timeSinceLastTrigger: TimeInterval = 0
-    private var timeAlive: Float = 0
-    
-    private var positionDelta = vector_float2.zero
+    var health: Float = 0 {
+        didSet { health = max(health, 0) }
+    }
     
     var ability: Ability
     var abilityReady = false
@@ -23,13 +25,28 @@ class Enemy: Node {
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
+    private let triggerInterval: TimeInterval
     private let symbolsAngleVelocityGain: Float
     private let symbolsAngleRecoilImpulse: Float
+    
+    private let maxHealth: Float
+    
+    private var timeSinceLastSymbolFlash: TimeInterval
+    private var timeSinceLastTrigger: TimeInterval = 0
+    private var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
+    private var timeAlive: Float = 0
+    
+    private var positionDelta = vector_float2.zero
+    
     private var symbolsAngleVelocity: Float
-    var symbols = Set<Node>()
+    private var symbols = Set<Node>()
     
     init(position: vector_float2, ability: Ability) {
         self.ability = ability
+        
+        maxHealth = ability.healthModifier * 1.0
+        health = maxHealth
+        
         triggerInterval = ability.interval
         timeSinceLastSymbolFlash = -triggerInterval / 2
         
@@ -42,6 +59,7 @@ class Enemy: Node {
         self.position = position
         name = "Enemy"
         
+        zPosition = 0
         size = [750, 750]
         physicsSize = [150, 150]
         
@@ -50,6 +68,7 @@ class Enemy: Node {
         
         for i in 0..<3 {
             let symbol = Node(size: [1, 1] * 110, textureName: ability.symbol)
+            symbol.zPosition = -1
             symbol.color.xyz = ability.color
             symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3
             updateSymbol(symbol, 0)
@@ -59,13 +78,23 @@ class Enemy: Node {
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderEnemy(modelMatrix: modelMatrix, color: color, position: position,
-                             positionDelta: positionDelta, timeAlive: timeAlive)
+        renderer.renderEnemy(modelMatrix: modelMatrix,
+                             color: color,
+                             position: position,
+                             positionDelta: positionDelta,
+                             timeAlive: timeAlive,
+                             baseColor: ability.color,
+                             health: health / maxHealth)
     }
     
-    func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.4 * min(timeAlive * 0.5, 1.0) + 0.6 * f
-        symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * 140
+    func receiveDamage(_ damage: Float) {
+        guard !isImmune else { return }
+        health -= damage
+        timeSinceLastHit = 0
+    }
+    
+    func resetHitImmunity() {
+        timeSinceLastHit = Enemy.recentlyHitInterval
     }
     
     func update(deltaTime: TimeInterval) {
@@ -73,6 +102,7 @@ class Enemy: Node {
         
         timeSinceLastTrigger += deltaTime
         timeSinceLastSymbolFlash += deltaTime
+        timeSinceLastHit += deltaTime
         
         if timeSinceLastTrigger >= triggerInterval {
             ability.trigger(for: self)
@@ -109,6 +139,11 @@ class Enemy: Node {
         let currentPositionDelta = position - prevPosition
         let deltaDelta = currentPositionDelta - positionDelta
         positionDelta += deltaDelta * 0.0167 // Fixed delta time 60 fps to prevents jumps
+    }
+    
+    private func updateSymbol(_ symbol: Node, _ f: Float) {
+        symbol.color.w = 0.4 * min(timeAlive * 0.5, 1.0) + 0.6 * f
+        symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * 160
     }
     
     private func adjustSaturation(of color: vector_float3, by scale: Float) -> vector_float3 {

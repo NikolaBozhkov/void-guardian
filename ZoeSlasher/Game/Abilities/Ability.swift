@@ -17,10 +17,14 @@ class Ability {
         var symbol: String = ""
         var symbolVelocityGain: Float = 0
         var symbolVelocityRecoil: Float = 0
+        
         var color: vector_float3 = .zero
         var colorScale: Float = 0
         var impulseSharpness: Float = 0
+        
         var interval: TimeInterval = 0
+        var healthModifier: Float = 0
+        
         var stage: Int = 0
         var cost: Float = 0
         
@@ -48,10 +52,14 @@ class Ability {
     let symbol: String
     let symbolVelocityGain: Float
     let symbolVelocityRecoil: Float
+    
     let color: vector_float3
     let colorScale: Float
     let impulseSharpness: Float
+    
     let interval: TimeInterval
+    let healthModifier: Float
+    
     let stage: Int
     let cost: Float
     
@@ -60,10 +68,14 @@ class Ability {
         symbol = config.symbol
         symbolVelocityGain = config.symbolVelocityGain
         symbolVelocityRecoil = config.symbolVelocityRecoil
+        
         color = config.color
         colorScale = config.colorScale
         impulseSharpness = config.impulseSharpness
+        
         interval = config.interval
+        healthModifier = config.healthModifier
+        
         stage = config.stage
         cost = config.cost
     }

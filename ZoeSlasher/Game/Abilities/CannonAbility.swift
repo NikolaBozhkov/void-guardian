@@ -33,13 +33,15 @@ class CannonAbility: Ability {
 extension CannonAbility {
     static let stage1Config: CannonAbilityConfig = {
         let config = getCoreConfig(stage: 1)
+        
         config.interval = 12
+        config.healthModifier = 2
         
         config.symbolVelocityGain = 1.2
         config.symbolVelocityRecoil = -.pi * 1.5
         config.impulseSharpness = 3.0
         
-        config.cost = 1.5
+        config.cost = 2
         config.spawnChanceFunction = { gameStage in
             0.2 * step(gameStage, edge: 2) + min(0.02 * (gameStage - 2), 0.3)
         }

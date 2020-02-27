@@ -6,16 +6,26 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-import CoreGraphics
+protocol PlayerDelegate {
+    func didChangeStage()
+}
 
 class Player: Node {
     
     enum Stage {
-        case charging, charged, piercing, idle
+        case charging, piercing, idle
     }
     
     static let energyRechargePerEnemy: Float = 1.8
     static let corruptionCleansePerEnemy: Float = 3.8
+    
+    static let baseChargingDamage: Float = 0.5
+    static let basePiercingDamage: Float = 1.0
+    
+    var delegate: PlayerDelegate?
+    
+    private(set) var stage: Stage = .idle
+    private(set) var anchor: Node?
     
     private let chargeSpeed: Float = 900
     private let pierceSpeed: Float = 7500
@@ -49,14 +59,17 @@ class Player: Node {
     private var moveStage = 0
     private var positionDelta = vector_float2.zero
     
-    private(set) var stage: Stage = .idle
-    private(set) var anchor: Node?
-    
     private var energySymbols = Set<Node>()
     private var symbolsSpeed: Float = 0.5
     private var symbolsAlpha: Float = 0.3
     
-    var anchorPlane: Node?
+    private var chargingDamage = Player.baseChargingDamage
+    private var piercingDamage = Player.basePiercingDamage
+    
+    // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
+    var damage: Float {
+        stage == .charging ? chargingDamage : stage == .piercing ? piercingDamage : chargingDamage * 0.5
+    }
     
     var energy: Float = 100 {
         didSet { energy = max(min(energy, 100), 0) }
@@ -70,11 +83,13 @@ class Player: Node {
         anchorRadiusNormalized = anchorRadius / anchorPlaneHeight
         super.init()
         name = "Player"
+        zPosition = -5
         size = vector_float2(repeating: 800)
         physicsSize = vector_float2(repeating: 160)
         
         for i in 0..<3 {
             let energySymbol = Node(size: [1, 1] * 120, textureName: "player")
+            energySymbol.zPosition = -6
             energySymbol.color = [0.431, 1.00, 0.473, 0.4]
             energySymbol.rotation = Float(i) * .pi * 2.0 / 3
             energySymbols.insert(energySymbol)
@@ -91,33 +106,19 @@ class Player: Node {
         
         let prevPosition = position
         
-        corruption -= corruptionCleansePerSecond * deltaTime
         energy += energyRechargePerSecond * deltaTime
-        
-        // Recharge energy if not piercing
-        if stage != .piercing {
-        }
         
         if stage == .charging {
             let delta = deltaTime * chargeSpeed * chargeDirection
             position += delta
-//            anchorPlane?.size.x += length(delta)
-//            anchorPlane?.position += delta / 2
-//            energy -= length(delta) * energyUsagePerUnit
             
             if distance(chargeInitial, position) >= chargeDistance {
                 // Prevent overshooting
                 position = chargeInitial + chargeDelta
-//                anchorPlane?.size.x = chargeDistance + anchorRadius * 2
-//                anchorPlane?.position = chargeInitial + chargeDelta / 2
-                stage = .charged
             }
         } else if stage == .piercing {
-//            let direction = moveStage == 0 ? chargeDirection : pierceDirection
             let delta = deltaTime * pierceSpeed * pierceDirection
             position += delta
-            
-//            corruption -= length(delta) * corruptionCleansePerUnit
             
             if distance(pierceInitial, position) >= pierceDistance {
                 position = pierceInitial + pierceDelta
@@ -145,6 +146,7 @@ class Player: Node {
             
             // Spawn anchor
             let anchor = Node()
+            anchor.zPosition = -4
             anchor.size = physicsSize * 0.7
             anchor.color = [1, 1, 0, 1]
             anchor.position = target
@@ -166,11 +168,12 @@ class Player: Node {
             
             energy -= energyUsagePerShot
             stage = .charging
+            delegate?.didChangeStage()
             
             // Update symbols
             symbolsSpeed = symbolsSpeedStageOne
             symbolsAlpha = symbolsAlphaStageOne
-        } else if stage == .charging || stage == .charged {
+        } else if stage == .charging {
             
             anchor?.removeFromParent()
             anchor = nil
@@ -185,6 +188,7 @@ class Player: Node {
             pierceDistance = length(pierceDelta)
             
             stage = .piercing
+            delegate?.didChangeStage()
             
             // Update symbols
             symbolsSpeed = symbolsSpeedStageTwo

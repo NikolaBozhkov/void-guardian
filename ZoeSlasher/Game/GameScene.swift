@@ -79,6 +79,8 @@ class GameScene: Scene {
         add(childNode: energyBar)
         add(childNode: corruptionBar)
         
+        player.delegate = self
+        
         reloadScene()
     }
     
@@ -106,32 +108,22 @@ class GameScene: Scene {
         
         // Check for game over
         if player.corruption == 100 {
-//            spawner.isActive = false
-//            spawner.reset()
             
             enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
             
             isGameOver = true
             skGameScene.didGameOver()
+            
+            stageManager.isActive = false
         }
-        
-        // Split
-//        for enemy in enemies where enemy.splitReady {
-//            var position: vector_float2
-//            repeat {
-//                let angle = Float.random(in: -.pi...(.pi))
-//                position = enemy.position + vector_float2(cos(angle), sin(angle)) * 200
-//            } while isOutsideBoundary(position: position, size: 75)
-//
-//            spawner.spawnEnemy(withPosition: position)
-//            enemy.didSplit()
-//        }
         
         stageManager.update(deltaTime: deltaTime)
         
         if stageManager.spawningEnded && enemies.isEmpty {
             stageManager.advanceStage()
+            player.corruption = 0
+            player.energy = 100
         }
     }
     
@@ -144,18 +136,14 @@ class GameScene: Scene {
     
     func reloadScene() {
         player.interruptCharging()
-        player.zPosition = -1
         player.position = .zero
         player.energy = 100
         player.corruption = 0
         add(childNode: player)
         
-//        spawner.isActive = true
         isGameOver = false
         
-        for _ in 0..<3 {
-//            spawner.spawnEnemy()
-        }
+        stageManager.reset()
     }
     
     private func spawnAttack(fromEnemy enemy: Enemy) {
@@ -193,11 +181,10 @@ class GameScene: Scene {
                 
                 // Intersection logic
                 if d <= (player.physicsSize.x / 2 + enemy.physicsSize.x / 2) {
-                    removeEnemy(enemy)
-                    
-                    // Recharge energy
-                    player.energy += Player.energyRechargePerEnemy
-                    player.corruption -= Player.corruptionCleansePerEnemy
+                    enemy.receiveDamage(player.damage)
+                    if enemy.health == 0 {
+                        removeEnemy(enemy)
+                    }
                 }
                 
                 if d < minDistance {
@@ -239,26 +226,8 @@ class GameScene: Scene {
     }
 }
 
-// MARK: - Temporary helpers
-
-func createEnergySymbol(size: vector_float2) -> Node {
-    let node = Node()
-    node.size = size
-    node.name = "energySymbol"
-    node.renderFunction = { renderer in
-        renderer.renderTexture("energy", modelMatrix: node.modelMatrix, color: node.color)
+extension GameScene: PlayerDelegate {
+    func didChangeStage() {
+        enemies.forEach { $0.resetHitImmunity() }
     }
-    
-    return node
-}
-
-func createTrapSymbol(size: vector_float2) -> Node {
-    let node = Node()
-    node.size = size
-    node.name = "trapSymbol"
-    node.renderFunction = { renderer in
-        renderer.renderTexture("trap", modelMatrix: node.modelMatrix, color: node.color)
-    }
-    
-    return node
 }
