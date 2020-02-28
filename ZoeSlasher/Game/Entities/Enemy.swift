@@ -14,7 +14,17 @@ class Enemy: Node {
     
     private static let recentlyHitInterval: TimeInterval = 0.5
 
-    private(set) var isImmune = false
+    private var _isImmune = false
+    var isImmune: Bool {
+        get {
+            return _isImmune || timeAlive < 0.75
+        }
+        
+        set {
+            _isImmune = newValue
+        }
+    }
+    
     private(set) var shouldRemove = false
     
     var health: Float = 0 {
@@ -50,6 +60,7 @@ class Enemy: Node {
     
     private var positionBeforeImpact: vector_float2 = .zero
     private var isImpactLocked = false
+    private var dmgReceivedNormalized: Float = 0
     
     init(position: vector_float2, ability: Ability) {
         self.ability = ability
@@ -97,14 +108,16 @@ class Enemy: Node {
                              baseColor: ability.color,
                              health: health / maxHealth,
                              lastHealth: lastHealth / maxHealth,
-                             timeSinceHit: Float(timeSinceLastHit))
+                             timeSinceHit: Float(timeSinceLastHit),
+                             dmgReceived: dmgReceivedNormalized)
     }
     
     func receiveDamage(_ damage: Float, impact: vector_float2) {
-        guard !isImmune && timeAlive > 1 else { return }
+        guard !isImmune else { return }
         
         lastHealth = health
         health -= damage
+        dmgReceivedNormalized = min(damage / maxHealth, 1.0)
         
         positionBeforeImpact = position
         position += impact
@@ -138,7 +151,10 @@ class Enemy: Node {
         }
         
         guard !shouldRemove else {
-            symbols.forEach { $0.color.w = simd_mix(0.5, 0.0, (1 + timeAlive) * 2) }
+            symbols.forEach {
+                $0.color.w = simd_mix(0.5, 0.0, (1 + timeAlive) * 2)
+                updateSymbolPosition($0)
+            }
             
             if timeAlive >= 0 {
                 removeFromParent()

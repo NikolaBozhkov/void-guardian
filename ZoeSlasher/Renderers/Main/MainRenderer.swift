@@ -243,7 +243,8 @@ extension MainRenderer: SceneRenderer {
                      baseColor: vector_float3,
                      health: Float,
                      lastHealth: Float,
-                     timeSinceHit: Float) {
+                     timeSinceHit: Float,
+                     dmgReceived: Float) {
         
         var positionDelta = positionDelta
         var timeAlive = timeAlive
@@ -252,6 +253,7 @@ extension MainRenderer: SceneRenderer {
         var health = health
         var lastHealth = lastHealth
         var timeSinceHit = timeSinceHit
+        var dmgReceived = dmgReceived
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         renderEncoder.setFragmentBytes(&timeAlive, length: MemoryLayout<Float>.size, index: 7)
@@ -259,6 +261,7 @@ extension MainRenderer: SceneRenderer {
         renderEncoder.setFragmentBytes(&health, length: MemoryLayout<Float>.size, index: 9)
         renderEncoder.setFragmentBytes(&lastHealth, length: MemoryLayout<Float>.size, index: 10)
         renderEncoder.setFragmentBytes(&timeSinceHit, length: MemoryLayout<Float>.size, index: 11)
+        renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 12)
         enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     

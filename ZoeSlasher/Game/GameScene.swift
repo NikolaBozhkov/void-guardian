@@ -182,16 +182,19 @@ class GameScene: Scene {
         let maxDistance = length(deltaPlayer)
         let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)
         var distanceTravelled: Float = 0
-        var minDistance: Float = .infinity
         
         // Cast ray
         while distanceTravelled <= maxDistance {
+            var minDistance: Float = .infinity
+            
             let position = prevPlayerPosition + distanceTravelled * direction
-            for enemy in enemies where !enemy.shouldRemove {
+            
+            for enemy in enemies where !enemy.shouldRemove && !enemy.isImmune {
                 let d = distance(position, enemy.position)
                 
                 // Intersection logic
-                if d <= (player.physicsSize.x / 2 + enemy.physicsSize.x / 2) {
+                let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
+                if d - 0.1 <= r {
                     let impactMod = player.damage * 20
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     if enemy.health == 0 {
@@ -199,8 +202,8 @@ class GameScene: Scene {
                     }
                 }
                 
-                if d < minDistance {
-                    minDistance = d
+                if d - r < minDistance {
+                    minDistance = d - r
                 }
             }
             

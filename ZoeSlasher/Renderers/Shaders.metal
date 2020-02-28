@@ -64,6 +64,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float &health [[buffer(9)]],
                             constant float &timeSinceHit [[buffer(11)]],
                             constant float &lastHealth [[buffer(10)]],
+                            constant float &dmgReceived [[buffer(12)]],
                             texture2d<float> fbmr [[texture(1)]],
                             texture2d<float> simplex [[texture(3)]])
 {
@@ -117,7 +118,10 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     f += v * damagedPart * (1 + 3 * impulse);
     
     enemy += f * 0.55;
-    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r));
+    
+    float h = 1 - (dmgReceived + 0.08);
+    float dmgCurve = 1 - h*h*h;
+    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1.0 * dmgCurve;
     
     // Spawning
     float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;
@@ -142,6 +146,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
 //    enemy = visible;
     
     f = min(f, 1.0);
+    
     float3 healthColor = mix(baseColor, float3(1, 1, 1), damagedPart * 0.5);
     return float4(mix(color.xyz, healthColor, f), enemy);
 }
