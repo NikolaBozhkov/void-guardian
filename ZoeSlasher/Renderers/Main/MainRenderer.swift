@@ -345,7 +345,7 @@ extension MainRenderer: MTKViewDelegate {
         computeEncoder.setComputePipelineState(backgroundFbmPipelineState)
         
         var octaves = 4
-        var scale: Float = 10.0
+        var scale: Float = 20.0
         
         computeEncoder.setBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: 2)
         computeEncoder.setBytes(&octaves, length: MemoryLayout<Int>.size, index: 0)

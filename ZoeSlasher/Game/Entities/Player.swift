@@ -35,17 +35,6 @@ class Player: Node {
     private let energyRechargePerSecond: Float = 6.6
     private let energyUsagePerShot: Float = 25
     
-    private let anchorRadius: Float = 30
-    private let anchorPlaneHeight: Float = 200
-    private let anchorRadiusNormalized: Float
-    
-    private let symbolsSpeedIdle: Float = 0.5
-    private let symbolsSpeedStageOne: Float = 3
-    private let symbolsSpeedStageTwo: Float = 8
-    private let symbolsAlphaIdle: Float = 0.3
-    private let symbolsAlphaStageOne: Float = 0.6
-    private let symbolsAlphaStageTwo: Float = 0.8
-    
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
     private var chargeDirection = vector_float2.zero
@@ -58,10 +47,6 @@ class Player: Node {
     
     private var moveStage = 0
     private var positionDelta = vector_float2.zero
-    
-    private var energySymbols = Set<Node>()
-    private var symbolsSpeed: Float = 0.5
-    private var symbolsAlpha: Float = 0.3
     
     private var chargingDamage = Player.baseChargingDamage
     private var piercingDamage = Player.basePiercingDamage
@@ -88,21 +73,11 @@ class Player: Node {
     }
     
     override init() {
-        anchorRadiusNormalized = anchorRadius / anchorPlaneHeight
         super.init()
         name = "Player"
         zPosition = -5
         size = vector_float2(repeating: 800)
         physicsSize = vector_float2(repeating: 160)
-        
-        for i in 0..<3 {
-            let energySymbol = Node(size: [1, 1] * 120, textureName: "player")
-            energySymbol.zPosition = -6
-            energySymbol.color = [0.431, 1.00, 0.473, 0.4]
-            energySymbol.rotation = Float(i) * .pi * 2.0 / 3
-            energySymbols.insert(energySymbol)
-            add(childNode: energySymbol)
-        }
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
@@ -133,22 +108,12 @@ class Player: Node {
             if distance(pierceInitial, position) >= pierceDistance {
                 position = pierceInitial + pierceDelta
                 stage = .idle
-                
-                // Update symbols
-                symbolsSpeed = symbolsSpeedIdle
-                symbolsAlpha = symbolsAlphaIdle
             }
         }
         
         let currentPositionDelta = position - prevPosition
         let deltaDelta = currentPositionDelta - positionDelta
         positionDelta += deltaDelta * deltaTime * 20.0
-        
-        energySymbols.forEach {
-            $0.color.w = symbolsAlpha
-            $0.rotation -= deltaTime * symbolsSpeed
-            $0.position = position + [cos($0.rotation + .pi / 2), sin($0.rotation + .pi / 2)] * 140
-        }
     }
     
     func move(to target: vector_float2) {
@@ -179,10 +144,6 @@ class Player: Node {
             energy -= energyUsagePerShot
             stage = .charging
             delegate?.didChangeStage()
-            
-            // Update symbols
-            symbolsSpeed = symbolsSpeedStageOne
-            symbolsAlpha = symbolsAlphaStageOne
         } else if stage == .charging {
             
             anchor?.removeFromParent()
@@ -199,10 +160,6 @@ class Player: Node {
             
             stage = .piercing
             delegate?.didChangeStage()
-            
-            // Update symbols
-            symbolsSpeed = symbolsSpeedStageTwo
-            symbolsAlpha = symbolsAlphaStageTwo
         }
     }
     

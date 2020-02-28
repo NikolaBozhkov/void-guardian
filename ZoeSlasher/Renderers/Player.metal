@@ -17,15 +17,42 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
                              constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                              constant float2 &worldPosNorm [[buffer(5)]],
-                             texture2d<float> fbmr [[texture(1)]],
-                             constant float2 &positionDelta [[buffer(6)]])
+                             constant float2 &positionDelta [[buffer(6)]],
+                             texture2d<float> fbmr [[texture(1)]])
 {
     float2 st = in.uv * 2.0 - 1.0;
+    
+    float angle = length(positionDelta) == 0 ? 0 : -atan2(positionDelta.y, positionDelta.x);
+    
+    float d = length(st);
     
     float2 stWorldNorm = 0.5 * st * (float2(800.0) / uniforms.size);
     stWorldNorm += worldPosNorm;
     
-    float player = entity(st, uniforms.playerSize, stWorldNorm, uniforms, 0.9, fbmr, positionDelta);
+    constexpr sampler s(filter::linear, address::repeat);
+    float f = fbmr.sample(s, stWorldNorm).x;
+    float ridges = pow(1. - f, 2.5);
+    
+    float2 pos = float2x2(cos(angle), sin(angle), -sin(angle), cos(angle)) * st;
+    
+    // Trail
+    float w = smoothstep(-uniforms.playerSize + uniforms.playerSize * smoothstep(0, 1.0, -pos.x), 0, pos.y)
+    - smoothstep(0.0, uniforms.playerSize - uniforms.playerSize * smoothstep(0, 1.0, -pos.x), pos.y);;
+    w *= smoothstep(-1.0, 0.2, pos.x) - smoothstep(-uniforms.playerSize * 2.0, uniforms.playerSize * 1.5, pos.x);
+    
+    f = fbmr.sample(s, stWorldNorm * 3).x;
+    f = f * f;
+    float d1 = d - w * f * length(positionDelta) * 0.15;
+    
+    float inf = 1 - smoothstep(uniforms.playerSize - 0.1, 1.0, d);
+    float intensity = 1.0 - smoothstep(0.2, 0.75, d);
+    
+    float player = 1.0 - smoothstep(uniforms.playerSize - 0.1, uniforms.playerSize, d1);
+    
+    ridges *= 0.5 + 0.3 * sin(atan2(st.y, st.x) * 3.0 + intensity * (ridges * 16. + 1.) + uniforms.time * 2.2);
+    
+    player += inf * ridges;
+    player = min(player, 1.0);
     
     return float4(float3(0.431, 1.00, 0.473), player);
 }

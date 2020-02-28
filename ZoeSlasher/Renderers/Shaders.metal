@@ -38,9 +38,10 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 }
 
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
-                                constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                                constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                texture2d<float> texture [[texture(0)]])
+                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                                 constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                 texture2d<float> texture [[texture(0)]],
+                                 texture2d<float> fbmr [[texture(1)]])
 {
     float2 st = in.uv;
 //    st.x *= uniforms.aspectRatio;
@@ -49,7 +50,9 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     constexpr sampler s(filter::linear, address::repeat);
     
     float f = texture.sample(s, st).x;
-    f = f*0.1;
+    float n = pow(1. - fbmr.sample(s, st).x, 2.5);
+    f = f*n*n*0.13;
+    f += n*0.01;
     
     return float4(float3(color.xyz), f);
 }
