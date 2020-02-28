@@ -192,7 +192,8 @@ class GameScene: Scene {
                 
                 // Intersection logic
                 if d <= (player.physicsSize.x / 2 + enemy.physicsSize.x / 2) {
-                    enemy.receiveDamage(player.damage, impact: direction * 20)
+                    let impactMod = player.damage * 20
+                    enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     if enemy.health == 0 {
                         removeEnemy(enemy)
                     }

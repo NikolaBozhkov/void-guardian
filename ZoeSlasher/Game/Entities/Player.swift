@@ -72,7 +72,8 @@ class Player: Node {
         if stage == .charging {
             return chargingDamage
         } else if stage == .piercing || wasPiercing {
-            return piercingDamage
+            let distanceMod = 1 + 1.5 * distance(pierceInitial, position) / SceneConstants.size.x
+            return piercingDamage * distanceMod
         } else {
             return chargingDamage * 0.1
         }
