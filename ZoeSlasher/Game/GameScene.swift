@@ -19,8 +19,6 @@ class GameScene: Scene {
     // UI Elements
     let skGameScene: SKGameScene
     let background = Node()
-    let energyBar = Node()
-    let corruptionBar = Node()
     
     let stageManager: StageManager
     let spawner = Spawner()
@@ -51,24 +49,6 @@ class GameScene: Scene {
         spawner.scene = self
         skGameScene.gameScene = self
         
-        energyBar.size = [size.x / 3, 50]
-        energyBar.position = [left + energyBar.size.x / 2 + 70, top - energyBar.size.y / 2]
-        energyBar.color = .one
-        energyBar.renderFunction = { [unowned self] in
-            $0.renderEnergyBar(modelMatrix: self.energyBar.modelMatrix,
-                               color: self.energyBar.color,
-                               energyPct: self.player.energy / 100)
-        }
-        
-        corruptionBar.size = [size.x / 3.5, 50]
-        corruptionBar.position = [left + corruptionBar.size.x / 2 + 35, top - energyBar.size.y - corruptionBar.size.y / 2]
-        corruptionBar.color = [0.8, 0.0, 0.9, 1.0]
-        corruptionBar.renderFunction = { [unowned self] in
-            $0.renderEnergyBar(modelMatrix: self.corruptionBar.modelMatrix,
-                               color: self.corruptionBar.color,
-                               energyPct: self.player.corruption / 100)
-        }
-        
         background.size = size
         background.zPosition = 10
         background.renderFunction = { [unowned self] in
@@ -76,8 +56,6 @@ class GameScene: Scene {
         }
         
         add(childNode: background)
-        add(childNode: energyBar)
-        add(childNode: corruptionBar)
         
         player.delegate = self
         
@@ -107,7 +85,7 @@ class GameScene: Scene {
         testPlayerEnemyAttackCollision()
         
         // Check for game over
-        if player.corruption == 100 && !isGameOver {
+        if player.health == 0 && !isGameOver {
             
             enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
@@ -127,7 +105,7 @@ class GameScene: Scene {
         // Enemies don't contain an alive enemy
         if stageManager.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.advanceStage()
-            player.corruption = 0
+            player.health = 100
             player.energy = 100
         }
     }
@@ -149,7 +127,7 @@ class GameScene: Scene {
         player.interruptCharging()
         player.position = .zero
         player.energy = 100
-        player.corruption = 0
+        player.health = 100
         add(childNode: player)
         
         isGameOver = false
@@ -195,7 +173,7 @@ class GameScene: Scene {
                 // Intersection logic
                 let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
                 if d - 0.1 <= r {
-                    let impactMod = player.damage * 20
+                    let impactMod = 100 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     if enemy.health == 0 {
                         removeEnemy(enemy)
@@ -215,7 +193,7 @@ class GameScene: Scene {
         for attack in attacks {
             var shouldRemoveAttack = false
             if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 {
-                player.corruption += Float(attack.corruption)
+                player.receiveDamage(Float(attack.corruption))
                 shouldRemoveAttack = true
             }
             

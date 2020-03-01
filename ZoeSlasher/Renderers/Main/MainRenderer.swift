@@ -49,6 +49,7 @@ class MainRenderer: NSObject {
     let anchorRenderer: SpriteRenderer
     let textureRenderer: SpriteRenderer
     let clearColorRenderer: SpriteRenderer
+    let energySymbolRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -69,7 +70,8 @@ class MainRenderer: NSObject {
     
     var noiseNeedsComputing = true
     
-    let playerSymbolTexture: MTLTexture
+    let energySymbolTexture: MTLTexture
+    let energyGlowTexture: MTLTexture
     let basicSymbolTexture: MTLTexture
     let machineGunSymbolTexture: MTLTexture
     let cannonSymbolTexture: MTLTexture
@@ -135,8 +137,10 @@ class MainRenderer: NSObject {
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
         textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
         clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
+        energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
         
-        playerSymbolTexture = createTexture(device: device, filePath: "player")
+        energySymbolTexture = createTexture(device: device, filePath: "energy")
+        energyGlowTexture = createTexture(device: device, filePath: "energy-glow")
         basicSymbolTexture = createTexture(device: device, filePath: "basic")
         machineGunSymbolTexture = createTexture(device: device, filePath: "machine-gun")
         cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
@@ -223,11 +227,32 @@ extension MainRenderer: SceneRenderer {
         backgroundRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
-    func renderPlayer(modelMatrix: matrix_float4x4, color: vector_float4, position: vector_float2, positionDelta: vector_float2) {
+    func renderPlayer(modelMatrix: matrix_float4x4,
+                      color: vector_float4,
+                      position: vector_float2,
+                      positionDelta: vector_float2,
+                      health: Float,
+                      fromHealth: Float,
+                      timeSinceHit: Float,
+                      dmgReceived: Float,
+                      timeSinceLastEnergyUse: Float) {
+        
         var position = normalizeWorldPosition(position)
         var positionDelta = positionDelta
+        var health = health
+        var fromHealth = fromHealth
+        var timeSinceHit = timeSinceHit
+        var dmgReceived = dmgReceived
+        var timeSinceLastEnergyUse = timeSinceLastEnergyUse
+        
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
+        renderEncoder.setFragmentBytes(&health, length: MemoryLayout<Float>.size, index: 7)
+        renderEncoder.setFragmentBytes(&fromHealth, length: MemoryLayout<Float>.size, index: 8)
+        renderEncoder.setFragmentBytes(&timeSinceHit, length: MemoryLayout<Float>.size, index: 9)
+        renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 10)
+        renderEncoder.setFragmentBytes(&timeSinceLastEnergyUse, length: MemoryLayout<Float>.size, index: 11)
+        
         playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
@@ -285,9 +310,7 @@ extension MainRenderer: SceneRenderer {
     
     func renderTexture(_ textureName: String, modelMatrix: matrix_float4x4, color: vector_float4) {
         var texture: MTLTexture!
-        if textureName == "player" {
-            texture = playerSymbolTexture
-        } else if textureName == "basic" {
+        if textureName == "basic" {
             texture = basicSymbolTexture
         } else if textureName == "machine-gun" {
             texture = machineGunSymbolTexture
@@ -299,6 +322,12 @@ extension MainRenderer: SceneRenderer {
         
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
         textureRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    }
+    
+    func renderEnergySymbol(modelMatrix: matrix_float4x4, color: vector_float4) {
+        renderEncoder.setFragmentTexture(energySymbolTexture, index: 2)
+        renderEncoder.setFragmentTexture(energyGlowTexture, index: 4)
+        energySymbolRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {

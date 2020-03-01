@@ -44,3 +44,9 @@ float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, flo
     player += inf * ridges;
     return min(player, 1.0);
 }
+
+float expImpulse(float x, float k)
+{
+    float h = k * x;
+    return h * exp(1.0 - h);
+}

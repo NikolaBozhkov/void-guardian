@@ -150,11 +150,11 @@ kernel void backgroundFbmKernel(texture2d<half, access::write> outTexture [[text
     float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
     
     float3 q = float3(0);
-    q.x = fbm(float3(st * 4.0 + float2(1.3, 6.1), uniforms.time * 0.05), 4);
-    q.y = fbmr(float3(st * 5.0, -uniforms.time * 0.03), 3);
+    q.x = fbm(float3(st * 4.0 + float2(1.3, 6.1), uniforms.time * 0.08), 4);
+    q.y = fbmr(float3(st * 5.0, -uniforms.time * 0.06), 3);
     
-    float value = 0.5 + 0.5 * fbm(float3(st * 3.0 + q.xy * 2, q.z + uniforms.time * 0.04), 4);
-    value = value*value*value;
+    float value = 0.5 + 0.5 * fbm(float3(st * 3.0 + q.xy * 2, q.z + uniforms.time * 0.1), 4);
+    value = value*value*value*value*(6 - 5 * value);
     
     outTexture.write(half4(half3(value), 1.0), gid);
 }

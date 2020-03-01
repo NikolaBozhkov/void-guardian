@@ -18,12 +18,6 @@
 
 using namespace metal;
 
-float expImpulse(float x, float k)
-{
-    float h = k * x;
-    return h * exp(1.0 - h);
-}
-
 vertex VertexOut vertexSprite(uint vid [[vertex_id]],
                               constant float4 *vertices [[buffer(BufferIndexVertices)]],
                               constant float4x4 &modelMatrix [[buffer(BufferIndexSpriteModelMatrix)]],
@@ -51,8 +45,8 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     
     float f = texture.sample(s, st).x;
     float n = pow(1. - fbmr.sample(s, st).x, 2.5);
-    f = f*n*n*0.13;
-    f += n*0.01;
+    f = f*n*n*n*0.25;
+//    f += n*0.01;
     
     return float4(float3(color.xyz), f);
 }

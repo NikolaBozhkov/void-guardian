@@ -16,9 +16,6 @@ class Player: Node {
         case charging, piercing, idle
     }
     
-    static let energyRechargePerEnemy: Float = 1.8
-    static let corruptionCleansePerEnemy: Float = 3.8
-    
     static let baseChargingDamage: Float = 0.5
     static let basePiercingDamage: Float = 1.0
     
@@ -29,9 +26,6 @@ class Player: Node {
     
     private let chargeSpeed: Float = 900
     private let pierceSpeed: Float = 7500
-    private let energyUsagePerUnit: Float = 0.025
-    private let corruptionCleansePerUnit: Float = 0.0025
-    private let corruptionCleansePerSecond: Float = 1
     private let energyRechargePerSecond: Float = 6.6
     private let energyUsagePerShot: Float = 25
     
@@ -45,12 +39,20 @@ class Player: Node {
     private var pierceDirection = vector_float2.zero
     private var pierceDistance: Float = 0
     
-    private var moveStage = 0
     private var positionDelta = vector_float2.zero
     
     private var chargingDamage = Player.baseChargingDamage
     private var piercingDamage = Player.basePiercingDamage
     private var wasPiercing = false
+    
+    private var energySymbols = Set<EnergySymbol>()
+    
+    private var maxHealth: Float = 100
+    private var lastHealth: Float = 100
+    private var healthDmgIndicator: Float = 100
+    private var timeSinceLastHit: Float = 100
+    private var dmgReceivedNormalized: Float = 0
+    private var timeSinceLastEnergyUse: Float = 100
     
     // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
     var damage: Float {
@@ -68,8 +70,8 @@ class Player: Node {
         didSet { energy = max(min(energy, 100), 0) }
     }
     
-    var corruption: Float = 0 {
-        didSet { corruption = max(min(corruption, 100), 0) }
+    var health: Float = 100 {
+        didSet { health = max(min(health, 100), 0) }
     }
     
     override init() {
@@ -78,14 +80,41 @@ class Player: Node {
         zPosition = -5
         size = vector_float2(repeating: 800)
         physicsSize = vector_float2(repeating: 160)
+        
+        health = maxHealth
+        lastHealth = health
+        
+        for i in 0..<4 {
+            let energySymbol = EnergySymbol(index: i)
+            energySymbols.insert(energySymbol)
+            add(childNode: energySymbol)
+        }
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderPlayer(modelMatrix: modelMatrix, color: color, position: position, positionDelta: positionDelta)
+        renderer.renderPlayer(modelMatrix: modelMatrix,
+                              color: color,
+                              position: position,
+                              positionDelta: positionDelta,
+                              health: health / maxHealth,
+                              fromHealth: healthDmgIndicator / maxHealth,
+                              timeSinceHit: timeSinceLastHit,
+                              dmgReceived: dmgReceivedNormalized,
+                              timeSinceLastEnergyUse: timeSinceLastEnergyUse)
+    }
+    
+    func receiveDamage(_ damage: Float) {
+        health -= damage
+        dmgReceivedNormalized = damage / maxHealth
+        lastHealth = healthDmgIndicator
+        timeSinceLastHit = 0
     }
     
     func update(deltaTime: CFTimeInterval) {
         let deltaTime = Float(deltaTime)
+        
+        timeSinceLastHit += deltaTime
+        timeSinceLastEnergyUse += deltaTime
         
         let prevPosition = position
         
@@ -114,6 +143,16 @@ class Player: Node {
         let currentPositionDelta = position - prevPosition
         let deltaDelta = currentPositionDelta - positionDelta
         positionDelta += deltaDelta * deltaTime * 20.0
+        
+        energySymbols.forEach {
+            $0.timeSinceLastUse = timeSinceLastEnergyUse
+            $0.update(deltaTime: deltaTime, energy: energy)
+        }
+        
+        // Dmg
+        let k = 1.5 * timeSinceLastHit
+        let catchUp = min(k * k * k, 1.0)
+        healthDmgIndicator = health + (lastHealth - health) * (1 - catchUp)
     }
     
     func move(to target: vector_float2) {
@@ -144,6 +183,8 @@ class Player: Node {
             energy -= energyUsagePerShot
             stage = .charging
             delegate?.didChangeStage()
+            
+            timeSinceLastEnergyUse = 0
         } else if stage == .charging {
             
             anchor?.removeFromParent()
@@ -167,5 +208,61 @@ class Player: Node {
         anchor?.removeFromParent()
         anchor = nil
         stage = .idle
+    }
+    
+    private func expImpulse(_ x: Float, _ k: Float) -> Float {
+        let h = k * x
+        return h * exp(1.0 - h)
+    }
+}
+
+class EnergySymbol: Node {
+    
+    private let index: Int
+    
+    var timeSinceLastUse: Float = 100
+    private var kickbackForce: Float = 0
+    
+    init(index: Int) {
+        self.index = index
+        
+        super.init(size: [1, 1] * 135, textureName: "energy")
+        
+        zPosition = -1
+        rotation = Float(index) * .pi / 2
+        
+        update(forEnergy: 100)
+    }
+    
+    override func acceptRenderer(_ renderer: SceneRenderer) {
+        renderer.renderEnergySymbol(modelMatrix: modelMatrix, color: color)
+    }
+    
+    func update(forEnergy energy: Float) {
+        let e = energy - Float(index) * 25
+        color.w = simd_clamp(e / 25, 0, 1)
+        let parentPosition = parent?.position ?? .zero
+        let direction = vector_float2(cos(rotation + .pi / 2), sin(rotation + .pi / 2))
+        position = parentPosition + direction * (170 - 35 * kickbackForce)
+    }
+    
+    func update(deltaTime: Float, energy: Float) {
+        timeSinceLastUse += deltaTime
+        
+        var k: Float = 7
+        var f = expImpulse(timeSinceLastUse + 1 / k, k)
+        kickbackForce = max(f, 0.0)
+        
+        k = 4
+        f = expImpulse(timeSinceLastUse + 1 / k, k)
+        let angularVelocity = 1.5 + f * 5.0
+        
+        rotation -= angularVelocity * deltaTime
+        update(forEnergy: energy)
+    }
+    
+    private func expImpulse(_ x: Float, _ k: Float) -> Float {
+        let h = k * x
+        return h * exp(1.0 - h)
     }
 }

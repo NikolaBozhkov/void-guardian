@@ -31,6 +31,8 @@ class Enemy: Node {
         didSet { health = max(health, 0) }
     }
     
+    let maxHealth: Float
+    
     var delegate: EnemyDelegate?
     
     var ability: Ability
@@ -43,8 +45,6 @@ class Enemy: Node {
     private let triggerInterval: TimeInterval
     private let symbolsAngleVelocityGain: Float
     private let symbolsAngleRecoilImpulse: Float
-    
-    private let maxHealth: Float
     
     private var timeSinceLastSymbolFlash: TimeInterval
     private var timeSinceLastTrigger: TimeInterval = 0
@@ -145,7 +145,7 @@ class Enemy: Node {
         timeSinceLastSymbolFlash += deltaTime
         timeSinceLastHit += deltaTime
         
-        if isImpactLocked && timeSinceLastHit > 0.05 {
+        if isImpactLocked && timeSinceLastHit > 0.07 {
             isImpactLocked = false
             position = positionBeforeImpact
         }

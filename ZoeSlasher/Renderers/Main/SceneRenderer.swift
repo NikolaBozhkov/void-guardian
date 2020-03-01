@@ -15,7 +15,12 @@ protocol SceneRenderer {
     func renderPlayer(modelMatrix: matrix_float4x4,
                       color: vector_float4,
                       position: vector_float2,
-                      positionDelta: vector_float2)
+                      positionDelta: vector_float2,
+                      health: Float,
+                      fromHealth: Float,
+                      timeSinceHit: Float,
+                      dmgReceived: Float,
+                      timeSinceLastEnergyUse: Float)
     
     func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4)
     
@@ -39,4 +44,6 @@ protocol SceneRenderer {
     func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4)
     
     func renderTexture(_ texture: String, modelMatrix: matrix_float4x4, color: vector_float4)
+    
+    func renderEnergySymbol(modelMatrix: matrix_float4x4, color: vector_float4)
 }

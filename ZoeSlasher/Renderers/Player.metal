@@ -18,7 +18,13 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                              constant float2 &worldPosNorm [[buffer(5)]],
                              constant float2 &positionDelta [[buffer(6)]],
-                             texture2d<float> fbmr [[texture(1)]])
+                             constant float &health [[buffer(7)]],
+                             constant float &fromHealth [[buffer(8)]],
+                             constant float &timeSinceHit [[buffer(9)]],
+                             constant float &dmgReceived [[buffer(10)]],
+                             constant float &timeSinceLastEnergyUse [[buffer(11)]],
+                             texture2d<float> fbmr [[texture(1)]],
+                             texture2d<float> simplex [[texture(3)]])
 {
     float2 st = in.uv * 2.0 - 1.0;
     
@@ -36,9 +42,9 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     float2 pos = float2x2(cos(angle), sin(angle), -sin(angle), cos(angle)) * st;
     
     // Trail
-    float w = smoothstep(-uniforms.playerSize + uniforms.playerSize * smoothstep(0, 1.0, -pos.x), 0, pos.y)
-    - smoothstep(0.0, uniforms.playerSize - uniforms.playerSize * smoothstep(0, 1.0, -pos.x), pos.y);;
-    w *= smoothstep(-1.0, 0.2, pos.x) - smoothstep(-uniforms.playerSize * 2.0, uniforms.playerSize * 1.5, pos.x);
+    float w = smoothstep(-uniforms.playerSize, 0, pos.y)
+    - smoothstep(0.0, uniforms.playerSize, pos.y);
+    w *= smoothstep(-1.0, 0.2, pos.x) - smoothstep(-uniforms.playerSize * 2.0, uniforms.playerSize * 0.7, pos.x);
     
     f = fbmr.sample(s, stWorldNorm * 3).x;
     f = f * f;
@@ -54,7 +60,61 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     player += inf * ridges;
     player = min(player, 1.0);
     
-    return float4(float3(0.431, 1.00, 0.473), player);
+    // Health
+    float r = length(st);
+    float ang = atan2(st.y, st.x);
+    
+    float noiseAng = ang - uniforms.time * 0.2;
+    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F;
+    float2 nPos = 0.5 + 0.5 * float2(cos(noiseAng), sin(noiseAng));
+    float2 nPos1 = 0.5 + 0.5 * float2(cos(noiseAng1), sin(noiseAng1));
+    float n = -1.0 + 2.0 * simplex.sample(s, nPos).x;
+    float n1 = -1.0 + 2.0 * simplex.sample(s, nPos1).x;
+    
+    float r1 = r;
+    float r2 = r;
+    
+    r1 += sin(ang * 5.0) * 0.01 + n * 0.02;
+    r2 += sin(ang * 5.0 + M_PI_F) * 0.01 + n1 * 0.02;
+    
+    const float mid = 2 * 95 / 800.0;
+    const float aa = 0.018;
+    
+    float h = 0.0;
+    h += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.3;
+    
+    float v = smoothstep(mid - aa, mid, r1) - smoothstep(mid, mid + aa, r1);
+    v += smoothstep(mid - aa, mid, r2) - smoothstep(mid, mid + aa, r2);
+    
+    ang = fmod(ang + M_PI_F * 1.5, M_PI_F * 2);
+    
+    h += v * step((1 - health) * M_PI_F * 2, ang);    
+    
+    float damagedPart = step((1 - fromHealth) * M_PI_F * 2 , ang) - step((1 - health) * M_PI_F * 2, ang);
+    damagedPart = max(damagedPart, 0.0);
+    
+    const float k = 7;
+    float impulse = expImpulse(timeSinceHit + 1 / k, k);
+    h += v * damagedPart * (1 + 3 * impulse);
+    
+    player += h * 0.8;
+    
+    float j = 1 - (dmgReceived + 0.08);
+    float dmgCurve = 1 - j*j*j;
+    float flash = impulse * (1.0 - smoothstep(0.0, 1.0, r)) * dmgCurve;
+    player += flash;
+    
+    h = min(h, 1.0);
+    
+    const float k1 = 7;
+    float i = expImpulse(timeSinceLastEnergyUse + 1.0 / k1, k1);
+    float energyFlash = i * (1.0 - smoothstep(0.0, 1.0, r)) * 0.5;
+    
+    player += energyFlash;
+    
+    float3 baseColor = mix(float3(0.627, 1.000, 0.447), float3(1), energyFlash);
+    float3 healthColor = mix(float3(0.627, 1.000, 0.447), float3(1, 0, 0), damagedPart * 0.7);
+    return float4(mix(baseColor, healthColor, h), player);
 }
 
 fragment float4 anchorShader(VertexOut in [[stage_in]],
@@ -74,7 +134,32 @@ fragment float4 anchorShader(VertexOut in [[stage_in]],
     - smoothstep(outerStart + outerWidth, outerStart + outerWidth * 2, r);
     
     float f = inner + outer;
-    float3 col = float3(0.431, 1.00, 0.473);
+    float3 col = float3(0.627, 1.000, 0.447);
+    return float4(col, f);
+}
+
+fragment float4 energySymbolShader(VertexOut in [[stage_in]],
+                                   constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                                   constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                   texture2d<float> texture [[texture(2)]],
+                                   texture2d<float> glow [[texture(4)]])
+{
+    constexpr sampler s(filter::linear, address::repeat);
+    
+    float t = texture.sample(s, in.uv).a;
+    float f = t * (0.2 + 0.5 * (1 - smoothstep(color.a, color.a + 0.05, in.uv.y)));
+    
+    float full = step(1.0, color.a);
+    f += t * 0.3 * full;
+    
+    float g = 0.6 + 0.3 * (0.5 + 0.5 * sin(uniforms.time * 5));
+    
+    float gSample = glow.sample(s, in.uv).a;
+    g = gSample * full * g;
+    
+    f += g;
+    float3 col = mix(float3(1), float3(0.627, 1.000, 0.447), step(0.01, gSample));
+//    col = float3(0.431, 1.00, 0.473);
     return float4(col, f);
 }
 
