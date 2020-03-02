@@ -243,18 +243,16 @@ class EnergySymbol: Node {
         color.w = simd_clamp(e / 25, 0, 1)
         let parentPosition = parent?.position ?? .zero
         let direction = vector_float2(cos(rotation + .pi / 2), sin(rotation + .pi / 2))
-        position = parentPosition + direction * (170 - 35 * kickbackForce)
+        position = parentPosition + direction * (170 - 30 * kickbackForce)
     }
     
     func update(deltaTime: Float, energy: Float) {
         timeSinceLastUse += deltaTime
         
-        var k: Float = 7
-        var f = expImpulse(timeSinceLastUse + 1 / k, k)
+        let k: Float = 7
+        let f = expImpulse(timeSinceLastUse + 1 / k, k)
         kickbackForce = max(f, 0.0)
         
-        k = 4
-        f = expImpulse(timeSinceLastUse + 1 / k, k)
         let angularVelocity = 1.5 + f * 5.0
         
         rotation -= angularVelocity * deltaTime
