@@ -7,7 +7,7 @@
 //
 
 protocol PlayerDelegate {
-    func didChangeStage()
+    func didEnterStage(_ stage: Player.Stage)
 }
 
 class Player: Node {
@@ -21,7 +21,12 @@ class Player: Node {
     
     var delegate: PlayerDelegate?
     
-    private(set) var stage: Stage = .idle
+    private(set) var stage: Stage = .idle {
+        didSet {
+            delegate?.didEnterStage(stage)
+        }
+    }
+    
     private(set) var anchor: Node?
     
     private let chargeSpeed: Float = 900
@@ -182,7 +187,6 @@ class Player: Node {
             
             energy -= energyUsagePerShot
             stage = .charging
-            delegate?.didChangeStage()
             
             timeSinceLastEnergyUse = 0
         } else if stage == .charging {
@@ -200,7 +204,6 @@ class Player: Node {
             pierceDistance = length(pierceDelta)
             
             stage = .piercing
-            delegate?.didChangeStage()
         }
     }
     
@@ -253,7 +256,7 @@ class EnergySymbol: Node {
         let f = expImpulse(timeSinceLastUse + 1 / k, k)
         kickbackForce = max(f, 0.0)
         
-        let angularVelocity = 1.5 + f * 5.0
+        let angularVelocity = 1.0 + f * 5.0
         
         rotation -= angularVelocity * deltaTime
         update(forEnergy: energy)

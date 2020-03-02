@@ -145,7 +145,7 @@ fragment float4 energySymbolShader(VertexOut in [[stage_in]],
     constexpr sampler s(filter::linear, address::repeat);
     
     float t = texture.sample(s, in.uv).a;
-    float f = t * (0.2 + 0.5 * (1 - smoothstep(color.a, color.a + 0.05, in.uv.y)));
+    float f = t * (0.2 + 0.4 * (1 - smoothstep(color.a, color.a + 0.05, in.uv.y)));
     
     float full = step(1.0, color.a);
     f += t * 0.3 * full;

@@ -16,8 +16,11 @@ enum SceneConstants {
 
 class GameScene: Scene {
     
+    let comboThreshold = 1
+//    let enemiesHitToEnergyGainTargets: [Int: Float] = [2: 2, 3: 5, 4: 9, 5: 14, 6: 20, 30: 60]
+    
     // UI Elements
-    let skGameScene: SKGameScene
+    var skGameScene: SKGameScene!
     let background = Node()
     
     let stageManager: StageManager
@@ -25,18 +28,20 @@ class GameScene: Scene {
     let player = Player()
     
     var enemies = Set<Enemy>()
-    var bufferedEnemyAttacks = Set<Enemy>()
     var attacks = Set<EnemyAttack>()
+    
+    var hitEnemies = Set<Enemy>()
+    var enemyHitsForMove = 0
+    var shouldHandleCombo = false
+    var shouldResetHitEnemies = false
+    var comboMultiplier = 0
     
     var isGameOver = false
     
     var prevPlayerPosition: vector_float2 = .zero
     
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
-        skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
-        
         stageManager = StageManager(spawner: spawner)
-        stageManager.delegate = skGameScene
         
         super.init()
         
@@ -45,6 +50,9 @@ class GameScene: Scene {
         
         SceneConstants.size = size
         SceneConstants.safeAreaInsets = safeAreaInsets
+        
+        skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
+        stageManager.delegate = skGameScene
         
         spawner.scene = self
         skGameScene.gameScene = self
@@ -62,7 +70,15 @@ class GameScene: Scene {
         reloadScene()
     }
     
-    func update(deltaTime: CFTimeInterval) {
+    func update(deltaTime: TimeInterval) {
+        if shouldResetHitEnemies {
+            resetHitEnemies()
+        }
+        
+        if shouldHandleCombo {
+            handleCombo()
+        }
+        
         prevPlayerPosition = player.position
         
         let wasPiercing = player.stage == .piercing
@@ -98,10 +114,6 @@ class GameScene: Scene {
         
         stageManager.update(deltaTime: deltaTime)
         
-//        if enemies.isEmpty {
-//            spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
-//        }
-        
         // Enemies don't contain an alive enemy
         if stageManager.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.advanceStage()
@@ -115,12 +127,8 @@ class GameScene: Scene {
         
         guard !isGameOver, !consumed else { return }
         player.move(to: location)
-//        if let enemy = enemies.first {
-//            enemy.receiveDamage(0.5)
-//            if enemy.health == 0 {
-//                removeEnemy(enemy)
-//            }
-//        }
+        
+//        skGameScene.didCombo(multiplier: 7, energy: 23)
     }
     
     func reloadScene() {
@@ -135,27 +143,7 @@ class GameScene: Scene {
         stageManager.reset()
     }
     
-    private func spawnAttack(fromEnemy enemy: Enemy) {
-        
-    }
-    
-    private func isOutsideBoundary(node: Node) -> Bool {
-        node.position.x < 0 && -safeLeft + node.position.x <= node.physicsSize.x / 2
-            || node.position.x > 0 && size.x / 2 - node.position.x <= node.physicsSize.x / 2
-            || node.position.y < 0 && -safeBottom + node.position.y <= node.physicsSize.x / 2
-            || node.position.y > 0 && size.y / 2 - node.position.y <= node.physicsSize.x / 2
-    }
-    
-    private func isOutsideBoundary(position: vector_float2, size: Float) -> Bool {
-        position.x < 0 && -safeLeft + position.x <= size
-            || position.x > 0 && self.size.x / 2 - position.x <= size
-            || position.y < 0 && -safeBottom + position.y <= size
-            || position.y > 0 && self.size.y / 2 - position.y <= size
-    }
-    
     private func testPlayerEnemyCollision(wasPiercing: Bool) {
-//        guard player.stage == .charging || player.stage == .piercing else { return }
-        
         let deltaPlayer = player.position - prevPlayerPosition
         let maxDistance = length(deltaPlayer)
         let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)
@@ -175,6 +163,11 @@ class GameScene: Scene {
                 if d - 0.1 <= r {
                     let impactMod = 100 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
+                    
+                    if player.stage != .idle {
+                        hitEnemies.insert(enemy)
+                    }
+                    
                     if enemy.health == 0 {
                         removeEnemy(enemy)
                     }
@@ -216,11 +209,53 @@ class GameScene: Scene {
         attack.removeFromParent()
         attacks.remove(attack)
     }
+    
+    private func resetHitEnemies() {
+        enemyHitsForMove += hitEnemies.count
+        hitEnemies.removeAll()
+        shouldResetHitEnemies = false
+    }
+    
+    private func handleCombo() {
+        defer {
+            enemyHitsForMove = 0
+            shouldHandleCombo = false
+        }
+        
+        guard enemyHitsForMove >= 2 else { return }
+        
+        // Sum of 2 to n
+        let energyGain = enemyHitsForMove * (enemyHitsForMove + 1) / 2 - 1
+        player.energy += Float(energyGain)
+        
+        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energyGain)
+    }
+    
+    private func isOutsideBoundary(node: Node) -> Bool {
+        node.position.x < 0 && -safeLeft + node.position.x <= node.physicsSize.x / 2
+            || node.position.x > 0 && size.x / 2 - node.position.x <= node.physicsSize.x / 2
+            || node.position.y < 0 && -safeBottom + node.position.y <= node.physicsSize.x / 2
+            || node.position.y > 0 && size.y / 2 - node.position.y <= node.physicsSize.x / 2
+    }
+    
+    private func isOutsideBoundary(position: vector_float2, size: Float) -> Bool {
+        position.x < 0 && -safeLeft + position.x <= size
+            || position.x > 0 && self.size.x / 2 - position.x <= size
+            || position.y < 0 && -safeBottom + position.y <= size
+            || position.y > 0 && self.size.y / 2 - position.y <= size
+    }
 }
 
 extension GameScene: PlayerDelegate {
-    func didChangeStage() {
+    func didEnterStage(_ stage: Player.Stage) {
         enemies.forEach { $0.resetHitImmunity() }
+        
+        if stage == .idle {
+            shouldHandleCombo = true
+            shouldResetHitEnemies = true
+        } else if stage == .piercing {
+            shouldResetHitEnemies = true
+        }
     }
 }
 

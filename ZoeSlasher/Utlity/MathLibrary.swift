@@ -6,7 +6,7 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-import Foundation
+import CoreGraphics
 
 extension SIMD4 {
     var xyz: SIMD3<Scalar> {
@@ -131,5 +131,11 @@ extension float4x4 {
     
     mutating func rotateAroundZ(by angle: Float) {
         self = self * float4x4.makeRotationZ(angle)
+    }
+}
+
+extension CGPoint {
+    init(_ point: vector_float2) {
+        self.init(x: CGFloat(point.x), y: CGFloat(point.y))
     }
 }
