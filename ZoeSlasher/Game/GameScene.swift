@@ -128,7 +128,13 @@ class GameScene: Scene {
         guard !isGameOver, !consumed else { return }
         player.move(to: location)
         
-//        skGameScene.didCombo(multiplier: 7, energy: 23)
+        
+//        GameScene.i += 1
+//        if GameScene.i == 11 {
+//            GameScene.i = 1
+//        }
+//
+//        skGameScene.didCombo(multiplier: GameScene.i, energy: 9)
     }
     
     func reloadScene() {

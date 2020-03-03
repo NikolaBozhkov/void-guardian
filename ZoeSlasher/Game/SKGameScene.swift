@@ -85,6 +85,15 @@ class SKGameScene: SKScene {
         let positionOffset = CGPoint(x: CGFloat(direction.x) * (comboLabel.width / 2 + offset), y: direction.y * offset)
         comboLabel.position = CGPoint(gameScene.player.position) + positionOffset
         
+        let scaleUp = SKAction.scale(to: 1.12, duration: 0.17)
+        scaleUp.timingMode = .easeOut
+        
+        let scaleDown = SKAction.scale(to: 1.0, duration: 0.08)
+        scaleDown.timingMode = .easeIn
+        
+        comboLabel.setScale(0)
+        comboLabel.run(SKAction.sequence([scaleUp, scaleDown]))
+        
         comboLabel.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1.5))
         comboLabel.run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 1.5),
@@ -110,12 +119,14 @@ extension SKGameScene: StageManagerDelegate {
 
 class ComboLabel: SKNode {
     
-    static let fontSize: CGFloat = 150
+    static let fontSizeLow: CGFloat = 120
+    static let fontSizeHigh: CGFloat = 240
     
     static let energySymbolTexture: SKTexture = {
         SKTexture(imageNamed: "energy-image")
     }()
     
+    private let fontSize: CGFloat
     private let xLabel: SKLabelNode
     private let multiplierLabel: SKLabelNode
     private let energyGainLabel: SKLabelNode
@@ -124,19 +135,22 @@ class ComboLabel: SKNode {
     private(set) var width: CGFloat = 0
     
     init(multiplier: Int, energy: Int) {
-        xLabel = ComboLabel.createLabel(fontNamed: Constants.sanosFont)
+        let bonusSize = (ComboLabel.fontSizeHigh - ComboLabel.fontSizeLow) * CGFloat(multiplier - 2) * 0.1
+        fontSize = min(ComboLabel.fontSizeLow + bonusSize, ComboLabel.fontSizeHigh)
+        
+        xLabel = ComboLabel.createLabel(fontSize: fontSize, fontNamed: Constants.sanosFont)
         xLabel.text = "x"
         
-        multiplierLabel = ComboLabel.createLabel()
+        multiplierLabel = ComboLabel.createLabel(fontSize: fontSize)
         multiplierLabel.text = "\(multiplier)"
         
         let energyColor = SKColor(red: 0.627, green: 1, blue: 0.447, alpha: 1)
-        energyGainLabel = ComboLabel.createLabel()
+        energyGainLabel = ComboLabel.createLabel(fontSize: fontSize)
         energyGainLabel.fontColor = energyColor
         energyGainLabel.text = "+\(energy)"
         
         energySymbol = SKSpriteNode(texture: ComboLabel.energySymbolTexture)
-        let energySymbolSize = ComboLabel.fontSize * 0.8
+        let energySymbolSize = fontSize * 0.8
         energySymbol.size = CGSize(width: energySymbolSize, height: energySymbolSize)
         energySymbol.anchorPoint = CGPoint(x: 0, y: 0.5)
         energySymbol.color = energyColor
@@ -163,17 +177,17 @@ class ComboLabel: SKNode {
         width = xLabel.frame.width + multiplierLabel.frame.width + energyGainLabel.frame.width
             + energySymbol.size.width + energyMargin + energySymbolMargin
         
-        xLabel.position = CGPoint(x: -width / 2, y: 0)
-        multiplierLabel.position = xLabel.position.offsetted(dx: xLabel.frame.width, dy: 0)
+        xLabel.position = CGPoint(x: -width / 2, y: -fontSize * 0.025)
+        multiplierLabel.position = xLabel.position.offsetted(dx: xLabel.frame.width, dy: -xLabel.position.y)
         energyGainLabel.position = multiplierLabel.position.offsetted(dx: multiplierLabel.frame.width + energyMargin, dy: 0)
         energySymbol.position = energyGainLabel.position.offsetted(dx: energyGainLabel.frame.width + energySymbolMargin, dy: 0)
     }
     
-    private static func createLabel(fontNamed: String = Constants.fontName) -> SKLabelNode {
+    private static func createLabel(fontSize: CGFloat, fontNamed: String = Constants.fontName) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: fontNamed)
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .left
-        label.fontSize = ComboLabel.fontSize
+        label.fontSize = fontSize
         return label
     }
 }
