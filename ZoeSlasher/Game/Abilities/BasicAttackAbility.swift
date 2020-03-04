@@ -14,12 +14,12 @@ class BasicAttackAbilityConfig: Ability.Configuration {
         BasicAttackAbility.self
     }
     
-    var corruption = 0
+    var corruption: Float = 0
 }
 
 class BasicAttackAbility: Ability {
     
-    let corruption: Int
+    let corruption: Float
     
     required init<C>(scene: GameScene, config: C) where C : BasicAttackAbilityConfig {
         self.corruption = config.corruption

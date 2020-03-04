@@ -76,6 +76,7 @@ class MainRenderer: NSObject {
     let machineGunSymbolTexture: MTLTexture
     let cannonSymbolTexture: MTLTexture
     let splitterSymbolTexture: MTLTexture
+    let circleTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -136,6 +137,7 @@ class MainRenderer: NSObject {
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
         textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
+        textureRenderer.currentPipelineState = textureRenderer.symbolPipelineState
         clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
         energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
         
@@ -145,6 +147,7 @@ class MainRenderer: NSObject {
         machineGunSymbolTexture = createTexture(device: device, filePath: "machine-gun")
         cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
         splitterSymbolTexture = createTexture(device: device, filePath: "splitter")
+        circleTexture = createTexture(device: device, filePath: "circle")
         
         super.init()
     }
@@ -318,6 +321,8 @@ extension MainRenderer: SceneRenderer {
             texture = cannonSymbolTexture
         } else if textureName == "splitter" {
             texture = splitterSymbolTexture
+        } else if textureName == "circle" {
+            texture = circleTexture
         }
         
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)

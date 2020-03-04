@@ -122,9 +122,7 @@ class ComboLabel: SKNode {
     static let fontSizeLow: CGFloat = 120
     static let fontSizeHigh: CGFloat = 240
     
-    static let energySymbolTexture: SKTexture = {
-        SKTexture(imageNamed: "energy-image")
-    }()
+    static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
     
     private let fontSize: CGFloat
     private let xLabel: SKLabelNode

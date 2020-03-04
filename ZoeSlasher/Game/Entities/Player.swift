@@ -21,6 +21,7 @@ class Player: Node {
     
     var delegate: PlayerDelegate?
     
+    var nextStage: Stage = .idle
     private(set) var stage: Stage = .idle {
         didSet {
             delegate?.didEnterStage(stage)
@@ -63,7 +64,7 @@ class Player: Node {
     var damage: Float {
         if stage == .charging {
             return chargingDamage
-        } else if stage == .piercing || wasPiercing {
+        } else if stage == .piercing {
             let distanceMod = 1 + 3.5 * distance(pierceInitial, position) / SceneConstants.size.x
             return piercingDamage * distanceMod
         } else {
@@ -141,7 +142,7 @@ class Player: Node {
             
             if distance(pierceInitial, position) >= pierceDistance {
                 position = pierceInitial + pierceDelta
-                stage = .idle
+                nextStage = .idle
             }
         }
         
@@ -186,7 +187,7 @@ class Player: Node {
             chargeDistance = length(chargeDelta)
             
             energy -= energyUsagePerShot
-            stage = .charging
+            nextStage = .charging
             
             timeSinceLastEnergyUse = 0
         } else if stage == .charging {
@@ -203,14 +204,19 @@ class Player: Node {
             
             pierceDistance = length(pierceDelta)
             
-            stage = .piercing
+            nextStage = .piercing
         }
     }
     
     func interruptCharging() {
         anchor?.removeFromParent()
         anchor = nil
-        stage = .idle
+        nextStage = .idle
+    }
+    
+    func advanceStage() {
+        guard nextStage != stage else { return }
+        stage = nextStage
     }
     
     private func expImpulse(_ x: Float, _ k: Float) -> Float {

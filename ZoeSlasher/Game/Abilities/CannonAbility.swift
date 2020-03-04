@@ -11,12 +11,12 @@ class CannonAbilityConfig: Ability.Configuration {
         CannonAbility.self
     }
     
-    var corruption: Int = 0
+    var corruption: Float = 0
 }
 
 class CannonAbility: Ability {
 
-    let corruption: Int
+    let corruption: Float
     
     required init<C>(scene: GameScene, config: C) where C : CannonAbilityConfig {
         self.corruption = config.corruption
@@ -35,7 +35,7 @@ extension CannonAbility {
         let config = getCoreConfig(stage: 1)
         
         config.interval = 12
-        config.healthModifier = 2
+        config.healthModifier = 3.1
         
         config.symbolVelocityGain = 1.2
         config.symbolVelocityRecoil = -.pi * 1.5
@@ -43,10 +43,10 @@ extension CannonAbility {
         
         config.cost = 2
         config.spawnChanceFunction = { gameStage in
-            0.2 * step(gameStage, edge: 2) + min(0.02 * (gameStage - 2), 0.3)
+            0.1 * step(gameStage, edge: 3) + min(0.05 * (gameStage - 3), 0.2)
         }
 
-        config.corruption = 25
+        config.corruption = 20
         
         return config
     }()

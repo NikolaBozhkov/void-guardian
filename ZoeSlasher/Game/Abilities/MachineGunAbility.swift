@@ -13,12 +13,12 @@ class MachineGunAbilityConfig: Ability.Configuration {
         MachineGunAbility.self
     }
     
-    var corruption: Int = 0
+    var corruption: Float = 0
 }
 
 class MachineGunAbility: Ability {
     
-    let corruption: Int
+    let corruption: Float
     
     required init<C>(scene: GameScene, config: C) where C : MachineGunAbilityConfig {
         self.corruption = config.corruption
@@ -43,12 +43,12 @@ extension MachineGunAbility {
         config.symbolVelocityRecoil = -.pi
         config.impulseSharpness = 10.0
         
-        config.cost = 2
+        config.cost = 2.2
         config.spawnChanceFunction = { gameStage in
-            0.15 * step(gameStage, edge: 3) + min(0.01 * (gameStage - 3), 0.5)
+            0.1 * step(gameStage, edge: 5) + min(0.05 * (gameStage - 5), 0.2)
         }
         
-        config.corruption = 3
+        config.corruption = 1.5
         
         return config
     }()

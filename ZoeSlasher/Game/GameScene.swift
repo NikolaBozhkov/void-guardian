@@ -81,7 +81,6 @@ class GameScene: Scene {
         
         prevPlayerPosition = player.position
         
-        let wasPiercing = player.stage == .piercing
         player.update(deltaTime: deltaTime)
         
         for enemy in enemies {
@@ -97,8 +96,10 @@ class GameScene: Scene {
             attack.update(deltaTime: deltaTime)
         }
         
-        testPlayerEnemyCollision(wasPiercing: wasPiercing)
+        testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
+        
+        player.advanceStage()
         
         // Check for game over
         if player.health == 0 && !isGameOver {
@@ -149,7 +150,7 @@ class GameScene: Scene {
         stageManager.reset()
     }
     
-    private func testPlayerEnemyCollision(wasPiercing: Bool) {
+    private func testPlayerEnemyCollision() {
         let deltaPlayer = player.position - prevPlayerPosition
         let maxDistance = length(deltaPlayer)
         let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)

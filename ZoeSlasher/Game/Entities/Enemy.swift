@@ -97,6 +97,18 @@ class Enemy: Node {
             symbols.insert(symbol)
             add(childNode: symbol)
         }
+        
+        if ability.stage > 1 {
+            for i in 0..<3 {
+                let symbol = Node(size: [1, 1] * 65, textureName: "circle")
+                symbol.zPosition = -1
+                symbol.color.xyz = ability.color
+                symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3 + .pi / 3
+                updateSymbol(symbol, 0)
+                symbols.insert(symbol)
+                add(childNode: symbol)
+            }
+        }
     }
     
     override func acceptRenderer(_ renderer: SceneRenderer) {
@@ -212,8 +224,8 @@ class Enemy: Node {
         updateSymbolPosition(symbol)
     }
     
-    private func updateSymbolPosition(_ symbol: Node) {
-        symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * 160
+    private func updateSymbolPosition(_ symbol: Node, radius: Float = 160) {
+        symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * radius
     }
     
     private func adjustSaturation(of color: vector_float3, by scale: Float) -> vector_float3 {

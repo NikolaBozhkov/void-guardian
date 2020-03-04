@@ -116,6 +116,23 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     
     enemy += f * 0.55;
     
+    // TEST
+    
+    r1 = r;
+    r2 = r;
+    
+    r1 += sin(ang * 5.0) * 0.007 + n * 0.015;
+    r2 += sin(ang * 5.0 + M_PI_F) * 0.007 + n1 * 0.015;
+    
+    float m = 2 * 160 / 750.0;
+    float a = 0.007;
+    v = smoothstep(m - a, m, r1) - smoothstep(m, m + a, r1);
+    v += smoothstep(m - a, m, r2) - smoothstep(m, m + a, r2);
+    
+//    enemy += v * 1;
+    
+    // END TEST
+    
     float h = 1 - (dmgReceived + 0.08);
     float dmgCurve = 1 - h*h*h;
     enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1.0 * dmgCurve;
@@ -144,7 +161,11 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     
     f = min(f, 1.0);
     
+    v = min(v, 1.0);
+    
+    
     float3 healthColor = mix(baseColor, float3(1, 1, 1), damagedPart * 0.5);
+//    float3 buffColor = mix(healthColor, float3(0.3, 0.4, 0.9), v);
     return float4(mix(color.xyz, healthColor, f), enemy);
 }
 

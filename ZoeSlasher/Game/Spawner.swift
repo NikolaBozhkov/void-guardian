@@ -8,14 +8,12 @@
 
 class Spawner {
     
-    private let spawnStages = 4
     private let spawnInterval: TimeInterval = 0.1
     
     private let stagesConfig: [(allowance: Float, threshold: Double)] = [
         (0.20, 0.00),
-        (0.35, 0.20),
-        (0.40, 0.40),
-        (0.75, 0.50),
+        (0.45, 0.25),
+        (0.65, 0.50),
         (1.00, 0.75)
     ]
     

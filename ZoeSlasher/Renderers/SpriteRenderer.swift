@@ -10,7 +10,9 @@ import Metal
 
 class SpriteRenderer {
     
-    private let pipelineState: MTLRenderPipelineState
+    var currentPipelineState: MTLRenderPipelineState
+    let pipelineState: MTLRenderPipelineState
+    let symbolPipelineState: MTLRenderPipelineState
     private let vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
@@ -54,13 +56,23 @@ class SpriteRenderer {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .one
+        
+        do {
+            symbolPipelineState = try device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            fatalError(error.localizedDescription)
+        }
+        
+        currentPipelineState = pipelineState
     }
     
     func draw(with renderEncoder: MTLRenderCommandEncoder, modelMatrix: matrix_float4x4, color: vector_float4) {
         var modelMatrix = modelMatrix
         var color = color
         
-        renderEncoder.setRenderPipelineState(pipelineState)
+        renderEncoder.setRenderPipelineState(currentPipelineState)
         
         renderEncoder.setVertexBytes(vertices,
                                      length: MemoryLayout<vector_float4>.stride * vertices.count,
