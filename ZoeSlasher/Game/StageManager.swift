@@ -17,7 +17,7 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
-    static let stageBudgetTargets: [Int: Float] = [1: 8, 5: 15, 8: 20, 12: 27, 20: 40, 30: 60]
+    static let stageBudgetTargets: [Int: Float] = [1: 8, 5: 14, 8: 18, 12: 24, 15: 27]
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?

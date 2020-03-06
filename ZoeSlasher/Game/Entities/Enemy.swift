@@ -211,7 +211,7 @@ class Enemy: Node {
             angle += n * 0.01
             speed = max(min(speed + n * 2, 200), 0)
             
-            position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
+//            position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
             
             let currentPositionDelta = position - prevPosition
             let deltaDelta = currentPositionDelta - positionDelta

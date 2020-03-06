@@ -45,7 +45,7 @@ extension MachineGunAbility {
         
         config.cost = 2.2
         config.spawnChanceFunction = { gameStage in
-            0.1 * step(gameStage, edge: 5) + min(0.05 * (gameStage - 5), 0.2)
+            0.1 * step(gameStage, edge: 5) + min(0.04 * (gameStage - 5), 0.1)
         }
         
         config.corruption = 1.5
