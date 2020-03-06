@@ -114,34 +114,36 @@ class SKGameScene: SKScene {
         let dmgLabel = makeLabel(text: "\(Int(dmg))", fontSize: 90, fontName: UIConstants.sanosFont)
         dmgLabel.position = position
         dmgLabel.fontColor = color
-        dmgLabel.setScale(0.85)
+        dmgLabel.setScale(0.8)
         
-        let randomX = CGFloat.random(in: -30...30)
-        let randomY = CGFloat.random(in: 0...30)
+        let randomX = CGFloat.random(in: -20...20)
+        let randomY = CGFloat.random(in: 0...20)
         
         dmgLabel.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.3)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.6)
         fadeOut.timingMode = .easeIn
         
-        let appearDuration: TimeInterval = 0.1
+        let appearDuration: TimeInterval = 0.15
         
         let scaleUp = SKAction.scale(to: 1.0, duration: appearDuration)
         scaleUp.timingMode = .easeOut
         
-        let moveBy = SKAction.moveBy(x: randomX,
-                                     y: randomY,
-                                     duration: appearDuration)
+        let scaleDown = SKAction.scale(to: 0.85, duration: 0.7)
+        
+        let moveBy = SKAction.moveBy(x: 0,
+                                     y: 20,
+                                     duration: 0.7)
         moveBy.timingMode = .easeOut
         
-//        dmgLabel.run(SKAction.sequence([
-//            scaleUp,
-//            scaleNormal
-//        ]))
+        dmgLabel.run(SKAction.sequence([
+            scaleUp,
+            scaleDown
+        ]))
         
         dmgLabel.run(moveBy)
         dmgLabel.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.2),
+            SKAction.wait(forDuration: 0.25),
             fadeOut,
             SKAction.removeFromParent()
         ]))
