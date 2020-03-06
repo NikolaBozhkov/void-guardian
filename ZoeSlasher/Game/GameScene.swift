@@ -123,6 +123,8 @@ class GameScene: Scene {
         }
     }
     
+//    static var i = 0
+    
     func didTap(at location: vector_float2) {
         let consumed = skGameScene.didTap(at: CGPoint(x: CGFloat(location.x), y: CGFloat(location.y)))
         
@@ -193,8 +195,12 @@ class GameScene: Scene {
         for attack in attacks {
             var shouldRemoveAttack = false
             if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 {
-                player.receiveDamage(Float(attack.corruption))
+                player.receiveDamage(attack.corruption)
                 shouldRemoveAttack = true
+                
+                skGameScene.showDmg(attack.corruption,
+                                    at: CGPoint(player.position + [0, 170]),
+                                    color: SKColor(vector_float3(1.0, 0.5, 0.5)))
             }
             
             if attack.didReachTarget || shouldRemoveAttack {
@@ -267,7 +273,14 @@ extension GameScene: PlayerDelegate {
 }
 
 extension GameScene: EnemyDelegate {
+    
     func didDestroy(_ enemy: Enemy) {
         enemies.remove(enemy)
+    }
+    
+    func didReceiveDmg(_ enemy: Enemy, damage: Float) {
+        skGameScene.showDmg(damage,
+                            at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
+                            color: .white)
     }
 }

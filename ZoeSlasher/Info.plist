@@ -6,6 +6,7 @@
 	<array>
 		<string>Arber-Vintage-Extended.otf</string>
 		<string>Sanos-Extended.ttf</string>
+		<string>Besom-extended.otf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

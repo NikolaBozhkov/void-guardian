@@ -7,10 +7,13 @@
 //
 
 protocol EnemyDelegate {
+    func didReceiveDmg(_ enemy: Enemy, damage: Float)
     func didDestroy(_ enemy: Enemy)
 }
 
 class Enemy: Node {
+    
+    static let baseHealth: Float = 20
     
     private static let recentlyHitInterval: TimeInterval = 0.5
 
@@ -58,14 +61,14 @@ class Enemy: Node {
     
     private var lastHealth: Float = 0
     
-    private var positionBeforeImpact: vector_float2 = .zero
+    var positionBeforeImpact: vector_float2 = .zero
     private var isImpactLocked = false
     private var dmgReceivedNormalized: Float = 0
     
     init(position: vector_float2, ability: Ability) {
         self.ability = ability
         
-        maxHealth = ability.healthModifier * 1.0
+        maxHealth = ability.healthModifier * Enemy.baseHealth
         health = maxHealth
         lastHealth = health
         
@@ -139,6 +142,8 @@ class Enemy: Node {
         
         timeSinceLastHit = 0
         isImmune = true
+        
+        delegate?.didReceiveDmg(self, damage: damage)
     }
     
     func resetHitImmunity() {

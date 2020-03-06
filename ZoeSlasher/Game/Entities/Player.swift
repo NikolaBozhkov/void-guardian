@@ -16,8 +16,8 @@ class Player: Node {
         case charging, piercing, idle
     }
     
-    static let baseChargingDamage: Float = 0.5
-    static let basePiercingDamage: Float = 1.0
+    static let baseChargingDamage: Float = Enemy.baseHealth * 0.5
+    static let basePiercingDamage: Float = Enemy.baseHealth
     
     var delegate: PlayerDelegate?
     
