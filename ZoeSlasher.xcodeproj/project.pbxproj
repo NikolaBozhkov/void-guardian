@@ -28,6 +28,7 @@
 		2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112724127D2C00900AE9 /* UIColor+Extensions.swift */; };
 		2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112B2412880600900AE9 /* SKColor+Extensions.swift */; };
 		2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112D24129E2700900AE9 /* Besom-extended.otf */; };
+		2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112F24156A1500900AE9 /* Muli-Regular.ttf */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
 		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
@@ -68,6 +69,7 @@
 		2498112724127D2C00900AE9 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		2498112B2412880600900AE9 /* SKColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKColor+Extensions.swift"; sourceTree = "<group>"; };
 		2498112D24129E2700900AE9 /* Besom-extended.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Besom-extended.otf"; sourceTree = "<group>"; };
+		2498112F24156A1500900AE9 /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 		247D705623F0085600480199 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2498112F24156A1500900AE9 /* Muli-Regular.ttf */,
 				2498112D24129E2700900AE9 /* Besom-extended.otf */,
 				247D705723F0086D00480199 /* Arber-Vintage-Extended.otf */,
 				24629E62240D6A87009A465B /* Sanos-Extended.ttf */,
@@ -300,6 +303,7 @@
 			files = (
 				24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */,
 				2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */,
+				2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */,
 				24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */,
 				247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,

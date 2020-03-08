@@ -12,6 +12,7 @@ enum UIConstants {
     static let fontName = "ArberVintageExtended"
     static let sanosFont = "SansExtended"
     static let besomFont = "Besom"
+    static let muliFont = "Muli-Regular"
 }
 
 class SKGameScene: SKScene {
@@ -38,11 +39,11 @@ class SKGameScene: SKScene {
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
         addChild(scoreLabel)
         
-//        for family in UIFont.familyNames {
-//            for font in UIFont.fontNames(forFamilyName: family) {
-//                print(font)
-//            }
-//        }
+        for family in UIFont.familyNames {
+            for font in UIFont.fontNames(forFamilyName: family) {
+                print(font)
+            }
+        }
     }
     
     func didGameOver() {
@@ -222,6 +223,41 @@ class SKGameScene: SKScene {
         let label = createLossGainLabel(amount: Int(dmg), at: position, color: color)
         addChild(label)
         shake(powerFactor)
+    }
+    
+    func showNoEnergyLabel() {
+        let label = makeLabel(text: "Not enough energy", fontSize: 100, fontName: UIConstants.muliFont)
+        label.fontColor = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
+        
+        let offset: CGFloat = 270
+        let threshold: Float = Float(offset) * 1.5
+        
+        let doesFitTop = gameScene.player.position.y + threshold < gameScene.size.y / 2
+        let doesFitSideways = gameScene.player.position.x - Float(label.frame.width / 2) > gameScene.safeLeft
+            && gameScene.player.position.x + Float(label.frame.width / 2) < gameScene.size.x / 2
+        let doesFitRight = gameScene.player.position.x + threshold + Float(label.frame.width) < gameScene.size.x / 2
+        
+        let direction: CGPoint
+        if doesFitTop && doesFitSideways {
+            direction = CGPoint(x: 0, y: 1)
+        } else if !doesFitTop && doesFitSideways {
+            direction = CGPoint(x: 0, y: -1)
+        } else if doesFitRight {
+            direction = CGPoint(x: 1, y: 0)
+        } else {
+            direction = CGPoint(x: -1, y: 0)
+        }
+            
+        let positionOffset = CGPoint(x: CGFloat(direction.x) * (label.frame.width / 2 + offset), y: direction.y * offset)
+        label.position = CGPoint(gameScene.player.position) + positionOffset
+        
+        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1))
+        label.run(SKAction.sequence([
+            SKAction.fadeOut(withDuration: 1),
+            SKAction.removeFromParent()
+        ]))
+        
+        addChild(label)
     }
     
     func shake(_ powerFactor: Float) {

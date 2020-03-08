@@ -131,8 +131,8 @@ class GameScene: Scene {
         let consumed = skGameScene.didTap(at: CGPoint(x: CGFloat(location.x), y: CGFloat(location.y)))
         
         guard !isGameOver, !consumed else { return }
-        player.move(to: location)
         
+        player.move(to: location)
         
 //        GameScene.i += 1
 //        if GameScene.i == 11 {
@@ -245,7 +245,7 @@ class GameScene: Scene {
         
         guard enemyHitsForMove >= 2 else { return }
         
-        let energyGain = enemyHitsForMove * 4
+//        let energyGain = enemyHitsForMove * 4
 //        player.energy += Float(energyGain)
         
 //        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energyGain)
@@ -276,6 +276,10 @@ extension GameScene: PlayerDelegate {
         } else if stage == .piercing {
             shouldResetHitEnemies = true
         }
+    }
+    
+    func didTryToMoveWithoutEnergy() {
+        skGameScene.showNoEnergyLabel()
     }
 }
 

@@ -139,6 +139,7 @@ fragment float4 anchorShader(VertexOut in [[stage_in]],
 fragment float4 energySymbolShader(VertexOut in [[stage_in]],
                                    constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                    constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                   constant float &timeSinceNoEnergy [[buffer(5)]],
                                    texture2d<float> texture [[texture(2)]],
                                    texture2d<float> glow [[texture(4)]])
 {
@@ -156,7 +157,14 @@ fragment float4 energySymbolShader(VertexOut in [[stage_in]],
     g = gSample * full * g;
     
     f += g;
-    float3 col = mix(float3(1), float3(0.627, 1.000, 0.447), step(0.01, gSample));
+    
+    // No energy flash
+    float k = 4;
+    float impulse = expImpulse(timeSinceNoEnergy + 1 / k, k);
+    f += impulse * gSample * 2;
+    
+    float3 glowColor = mix(float3(0.627, 1.000, 0.447), float3(1.0, 0.2, 0.2), impulse);
+    float3 col = mix(float3(1), glowColor, step(0.01, gSample));
 //    col = float3(0.431, 1.00, 0.473);
     return float4(col, f);
 }

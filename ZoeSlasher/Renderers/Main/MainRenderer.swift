@@ -317,9 +317,14 @@ extension MainRenderer {
         textureRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnergySymbol(_ node: Node) {
+    func renderEnergySymbol(_ node: EnergySymbol) {
         renderEncoder.setFragmentTexture(energySymbolTexture, index: 2)
         renderEncoder.setFragmentTexture(energyGlowTexture, index: 4)
+        
+        renderEncoder.setFragmentBytes(&node.timeSinceNoEnergy,
+                                       length: MemoryLayout<Float>.size,
+                                       index: 5)
+        
         energySymbolRenderer.draw(node, with: renderEncoder)
     }
     

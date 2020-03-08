@@ -8,6 +8,7 @@
 
 protocol PlayerDelegate {
     func didEnterStage(_ stage: Player.Stage)
+    func didTryToMoveWithoutEnergy()
 }
 
 class Player: Node {
@@ -70,6 +71,10 @@ class Player: Node {
         } else {
             return chargingDamage * 0.1
         }
+    }
+    
+    var hasEnoughEnergy: Bool {
+        return energy >= energyUsagePerShot
     }
     
     var energy: Float = 100 {
@@ -161,7 +166,7 @@ class Player: Node {
     }
     
     func move(to target: vector_float2) {
-        if stage == .idle && energy >= energyUsagePerShot {
+        if stage == .idle && hasEnoughEnergy {
             
             // Spawn anchor
             let anchor = Node()
@@ -189,8 +194,12 @@ class Player: Node {
             nextStage = .charging
             
             timeSinceLastEnergyUse = 0
-        } else if stage == .charging {
             
+        } else if stage == .idle && !hasEnoughEnergy {
+            energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
+            delegate?.didTryToMoveWithoutEnergy()
+            
+        } else if stage == .charging {
             anchor?.removeFromParent()
             anchor = nil
             
@@ -229,6 +238,7 @@ class EnergySymbol: Node {
     private let index: Int
     
     var timeSinceLastUse: Float = 100
+    var timeSinceNoEnergy: Float = 1000
     private var kickbackForce: Float = 0
     
     init(index: Int) {
@@ -255,6 +265,7 @@ class EnergySymbol: Node {
     
     func update(deltaTime: Float, energy: Float) {
         timeSinceLastUse += deltaTime
+        timeSinceNoEnergy += deltaTime
         
         let k: Float = 7
         let f = expImpulse(timeSinceLastUse + 1 / k, k)
