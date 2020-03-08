@@ -18,6 +18,8 @@ class SKGameScene: SKScene {
     
     unowned var gameScene: GameScene!
     
+    let shakeNode = SKNode()
+    
     private var scoreLabel: SKLabelNode!
     private var score = 0 {
         didSet {
@@ -27,6 +29,8 @@ class SKGameScene: SKScene {
     
     override func sceneDidLoad() {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
+        addChild(shakeNode)
         
         scoreLabel = makeLabel(text: "1", fontSize: 200)
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
@@ -110,30 +114,28 @@ class SKGameScene: SKScene {
         addChild(comboLabel)
     }
     
-    func showDmg(_ dmg: Float, at position: CGPoint, color: SKColor) {
-        let dmgLabel = makeLabel(text: "\(Int(dmg))", fontSize: 90, fontName: UIConstants.sanosFont)
+    func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
+        let dmgLabel = makeLabel(text: "\(Int(dmg))", fontSize: 95, fontName: UIConstants.sanosFont)
         dmgLabel.position = position
         dmgLabel.fontColor = color
-        dmgLabel.setScale(0.8)
+        dmgLabel.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
         let randomY = CGFloat.random(in: 0...20)
         
         dmgLabel.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.6)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
         fadeOut.timingMode = .easeIn
         
-        let appearDuration: TimeInterval = 0.15
-        
-        let scaleUp = SKAction.scale(to: 1.0, duration: appearDuration)
+        let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.85, duration: 0.7)
+        let scaleDown = SKAction.scale(to: 0.75, duration: 1.1)
         
         let moveBy = SKAction.moveBy(x: 0,
-                                     y: 20,
-                                     duration: 0.7)
+                                     y: 30,
+                                     duration: 1.1)
         moveBy.timingMode = .easeOut
         
         dmgLabel.run(SKAction.sequence([
@@ -143,12 +145,39 @@ class SKGameScene: SKScene {
         
         dmgLabel.run(moveBy)
         dmgLabel.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.25),
+            SKAction.wait(forDuration: 0.3),
             fadeOut,
             SKAction.removeFromParent()
         ]))
         
         addChild(dmgLabel)
+        
+        shake(powerFactor)
+    }
+    
+    func shake(_ powerFactor: Float) {
+        let f = 1 - powerFactor
+        let powerFactor = 1 - f*f*f
+        
+        var actions = [SKAction]()
+        var amplitude: CGFloat = 1.0
+        let power: CGFloat = 8 * CGFloat(powerFactor)
+        
+        for _ in 0..<3 {
+            let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
+            let translation = direction * power * amplitude
+            let moveAction = SKAction.moveBy(x: translation.x,
+                                             y: translation.y,
+                                             duration: 0.0334)
+            moveAction.timingMode = .easeOut
+            
+            actions.append(moveAction)
+            actions.append(moveAction.reversed())
+            
+            amplitude *= 0.5
+        }
+        
+        shakeNode.run(SKAction.sequence(actions))
     }
     
     private func expImpulse(_ x: Float, _ k: Float) -> Float {

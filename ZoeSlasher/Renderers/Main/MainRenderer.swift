@@ -224,14 +224,13 @@ class MainRenderer: NSObject {
 }
 
 // MARK: - SceneRenderer
-extension MainRenderer: SceneRenderer {
+extension MainRenderer {
     
-    func renderBackground(modelMatrix: matrix_float4x4, color: vector_float4) {
-        backgroundRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    func renderBackground(_ node: Node) {
+        backgroundRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderPlayer(modelMatrix: matrix_float4x4,
-                      color: vector_float4,
+    func renderPlayer(_ player: Player,
                       position: vector_float2,
                       positionDelta: vector_float2,
                       health: Float,
@@ -240,7 +239,7 @@ extension MainRenderer: SceneRenderer {
                       dmgReceived: Float,
                       timeSinceLastEnergyUse: Float) {
         
-        var position = normalizeWorldPosition(position)
+        var position = normalizeWorldPosition(player.worldPosition)
         var positionDelta = positionDelta
         var health = health
         var fromHealth = fromHealth
@@ -256,15 +255,14 @@ extension MainRenderer: SceneRenderer {
         renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 10)
         renderEncoder.setFragmentBytes(&timeSinceLastEnergyUse, length: MemoryLayout<Float>.size, index: 11)
         
-        playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        playerRenderer.draw(player, with: renderEncoder)
     }
     
-    func renderAnchor(modelMatrix: matrix_float4x4, color: vector_float4) {
-        anchorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    func renderAnchor(_ node: Node) {
+        anchorRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnemy(modelMatrix: matrix_float4x4,
-                     color: vector_float4,
+    func renderEnemy(_ enemy: Enemy,
                      position: vector_float2,
                      positionDelta: vector_float2,
                      timeAlive: Float,
@@ -276,7 +274,7 @@ extension MainRenderer: SceneRenderer {
         
         var positionDelta = positionDelta
         var timeAlive = timeAlive
-        var position = normalizeWorldPosition(position)
+        var position = normalizeWorldPosition(enemy.worldPosition)
         var baseColor = baseColor
         var health = health
         var lastHealth = lastHealth
@@ -290,28 +288,18 @@ extension MainRenderer: SceneRenderer {
         renderEncoder.setFragmentBytes(&lastHealth, length: MemoryLayout<Float>.size, index: 10)
         renderEncoder.setFragmentBytes(&timeSinceHit, length: MemoryLayout<Float>.size, index: 11)
         renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 12)
-        enemyRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        enemyRenderer.draw(enemy, with: renderEncoder)
     }
     
-    func renderShot(modelMatrix: matrix_float4x4, color: vector_float4) {
-        playerRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    func renderEnemyAttack(_ node: Node) {
+        clearColorRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnergyBar(modelMatrix: matrix_float4x4, color: vector_float4, energyPct: Float) {
-        var energyPct = energyPct
-        renderEncoder.setFragmentBytes(&energyPct, length: MemoryLayout<Float>.size, index: 4)
-        energyBarRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+    func renderDefault(_ node: Node) {
+        clearColorRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnemyAttack(modelMatrix: matrix_float4x4, color: vector_float4) {
-        clearColorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
-    }
-    
-    func renderDefault(modelMatrix: matrix_float4x4, color: vector_float4) {
-        clearColorRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
-    }
-    
-    func renderTexture(_ textureName: String, modelMatrix: matrix_float4x4, color: vector_float4) {
+    func renderTexture(_ node: Node, _ textureName: String) {
         var texture: MTLTexture!
         if textureName == "basic" {
             texture = basicSymbolTexture
@@ -326,17 +314,17 @@ extension MainRenderer: SceneRenderer {
         }
         
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
-        textureRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        textureRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnergySymbol(modelMatrix: matrix_float4x4, color: vector_float4) {
+    func renderEnergySymbol(_ node: Node) {
         renderEncoder.setFragmentTexture(energySymbolTexture, index: 2)
         renderEncoder.setFragmentTexture(energyGlowTexture, index: 4)
-        energySymbolRenderer.draw(with: renderEncoder, modelMatrix: modelMatrix, color: color)
+        energySymbolRenderer.draw(node, with: renderEncoder)
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {
-        0.5 + pos / scene.size
+        0.5 + (pos - scene.rootNode.position) / scene.size
     }
 }
 

@@ -68,20 +68,23 @@ class SpriteRenderer {
         currentPipelineState = pipelineState
     }
     
-    func draw(with renderEncoder: MTLRenderCommandEncoder, modelMatrix: matrix_float4x4, color: vector_float4) {
-        var modelMatrix = modelMatrix
-        var color = color
-        
+    func draw(_ node: Node, with renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setRenderPipelineState(currentPipelineState)
         
         renderEncoder.setVertexBytes(vertices,
                                      length: MemoryLayout<vector_float4>.stride * vertices.count,
                                      index: BufferIndex.vertices.rawValue)
-        renderEncoder.setVertexBytes(&modelMatrix,
+        
+        var worldTransform = node.worldTransform
+        renderEncoder.setVertexBytes(&worldTransform,
                                      length: MemoryLayout<matrix_float4x4>.stride,
                                      index: BufferIndex.spriteModelMatrix.rawValue)
         
-        renderEncoder.setFragmentBytes(&color,
+        renderEncoder.setVertexBytes(&node.size,
+                                     length: MemoryLayout<vector_float2>.stride,
+                                     index: BufferIndex.size.rawValue)
+        
+        renderEncoder.setFragmentBytes(&node.color,
                                        length: MemoryLayout<vector_float4>.stride,
                                        index: BufferIndex.spriteColor.rawValue)
         

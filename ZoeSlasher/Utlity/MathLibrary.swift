@@ -134,6 +134,12 @@ extension float4x4 {
     }
 }
 
+extension SIMD2 where Scalar == Float {
+    init(_ point: CGPoint) {
+        self.init(Float(point.x), Float(point.y))
+    }
+}
+
 extension CGPoint {
     init(_ point: vector_float2) {
         self.init(x: CGFloat(point.x), y: CGFloat(point.y))

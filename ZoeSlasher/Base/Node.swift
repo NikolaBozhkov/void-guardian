@@ -9,7 +9,7 @@
 import Metal
 
 protocol Renderable {
-    func acceptRenderer(_ renderer: SceneRenderer)
+    func acceptRenderer(_ renderer: MainRenderer)
 }
 
 class Node: Renderable, Hashable {
@@ -23,8 +23,10 @@ class Node: Renderable, Hashable {
     var position = vector_float2.zero { didSet { uniformsDirty = true } }
     var zPosition = 0 { didSet { uniformsDirty = true } }
     
-    var size = vector_float2.zero { didSet { uniformsDirty = true } }
+    var size = vector_float2.zero
     var physicsSize = vector_float2.zero
+    
+    var scale: Float = 1 { didSet { uniformsDirty = true} }
     
     var rotation: Float = 0 { didSet { uniformsDirty = true } }
     
@@ -33,11 +35,11 @@ class Node: Renderable, Hashable {
     var parent: Node?
     var children = Set<Node>()
     
-    lazy var renderFunction: (SceneRenderer) -> Void = { [unowned self] renderer in
+    lazy var renderFunction: (MainRenderer) -> Void = { [unowned self] renderer in
         if let textureName = self.textureName {
-            renderer.renderTexture(textureName, modelMatrix: self.modelMatrix, color: self.color)
+            renderer.renderTexture(self, textureName)
         } else {
-            renderer.renderDefault(modelMatrix: self.modelMatrix, color: self.color)
+            renderer.renderDefault(self)
         }
     }
     
@@ -48,7 +50,7 @@ class Node: Renderable, Hashable {
             if uniformsDirty {
                 _modelMatrix = float4x4.makeTranslation(vector_float3(position, Float(zPosition)))
                 _modelMatrix.rotateAroundZ(by: rotation)
-                _modelMatrix.scale(by: vector_float3(size, 1))
+                _modelMatrix.scale(by: vector_float3(scale, scale, 1))
                 uniformsDirty = false
             }
             
@@ -66,6 +68,14 @@ class Node: Renderable, Hashable {
         }
         
         return modelMatrix
+    }
+    
+    var worldPosition: vector_float2 {
+        if let parent = parent {
+            return parent.position + position
+        }
+        
+        return position
     }
     
     init() {
@@ -111,7 +121,7 @@ class Node: Renderable, Hashable {
         parent.remove(childNode: self)
     }
     
-    func acceptRenderer(_ renderer: SceneRenderer) {
+    func acceptRenderer(_ renderer: MainRenderer) {
         renderFunction(renderer)
     }
 }

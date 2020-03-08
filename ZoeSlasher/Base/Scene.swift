@@ -10,6 +10,7 @@ import UIKit
 
 class Scene: Node {
     
+    let rootNode = Node()
     var safeAreaInsets = UIEdgeInsets.zero
     
     var safeLeft: Float {
@@ -28,8 +29,9 @@ class Scene: Node {
         return size.y / 2
     }
     
-    func initialize() {
-        
+    override init() {
+        super.init()
+        add(childNode: rootNode)
     }
     
     func randomPosition(padding: vector_float2 = [0, 0]) -> vector_float2 {

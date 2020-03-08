@@ -34,7 +34,7 @@ class EnemyAttack: Node {
         size = [0, 8]
         
         renderFunction = { [unowned self] in
-            $0.renderEnemyAttack(modelMatrix: self.modelMatrix, color: self.color)
+            $0.renderEnemyAttack(self)
         }
     }
     

@@ -26,7 +26,8 @@ typedef NS_ENUM(NSInteger, BufferIndex)
     BufferIndexVertices = 0,
     BufferIndexSpriteModelMatrix = 1,
     BufferIndexUniforms = 2,
-    BufferIndexSpriteColor = 3
+    BufferIndexSpriteColor = 3,
+    BufferIndexSize = 4
 };
 
 typedef NS_ENUM(NSInteger, TextureIndex)

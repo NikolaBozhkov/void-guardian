@@ -74,6 +74,6 @@ class Spawner {
                           ability: config.createAbility(for: scene))
         enemy.delegate = scene
         scene.enemies.insert(enemy)
-        scene.add(childNode: enemy)
+        scene.rootNode.add(childNode: enemy)
     }
 }

@@ -88,7 +88,7 @@ class StageManager {
     
     func reset() {
         isActive = true
-        stage = 0
+        stage = 10
         advanceStage()
     }
 }

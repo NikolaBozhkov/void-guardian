@@ -62,7 +62,7 @@ class Enemy: Node {
     private var lastHealth: Float = 0
     
     var positionBeforeImpact: vector_float2 = .zero
-    private var isImpactLocked = false
+    var isImpactLocked = false
     private var dmgReceivedNormalized: Float = 0
     
     init(position: vector_float2, ability: Ability) {
@@ -114,9 +114,8 @@ class Enemy: Node {
         }
     }
     
-    override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderEnemy(modelMatrix: modelMatrix,
-                             color: color,
+    override func acceptRenderer(_ renderer: MainRenderer) {
+        renderer.renderEnemy(self,
                              position: position,
                              positionDelta: positionDelta,
                              timeAlive: timeAlive,
@@ -134,9 +133,12 @@ class Enemy: Node {
         health -= damage
         dmgReceivedNormalized = min(damage / maxHealth, 1.0)
         
-        positionBeforeImpact = position
+        if !isImpactLocked {
+            positionBeforeImpact = position
+            isImpactLocked = true
+        }
+        
         position += impact
-        isImpactLocked = true
         
         symbols.forEach { updateSymbolPosition($0) }
         
@@ -162,7 +164,7 @@ class Enemy: Node {
         timeSinceLastSymbolFlash += deltaTime
         timeSinceLastHit += deltaTime
         
-        if isImpactLocked && timeSinceLastHit > 0.07 {
+        if isImpactLocked && timeSinceLastHit > 0.085 {
             isImpactLocked = false
             position = positionBeforeImpact
         }
@@ -230,7 +232,7 @@ class Enemy: Node {
     }
     
     private func updateSymbolPosition(_ symbol: Node, radius: Float = 160) {
-        symbol.position = position + [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * radius
+        symbol.position = [cos(symbol.rotation + .pi / 2), sin(symbol.rotation + .pi / 2)] * radius
     }
     
     private func adjustSaturation(of color: vector_float3, by scale: Float) -> vector_float3 {

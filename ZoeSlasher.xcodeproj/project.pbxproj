@@ -14,7 +14,6 @@
 		2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393423C465B0001A6CAE /* SpriteRenderer.swift */; };
 		2469393723C4A544001A6CAE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393623C4A544001A6CAE /* Node.swift */; };
 		2469393923C5D126001A6CAE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393823C5D126001A6CAE /* Player.swift */; };
-		2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393A23C5D867001A6CAE /* SceneRenderer.swift */; };
 		2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393C23C5EB1E001A6CAE /* Scene.swift */; };
 		246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */ = {isa = PBXBuildFile; fileRef = 246ACBB823F7270500C947C9 /* NoiseLib.metal */; };
 		247D704423E1D2CD00480199 /* Player.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247D704323E1D2CD00480199 /* Player.metal */; };
@@ -27,7 +26,6 @@
 		247D705E23F52D8B00480199 /* Common.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247D705D23F52D8B00480199 /* Common.metal */; };
 		247D706123F531A800480199 /* RendererCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D706023F531A800480199 /* RendererCommon.swift */; };
 		2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112724127D2C00900AE9 /* UIColor+Extensions.swift */; };
-		2498112A2412845100900AE9 /* dmgFontShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 249811292412845100900AE9 /* dmgFontShader.fsh */; };
 		2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112B2412880600900AE9 /* SKColor+Extensions.swift */; };
 		2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112D24129E2700900AE9 /* Besom-extended.otf */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
@@ -54,7 +52,6 @@
 		2469393423C465B0001A6CAE /* SpriteRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRenderer.swift; sourceTree = "<group>"; };
 		2469393623C4A544001A6CAE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		2469393823C5D126001A6CAE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		2469393A23C5D867001A6CAE /* SceneRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRenderer.swift; sourceTree = "<group>"; };
 		2469393C23C5EB1E001A6CAE /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		246ACBB823F7270500C947C9 /* NoiseLib.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = NoiseLib.metal; sourceTree = "<group>"; };
 		247D704323E1D2CD00480199 /* Player.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Player.metal; sourceTree = "<group>"; };
@@ -69,7 +66,6 @@
 		247D705F23F52F2900480199 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		247D706023F531A800480199 /* RendererCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RendererCommon.swift; sourceTree = "<group>"; };
 		2498112724127D2C00900AE9 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
-		249811292412845100900AE9 /* dmgFontShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = dmgFontShader.fsh; sourceTree = "<group>"; };
 		2498112B2412880600900AE9 /* SKColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKColor+Extensions.swift"; sourceTree = "<group>"; };
 		2498112D24129E2700900AE9 /* Besom-extended.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Besom-extended.otf"; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +113,6 @@
 			children = (
 				247D705923F009DD00480199 /* SKGameScene.swift */,
 				2464427B24127BFB004CF697 /* ComboLabel.swift */,
-				249811292412845100900AE9 /* dmgFontShader.fsh */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -181,7 +176,6 @@
 			isa = PBXGroup;
 			children = (
 				24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */,
-				2469393A23C5D867001A6CAE /* SceneRenderer.swift */,
 				247D706023F531A800480199 /* RendererCommon.swift */,
 				247D705F23F52F2900480199 /* Common.h */,
 				247D705D23F52D8B00480199 /* Common.metal */,
@@ -309,7 +303,6 @@
 				24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */,
 				247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,
-				2498112A2412845100900AE9 /* dmgFontShader.fsh in Resources */,
 				24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,7 +323,6 @@
 				2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
-				2469393B23C5D867001A6CAE /* SceneRenderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,

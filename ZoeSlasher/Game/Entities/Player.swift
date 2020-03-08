@@ -53,7 +53,7 @@ class Player: Node {
     
     private var energySymbols = Set<EnergySymbol>()
     
-    private var maxHealth: Float = 100
+    var maxHealth: Float = 100
     private var lastHealth: Float = 100
     private var healthDmgIndicator: Float = 100
     private var timeSinceLastHit: Float = 100
@@ -97,9 +97,8 @@ class Player: Node {
         }
     }
     
-    override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderPlayer(modelMatrix: modelMatrix,
-                              color: color,
+    override func acceptRenderer(_ renderer: MainRenderer) {
+        renderer.renderPlayer(self,
                               position: position,
                               positionDelta: positionDelta,
                               health: health / maxHealth,
@@ -171,11 +170,11 @@ class Player: Node {
             anchor.color = [1, 1, 0, 1]
             anchor.position = target
             anchor.renderFunction = { [unowned self] in
-                $0.renderAnchor(modelMatrix: self.anchor!.modelMatrix, color: self.anchor!.color)
+                $0.renderAnchor(self.anchor!)
             }
             
             self.anchor = anchor
-            add(childNode: anchor)
+            parent?.add(childNode: anchor)
             
             chargeInitial = position
             chargeDelta = target - position
@@ -243,16 +242,15 @@ class EnergySymbol: Node {
         update(forEnergy: 100)
     }
     
-    override func acceptRenderer(_ renderer: SceneRenderer) {
-        renderer.renderEnergySymbol(modelMatrix: modelMatrix, color: color)
+    override func acceptRenderer(_ renderer: MainRenderer) {
+        renderer.renderEnergySymbol(self)
     }
     
     func update(forEnergy energy: Float) {
         let e = energy - Float(index) * 25
         color.w = simd_clamp(e / 25, 0, 1)
-        let parentPosition = parent?.position ?? .zero
         let direction = vector_float2(cos(rotation + .pi / 2), sin(rotation + .pi / 2))
-        position = parentPosition + direction * (170 - 30 * kickbackForce)
+        position = direction * (170 - 30 * kickbackForce)
     }
     
     func update(deltaTime: Float, energy: Float) {

@@ -60,10 +60,10 @@ class GameScene: Scene {
         background.size = size
         background.zPosition = 10
         background.renderFunction = { [unowned self] in
-            $0.renderBackground(modelMatrix: self.modelMatrix, color: self.color)
+            $0.renderBackground(self.background)
         }
         
-        add(childNode: background)
+        rootNode.add(childNode: background)
         
         player.delegate = self
         
@@ -71,6 +71,8 @@ class GameScene: Scene {
     }
     
     func update(deltaTime: TimeInterval) {
+        rootNode.position = vector_float2(skGameScene.shakeNode.position)
+        
         if shouldResetHitEnemies {
             resetHitEnemies()
         }
@@ -145,7 +147,7 @@ class GameScene: Scene {
         player.position = .zero
         player.energy = 100
         player.health = 100
-        add(childNode: player)
+        rootNode.add(childNode: player)
         
         isGameOver = false
         
@@ -165,12 +167,12 @@ class GameScene: Scene {
             let position = prevPlayerPosition + distanceTravelled * direction
             
             for enemy in enemies where !enemy.shouldRemove && !enemy.isImmune {
-                let d = distance(position, enemy.position)
+                let d = distance(position, enemy.isImpactLocked ? enemy.positionBeforeImpact : enemy.position)
                 
                 // Intersection logic
                 let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
                 if d - 0.1 <= r {
-                    let impactMod = 100 * min(player.damage / enemy.maxHealth, 1.0)
+                    let impactMod = 150 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
                     if player.stage != .idle {
@@ -198,9 +200,10 @@ class GameScene: Scene {
                 player.receiveDamage(attack.corruption)
                 shouldRemoveAttack = true
                 
-                skGameScene.showDmg(attack.corruption,
-                                    at: CGPoint(player.position + [0, 170]),
-                                    color: SKColor(vector_float3(1.0, 0.5, 0.5)))
+                skGameScene.didDmg(attack.corruption,
+                                   powerFactor: min(attack.corruption / player.maxHealth, 1.0),
+                                   at: CGPoint(player.position + [0, 170]),
+                                   color: SKColor(vector_float3(1.0, 0.5, 0.5)))
             }
             
             if attack.didReachTarget || shouldRemoveAttack {
@@ -279,8 +282,9 @@ extension GameScene: EnemyDelegate {
     }
     
     func didReceiveDmg(_ enemy: Enemy, damage: Float) {
-        skGameScene.showDmg(damage,
-                            at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
-                            color: .white)
+        skGameScene.didDmg(damage,
+                           powerFactor: min(damage / enemy.maxHealth, 1.0),
+                           at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
+                           color: .white)
     }
 }

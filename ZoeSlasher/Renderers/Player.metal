@@ -55,7 +55,7 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     
     float player = 1.0 - smoothstep(uniforms.playerSize - 0.1, uniforms.playerSize, d1);
     
-    ridges *= 0.5 + 0.3 * sin(atan2(st.y, st.x) * 3.0 + intensity * (ridges * 16. + 1.) + uniforms.time * 2.2);
+    ridges *= 0.57 + 0.3 * sin(atan2(st.y, st.x) * 3.0 + intensity * (ridges * 16. + 1.) + uniforms.time * 2.2);
     
     player += inf * ridges;
     player = min(player, 1.0);
