@@ -16,6 +16,8 @@ enum UIConstants {
 
 class SKGameScene: SKScene {
     
+    static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
+    
     unowned var gameScene: GameScene!
     
     let shakeNode = SKNode()
@@ -114,14 +116,21 @@ class SKGameScene: SKScene {
         addChild(comboLabel)
     }
     
-    func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
-        let dmgLabel = makeLabel(text: "\(Int(dmg))", fontSize: 95, fontName: UIConstants.sanosFont)
+    func createLossGainLabel(prefix: String = "",
+                             amount: Int,
+                             at position: CGPoint,
+                             xRange: ClosedRange<CGFloat> = -25...25,
+                             yRange: ClosedRange<CGFloat> = 0...25,
+                             color: SKColor,
+                             symbol: SKSpriteNode? = nil,
+                             symbolSizeFactor: CGFloat = 0) -> SKLabelNode {
+        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 95, fontName: UIConstants.sanosFont)
         dmgLabel.position = position
         dmgLabel.fontColor = color
         dmgLabel.setScale(0.7)
         
-        let randomX = CGFloat.random(in: -20...20)
-        let randomY = CGFloat.random(in: 0...20)
+        let randomX = CGFloat.random(in: xRange)
+        let randomY = CGFloat.random(in: yRange)
         
         dmgLabel.position.offset(dx: randomX, dy: randomY)
         
@@ -131,11 +140,11 @@ class SKGameScene: SKScene {
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.75, duration: 1.1)
+        let scaleDown = SKAction.scale(to: 0.8, duration: 1.05)
         
         let moveBy = SKAction.moveBy(x: 0,
-                                     y: 30,
-                                     duration: 1.1)
+                                     y: 26,
+                                     duration: 1.2)
         moveBy.timingMode = .easeOut
         
         dmgLabel.run(SKAction.sequence([
@@ -144,14 +153,74 @@ class SKGameScene: SKScene {
         ]))
         
         dmgLabel.run(moveBy)
-        dmgLabel.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.3),
+        
+        let fadeOutSequence = SKAction.sequence([
+            SKAction.wait(forDuration: 0.4),
+            fadeOut,
+            SKAction.removeFromParent()
+        ])
+        dmgLabel.run(fadeOutSequence)
+        
+        return dmgLabel
+    }
+    
+    func didRegenEnergy(_ amount: Int) {
+        let color = SKColor(mix(vector_float3(0.627, 1.000, 0.447), vector_float3.one, t: 0.7))
+        let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
+        
+        let label = makeLabel(text: "+\(amount)", fontSize: 95, fontName: UIConstants.sanosFont)
+        label.position = CGPoint(gameScene.player.position) + direction * 300
+        label.fontColor = color
+        label.setScale(0.7)
+        
+        let randomX = CGFloat.random(in: -20...20)
+        let randomY = CGFloat.random(in: -20...20)
+        
+        label.position.offset(dx: randomX, dy: randomY)
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        fadeOut.timingMode = .easeIn
+        
+        let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
+        scaleUp.timingMode = .easeOut
+        
+        let scaleDown = SKAction.scale(to: 0.8, duration: 1.05)
+        
+        let moveOutDistance: CGFloat = 26
+        let moveBy = SKAction.moveBy(x: direction.x * moveOutDistance,
+                                     y: direction.y * moveOutDistance,
+                                     duration: 1.2)
+        moveBy.timingMode = .easeOut
+        
+        label.run(SKAction.sequence([
+            scaleUp,
+            scaleDown
+        ]))
+        
+        label.run(moveBy)
+        
+        label.run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.4),
             fadeOut,
             SKAction.removeFromParent()
         ]))
         
-        addChild(dmgLabel)
+        let energySymbol = SKSpriteNode(texture: SKGameScene.energySymbolTexture)
+        energySymbol.anchorPoint = CGPoint(x: 0, y: 0.15)
+        energySymbol.position = CGPoint(x: label.frame.width / 2 + 13, y: 0)
+        energySymbol.colorBlendFactor = 1
+        energySymbol.color = color
+        energySymbol.size = CGSize(width: label.fontSize * 1.3, height: label.fontSize * 1.3)
         
+        label.position.offset(dx: -energySymbol.frame.width / 2, dy: 0)
+        
+        addChild(label)
+        label.addChild(energySymbol)
+    }
+    
+    func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
+        let label = createLossGainLabel(amount: Int(dmg), at: position, color: color)
+        addChild(label)
         shake(powerFactor)
     }
     

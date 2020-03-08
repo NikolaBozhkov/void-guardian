@@ -175,6 +175,11 @@ class GameScene: Scene {
                     let impactMod = 150 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
+                    if !hitEnemies.contains(enemy) {
+                        player.energy += 4
+                        skGameScene.didRegenEnergy(4)
+                    }
+                    
                     if player.stage != .idle {
                         hitEnemies.insert(enemy)
                     }
@@ -240,11 +245,10 @@ class GameScene: Scene {
         
         guard enemyHitsForMove >= 2 else { return }
         
-        // Sum of 2 to n
-        let energyGain = enemyHitsForMove * (enemyHitsForMove + 1) / 2 - 1
-        player.energy += Float(energyGain)
+        let energyGain = enemyHitsForMove * 4
+//        player.energy += Float(energyGain)
         
-        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energyGain)
+//        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energyGain)
     }
     
     private func isOutsideBoundary(node: Node) -> Bool {
