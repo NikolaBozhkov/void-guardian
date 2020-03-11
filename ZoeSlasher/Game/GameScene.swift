@@ -190,7 +190,7 @@ class GameScene: Scene {
                     if player.stage != .idle {
                         if !hitEnemies.contains(enemy) {
                             player.energy += 4
-                            skGameScene.didRegenEnergy(4)
+                            skGameScene.didRegenEnergy(4, around: CGPoint(player.position), radius: 300)
                         }
                         
                         hitEnemies.insert(enemy)
@@ -235,6 +235,12 @@ class GameScene: Scene {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
                 potion.apply(to: player)
+                
+                skGameScene.shake(1)
+                
+                if potion.type == .energy {
+                    skGameScene.didRegenEnergy(potion.amount, around: CGPoint(potion.position), radius: 250)
+                }
             }
         }
     }

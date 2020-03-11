@@ -21,19 +21,19 @@ class Potion: Node {
     private static let configForType: [PotionType: PotionConfiguration] = [
         .health: PotionConfiguration(symbolColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.9),
                                      glowColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.6)),
-        .energy: PotionConfiguration(symbolColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.9),
-                                     glowColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.7))
+        .energy: PotionConfiguration(symbolColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.85),
+                                     glowColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.6))
     ]
     
     let type: PotionType
-    let amount: Float
+    let amount: Int
     let symbolColor: vector_float3
     let glowColor: vector_float3
     
     private(set) var timeSinceConsumed: Float = -1
     private(set) var consumed = false
     
-    init(type: PotionType, amount: Float) {
+    init(type: PotionType, amount: Int) {
         self.type = type
         self.amount = amount
             
@@ -53,9 +53,9 @@ class Potion: Node {
     
     func apply(to player: Player) {
         if type == .energy {
-            player.energy += amount
+            player.energy += Float(amount)
         } else if type == .health {
-            player.health += amount
+            player.health += Float(amount)
         }
         
         consumed = true

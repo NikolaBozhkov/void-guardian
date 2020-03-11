@@ -181,12 +181,12 @@ class SKGameScene: SKScene {
         return dmgLabel
     }
     
-    func didRegenEnergy(_ amount: Int) {
+    func didRegenEnergy(_ amount: Int, around position: CGPoint, radius: CGFloat) {
         let color = SKColor(mix(vector_float3(0.627, 1.000, 0.447), vector_float3.one, t: 0.6))
         let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
         
         let label = makeLabel(text: "+\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
-        label.position = CGPoint(gameScene.player.position) + direction * 300
+        label.position = position + direction * radius
         label.fontColor = color
         label.setScale(0.7)
         
