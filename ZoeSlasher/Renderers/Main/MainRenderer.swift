@@ -50,6 +50,7 @@ class MainRenderer: NSObject {
     let textureRenderer: SpriteRenderer
     let clearColorRenderer: SpriteRenderer
     let energySymbolRenderer: SpriteRenderer
+    let potionRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -77,6 +78,8 @@ class MainRenderer: NSObject {
     let cannonSymbolTexture: MTLTexture
     let splitterSymbolTexture: MTLTexture
     let circleTexture: MTLTexture
+    let energyPotionTexture: MTLTexture
+    let healthPotionTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -140,6 +143,7 @@ class MainRenderer: NSObject {
         textureRenderer.currentPipelineState = textureRenderer.symbolPipelineState
         clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
         energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
+        potionRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "potionShader")
         
         energySymbolTexture = createTexture(device: device, filePath: "energy")
         energyGlowTexture = createTexture(device: device, filePath: "energy-glow")
@@ -148,6 +152,8 @@ class MainRenderer: NSObject {
         cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
         splitterSymbolTexture = createTexture(device: device, filePath: "splitter")
         circleTexture = createTexture(device: device, filePath: "circle")
+        energyPotionTexture = createTexture(device: device, filePath: "energy-potion")
+        healthPotionTexture = createTexture(device: device, filePath: "health-potion")
         
         super.init()
     }
@@ -326,6 +332,34 @@ extension MainRenderer {
                                        index: 5)
         
         energySymbolRenderer.draw(node, with: renderEncoder)
+    }
+    
+    func renderPotion(_ potion: Potion) {
+        var symbol: MTLTexture!
+        if potion.type == .energy {
+            symbol = energySymbolTexture
+        } else if potion.type == .health {
+        }
+        
+        renderEncoder.setFragmentTexture(symbol, index: 5)
+        
+        var physicsSizeNormalized = potion.physicsSize / potion.size
+        renderEncoder.setFragmentBytes(&physicsSizeNormalized,
+                                       length: MemoryLayout<vector_float2>.stride,
+                                       index: 5)
+        
+        var symbolColor = potion.symbolColor;
+        var glowColor = potion.glowColor;
+        renderEncoder.setFragmentBytes(&symbolColor, length: MemoryLayout<vector_float3>.stride, index: 6)
+        renderEncoder.setFragmentBytes(&glowColor, length: MemoryLayout<vector_float3>.stride, index: 7)
+        
+        var worldPos = normalizeWorldPosition(potion.worldPosition)
+        renderEncoder.setFragmentBytes(&worldPos, length: MemoryLayout<vector_float2>.stride, index: 8)
+        
+        var timeSinceConsumed = potion.timeSinceConsumed
+        renderEncoder.setFragmentBytes(&timeSinceConsumed, length: MemoryLayout<Float>.size, index: 9)
+        
+        potionRenderer.draw(potion, with: renderEncoder)
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {

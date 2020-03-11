@@ -30,6 +30,8 @@ class GameScene: Scene {
     var enemies = Set<Enemy>()
     var attacks = Set<EnemyAttack>()
     
+    var potions = Set<Potion>()
+    
     var hitEnemies = Set<Enemy>()
     var enemyHitsForMove = 0
     var shouldHandleCombo = false
@@ -98,8 +100,11 @@ class GameScene: Scene {
             attack.update(deltaTime: deltaTime)
         }
         
+        potions.forEach { $0.update(deltaTime: deltaTime) }
+        
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
+        testPlayerPotionCollision()
         
         player.advanceStage()
         
@@ -123,6 +128,8 @@ class GameScene: Scene {
             player.health = 100
             player.energy = 100
         }
+        
+        skGameScene.update()
     }
     
 //    static var i = 0
@@ -148,6 +155,11 @@ class GameScene: Scene {
         player.energy = 100
         player.health = 100
         rootNode.add(childNode: player)
+        
+        let potion = Potion(type: .energy, amount: 20)
+        potion.position = [-600, 0]
+        rootNode.add(childNode: potion)
+        potions.insert(potion)
         
         isGameOver = false
         
@@ -175,12 +187,12 @@ class GameScene: Scene {
                     let impactMod = 150 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
-                    if !hitEnemies.contains(enemy) {
-                        player.energy += 4
-                        skGameScene.didRegenEnergy(4)
-                    }
-                    
                     if player.stage != .idle {
+                        if !hitEnemies.contains(enemy) {
+                            player.energy += 4
+                            skGameScene.didRegenEnergy(4)
+                        }
+                        
                         hitEnemies.insert(enemy)
                     }
                     
@@ -207,12 +219,22 @@ class GameScene: Scene {
                 
                 skGameScene.didDmg(attack.corruption,
                                    powerFactor: min(attack.corruption / player.maxHealth, 1.0),
-                                   at: CGPoint(player.position + [0, 170]),
+                                   at: CGPoint(player.position + [0, 190]),
                                    color: SKColor(vector_float3(1.0, 0.5, 0.5)))
+                skGameScene.didPlayerReceivedDamage(attack.corruption, from: attack.enemy)
             }
             
             if attack.didReachTarget || shouldRemoveAttack {
                 removeEnemyAttack(attack)
+            }
+        }
+    }
+    
+    private func testPlayerPotionCollision() {
+        for potion in potions where !potion.consumed {
+            let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
+            if distance(potion.position, player.position) <= threshold {
+                potion.apply(to: player)
             }
         }
     }

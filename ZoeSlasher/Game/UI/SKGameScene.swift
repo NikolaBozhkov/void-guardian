@@ -18,10 +18,14 @@ enum UIConstants {
 class SKGameScene: SKScene {
     
     static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
+    static let dmgTexture = SKTexture(imageNamed: "dmg-indicator")
     
     unowned var gameScene: GameScene!
     
     let shakeNode = SKNode()
+    let followPlayerNode = SKNode()
+    
+    var indicatorToEnemyMap: [SKSpriteNode: Node] = [:]
     
     private var scoreLabel: SKLabelNode!
     private var score = 0 {
@@ -34,14 +38,26 @@ class SKGameScene: SKScene {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
         addChild(shakeNode)
+        addChild(followPlayerNode)
         
         scoreLabel = makeLabel(text: "1", fontSize: 200)
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
         addChild(scoreLabel)
         
-        for family in UIFont.familyNames {
-            for font in UIFont.fontNames(forFamilyName: family) {
-                print(font)
+//        for family in UIFont.familyNames {
+//            for font in UIFont.fontNames(forFamilyName: family) {
+//                print(font)
+//            }
+//        }
+    }
+    
+    func update() {
+        followPlayerNode.position = CGPoint(gameScene.player.position)
+        
+        for indicator in indicatorToEnemyMap.keys {
+            if let enemy = indicatorToEnemyMap[indicator] {
+                let delta = enemy.position - gameScene.player.position
+                indicator.zRotation = CGFloat(atan2(delta.y, delta.x)) - .pi / 2
             }
         }
     }
@@ -125,7 +141,7 @@ class SKGameScene: SKScene {
                              color: SKColor,
                              symbol: SKSpriteNode? = nil,
                              symbolSizeFactor: CGFloat = 0) -> SKLabelNode {
-        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 95, fontName: UIConstants.sanosFont)
+        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
         dmgLabel.position = position
         dmgLabel.fontColor = color
         dmgLabel.setScale(0.7)
@@ -141,7 +157,7 @@ class SKGameScene: SKScene {
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.8, duration: 1.05)
+        let scaleDown = SKAction.scale(to: 0.85, duration: 1.05)
         
         let moveBy = SKAction.moveBy(x: 0,
                                      y: 26,
@@ -166,10 +182,10 @@ class SKGameScene: SKScene {
     }
     
     func didRegenEnergy(_ amount: Int) {
-        let color = SKColor(mix(vector_float3(0.627, 1.000, 0.447), vector_float3.one, t: 0.7))
+        let color = SKColor(mix(vector_float3(0.627, 1.000, 0.447), vector_float3.one, t: 0.6))
         let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
         
-        let label = makeLabel(text: "+\(amount)", fontSize: 95, fontName: UIConstants.sanosFont)
+        let label = makeLabel(text: "+\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
         label.position = CGPoint(gameScene.player.position) + direction * 300
         label.fontColor = color
         label.setScale(0.7)
@@ -185,7 +201,7 @@ class SKGameScene: SKScene {
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.8, duration: 1.05)
+        let scaleDown = SKAction.scale(to: 0.85, duration: 1.05)
         
         let moveOutDistance: CGFloat = 26
         let moveBy = SKAction.moveBy(x: direction.x * moveOutDistance,
@@ -225,6 +241,34 @@ class SKGameScene: SKScene {
         shake(powerFactor)
     }
     
+    func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
+        let indicator = SKSpriteNode(texture: SKGameScene.dmgTexture)
+        
+        let delta = enemy.position - gameScene.player.position
+        indicator.zRotation = CGFloat(atan2(delta.y, delta.x)) - .pi / 2
+        
+        indicator.colorBlendFactor = 1.0
+        indicator.color = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1)
+        
+        let size: CGFloat = 660
+        indicator.size = CGSize(width: size, height: size)
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 1.0)
+        fadeOut.timingMode = .easeIn
+        
+        indicator.run(SKAction.sequence([
+            fadeOut,
+            SKAction.removeFromParent(),
+            SKAction.run { [unowned self] in
+                self.indicatorToEnemyMap.removeValue(forKey: indicator)
+            }
+        ]))
+        
+        indicatorToEnemyMap[indicator] = enemy
+        
+        followPlayerNode.addChild(indicator)
+    }
+    
     func showNoEnergyLabel() {
         let label = makeLabel(text: "Not enough energy", fontSize: 100, fontName: UIConstants.muliFont)
         label.fontColor = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
@@ -251,7 +295,7 @@ class SKGameScene: SKScene {
         let positionOffset = CGPoint(x: CGFloat(direction.x) * (label.frame.width / 2 + offset), y: direction.y * offset)
         label.position = CGPoint(gameScene.player.position) + positionOffset
         
-        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1))
+        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 2))
         label.run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 1),
             SKAction.removeFromParent()
@@ -266,7 +310,7 @@ class SKGameScene: SKScene {
         
         var actions = [SKAction]()
         var amplitude: CGFloat = 1.0
-        let power: CGFloat = 12 * CGFloat(powerFactor)
+        let power: CGFloat = 15 * CGFloat(powerFactor)
         
         for _ in 0..<3 {
             let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
