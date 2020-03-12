@@ -100,7 +100,13 @@ class GameScene: Scene {
             attack.update(deltaTime: deltaTime)
         }
         
-        potions.forEach { $0.update(deltaTime: deltaTime) }
+        potions.forEach { potion in
+            potion.update(deltaTime: deltaTime)
+            if potion.timeSinceConsumed >= 2 {
+                potion.removeFromParent()
+                potions.remove(potion)
+            }
+        }
         
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
@@ -155,11 +161,6 @@ class GameScene: Scene {
         player.energy = 100
         player.health = 100
         rootNode.add(childNode: player)
-        
-        let potion = Potion(type: .energy, amount: 20)
-        potion.position = [-600, 0]
-        rootNode.add(childNode: potion)
-        potions.insert(potion)
         
         isGameOver = false
         
@@ -216,11 +217,6 @@ class GameScene: Scene {
             if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 {
                 player.receiveDamage(attack.corruption)
                 shouldRemoveAttack = true
-                
-                skGameScene.didDmg(attack.corruption,
-                                   powerFactor: min(attack.corruption / player.maxHealth, 1.0),
-                                   at: CGPoint(player.position + [0, 190]),
-                                   color: SKColor(vector_float3(1.0, 0.5, 0.5)))
                 skGameScene.didPlayerReceivedDamage(attack.corruption, from: attack.enemy)
             }
             
@@ -231,7 +227,7 @@ class GameScene: Scene {
     }
     
     private func testPlayerPotionCollision() {
-        for potion in potions where !potion.consumed {
+        for potion in potions where !potion.isConsumed {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
                 potion.apply(to: player)

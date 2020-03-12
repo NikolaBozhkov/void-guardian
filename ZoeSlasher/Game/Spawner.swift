@@ -8,6 +8,7 @@
 
 class Spawner {
     
+    private let potionInterval: TimeInterval = 5
     private let spawnInterval: TimeInterval = 0.1
     
     private let stagesConfig: [(allowance: Float, threshold: Double)] = [
@@ -30,10 +31,12 @@ class Spawner {
     private var spawnStage: Int = 0
     
     private var timeSinceLastSpawn: TimeInterval = .infinity
+    private var timeSinceLastPotion: TimeInterval = 0
     
     func update(deltaTime: TimeInterval) {
         currentPeriodTime += deltaTime
         timeSinceLastSpawn += deltaTime
+        timeSinceLastPotion += deltaTime
         guard currentPeriodTime < spawnPeriod else { return }
         
         for (stage, config) in stagesConfig.enumerated() {
@@ -56,6 +59,17 @@ class Spawner {
                     break
                 }
             }
+        }
+        
+        if timeSinceLastPotion >= potionInterval {
+            if Float.random(in: 0..<1) < 0.05 {
+                let potion = Potion(type: .energy, amount: 15)
+                potion.position = scene.randomPosition(padding: [300, 200])
+                scene.rootNode.add(childNode: potion)
+                scene.potions.insert(potion)
+            }
+            
+            timeSinceLastPotion = 0
         }
     }
     

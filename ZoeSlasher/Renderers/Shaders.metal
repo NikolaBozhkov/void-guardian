@@ -46,7 +46,7 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     
     float f = texture.sample(s, st).x;
     float n = pow(1. - fbmr.sample(s, st).x, 2.5);
-    f = 0.02 + f*n*n*n*0.25;
+    f = 0.04 + f*n*n*n*0.25;
 //    f += n*0.01;
     
     return float4(float3(color.xyz), f);

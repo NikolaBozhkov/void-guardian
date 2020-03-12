@@ -31,7 +31,7 @@ class Potion: Node {
     let glowColor: vector_float3
     
     private(set) var timeSinceConsumed: Float = -1
-    private(set) var consumed = false
+    private(set) var isConsumed = false
     
     init(type: PotionType, amount: Int) {
         self.type = type
@@ -58,18 +58,13 @@ class Potion: Node {
             player.health += Float(amount)
         }
         
-        consumed = true
+        isConsumed = true
         timeSinceConsumed = 0
     }
     
     func update(deltaTime: TimeInterval) {
-        if consumed {
+        if isConsumed {
             timeSinceConsumed += Float(deltaTime)
-        }
-        
-        if timeSinceConsumed > 1.7 {
-            consumed = false
-            timeSinceConsumed = -1
         }
     }
 }

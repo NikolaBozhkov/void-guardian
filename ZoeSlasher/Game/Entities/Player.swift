@@ -60,6 +60,7 @@ class Player: Node {
     private var timeSinceLastHit: Float = 100
     private var dmgReceivedNormalized: Float = 0
     private var timeSinceLastEnergyUse: Float = 100
+    private var timeSinceLastMove: Float = 100
     
     // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
     var damage: Float {
@@ -148,6 +149,8 @@ class Player: Node {
                 position = pierceInitial + pierceDelta
                 nextStage = .idle
             }
+        } else {
+            timeSinceLastMove += deltaTime
         }
         
         let currentPositionDelta = position - prevPosition
@@ -155,6 +158,7 @@ class Player: Node {
         positionDelta += deltaDelta * deltaTime * 20.0
         
         energySymbols.forEach {
+            $0.timeSinceLastMove = timeSinceLastMove
             $0.timeSinceLastUse = timeSinceLastEnergyUse
             $0.update(deltaTime: deltaTime, energy: energy)
         }
@@ -193,6 +197,7 @@ class Player: Node {
             energy -= energyUsagePerShot
             nextStage = .charging
             
+            timeSinceLastMove = 0
             timeSinceLastEnergyUse = 0
             
         } else if stage == .idle && !hasEnoughEnergy {
@@ -238,6 +243,7 @@ class EnergySymbol: Node {
     private let index: Int
     
     var timeSinceLastUse: Float = 100
+    var timeSinceLastMove: Float = 100
     var timeSinceNoEnergy: Float = 1000
     private var kickbackForce: Float = 0
     
@@ -271,7 +277,13 @@ class EnergySymbol: Node {
         let f = expImpulse(timeSinceLastUse + 1 / k, k)
         kickbackForce = max(f, 0.0)
         
-        let angularVelocity = 1.0 + f * 5.0
+        var h = expImpulse(timeSinceLastMove + 1 / 4, 4)
+        
+//        if timeSinceLastUse <= 1 / k {
+//            h = expImpulse(timeSinceLastUse, k)
+//        }
+        
+        let angularVelocity = 1.0 + h * 8
         
         rotation -= angularVelocity * deltaTime
         update(forEnergy: energy)

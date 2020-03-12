@@ -18,7 +18,9 @@ enum UIConstants {
 class SKGameScene: SKScene {
     
     static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
+    static let energySymbolGlowTexture = SKTexture(imageNamed: "energy-glow-image")
     static let dmgTexture = SKTexture(imageNamed: "dmg-indicator")
+    static let glowTexture = SKTexture(imageNamed: "glow")
     
     unowned var gameScene: GameScene!
     
@@ -151,7 +153,7 @@ class SKGameScene: SKScene {
         
         dmgLabel.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.7)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
@@ -172,7 +174,7 @@ class SKGameScene: SKScene {
         dmgLabel.run(moveBy)
         
         let fadeOutSequence = SKAction.sequence([
-            SKAction.wait(forDuration: 0.4),
+            SKAction.wait(forDuration: 0.5),
             fadeOut,
             SKAction.removeFromParent()
         ])
@@ -182,12 +184,14 @@ class SKGameScene: SKScene {
     }
     
     func didRegenEnergy(_ amount: Int, around position: CGPoint, radius: CGFloat) {
-        let color = SKColor(mix(vector_float3(0.627, 1.000, 0.447), vector_float3.one, t: 0.6))
         let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
         
-        let label = makeLabel(text: "+\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
+        let label = makeLabel(text: "\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
+        let glowColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.5))
+        addGlow(to: label, color: glowColor)
+        
         label.position = position + direction * radius
-        label.fontColor = color
+        label.fontColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.9))
         label.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
@@ -195,7 +199,7 @@ class SKGameScene: SKScene {
         
         label.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.7)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
@@ -217,17 +221,27 @@ class SKGameScene: SKScene {
         label.run(moveBy)
         
         label.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.4),
+            SKAction.wait(forDuration: 0.5),
             fadeOut,
             SKAction.removeFromParent()
         ]))
         
         let energySymbol = SKSpriteNode(texture: SKGameScene.energySymbolTexture)
-        energySymbol.anchorPoint = CGPoint(x: 0, y: 0.15)
-        energySymbol.position = CGPoint(x: label.frame.width / 2 + 13, y: 0)
+        energySymbol.anchorPoint = CGPoint(x: 0, y: 0.5)
+        energySymbol.position = CGPoint(x: label.frame.width / 2, y: 0)
         energySymbol.colorBlendFactor = 1
-        energySymbol.color = color
-        energySymbol.size = CGSize(width: label.fontSize * 1.3, height: label.fontSize * 1.3)
+        energySymbol.color = label.fontColor!
+        energySymbol.zPosition = 1
+        energySymbol.size = CGSize(repeating: label.fontSize) * 2
+        
+        let energySymbolGlow = SKSpriteNode(texture: SKGameScene.energySymbolGlowTexture)
+        energySymbolGlow.size = energySymbol.size
+        energySymbolGlow.alpha = 0.75
+        energySymbolGlow.colorBlendFactor = 1
+        energySymbolGlow.color = glowColor
+        energySymbolGlow.anchorPoint = energySymbol.anchorPoint
+        energySymbolGlow.zPosition = -1
+        energySymbol.addChild(energySymbolGlow)
         
         label.position.offset(dx: -energySymbol.frame.width / 2, dy: 0)
         
@@ -242,6 +256,18 @@ class SKGameScene: SKScene {
     }
     
     func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
+        let label = createLossGainLabel(amount: Int(damage),
+                                        at: CGPoint(gameScene.player.position + [0, 190]),
+                                        xRange: -40...40,
+                                        yRange: 0...30,
+                                        color: SKColor(vector_float3(1.0, 0.3, 0.3)))
+        addGlow(to: label, color: label.fontColor!)
+        
+        let power = min(damage / gameScene.player.maxHealth * 0.5, 1.0)
+        label.fontSize = CGFloat(100 * (1 + power))
+        addChild(label)
+        shake(power)
+        
         let indicator = SKSpriteNode(texture: SKGameScene.dmgTexture)
         
         let delta = enemy.position - gameScene.player.position
@@ -338,7 +364,19 @@ class SKGameScene: SKScene {
         let label = SKLabelNode(fontNamed: fontName)
         label.text = text
         label.fontSize = fontSize
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
         return label
+    }
+    
+    private func addGlow(to label: SKLabelNode, color: SKColor) {
+        let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
+        glow.size = label.frame.size + CGSize.one * 300
+        glow.alpha = 0.5
+        glow.color = color
+        glow.colorBlendFactor = 1.0
+        glow.zPosition = -1
+        label.addChild(glow)
     }
 }
 
