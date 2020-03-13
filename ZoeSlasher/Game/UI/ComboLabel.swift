@@ -10,8 +10,8 @@ import SpriteKit
 
 class ComboLabel: SKNode {
     
-    static let fontSizeLow: CGFloat = 115 //120
-    static let fontSizeHigh: CGFloat = 160 // 240
+    static let fontSizeLow: CGFloat = 105 //120
+    static let fontSizeHigh: CGFloat = 150 // 240
     
     private let fontSize: CGFloat
     private let multiplierLabel: SKLabelNode
@@ -34,7 +34,7 @@ class ComboLabel: SKNode {
         oilBackground.size = CGSize(repeating: fontSize) * 3.5
         oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)//multiplierLabel.frame.height / 2)
         oilBackground.zPosition = -2
-        oilBackground.alpha = 0.34
+        oilBackground.alpha = 0.4
 //        oilBackground.colorBlendFactor = 1
 //        oilBackground.color = SKColor(red: , green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
         multiplierLabel.addChild(oilBackground)
@@ -95,13 +95,13 @@ class ComboLabel: SKNode {
     
     private func runGainLabelActions(for label: GainLabel, flip: Bool = false) {
         let side: CGFloat = flip ? -1 : 1
-        let offset: CGFloat = label.width * side
+        let offset: CGFloat = 0.8 * label.width * side
         
         label.position.x += -offset
         
         label.alpha = 0
-        label.yScale = 0.7
-        label.xScale = 1.8
+        label.yScale = 0.5
+        label.xScale = 2
         
         let duration = 0.2
         let move = SKAction.moveBy(x: offset, y: 0, duration: duration * 0.9)

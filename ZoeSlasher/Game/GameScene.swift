@@ -145,14 +145,14 @@ class GameScene: Scene {
         
         guard !isGameOver, !consumed else { return }
         
-//        player.move(to: location)
+        player.move(to: location)
         
-        GameScene.i += 1
-        if GameScene.i == 11 {
-            GameScene.i = 2
-        }
-
-        skGameScene.didCombo(multiplier: GameScene.i, energy: (GameScene.i - 1) * 4, favor: Int(pow(Float(GameScene.i), 1.7)))
+//        GameScene.i += 1
+//        if GameScene.i == 11 {
+//            GameScene.i = 2
+//        }
+//
+//        skGameScene.didCombo(multiplier: GameScene.i, energy: (GameScene.i - 1) * 4, favor: Int(pow(Float(GameScene.i), 1.7)))
     }
     
     func reloadScene() {

@@ -28,7 +28,7 @@ class EnergyGainLabel: SKNode, GainLabel {
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.9))
+        amountLabel.fontColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.95))
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = rightAligned ? .right : .left
         
@@ -54,9 +54,9 @@ class EnergyGainLabel: SKNode, GainLabel {
         
         let energySymbolGlow = SKSpriteNode(texture: SKGameScene.energySymbolGlowTexture)
         energySymbolGlow.size = symbol.size
-        energySymbolGlow.alpha = 0.75
+        energySymbolGlow.alpha = 0.85
         energySymbolGlow.colorBlendFactor = 1
-        energySymbolGlow.color = glowColor
+        energySymbolGlow.color = SKColor(mix(vector_float3(0.3, 1.000, 0.3), .one, t: 0.4))
         energySymbolGlow.anchorPoint = symbol.anchorPoint
         energySymbolGlow.zPosition = -1
         symbol.addChild(energySymbolGlow)

@@ -98,12 +98,13 @@ class SKGameScene: SKScene {
         let comboLabel = ComboLabel(multiplier: multiplier, energy: energy, favor: favor)
         
         let offset: CGFloat = 200
-        let threshold: Float = Float(offset) * 1.5
         
-        let doesFitTop = gameScene.player.position.y + threshold < gameScene.size.y / 2
+        let topEdge = gameScene.player.position.y + Float(offset + comboLabel.height)
+        let doesFitTop = topEdge < gameScene.size.y / 2
+        
         let doesFitSideways = gameScene.player.position.x - Float(comboLabel.width / 2) > gameScene.safeLeft
             && gameScene.player.position.x + Float(comboLabel.width / 2) < gameScene.size.x / 2
-        let doesFitRight = gameScene.player.position.x + threshold + Float(comboLabel.width) < gameScene.size.x / 2
+        let doesFitRight = gameScene.player.position.x + Float(comboLabel.width + offset) < gameScene.size.x / 2
         
         let direction: CGPoint
         if doesFitTop && doesFitSideways {
@@ -116,25 +117,16 @@ class SKGameScene: SKScene {
             direction = CGPoint(x: -1, y: 0)
         }
             
-        let positionOffset = CGPoint(x: CGFloat(direction.x) * (comboLabel.width / 2 + offset),
+        let positionOffset = CGPoint(x: direction.x * (offset + comboLabel.width / 2),
                                      y: direction.y * (offset + comboLabel.height / 2))
         comboLabel.position = CGPoint(gameScene.player.position) + positionOffset
         
-        let scaleUp = SKAction.scale(to: 1.0, duration: 0.25)
-        scaleUp.timingMode = .easeOut
-        
-        let scaleDown = SKAction.scale(to: 1.0, duration: 0.08)
-        scaleDown.timingMode = .easeIn
-        
-//        comboLabel.setScale(0)
-//        comboLabel.run(scaleUp)
-        
-        let fadeOut = SKAction.fadeOut(withDuration: 0.4)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.6)
         fadeOut.timingMode = .easeIn
         
         comboLabel.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1.5))
         comboLabel.run(SKAction.sequence([
-            SKAction.wait(forDuration: 1.1),
+            SKAction.wait(forDuration: 0.8),
             fadeOut,
             SKAction.removeFromParent()
         ]))
