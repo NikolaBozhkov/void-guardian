@@ -10,73 +10,154 @@ import SpriteKit
 
 class ComboLabel: SKNode {
     
-    static let fontSizeLow: CGFloat = 90 //120
-    static let fontSizeHigh: CGFloat = 210 // 240
-    
-    static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
+    static let fontSizeLow: CGFloat = 115 //120
+    static let fontSizeHigh: CGFloat = 160 // 240
     
     private let fontSize: CGFloat
-    private let xLabel: SKLabelNode
     private let multiplierLabel: SKLabelNode
-    private let energyGainLabel: SKLabelNode
-    private let energySymbol: SKSpriteNode
+    private let energyGainLabel: EnergyGainLabel
+    private let favorGainLabel: FavorGainLabel
     
     private(set) var width: CGFloat = 0
+    private(set) var height: CGFloat = 0
     
-    init(multiplier: Int, energy: Int) {
+    init(multiplier: Int, energy: Int, favor: Int) {
         let bonusSize = (ComboLabel.fontSizeHigh - ComboLabel.fontSizeLow) * CGFloat(multiplier - 2) * 0.1
         fontSize = min(ComboLabel.fontSizeLow + bonusSize, ComboLabel.fontSizeHigh)
         
-        xLabel = ComboLabel.createLabel(fontSize: fontSize + 30, fontNamed: UIConstants.sanosFont)
-        xLabel.text = "x"
-        
         multiplierLabel = ComboLabel.createLabel(fontSize: fontSize, fontNamed: UIConstants.sanosFont)
-        multiplierLabel.text = "\(multiplier)"
+        multiplierLabel.text = "x\(multiplier)"
+        multiplierLabel.verticalAlignmentMode = .center
+        multiplierLabel.horizontalAlignmentMode = .center
         
-        let energyColor = SKColor(red: 0.627, green: 1, blue: 0.447, alpha: 1)
-        energyGainLabel = ComboLabel.createLabel(fontSize: fontSize, fontNamed: UIConstants.sanosFont)
-        energyGainLabel.fontColor = energyColor
-        energyGainLabel.text = "+\(energy)"
+        let oilBackground = SKSpriteNode(imageNamed: "oil-background-image")
+        oilBackground.size = CGSize(repeating: fontSize) * 3.5
+        oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)//multiplierLabel.frame.height / 2)
+        oilBackground.zPosition = -2
+        oilBackground.alpha = 0.34
+//        oilBackground.colorBlendFactor = 1
+//        oilBackground.color = SKColor(red: , green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
+        multiplierLabel.addChild(oilBackground)
         
-        energySymbol = SKSpriteNode(texture: ComboLabel.energySymbolTexture)
-        let energySymbolSize = fontSize * 1.3 //* 0.8
-        energySymbol.size = CGSize(width: energySymbolSize, height: energySymbolSize)
-        energySymbol.anchorPoint = CGPoint(x: 0, y: 0.15)
-        energySymbol.color = energyColor
-        energySymbol.colorBlendFactor = 1.0
+        energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, topAlign: true)
+        favorGainLabel = FavorGainLabel(amount: favor, fontSize: fontSize)
         
         super.init()
         
-        addChild(xLabel)
+        addGlow(to: multiplierLabel, color: .white)
+        
         addChild(multiplierLabel)
         addChild(energyGainLabel)
-        addChild(energySymbol)
+        addChild(favorGainLabel)
         
         positionLabels()
+        
+//        let bg = SKSpriteNode(color: .red, size: CGSize(width: width, height: height))
+//        bg.alpha = 0.2
+//        bg.zPosition = -10
+//        addChild(bg)
+        
+        runMultiplierLabelActions()
+        runGainLabelActions(for: energyGainLabel)
+        runGainLabelActions(for: favorGainLabel, delay: 0.07)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func runMultiplierLabelActions() {
+        multiplierLabel.xScale = 3
+        multiplierLabel.yScale = 0.3
+        multiplierLabel.alpha = 0
+        
+        let duration = 0.2
+        let scaleXDown = SKAction.scaleX(to: 0.9, duration: duration)
+        scaleXDown.timingMode = .easeInEaseOut
+        
+        let scaleYUp = SKAction.scaleY(to: 1.05, duration: duration)
+        scaleYUp.timingMode = .easeInEaseOut
+        
+        let scaleNormal = SKAction.scale(to: 1, duration: 0.05)
+        scaleNormal.timingMode = .easeIn
+        
+        let fadeIn = SKAction.fadeIn(withDuration: 0.2)
+        fadeIn.timingMode = .easeIn
+        
+        multiplierLabel.run(scaleXDown)
+        multiplierLabel.run(SKAction.sequence([
+            scaleYUp,
+            scaleNormal
+        ]))
+        
+        multiplierLabel.run(fadeIn)
+    }
+    
+    private func runGainLabelActions(for label: SKNode, flip: Bool = false) {
+        let side: CGFloat = flip ? -1 : 1
+        
+        label.alpha = 0
+        label.yScale = 2
+        label.xScale = 0.7
+        
+        let offset: CGFloat = -80
+        label.position.y += offset
+        
+        let duration = 0.2
+        let move = SKAction.moveBy(x: 0, y: -offset, duration: duration * 0.9)
+        move.timingMode = .easeIn
+        
+        let scaleYDown = SKAction.scaleY(to: 0.94, duration: duration)
+        scaleYDown.timingMode = .easeInEaseOut
+        
+        let scaleXUp = SKAction.scaleX(to: 1.03, duration: duration)
+        scaleXUp.timingMode = .easeInEaseOut
+        
+        let scaleNormal = SKAction.scale(to: 1, duration: 0.05)
+        scaleNormal.timingMode = .easeIn
+        
+        let fadeIn = SKAction.fadeIn(withDuration: duration)
+        fadeIn.timingMode = .easeIn
+        
+        let scale = SKAction.scale(to: 1, duration: duration)
+        scale.timingMode = .easeIn
+        
+        label.run(move)
+        label.run(scaleYDown)
+        label.run(SKAction.sequence([
+            scaleXUp,
+            scaleNormal
+        ]))
+        label.run(fadeIn)
+    }
+    
     private func positionLabels() {
-        let energyMargin: CGFloat = 40
-        let energySymbolMargin: CGFloat = 13
+        multiplierLabel.position = CGPoint(x: 0, y: 50 + multiplierLabel.frame.height / 2)
         
-        width = xLabel.frame.width + multiplierLabel.frame.width + energyGainLabel.frame.width
-            + energySymbol.size.width + energyMargin + energySymbolMargin
+        width = energyGainLabel.width + favorGainLabel.width
+        height = multiplierLabel.frame.height + max(energyGainLabel.height, favorGainLabel.height) + multiplierLabel.position.y
         
-        xLabel.position = CGPoint(x: -width / 2, y: 0)//-fontSize * 0.025)
-        multiplierLabel.position = xLabel.position.offsetted(dx: xLabel.frame.width, dy: -xLabel.position.y)
-        energyGainLabel.position = multiplierLabel.position.offsetted(dx: multiplierLabel.frame.width + energyMargin, dy: 0)
-        energySymbol.position = energyGainLabel.position.offsetted(dx: energyGainLabel.frame.width + energySymbolMargin, dy: 0)
+        let offset: CGFloat = 2.3
+        energyGainLabel.position = CGPoint(x: -energyGainLabel.width / offset, y: 0)
+        favorGainLabel.position = CGPoint(x: favorGainLabel.width / offset, y: 0)
     }
     
     private static func createLabel(fontSize: CGFloat, fontNamed: String = UIConstants.fontName) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: fontNamed)
-        label.verticalAlignmentMode = .baseline
+        label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .left
         label.fontSize = fontSize
         return label
+    }
+    
+    private func addGlow(to label: SKLabelNode, color: SKColor) {
+        let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
+        glow.size = label.frame.size + CGSize.one * 300
+        glow.alpha = 0.7
+        glow.color = color
+        glow.colorBlendFactor = 1.0
+        glow.zPosition = -1
+        glow.position.offset(dx: 0, dy: 0)//label.frame.height / 2)
+        label.addChild(glow)
     }
 }

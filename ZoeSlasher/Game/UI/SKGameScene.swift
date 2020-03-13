@@ -21,6 +21,8 @@ class SKGameScene: SKScene {
     static let energySymbolGlowTexture = SKTexture(imageNamed: "energy-glow-image")
     static let dmgTexture = SKTexture(imageNamed: "dmg-indicator")
     static let glowTexture = SKTexture(imageNamed: "glow")
+    static let voidFavorTexture = SKTexture(imageNamed: "void-favor-image")
+    static let voidFavorGlowTexture = SKTexture(imageNamed: "void-favor-glow-image")
     
     unowned var gameScene: GameScene!
     
@@ -92,10 +94,10 @@ class SKGameScene: SKScene {
         return false
     }
     
-    func didCombo(multiplier: Int, energy: Int) {
-        let comboLabel = ComboLabel(multiplier: multiplier, energy: energy)
+    func didCombo(multiplier: Int, energy: Int, favor: Int) {
+        let comboLabel = ComboLabel(multiplier: multiplier, energy: energy, favor: favor)
         
-        let offset: CGFloat = 270
+        let offset: CGFloat = 200
         let threshold: Float = Float(offset) * 1.5
         
         let doesFitTop = gameScene.player.position.y + threshold < gameScene.size.y / 2
@@ -114,21 +116,26 @@ class SKGameScene: SKScene {
             direction = CGPoint(x: -1, y: 0)
         }
             
-        let positionOffset = CGPoint(x: CGFloat(direction.x) * (comboLabel.width / 2 + offset), y: direction.y * offset)
+        let positionOffset = CGPoint(x: CGFloat(direction.x) * (comboLabel.width / 2 + offset),
+                                     y: direction.y * (offset + comboLabel.height / 2))
         comboLabel.position = CGPoint(gameScene.player.position) + positionOffset
         
-        let scaleUp = SKAction.scale(to: 1.12, duration: 0.17)
+        let scaleUp = SKAction.scale(to: 1.0, duration: 0.25)
         scaleUp.timingMode = .easeOut
         
         let scaleDown = SKAction.scale(to: 1.0, duration: 0.08)
         scaleDown.timingMode = .easeIn
         
-        comboLabel.setScale(0)
-        comboLabel.run(SKAction.sequence([scaleUp, scaleDown]))
+//        comboLabel.setScale(0)
+//        comboLabel.run(scaleUp)
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 0.4)
+        fadeOut.timingMode = .easeIn
         
         comboLabel.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1.5))
         comboLabel.run(SKAction.sequence([
-            SKAction.fadeOut(withDuration: 1.5),
+            SKAction.wait(forDuration: 1.1),
+            fadeOut,
             SKAction.removeFromParent()
         ]))
         
@@ -186,12 +193,8 @@ class SKGameScene: SKScene {
     func didRegenEnergy(_ amount: Int, around position: CGPoint, radius: CGFloat) {
         let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
         
-        let label = makeLabel(text: "\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
-        let glowColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.5))
-        addGlow(to: label, color: glowColor)
-        
+        let label = EnergyGainLabel(amount: amount, fontSize: 100)
         label.position = position + direction * radius
-        label.fontColor = SKColor(mix(vector_float3(0.3, 1.000, 0.3), vector_float3.one, t: 0.9))
         label.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
@@ -226,27 +229,7 @@ class SKGameScene: SKScene {
             SKAction.removeFromParent()
         ]))
         
-        let energySymbol = SKSpriteNode(texture: SKGameScene.energySymbolTexture)
-        energySymbol.anchorPoint = CGPoint(x: 0, y: 0.5)
-        energySymbol.position = CGPoint(x: label.frame.width / 2, y: 0)
-        energySymbol.colorBlendFactor = 1
-        energySymbol.color = label.fontColor!
-        energySymbol.zPosition = 1
-        energySymbol.size = CGSize(repeating: label.fontSize) * 2
-        
-        let energySymbolGlow = SKSpriteNode(texture: SKGameScene.energySymbolGlowTexture)
-        energySymbolGlow.size = energySymbol.size
-        energySymbolGlow.alpha = 0.75
-        energySymbolGlow.colorBlendFactor = 1
-        energySymbolGlow.color = glowColor
-        energySymbolGlow.anchorPoint = energySymbol.anchorPoint
-        energySymbolGlow.zPosition = -1
-        energySymbol.addChild(energySymbolGlow)
-        
-        label.position.offset(dx: -energySymbol.frame.width / 2, dy: 0)
-        
         addChild(label)
-        label.addChild(energySymbol)
     }
     
     func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {

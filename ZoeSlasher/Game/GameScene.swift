@@ -138,21 +138,21 @@ class GameScene: Scene {
         skGameScene.update()
     }
     
-//    static var i = 0
+    static var i = 1
     
     func didTap(at location: vector_float2) {
         let consumed = skGameScene.didTap(at: CGPoint(x: CGFloat(location.x), y: CGFloat(location.y)))
         
         guard !isGameOver, !consumed else { return }
         
-        player.move(to: location)
+//        player.move(to: location)
         
-//        GameScene.i += 1
-//        if GameScene.i == 11 {
-//            GameScene.i = 1
-//        }
-//
-//        skGameScene.didCombo(multiplier: GameScene.i, energy: 9)
+        GameScene.i += 1
+        if GameScene.i == 11 {
+            GameScene.i = 2
+        }
+
+        skGameScene.didCombo(multiplier: GameScene.i, energy: (GameScene.i - 1) * 4, favor: Int(pow(Float(GameScene.i), 1.7)))
     }
     
     func reloadScene() {
@@ -189,10 +189,10 @@ class GameScene: Scene {
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
                     if player.stage != .idle {
-                        if !hitEnemies.contains(enemy) {
-                            player.energy += 4
-                            skGameScene.didRegenEnergy(4, around: CGPoint(player.position), radius: 300)
-                        }
+//                        if !hitEnemies.contains(enemy) {
+//                            player.energy += 4
+//                            skGameScene.didRegenEnergy(4, around: CGPoint(player.position), radius: 300)
+//                        }
                         
                         hitEnemies.insert(enemy)
                     }
@@ -269,10 +269,12 @@ class GameScene: Scene {
         
         guard enemyHitsForMove >= 2 else { return }
         
-//        let energyGain = enemyHitsForMove * 4
-//        player.energy += Float(energyGain)
+        let energy = (enemyHitsForMove - 1) * 4
+        player.energy += Float(energy)
         
-//        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energyGain)
+        let favor = Int(pow(Float(enemyHitsForMove), 1.7))
+        
+        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energy, favor: favor)
     }
     
     private func isOutsideBoundary(node: Node) -> Bool {

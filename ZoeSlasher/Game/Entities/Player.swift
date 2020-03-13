@@ -277,12 +277,7 @@ class EnergySymbol: Node {
         let f = expImpulse(timeSinceLastUse + 1 / k, k)
         kickbackForce = max(f, 0.0)
         
-        var h = expImpulse(timeSinceLastMove + 1 / 4, 4)
-        
-//        if timeSinceLastUse <= 1 / k {
-//            h = expImpulse(timeSinceLastUse, k)
-//        }
-        
+        let h = expImpulse(timeSinceLastMove + 1 / 4, 4)
         let angularVelocity = 1.0 + h * 8
         
         rotation -= angularVelocity * deltaTime

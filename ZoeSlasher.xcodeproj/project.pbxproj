@@ -32,6 +32,8 @@
 		24981132241820CA00900AE9 /* Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24981131241820CA00900AE9 /* Potion.swift */; };
 		249811352418271F00900AE9 /* Potion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249811342418271F00900AE9 /* Potion.metal */; };
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
+		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
+		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
 		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
@@ -76,6 +78,8 @@
 		24981131241820CA00900AE9 /* Potion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Potion.swift; sourceTree = "<group>"; };
 		249811342418271F00900AE9 /* Potion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Potion.metal; sourceTree = "<group>"; };
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
+		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
+		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
@@ -122,6 +126,8 @@
 			children = (
 				247D705923F009DD00480199 /* SKGameScene.swift */,
 				2464427B24127BFB004CF697 /* ComboLabel.swift */,
+				24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */,
+				24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -355,6 +361,7 @@
 				24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */,
 				24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */,
 				24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */,
+				24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */,
 				249811352418271F00900AE9 /* Potion.metal in Sources */,
 				2464427C24127BFB004CF697 /* ComboLabel.swift in Sources */,
 				247D704823E6B20B00480199 /* GameScene.swift in Sources */,
@@ -362,6 +369,7 @@
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
+				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
 				24E7D8B024056330007A66D2 /* SplitterAbility.swift in Sources */,
