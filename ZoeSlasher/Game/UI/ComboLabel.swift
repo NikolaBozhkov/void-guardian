@@ -39,7 +39,7 @@ class ComboLabel: SKNode {
 //        oilBackground.color = SKColor(red: , green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
         multiplierLabel.addChild(oilBackground)
         
-        energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, topAlign: true)
+        energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, rightAligned: true)
         favorGainLabel = FavorGainLabel(amount: favor, fontSize: fontSize)
         
         super.init()
@@ -59,7 +59,7 @@ class ComboLabel: SKNode {
         
         runMultiplierLabelActions()
         runGainLabelActions(for: energyGainLabel)
-        runGainLabelActions(for: favorGainLabel, delay: 0.07)
+        runGainLabelActions(for: favorGainLabel, flip: true)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -93,25 +93,25 @@ class ComboLabel: SKNode {
         multiplierLabel.run(fadeIn)
     }
     
-    private func runGainLabelActions(for label: SKNode, flip: Bool = false) {
+    private func runGainLabelActions(for label: GainLabel, flip: Bool = false) {
         let side: CGFloat = flip ? -1 : 1
+        let offset: CGFloat = label.width * side
+        
+        label.position.x += -offset
         
         label.alpha = 0
-        label.yScale = 2
-        label.xScale = 0.7
-        
-        let offset: CGFloat = -80
-        label.position.y += offset
+        label.yScale = 0.7
+        label.xScale = 1.8
         
         let duration = 0.2
-        let move = SKAction.moveBy(x: 0, y: -offset, duration: duration * 0.9)
+        let move = SKAction.moveBy(x: offset, y: 0, duration: duration * 0.9)
         move.timingMode = .easeIn
         
-        let scaleYDown = SKAction.scaleY(to: 0.94, duration: duration)
-        scaleYDown.timingMode = .easeInEaseOut
+        let scaleYUp = SKAction.scaleY(to: 1.03, duration: duration)
+        scaleYUp.timingMode = .easeInEaseOut
         
-        let scaleXUp = SKAction.scaleX(to: 1.03, duration: duration)
-        scaleXUp.timingMode = .easeInEaseOut
+        let scaleXDown = SKAction.scaleX(to: 0.9, duration: duration)
+        scaleXDown.timingMode = .easeInEaseOut
         
         let scaleNormal = SKAction.scale(to: 1, duration: 0.05)
         scaleNormal.timingMode = .easeIn
@@ -123,11 +123,12 @@ class ComboLabel: SKNode {
         scale.timingMode = .easeIn
         
         label.run(move)
-        label.run(scaleYDown)
+        label.run(scaleYUp)
         label.run(SKAction.sequence([
-            scaleXUp,
+            scaleXDown,
             scaleNormal
         ]))
+        
         label.run(fadeIn)
     }
     
@@ -138,8 +139,8 @@ class ComboLabel: SKNode {
         height = multiplierLabel.frame.height + max(energyGainLabel.height, favorGainLabel.height) + multiplierLabel.position.y
         
         let offset: CGFloat = 2.3
-        energyGainLabel.position = CGPoint(x: -energyGainLabel.width / offset, y: 0)
-        favorGainLabel.position = CGPoint(x: favorGainLabel.width / offset, y: 0)
+        energyGainLabel.position = CGPoint(x: -energyGainLabel.width / offset, y: -energyGainLabel.height / 2)
+        favorGainLabel.position = CGPoint(x: favorGainLabel.width / offset, y: -favorGainLabel.height / 2)
     }
     
     private static func createLabel(fontSize: CGFloat, fontNamed: String = UIConstants.fontName) -> SKLabelNode {

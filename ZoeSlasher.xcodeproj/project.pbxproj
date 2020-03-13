@@ -34,6 +34,7 @@
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
 		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
 		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
+		24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF5A241BC2F7007743C6 /* GainLabel.swift */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
 		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
@@ -80,6 +81,7 @@
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
+		24D7FF5A241BC2F7007743C6 /* GainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GainLabel.swift; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				2464427B24127BFB004CF697 /* ComboLabel.swift */,
 				24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */,
 				24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */,
+				24D7FF5A241BC2F7007743C6 /* GainLabel.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,
 				2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */,
+				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
