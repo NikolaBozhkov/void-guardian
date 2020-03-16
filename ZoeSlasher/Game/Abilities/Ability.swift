@@ -44,8 +44,16 @@ class Ability {
     }
     
     static let allConfigs: [Ability.Configuration] = [
-        BasicAttackAbility.stage1Config, MachineGunAbility.stage1Config, CannonAbility.stage1Config
-        ].sorted(by: { $0.cost > $1.cost })
+        MachineGunAbility.stage3Config,
+        CannonAbility.stage3Config,
+        MachineGunAbility.stage2Config,
+        CannonAbility.stage2Config,
+        MachineGunAbility.stage1Config,
+        CannonAbility.stage1Config,
+        BasicAttackAbility.stage3Config,
+        BasicAttackAbility.stage2Config,
+        BasicAttackAbility.stage1Config
+        ]
     
     let scene: GameScene
     

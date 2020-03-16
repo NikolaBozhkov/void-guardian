@@ -17,7 +17,7 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
-    static let stageBudgetTargets: [Int: Float] = [1: 8, 5: 14, 8: 18, 12: 24, 15: 27]
+    static let stageBudgetTargets: [Int: Float] = [1: 8, 5: 14, 8: 18, 12: 24, 15: 27, 20: 27, 42: 42]
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?
@@ -76,7 +76,7 @@ class StageManager {
     
     func advanceStage() {
         stage += 1
-        stageDuration = Constants.baseStageDuration + Double((stage - 1)) * 0.5
+        stageDuration = Constants.baseStageDuration
         stageTime = 0
         spawnPeriod = stageDuration * 0.34
         budget = StageManager.getBudget(for: stage)
@@ -88,7 +88,7 @@ class StageManager {
     
     func reset() {
         isActive = true
-        stage = 15
+        stage = 0
         advanceStage()
         
 //        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)

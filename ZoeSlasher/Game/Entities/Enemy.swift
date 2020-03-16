@@ -103,10 +103,11 @@ class Enemy: Node {
         
         if ability.stage > 1 {
             for i in 0..<3 {
-                let symbol = Node(size: [1, 1] * 65, textureName: "circle")
+                let symbol = Node(size: [1, 1] * 65, textureName: "stage\(ability.stage)")
                 symbol.zPosition = -1
-                symbol.color.xyz = ability.color
+                symbol.color.xyz = mix(ability.color, .one, t: 0.3)
                 symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3 + .pi / 3
+                symbol.name = "stage"
                 updateSymbol(symbol, 0)
                 symbols.insert(symbol)
                 add(childNode: symbol)
@@ -227,7 +228,12 @@ class Enemy: Node {
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.55 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.45 * f
+        symbol.color.w = 0.65 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.35 * f
+        
+        if symbol.name == "stage" {
+            symbol.color.w = 1 * min(timeAlive * 0.75 - 0.5, 1.0)
+        }
+        
         updateSymbolPosition(symbol)
     }
     

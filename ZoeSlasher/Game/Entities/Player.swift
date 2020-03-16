@@ -158,6 +158,7 @@ class Player: Node {
         positionDelta += deltaDelta * deltaTime * 20.0
         
         energySymbols.forEach {
+            $0.angularK = stage == .charging ? 6 : 12
             $0.timeSinceLastMove = timeSinceLastMove
             $0.timeSinceLastUse = timeSinceLastEnergyUse
             $0.update(deltaTime: deltaTime, energy: energy)
@@ -245,6 +246,7 @@ class EnergySymbol: Node {
     var timeSinceLastUse: Float = 100
     var timeSinceLastMove: Float = 100
     var timeSinceNoEnergy: Float = 1000
+    var angularK: Float = 0
     private var kickbackForce: Float = 0
     
     init(index: Int) {
@@ -277,8 +279,8 @@ class EnergySymbol: Node {
         let f = expImpulse(timeSinceLastUse + 1 / k, k)
         kickbackForce = max(f, 0.0)
         
-        let h = expImpulse(timeSinceLastMove + 1 / 4, 4)
-        let angularVelocity = 1.0 + h * 8
+        let h = expImpulse(timeSinceLastMove + 1 / 6, 6)
+        let angularVelocity = 1.0 + h * angularK
         
         rotation -= angularVelocity * deltaTime
         update(forEnergy: energy)

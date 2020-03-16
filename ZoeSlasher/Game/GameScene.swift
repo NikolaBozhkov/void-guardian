@@ -17,9 +17,7 @@ enum SceneConstants {
 class GameScene: Scene {
     
     let comboThreshold = 1
-//    let enemiesHitToEnergyGainTargets: [Int: Float] = [2: 2, 3: 5, 4: 9, 5: 14, 6: 20, 30: 60]
-    
-    // UI Elements
+
     var skGameScene: SKGameScene!
     let background = Node()
     
@@ -37,6 +35,13 @@ class GameScene: Scene {
     var shouldHandleCombo = false
     var shouldResetHitEnemies = false
     var comboMultiplier = 0
+    
+    var favor: Float = 0 {
+        didSet {
+            favor = max(favor, 0)
+            skGameScene.didUpdateFavor(favor)
+        }
+    }
     
     var isGameOver = false
     
@@ -74,6 +79,8 @@ class GameScene: Scene {
     
     func update(deltaTime: TimeInterval) {
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
+        
+        favor -= Float(deltaTime) * (favor / 15)
         
         if shouldResetHitEnemies {
             resetHitEnemies()
@@ -129,11 +136,16 @@ class GameScene: Scene {
         stageManager.update(deltaTime: deltaTime)
         
         // Enemies don't contain an alive enemy
-        if stageManager.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
-            stageManager.advanceStage()
-            player.health = 100
-            player.energy = 100
+        if !enemies.contains(where: { !$0.shouldRemove }) {
+            if stageManager.spawningEnded {
+                stageManager.advanceStage()
+                player.health = 100
+                player.energy = 100
+            } else if spawner.availableBudget <= 0 {
+                spawner.advance()
+            }
         }
+        
         
         skGameScene.update()
     }
@@ -235,7 +247,7 @@ class GameScene: Scene {
                 skGameScene.shake(1)
                 
                 if potion.type == .energy {
-                    skGameScene.didRegenEnergy(potion.amount, around: CGPoint(potion.position), radius: 250)
+                    skGameScene.didRegenEnergy(potion.amount, at: CGPoint(potion.position))
                 }
             }
         }
@@ -272,9 +284,10 @@ class GameScene: Scene {
         let energy = (enemyHitsForMove - 1) * 4
         player.energy += Float(energy)
         
-        let favor = Int(pow(Float(enemyHitsForMove), 1.7))
+        let favor = pow(Float(enemyHitsForMove), 1.9)
+        self.favor += favor
         
-        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energy, favor: favor)
+        skGameScene.didCombo(multiplier: enemyHitsForMove, energy: energy, favor: Int(favor))
     }
     
     private func isOutsideBoundary(node: Node) -> Bool {

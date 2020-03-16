@@ -8,7 +8,7 @@
 
 class Spawner {
     
-    private let potionInterval: TimeInterval = 5
+    private let potionInterval: TimeInterval = 25
     private let spawnInterval: TimeInterval = 0.1
     
     private let stagesConfig: [(allowance: Float, threshold: Double)] = [
@@ -33,10 +33,15 @@ class Spawner {
     private var timeSinceLastSpawn: TimeInterval = .infinity
     private var timeSinceLastPotion: TimeInterval = 0
     
+    var availableBudget: Float {
+        allowance * budget - spent
+    }
+    
     func update(deltaTime: TimeInterval) {
         currentPeriodTime += deltaTime
         timeSinceLastSpawn += deltaTime
-        timeSinceLastPotion += deltaTime
+        timeSinceLastPotion += deltaTime * TimeInterval(max(6 * scene.favor / 100, 2))
+        
         guard currentPeriodTime < spawnPeriod else { return }
         
         for (stage, config) in stagesConfig.enumerated() {
@@ -47,12 +52,11 @@ class Spawner {
             }
         }
         
-        let available = allowance * budget - spent
-        if available > 0 && timeSinceLastSpawn >= spawnInterval {
+        if availableBudget > 0 && timeSinceLastSpawn >= spawnInterval {
             
             for config in Ability.allConfigs {
                 let roll = Float.random(in: 0..<1)
-                if available >= config.cost && roll < config.spawnChance(for: stage) {
+                if availableBudget >= config.cost && roll < config.spawnChance(for: stage) {
                     spawnEnemy(for: config)
                     spent += config.cost
                     timeSinceLastSpawn = 0
@@ -62,15 +66,16 @@ class Spawner {
         }
         
         if timeSinceLastPotion >= potionInterval {
-            if Float.random(in: 0..<1) < 0.05 {
-                let potion = Potion(type: .energy, amount: 15)
-                potion.position = scene.randomPosition(padding: [300, 200])
-                scene.rootNode.add(childNode: potion)
-                scene.potions.insert(potion)
-            }
+            let potion = Potion(type: .energy, amount: 25)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
             
             timeSinceLastPotion = 0
         }
+    }
+    
+    func advance() {
     }
     
     func setState(stage: Int, budget: Float, spawnPeriod: TimeInterval) {

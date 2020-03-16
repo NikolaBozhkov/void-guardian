@@ -30,7 +30,7 @@ class ComboLabel: SKNode {
         multiplierLabel.verticalAlignmentMode = .center
         multiplierLabel.horizontalAlignmentMode = .center
         
-        let oilBackground = SKSpriteNode(imageNamed: "oil-background-image")
+        let oilBackground = SKSpriteNode(texture: SKGameScene.oilBackgroundTexture)
         oilBackground.size = CGSize(repeating: fontSize) * 3.5
         oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)//multiplierLabel.frame.height / 2)
         oilBackground.zPosition = -2

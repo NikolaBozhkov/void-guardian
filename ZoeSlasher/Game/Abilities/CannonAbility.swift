@@ -43,10 +43,50 @@ extension CannonAbility {
         
         config.cost = 2
         config.spawnChanceFunction = { gameStage in
-            0.15 * step(gameStage, edge: 3) + min(0.05 * (gameStage - 3), 0.17)
+            0.15 * step(gameStage, edge: 3) + min(0.05 * (gameStage - 3), 0.15)
         }
 
         config.corruption = 20
+        
+        return config
+    }()
+    
+    static let stage2Config: CannonAbilityConfig = {
+        let config = getCoreConfig(stage: 2)
+        
+        config.interval = 10
+        config.healthModifier = 3.2
+        
+        config.symbolVelocityGain = 1.3
+        config.symbolVelocityRecoil = -.pi * 1.5
+        config.impulseSharpness = 4.0
+        
+        config.cost = 3
+        config.spawnChanceFunction = { gameStage in
+            0.05 * step(gameStage, edge: 17) + min(0.05 * (gameStage - 17), 0.25)
+        }
+
+        config.corruption = 20
+        
+        return config
+    }()
+    
+    static let stage3Config: CannonAbilityConfig = {
+        let config = getCoreConfig(stage: 3)
+        
+        config.interval = 10
+        config.healthModifier = 4
+        
+        config.symbolVelocityGain = 1.3
+        config.symbolVelocityRecoil = -.pi * 1.5
+        config.impulseSharpness = 4.0
+        
+        config.cost = 3.7
+        config.spawnChanceFunction = { gameStage in
+            0.02 * step(gameStage, edge: 31) + min(0.02 * (gameStage - 31), 0.22)
+        }
+
+        config.corruption = 25
         
         return config
     }()

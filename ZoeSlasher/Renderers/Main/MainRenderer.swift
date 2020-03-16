@@ -77,7 +77,7 @@ class MainRenderer: NSObject {
     let machineGunSymbolTexture: MTLTexture
     let cannonSymbolTexture: MTLTexture
     let splitterSymbolTexture: MTLTexture
-    let circleTexture: MTLTexture
+    var stageTextures: [String: MTLTexture] = [:]
     let energyPotionTexture: MTLTexture
     let healthPotionTexture: MTLTexture
     
@@ -151,7 +151,11 @@ class MainRenderer: NSObject {
         machineGunSymbolTexture = createTexture(device: device, filePath: "machine-gun")
         cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
         splitterSymbolTexture = createTexture(device: device, filePath: "splitter")
-        circleTexture = createTexture(device: device, filePath: "circle")
+        
+        for i in 2...6 {
+            stageTextures["stage\(i)"] = createTexture(device: device, filePath: "stage\(i)")
+        }
+        
         energyPotionTexture = createTexture(device: device, filePath: "energy-potion")
         healthPotionTexture = createTexture(device: device, filePath: "health-potion")
         
@@ -315,8 +319,8 @@ extension MainRenderer {
             texture = cannonSymbolTexture
         } else if textureName == "splitter" {
             texture = splitterSymbolTexture
-        } else if textureName == "circle" {
-            texture = circleTexture
+        } else {
+            texture = stageTextures[textureName]!
         }
         
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)

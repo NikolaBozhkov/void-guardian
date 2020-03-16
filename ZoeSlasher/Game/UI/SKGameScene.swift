@@ -23,6 +23,7 @@ class SKGameScene: SKScene {
     static let glowTexture = SKTexture(imageNamed: "glow")
     static let voidFavorTexture = SKTexture(imageNamed: "void-favor-image")
     static let voidFavorGlowTexture = SKTexture(imageNamed: "void-favor-glow-image")
+    static let oilBackgroundTexture = SKTexture(imageNamed: "oil-background-image")
     
     unowned var gameScene: GameScene!
     
@@ -30,6 +31,8 @@ class SKGameScene: SKScene {
     let followPlayerNode = SKNode()
     
     var indicatorToEnemyMap: [SKSpriteNode: Node] = [:]
+    
+    private var favorLabel: SKLabelNode!
     
     private var scoreLabel: SKLabelNode!
     private var score = 0 {
@@ -43,6 +46,34 @@ class SKGameScene: SKScene {
         
         addChild(shakeNode)
         addChild(followPlayerNode)
+        
+        let favorLabel = makeLabel(text: "0", fontSize: 190)
+        favorLabel.verticalAlignmentMode = .center
+        favorLabel.horizontalAlignmentMode = .left
+        favorLabel.fontColor = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.9))
+        self.favorLabel = favorLabel
+        
+        let favorSymbol = SKSpriteNode(texture: SKGameScene.voidFavorTexture)
+        favorSymbol.anchorPoint = CGPoint(x: 0, y: 0.5)
+        favorSymbol.size = .one * favorLabel.fontSize * 1.2
+        favorSymbol.color = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.9))
+        favorSymbol.colorBlendFactor = 1
+        
+        let favorSymbolGlow = SKSpriteNode(texture: SKGameScene.voidFavorGlowTexture)
+        favorSymbolGlow.size = favorSymbol.size
+        favorSymbolGlow.anchorPoint = favorSymbol.anchorPoint
+        favorSymbolGlow.zPosition = -1
+        favorSymbolGlow.color = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.0))
+        favorSymbolGlow.colorBlendFactor = 1
+        favorSymbol.addChild(favorSymbolGlow)
+        
+        favorSymbol.position = CGPoint(x: -size.width / 2 + 100,
+                                       y: size.height / 2 - favorSymbol.size.height / 2 - 10)
+        
+        favorLabel.position = favorSymbol.position.offsetted(dx: favorSymbol.size.width * 0.92, dy: 0)
+        
+        addChild(favorLabel)
+        addChild(favorSymbol)
         
         scoreLabel = makeLabel(text: "1", fontSize: 200)
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
@@ -182,11 +213,9 @@ class SKGameScene: SKScene {
         return dmgLabel
     }
     
-    func didRegenEnergy(_ amount: Int, around position: CGPoint, radius: CGFloat) {
-        let direction = CGPoint(angle: .random(in: -.pi...(.pi)))
-        
-        let label = EnergyGainLabel(amount: amount, fontSize: 100)
-        label.position = position + direction * radius
+    func didRegenEnergy(_ amount: Int, at position: CGPoint) {
+        let label = EnergyGainLabel(amount: amount, fontSize: 133)
+        label.position = position.offsetted(dx: 0, dy: 0)
         label.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
@@ -194,7 +223,7 @@ class SKGameScene: SKScene {
         
         label.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.7)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
@@ -202,10 +231,7 @@ class SKGameScene: SKScene {
         
         let scaleDown = SKAction.scale(to: 0.85, duration: 1.05)
         
-        let moveOutDistance: CGFloat = 26
-        let moveBy = SKAction.moveBy(x: direction.x * moveOutDistance,
-                                     y: direction.y * moveOutDistance,
-                                     duration: 1.2)
+        let moveBy = SKAction.moveBy(x: 0, y: 28, duration: 1.2)
         moveBy.timingMode = .easeOut
         
         label.run(SKAction.sequence([
@@ -216,7 +242,7 @@ class SKGameScene: SKScene {
         label.run(moveBy)
         
         label.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.5),
+            SKAction.wait(forDuration: 0.7),
             fadeOut,
             SKAction.removeFromParent()
         ]))
@@ -303,6 +329,10 @@ class SKGameScene: SKScene {
         ]))
         
         addChild(label)
+    }
+    
+    func didUpdateFavor(_ newValue: Float) {
+        favorLabel.text = "\(Int(newValue))"
     }
     
     func shake(_ powerFactor: Float) {
