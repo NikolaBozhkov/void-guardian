@@ -122,16 +122,16 @@ class GameScene: Scene {
         player.advanceStage()
         
         // Check for game over
-        if player.health == 0 && !isGameOver {
-            
-            enemies.forEach { removeEnemy($0) }
-            player.removeFromParent()
-            
-            isGameOver = true
-            skGameScene.didGameOver()
-            
-            stageManager.isActive = false
-        }
+//        if player.health == 0 && !isGameOver {
+//            
+//            enemies.forEach { removeEnemy($0) }
+//            player.removeFromParent()
+//            
+//            isGameOver = true
+//            skGameScene.didGameOver()
+//            
+//            stageManager.isActive = false
+//        }
         
         stageManager.update(deltaTime: deltaTime)
         
@@ -141,6 +141,14 @@ class GameScene: Scene {
                 stageManager.advanceStage()
                 player.health = 100
                 player.energy = 100
+                
+                var angle = Float.random(in: -.pi...(.pi))
+                var offset = vector_float2(cos(angle), sin(angle)) * 220
+                skGameScene.didRegenEnergy(100, at: CGPoint(player.position), offset: CGPoint(offset))
+                
+                angle = Float.random(in: -.pi...(.pi))
+                offset = vector_float2(cos(angle), sin(angle)) * 220
+                skGameScene.didRegenHealth(100, at: CGPoint(player.position), offset: CGPoint(offset))
             } else if spawner.availableBudget <= 0 {
                 spawner.advance()
             }
@@ -165,6 +173,10 @@ class GameScene: Scene {
 //        }
 //
 //        skGameScene.didCombo(multiplier: GameScene.i, energy: (GameScene.i - 1) * 4, favor: Int(pow(Float(GameScene.i), 1.7)))
+        
+//        skGameScene.showNoEnergyLabel()
+//        skGameScene.didRegenHealth(15, at: CGPoint(player.position), offset: CGPoint(x: 0, y: 210))
+//        skGameScene.didRegenEnergy(15, at: CGPoint(player.position), offset: CGPoint(x: 0, y: 210))
     }
     
     func reloadScene() {
@@ -248,6 +260,8 @@ class GameScene: Scene {
                 
                 if potion.type == .energy {
                     skGameScene.didRegenEnergy(potion.amount, at: CGPoint(potion.position))
+                } else if potion.type == .health {
+                    skGameScene.didRegenHealth(potion.amount, at: CGPoint(potion.position))
                 }
             }
         }

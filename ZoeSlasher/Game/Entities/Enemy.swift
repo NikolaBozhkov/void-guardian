@@ -228,7 +228,7 @@ class Enemy: Node {
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.65 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.35 * f
+        symbol.color.w = 0.8 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.2 * f
         
         if symbol.name == "stage" {
             symbol.color.w = 1 * min(timeAlive * 0.75 - 0.5, 1.0)

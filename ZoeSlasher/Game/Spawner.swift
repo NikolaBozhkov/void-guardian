@@ -8,7 +8,8 @@
 
 class Spawner {
     
-    private let potionInterval: TimeInterval = 25
+    private let energyPotionInterval: TimeInterval = 25
+    private let healthPotionInterval: TimeInterval = 25
     private let spawnInterval: TimeInterval = 0.1
     
     private let stagesConfig: [(allowance: Float, threshold: Double)] = [
@@ -31,7 +32,8 @@ class Spawner {
     private var spawnStage: Int = 0
     
     private var timeSinceLastSpawn: TimeInterval = .infinity
-    private var timeSinceLastPotion: TimeInterval = 0
+    private var timeSinceLastEnergyPotion: TimeInterval = 0
+    private var timeSinceLastHealthPotion: TimeInterval = 0
     
     var availableBudget: Float {
         allowance * budget - spent
@@ -40,7 +42,10 @@ class Spawner {
     func update(deltaTime: TimeInterval) {
         currentPeriodTime += deltaTime
         timeSinceLastSpawn += deltaTime
-        timeSinceLastPotion += deltaTime * TimeInterval(max(6 * scene.favor / 100, 2))
+        
+        let potionDeltaTime = deltaTime * TimeInterval(max(6 * scene.favor / 100, 2))
+        timeSinceLastEnergyPotion += potionDeltaTime
+        timeSinceLastHealthPotion += potionDeltaTime
         
         guard currentPeriodTime < spawnPeriod else { return }
         
@@ -65,13 +70,22 @@ class Spawner {
             }
         }
         
-        if timeSinceLastPotion >= potionInterval {
+        if timeSinceLastEnergyPotion >= energyPotionInterval {
             let potion = Potion(type: .energy, amount: 25)
             potion.position = scene.randomPosition(padding: [300, 200])
             scene.rootNode.add(childNode: potion)
             scene.potions.insert(potion)
             
-            timeSinceLastPotion = 0
+            timeSinceLastEnergyPotion = 0
+        }
+        
+        if timeSinceLastHealthPotion >= healthPotionInterval {
+            let potion = Potion(type: .health, amount: 5)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
+            
+            timeSinceLastHealthPotion = 0
         }
     }
     

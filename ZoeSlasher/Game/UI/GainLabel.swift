@@ -11,5 +11,11 @@ import SpriteKit
 protocol GainLabel: SKNode {
     var width: CGFloat { get }
     var height: CGFloat { get }
+    var size: CGSize { get }
 }
 
+extension GainLabel {
+    var size: CGSize {
+        CGSize(width: width, height: height)
+    }
+}

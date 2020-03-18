@@ -50,14 +50,16 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     f = f * f;
     float d1 = d - w * f * length(positionDelta) * 0.15;
     
-    float inf = 1 - smoothstep(uniforms.playerSize - 0.1, 1.0, d);
+    float inf = 1 - smoothstep(uniforms.playerSize, 1.0, d);
+    float accent = (1 - smoothstep(uniforms.playerSize, uniforms.playerSize + 0.15, d));
     float intensity = 1.0 - smoothstep(0.2, 0.75, d);
     
-    float player = 1.0 - smoothstep(uniforms.playerSize - 0.1, uniforms.playerSize, d1);
+    float player = 1.0 - smoothstep(uniforms.playerSize - 0.09, uniforms.playerSize, d1);
     
-    ridges *= 0.57 + 0.3 * sin(atan2(st.y, st.x) * 3.0 + intensity * (ridges * 16. + 1.) + uniforms.time * 2.2);
+    ridges *= 0.57 + (0.3 + 0.04 * accent) * sin(atan2(st.y, st.x) * 3.0 + intensity * (ridges * 16. + 1. + accent * 4) + uniforms.time * 2.2);
     
     player += inf * ridges;
+    player += 0.5 * accent * ridges;
     player = min(player, 1.0);
     
     // Health

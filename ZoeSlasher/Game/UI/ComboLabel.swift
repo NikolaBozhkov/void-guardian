@@ -21,6 +21,10 @@ class ComboLabel: SKNode {
     private(set) var width: CGFloat = 0
     private(set) var height: CGFloat = 0
     
+    var size: CGSize {
+        CGSize(width: width, height: height)
+    }
+    
     init(multiplier: Int, energy: Int, favor: Int) {
         let bonusSize = (ComboLabel.fontSizeHigh - ComboLabel.fontSizeLow) * CGFloat(multiplier - 2) * 0.1
         fontSize = min(ComboLabel.fontSizeLow + bonusSize, ComboLabel.fontSizeHigh)
@@ -32,11 +36,9 @@ class ComboLabel: SKNode {
         
         let oilBackground = SKSpriteNode(texture: SKGameScene.oilBackgroundTexture)
         oilBackground.size = CGSize(repeating: fontSize) * 3.5
-        oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)//multiplierLabel.frame.height / 2)
+        oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)
         oilBackground.zPosition = -2
         oilBackground.alpha = 0.4
-//        oilBackground.colorBlendFactor = 1
-//        oilBackground.color = SKColor(red: , green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
         multiplierLabel.addChild(oilBackground)
         
         energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, rightAligned: true)
@@ -51,11 +53,6 @@ class ComboLabel: SKNode {
         addChild(favorGainLabel)
         
         positionLabels()
-        
-//        let bg = SKSpriteNode(color: .red, size: CGSize(width: width, height: height))
-//        bg.alpha = 0.2
-//        bg.zPosition = -10
-//        addChild(bg)
         
         runMultiplierLabelActions()
         runGainLabelActions(for: energyGainLabel)

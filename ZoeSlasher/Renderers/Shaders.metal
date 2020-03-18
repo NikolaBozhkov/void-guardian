@@ -96,7 +96,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     const float aa = 0.018;
     
     float f = 0.0;
-    f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.5;
+    f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.4;
     
     float v = smoothstep(mid - aa, mid, r1) - smoothstep(mid, mid + aa, r1);
     v += smoothstep(mid - aa, mid, r2) - smoothstep(mid, mid + aa, r2);
@@ -115,7 +115,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     float impulse = expImpulse(timeSinceHit + 1 / k, k);
     f += v * damagedPart * (1 + 3 * impulse);
     
-    enemy += f * 0.55;
+    enemy += f * 0.8;
     
     // TEST
     

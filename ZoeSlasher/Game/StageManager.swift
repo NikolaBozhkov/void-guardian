@@ -68,7 +68,7 @@ class StageManager {
         stageTime += deltaTime
         
         if stageTime >= stageDuration {
-            advanceStage()
+//            advanceStage()
         }
         
         spawner.update(deltaTime: deltaTime)
@@ -88,7 +88,7 @@ class StageManager {
     
     func reset() {
         isActive = true
-        stage = 0
+        stage = 15
         advanceStage()
         
 //        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)

@@ -78,8 +78,7 @@ class MainRenderer: NSObject {
     let cannonSymbolTexture: MTLTexture
     let splitterSymbolTexture: MTLTexture
     var stageTextures: [String: MTLTexture] = [:]
-    let energyPotionTexture: MTLTexture
-    let healthPotionTexture: MTLTexture
+    let balanceSymbolTexture: MTLTexture
     
     var scene: GameScene!
     
@@ -156,8 +155,7 @@ class MainRenderer: NSObject {
             stageTextures["stage\(i)"] = createTexture(device: device, filePath: "stage\(i)")
         }
         
-        energyPotionTexture = createTexture(device: device, filePath: "energy-potion")
-        healthPotionTexture = createTexture(device: device, filePath: "health-potion")
+        balanceSymbolTexture = createTexture(device: device, filePath: "balance")
         
         super.init()
     }
@@ -343,6 +341,7 @@ extension MainRenderer {
         if potion.type == .energy {
             symbol = energySymbolTexture
         } else if potion.type == .health {
+            symbol = balanceSymbolTexture
         }
         
         renderEncoder.setFragmentTexture(symbol, index: 5)
@@ -352,8 +351,8 @@ extension MainRenderer {
                                        length: MemoryLayout<vector_float2>.stride,
                                        index: 5)
         
-        var symbolColor = potion.symbolColor;
-        var glowColor = potion.glowColor;
+        var symbolColor = potion.symbolColor
+        var glowColor = potion.glowColor
         renderEncoder.setFragmentBytes(&symbolColor, length: MemoryLayout<vector_float3>.stride, index: 6)
         renderEncoder.setFragmentBytes(&glowColor, length: MemoryLayout<vector_float3>.stride, index: 7)
         

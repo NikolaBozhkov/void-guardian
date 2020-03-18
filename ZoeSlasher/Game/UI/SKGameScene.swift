@@ -19,6 +19,8 @@ class SKGameScene: SKScene {
     
     static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
     static let energySymbolGlowTexture = SKTexture(imageNamed: "energy-glow-image")
+    static let balanceSymbolTexture = SKTexture(imageNamed: "balance-image")
+    static let balanceSymbolGlowTexture = SKTexture(imageNamed: "balance-glow-image")
     static let dmgTexture = SKTexture(imageNamed: "dmg-indicator")
     static let glowTexture = SKTexture(imageNamed: "glow")
     static let voidFavorTexture = SKTexture(imageNamed: "void-favor-image")
@@ -129,33 +131,17 @@ class SKGameScene: SKScene {
         let comboLabel = ComboLabel(multiplier: multiplier, energy: energy, favor: favor)
         
         let offset: CGFloat = 200
-        
-        let topEdge = gameScene.player.position.y + Float(offset + comboLabel.height)
-        let doesFitTop = topEdge < gameScene.size.y / 2
-        
-        let doesFitSideways = gameScene.player.position.x - Float(comboLabel.width / 2) > gameScene.safeLeft
-            && gameScene.player.position.x + Float(comboLabel.width / 2) < gameScene.size.x / 2
-        let doesFitRight = gameScene.player.position.x + Float(comboLabel.width + offset) < gameScene.size.x / 2
-        
-        let direction: CGPoint
-        if doesFitTop && doesFitSideways {
-            direction = CGPoint(x: 0, y: 1)
-        } else if !doesFitTop && doesFitSideways {
-            direction = CGPoint(x: 0, y: -1)
-        } else if doesFitRight {
-            direction = CGPoint(x: 1, y: 0)
-        } else {
-            direction = CGPoint(x: -1, y: 0)
-        }
-            
-        let positionOffset = CGPoint(x: direction.x * (offset + comboLabel.width / 2),
-                                     y: direction.y * (offset + comboLabel.height / 2))
-        comboLabel.position = CGPoint(gameScene.player.position) + positionOffset
+        let moveDistance = offset / 2
+        let positionInfo = getPositionInfoAroundPlayer(withOffset: offset,
+                                                       forSize: comboLabel.size,
+                                                       padding: CGPoint(x: 0, y: moveDistance))
+        comboLabel.position = positionInfo.position
         
         let fadeOut = SKAction.fadeOut(withDuration: 0.6)
         fadeOut.timingMode = .easeIn
         
-        comboLabel.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 1.5))
+        let direction = positionInfo.direction
+        comboLabel.run(SKAction.moveBy(x: 0, y: CGFloat(direction.y + abs(direction.x)) * moveDistance, duration: 1.5))
         comboLabel.run(SKAction.sequence([
             SKAction.wait(forDuration: 0.8),
             fadeOut,
@@ -213,9 +199,18 @@ class SKGameScene: SKScene {
         return dmgLabel
     }
     
-    func didRegenEnergy(_ amount: Int, at position: CGPoint) {
+    func didRegenEnergy(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero) {
         let label = EnergyGainLabel(amount: amount, fontSize: 133)
-        label.position = position.offsetted(dx: 0, dy: 0)
+        configureRegenLabel(label, size: label.size, position: position, offset: offset)
+    }
+    
+    func didRegenHealth(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero) {
+        let label = HealthGainLabel(amount: amount, fontSize: 133)
+        configureRegenLabel(label, size: label.size, position: position, offset: offset)
+    }
+    
+    private func configureRegenLabel(_ label: SKNode, size: CGSize, position: CGPoint, offset: CGPoint) {
+        label.position = position + offset + offset.normalized * CGPoint(size / 2)
         label.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
@@ -223,15 +218,15 @@ class SKGameScene: SKScene {
         
         label.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.4)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.85, duration: 1.05)
+        let scaleDown = SKAction.scale(to: 0.85, duration: 1.1)
         
-        let moveBy = SKAction.moveBy(x: 0, y: 28, duration: 1.2)
+        let moveBy = SKAction.moveBy(x: 0, y: 30, duration: 1.25)
         moveBy.timingMode = .easeOut
         
         label.run(SKAction.sequence([
@@ -242,7 +237,7 @@ class SKGameScene: SKScene {
         label.run(moveBy)
         
         label.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.7),
+            SKAction.wait(forDuration: 0.85),
             fadeOut,
             SKAction.removeFromParent()
         ]))
@@ -258,14 +253,14 @@ class SKGameScene: SKScene {
     
     func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
         let label = createLossGainLabel(amount: Int(damage),
-                                        at: CGPoint(gameScene.player.position + [0, 190]),
+                                        at: CGPoint(gameScene.player.position + [0, 210]),
                                         xRange: -40...40,
                                         yRange: 0...30,
                                         color: SKColor(vector_float3(1.0, 0.3, 0.3)))
         addGlow(to: label, color: label.fontColor!)
         
         let power = min(damage / gameScene.player.maxHealth * 0.5, 1.0)
-        label.fontSize = CGFloat(100 * (1 + power))
+        label.fontSize = CGFloat(108 * (1 + power))
         addChild(label)
         shake(power)
         
@@ -296,17 +291,39 @@ class SKGameScene: SKScene {
         followPlayerNode.addChild(indicator)
     }
     
-    func showNoEnergyLabel() {
-        let label = makeLabel(text: "Not enough energy", fontSize: 100, fontName: UIConstants.muliFont)
-        label.fontColor = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
+    func didRestoreResources() {
+        let fontSize: CGFloat = 100
+        let label = makeLabel(text: "Health & Energy restored", fontSize: fontSize, fontName: UIConstants.muliFont)
+        label.fontColor = SKColor(mix(vector_float3(0.3, 1, 0.3), .one, t: 0.5))
         
         let offset: CGFloat = 270
-        let threshold: Float = Float(offset) * 1.5
+        let moveDistance = offset / 2
+        let positionInfo = getPositionInfoAroundPlayer(withOffset: offset,
+                                                       forSize: CGSize(width: label.frame.width, height: label.frame.height),
+                                                       padding: CGPoint(x: 0, y: moveDistance))
+        label.position = positionInfo.position
         
-        let doesFitTop = gameScene.player.position.y + threshold < gameScene.size.y / 2
-        let doesFitSideways = gameScene.player.position.x - Float(label.frame.width / 2) > gameScene.safeLeft
-            && gameScene.player.position.x + Float(label.frame.width / 2) < gameScene.size.x / 2
-        let doesFitRight = gameScene.player.position.x + threshold + Float(label.frame.width) < gameScene.size.x / 2
+        let direction = positionInfo.direction
+        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 2))
+        label.run(SKAction.sequence([
+            SKAction.fadeOut(withDuration: 1),
+            SKAction.removeFromParent()
+        ]))
+        
+        addChild(label)
+    }
+    
+    func getPositionInfoAroundPlayer(withOffset offset: CGFloat,
+                                     forSize size: CGSize,
+                                     padding: CGPoint) -> (position: CGPoint, direction: CGPoint) {
+        let topEdge = gameScene.player.position.y + Float(size.height + offset + padding.y)
+        let doesFitTop = topEdge < gameScene.size.y / 2
+        
+        let leftEdge = gameScene.player.position.x - Float(size.width / 2 + padding.x)
+        let rightEdge = gameScene.player.position.x + Float(size.width / 2 + padding.x)
+        let doesFitSideways = leftEdge > gameScene.safeLeft && rightEdge < gameScene.size.x / 2
+        
+        let doesFitRight = gameScene.player.position.x + Float(size.width + offset + padding.x) < gameScene.size.x / 2
         
         let direction: CGPoint
         if doesFitTop && doesFitSideways {
@@ -318,13 +335,32 @@ class SKGameScene: SKScene {
         } else {
             direction = CGPoint(x: -1, y: 0)
         }
-            
-        let positionOffset = CGPoint(x: CGFloat(direction.x) * (label.frame.width / 2 + offset), y: direction.y * offset)
-        label.position = CGPoint(gameScene.player.position) + positionOffset
         
-        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 2))
+        let positionOffset = CGPoint(x: direction.x * (offset + size.width / 2),
+                                     y: direction.y * (offset + size.height / 2))
+        return (CGPoint(gameScene.player.position) + positionOffset, direction)
+    }
+    
+    func showNoEnergyLabel() {
+        let label = makeLabel(text: "Not enough energy", fontSize: 100, fontName: UIConstants.muliFont)
+        label.fontColor = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
+        
+        let offset: CGFloat = 250
+        let moveDistance = offset / 3
+        let positionInfo = getPositionInfoAroundPlayer(withOffset: offset,
+                                                       forSize: CGSize(width: label.frame.width, height: label.frame.height),
+                                                       padding: CGPoint(x: 0, y: moveDistance))
+
+        label.position = positionInfo.position
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 1)
+        fadeOut.timingMode = .easeIn
+        
+        let direction = positionInfo.direction
+        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * moveDistance, duration: 2))
         label.run(SKAction.sequence([
-            SKAction.fadeOut(withDuration: 1),
+            SKAction.wait(forDuration: 0.2),
+            fadeOut,
             SKAction.removeFromParent()
         ]))
         

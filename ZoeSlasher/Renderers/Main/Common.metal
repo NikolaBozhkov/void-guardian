@@ -21,7 +21,7 @@ float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, flo
     float2 diff = float2(0.0) - st;
     float d = length(diff);
     
-    float inf = 1 - smoothstep(radius - 0.1, 1.0, d);
+    float inf = 1 - smoothstep(radius, 1.0, d);
     
     float f = fbmr.sample(s, stWorldNorm).x;
     float ridges = pow(1. - f, 2.5);
@@ -36,12 +36,15 @@ float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, flo
     f = f * f;
     float d1 = d - w * f * length(positionDelta) * 0.25;
     
-    float player = 1.0 - smoothstep(radius - 0.1, radius, d1);
+    float player = 1.0 - smoothstep(radius - 0.075, radius, d1);
     
+    float accent = (1 - smoothstep(radius, radius + 0.15, d));
     float intensity = 1.0 - smoothstep(0.2, 0.75, d);
-    ridges *= 0.57 + 0.3 * sin(atan2(diff.y, diff.x) * 3.0 + intensity * sign(clockwise) * (ridges * 16. + 1.) + uniforms.time * 2.2 * clockwise);
+    ridges *= 0.57 + (0.3 + 0.04 * accent) * sin(atan2(diff.y, diff.x) * 3.0 + intensity * sign(clockwise) * (ridges * 16. + 1. + accent * 4) + uniforms.time * 2.2 * clockwise);
     
     player += inf * ridges;
+    player += 0.5 * accent * ridges;
+    
     return min(player, 1.0);
 }
 
