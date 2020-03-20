@@ -203,7 +203,8 @@ class Enemy: Node {
         
         let attackProgress = Float(timeSinceLastTrigger / triggerInterval)
         
-        color.xyz = mix([1, 1, 1], ability.color,
+        color.xyz = mix([1, 1, 1],
+                        ability.color,
                         t: 1.0 - ability.colorScale + ability.colorScale * max(f, attackProgress))
         
         symbolsAngleVelocity += Float(deltaTime) * symbolsAngleVelocityGain

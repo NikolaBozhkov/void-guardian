@@ -29,16 +29,22 @@ class ComboLabel: SKNode {
         let bonusSize = (ComboLabel.fontSizeHigh - ComboLabel.fontSizeLow) * CGFloat(multiplier - 2) * 0.1
         fontSize = min(ComboLabel.fontSizeLow + bonusSize, ComboLabel.fontSizeHigh)
         
+        var multiplierColor = vector_float3(1.000, 0.961, 0.420)
+        multiplierColor = .one
+        
         multiplierLabel = ComboLabel.createLabel(fontSize: fontSize, fontNamed: UIConstants.sanosFont)
         multiplierLabel.text = "x\(multiplier)"
         multiplierLabel.verticalAlignmentMode = .center
         multiplierLabel.horizontalAlignmentMode = .center
+//        multiplierLabel.fontColor = multiplierColor
         
         let oilBackground = SKSpriteNode(texture: SKGameScene.oilBackgroundTexture)
         oilBackground.size = CGSize(repeating: fontSize) * 3.5
         oilBackground.position = CGPoint(x: fontSize * 0.075, y: 0)
         oilBackground.zPosition = -2
         oilBackground.alpha = 0.4
+        oilBackground.color = SKColor(multiplierColor)
+        oilBackground.colorBlendFactor = 1
         multiplierLabel.addChild(oilBackground)
         
         energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, rightAligned: true)
@@ -46,7 +52,7 @@ class ComboLabel: SKNode {
         
         super.init()
         
-        addGlow(to: multiplierLabel, color: .white)
+        addGlow(to: multiplierLabel, color: SKColor(multiplierColor))
         
         addChild(multiplierLabel)
         addChild(energyGainLabel)

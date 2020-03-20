@@ -110,8 +110,8 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     float i = expImpulse(timeSinceLastEnergyUse + 1.0 / k1, k1);
     float energyFlash = i * (1.0 - smoothstep(0.0, 1.0, r));
     
-    float3 baseColor = mix(float3(0.627, 1.000, 0.447), float3(1), energyFlash);
-    float3 healthColor = mix(float3(0.627, 1.000, 0.447), float3(1, 0, 0), damagedPart * 0.7);
+    float3 baseColor = float3(0.345, 1.000, 0.129);
+    float3 healthColor = mix(baseColor, float3(1, 0, 0), damagedPart * 0.7);
     return float4(mix(baseColor, healthColor, h), player);
 }
 
@@ -132,7 +132,7 @@ fragment float4 anchorShader(VertexOut in [[stage_in]],
     - smoothstep(outerStart + outerWidth, outerStart + outerWidth * 2, r);
     
     float f = inner + outer;
-    float3 col = float3(0.627, 1.000, 0.447);
+    float3 col = float3(0.345, 1.000, 0.129);
     return float4(col, f);
 }
 
@@ -149,7 +149,7 @@ fragment float4 energySymbolShader(VertexOut in [[stage_in]],
     float f = t * (0.2 + 0.4 * (1 - smoothstep(color.a, color.a + 0.05, in.uv.y)));
     
     float full = step(1.0, color.a);
-    f += t * 0.3 * full;
+    f += t * 0.4 * full;
     
     float g = 0.6 + 0.3 * (0.5 + 0.5 * sin(uniforms.time * 5));
     
@@ -163,8 +163,8 @@ fragment float4 energySymbolShader(VertexOut in [[stage_in]],
     float impulse = expImpulse(timeSinceNoEnergy + 1 / k, k);
     f += impulse * gSample * 2;
     
-    float3 glowColor = mix(float3(0.627, 1.000, 0.447), float3(1.0, 0.2, 0.2), impulse);
-    float3 col = mix(float3(1), glowColor, step(0.01, gSample));
+    float3 glowColor = mix(float3(0.898, 1.000, 0.000), float3(1.0, 0.2, 0.2), impulse);
+    float3 col = mix(mix(glowColor, float3(1), 0.9), glowColor, step(0.01, gSample));
 //    col = float3(0.431, 1.00, 0.473);
     return float4(col, f);
 }

@@ -144,11 +144,19 @@ class GameScene: Scene {
                 
                 var angle = Float.random(in: -.pi...(.pi))
                 var offset = vector_float2(cos(angle), sin(angle)) * 220
-                skGameScene.didRegenEnergy(100, at: CGPoint(player.position), offset: CGPoint(offset))
+                skGameScene.didRegenEnergy(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
                 
-                angle = Float.random(in: -.pi...(.pi))
+                let direction = sign(Float.random(in: -1...1))
+                let range: ClosedRange<Float>
+                if direction == -1 {
+                    range = -.pi * 1.5...(-.pi / 2)
+                } else {
+                    range = .pi / 2...(.pi * 1.5)
+                }
+                
+                angle += Float.random(in: range)
                 offset = vector_float2(cos(angle), sin(angle)) * 220
-                skGameScene.didRegenHealth(100, at: CGPoint(player.position), offset: CGPoint(offset))
+                skGameScene.didRegenHealth(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
             } else if spawner.availableBudget <= 0 {
                 spawner.advance()
             }

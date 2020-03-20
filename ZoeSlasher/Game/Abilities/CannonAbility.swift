@@ -94,7 +94,7 @@ extension CannonAbility {
     private static func getCoreConfig(stage: Int) -> CannonAbilityConfig {
         let config = CannonAbilityConfig()
         config.symbol = "cannon"
-        config.color = vector_float3(0.9, 0.0, 1.0)
+        config.color = vector_float3(0.898, 0.016, 0.929)
         config.colorScale = 0.9
         config.stage = stage
         return config

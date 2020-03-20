@@ -97,7 +97,7 @@ extension BasicAttackAbility {
     private static func getCoreConfig(stage: Int) -> BasicAttackAbilityConfig {
         let config = BasicAttackAbilityConfig()
         config.symbol = "basic"
-        config.color = vector_float3(1.0, 0.1, 0.0)
+        config.color = vector_float3(1.0, 0.048, 0.061)
         config.colorScale = 0.9
         config.stage = stage
         return config

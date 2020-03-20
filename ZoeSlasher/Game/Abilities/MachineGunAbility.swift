@@ -98,7 +98,7 @@ extension MachineGunAbility {
     private static func getCoreConfig(stage: Int) -> MachineGunAbilityConfig {
         let config = MachineGunAbilityConfig()
         config.symbol = "machine-gun"
-        config.color = vector_float3(1.0, 0.5, 0.0)
+        config.color = vector_float3(1.000, 0.427, 0.047)
         config.colorScale = 0.9
         config.stage = stage
         return config

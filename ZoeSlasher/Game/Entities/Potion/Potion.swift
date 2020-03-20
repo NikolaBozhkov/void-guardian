@@ -19,10 +19,10 @@ struct PotionConfiguration {
 class Potion: Node {
     
     private static let configForType: [PotionType: PotionConfiguration] = [
-        .health: PotionConfiguration(symbolColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.5),
-                                     glowColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.0)),
-        .energy: PotionConfiguration(symbolColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.85),
-                                     glowColor: mix(vector_float3(0.627, 1.000, 0.447), .one, t: 0.6))
+        .health: PotionConfiguration(symbolColor: mix(Colors.player, .one, t: 0.8),
+                                     glowColor: mix(Colors.player, .one, t: 0.0)),
+        .energy: PotionConfiguration(symbolColor: mix(Colors.energy, .one, t: 0.8),
+                                     glowColor: mix(Colors.energy, .one, t: 0.0))
     ]
     
     let type: PotionType

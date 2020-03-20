@@ -8,8 +8,8 @@
 
 class Spawner {
     
-    private let energyPotionInterval: TimeInterval = 25
-    private let healthPotionInterval: TimeInterval = 25
+    private let energyPotionInterval: TimeInterval = 30
+    private let healthPotionInterval: TimeInterval = 55
     private let spawnInterval: TimeInterval = 0.1
     
     private let stagesConfig: [(allowance: Float, threshold: Double)] = [
@@ -47,6 +47,24 @@ class Spawner {
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
+        if timeSinceLastEnergyPotion >= energyPotionInterval {
+            let potion = Potion(type: .energy, amount: 25)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
+            
+            timeSinceLastEnergyPotion = 0
+        }
+        
+        if timeSinceLastHealthPotion >= healthPotionInterval {
+            let potion = Potion(type: .health, amount: 10)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
+            
+            timeSinceLastHealthPotion = 0
+        }
+        
         guard currentPeriodTime < spawnPeriod else { return }
         
         for (stage, config) in stagesConfig.enumerated() {
@@ -68,24 +86,6 @@ class Spawner {
                     break
                 }
             }
-        }
-        
-        if timeSinceLastEnergyPotion >= energyPotionInterval {
-            let potion = Potion(type: .energy, amount: 25)
-            potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
-            scene.potions.insert(potion)
-            
-            timeSinceLastEnergyPotion = 0
-        }
-        
-        if timeSinceLastHealthPotion >= healthPotionInterval {
-            let potion = Potion(type: .health, amount: 5)
-            potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
-            scene.potions.insert(potion)
-            
-            timeSinceLastHealthPotion = 0
         }
     }
     

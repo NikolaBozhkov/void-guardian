@@ -23,12 +23,14 @@ class FavorGainLabel: SKNode, GainLabel {
     }
     
     init(amount: Int, fontSize: CGFloat) {
+//        let color = vector_float3(0.259, 0.541, 1.000) ICY COLOR
+        let color = Colors.voidFavor
         margin = -fontSize * 0.2
         
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.9))
+        amountLabel.fontColor = SKColor(mix(color, .one, t: 0.9))
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         
@@ -41,11 +43,11 @@ class FavorGainLabel: SKNode, GainLabel {
         
         super.init()
         
-        let glowColor = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.0))
+        let glowColor = SKColor(mix(color, .one, t: 0.0))
         let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
         glow.size = amountLabel.frame.size + .one * 240
         glow.position.offset(dx: amountLabel.frame.width / 2, dy: 0)
-        glow.alpha = 0.75
+        glow.alpha = 0.8
         glow.color = glowColor
         glow.colorBlendFactor = 1.0
         glow.zPosition = -1
@@ -55,7 +57,7 @@ class FavorGainLabel: SKNode, GainLabel {
         energySymbolGlow.size = symbol.size
         energySymbolGlow.alpha = 1
         energySymbolGlow.colorBlendFactor = 1
-        energySymbolGlow.color = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.0))
+        energySymbolGlow.color = glowColor
         energySymbolGlow.anchorPoint = symbol.anchorPoint
         energySymbolGlow.zPosition = -1
         symbol.addChild(energySymbolGlow)
@@ -69,5 +71,9 @@ class FavorGainLabel: SKNode, GainLabel {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setAmount(_ newAmount: Int) {
+        amountLabel.text = "\(newAmount)"
     }
 }

@@ -52,21 +52,22 @@ class SKGameScene: SKScene {
         let favorLabel = makeLabel(text: "0", fontSize: 190)
         favorLabel.verticalAlignmentMode = .center
         favorLabel.horizontalAlignmentMode = .left
-        favorLabel.fontColor = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.9))
+        favorLabel.fontColor = SKColor(mix(Colors.voidFavor, .one, t: 0.9))
         self.favorLabel = favorLabel
         
         let favorSymbol = SKSpriteNode(texture: SKGameScene.voidFavorTexture)
         favorSymbol.anchorPoint = CGPoint(x: 0, y: 0.5)
         favorSymbol.size = .one * favorLabel.fontSize * 1.2
-        favorSymbol.color = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.9))
+        favorSymbol.color = favorLabel.fontColor!
         favorSymbol.colorBlendFactor = 1
         
         let favorSymbolGlow = SKSpriteNode(texture: SKGameScene.voidFavorGlowTexture)
         favorSymbolGlow.size = favorSymbol.size
         favorSymbolGlow.anchorPoint = favorSymbol.anchorPoint
         favorSymbolGlow.zPosition = -1
-        favorSymbolGlow.color = SKColor(mix(vector_float3(0.66, 0, 1), .one, t: 0.0))
+        favorSymbolGlow.color = SKColor(mix(Colors.voidFavor, .one, t: 0.0))
         favorSymbolGlow.colorBlendFactor = 1
+        favorSymbolGlow.alpha = 1
         favorSymbol.addChild(favorSymbolGlow)
         
         favorSymbol.position = CGPoint(x: -size.width / 2 + 100,
@@ -199,14 +200,24 @@ class SKGameScene: SKScene {
         return dmgLabel
     }
     
-    func didRegenEnergy(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero) {
+    func didRegenEnergy(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero, followsPlayer: Bool = false) {
         let label = EnergyGainLabel(amount: amount, fontSize: 133)
         configureRegenLabel(label, size: label.size, position: position, offset: offset)
+        if followsPlayer {
+            followPlayerNode.addChild(label)
+        } else {
+            addChild(label)
+        }
     }
     
-    func didRegenHealth(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero) {
+    func didRegenHealth(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero, followsPlayer: Bool = false) {
         let label = HealthGainLabel(amount: amount, fontSize: 133)
         configureRegenLabel(label, size: label.size, position: position, offset: offset)
+        if followsPlayer {
+            followPlayerNode.addChild(label)
+        } else {
+            addChild(label)
+        }
     }
     
     private func configureRegenLabel(_ label: SKNode, size: CGSize, position: CGPoint, offset: CGPoint) {
@@ -241,8 +252,6 @@ class SKGameScene: SKScene {
             fadeOut,
             SKAction.removeFromParent()
         ]))
-        
-        addChild(label)
     }
     
     func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
