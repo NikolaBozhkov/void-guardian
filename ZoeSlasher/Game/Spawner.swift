@@ -39,6 +39,10 @@ class Spawner {
         allowance * budget - spent
     }
     
+    var spawningEnded: Bool {
+        currentPeriodTime >= spawnPeriod
+    }
+    
     func update(deltaTime: TimeInterval) {
         currentPeriodTime += deltaTime
         timeSinceLastSpawn += deltaTime
@@ -47,23 +51,23 @@ class Spawner {
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
-        if timeSinceLastEnergyPotion >= energyPotionInterval {
-            let potion = Potion(type: .energy, amount: 25)
-            potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
-            scene.potions.insert(potion)
-            
-            timeSinceLastEnergyPotion = 0
-        }
-        
-        if timeSinceLastHealthPotion >= healthPotionInterval {
-            let potion = Potion(type: .health, amount: 10)
-            potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
-            scene.potions.insert(potion)
-            
-            timeSinceLastHealthPotion = 0
-        }
+//        if timeSinceLastEnergyPotion >= energyPotionInterval {
+//            let potion = Potion(type: .energy, amount: 25)
+//            potion.position = scene.randomPosition(padding: [300, 200])
+//            scene.rootNode.add(childNode: potion)
+//            scene.potions.insert(potion)
+//            
+//            timeSinceLastEnergyPotion = 0
+//        }
+//        
+//        if timeSinceLastHealthPotion >= healthPotionInterval {
+//            let potion = Potion(type: .health, amount: 10)
+//            potion.position = scene.randomPosition(padding: [300, 200])
+//            scene.rootNode.add(childNode: potion)
+//            scene.potions.insert(potion)
+//            
+//            timeSinceLastHealthPotion = 0
+//        }
         
         guard currentPeriodTime < spawnPeriod else { return }
         
@@ -87,9 +91,6 @@ class Spawner {
                 }
             }
         }
-    }
-    
-    func advance() {
     }
     
     func setState(stage: Int, budget: Float, spawnPeriod: TimeInterval) {

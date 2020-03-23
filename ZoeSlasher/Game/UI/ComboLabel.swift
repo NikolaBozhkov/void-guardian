@@ -47,7 +47,7 @@ class ComboLabel: SKNode {
         oilBackground.colorBlendFactor = 1
         multiplierLabel.addChild(oilBackground)
         
-        energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize, rightAligned: true)
+        energyGainLabel = EnergyGainLabel(amount: energy, fontSize: fontSize)
         favorGainLabel = FavorGainLabel(amount: favor, fontSize: fontSize)
         
         super.init()

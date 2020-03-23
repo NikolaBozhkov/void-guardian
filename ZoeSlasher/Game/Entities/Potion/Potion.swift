@@ -26,7 +26,7 @@ class Potion: Node {
     ]
     
     let type: PotionType
-    let amount: Int
+    var amount: Int
     let symbolColor: vector_float3
     let glowColor: vector_float3
     
@@ -51,13 +51,18 @@ class Potion: Node {
         renderer.renderPotion(self)
     }
     
-    func apply(to player: Player) {
+    func apply(to player: Player, multiplier: Float = 1) {
+        let amount = Float(self.amount) * multiplier
         if type == .energy {
-            player.energy += Float(amount)
+            player.energy += amount
         } else if type == .health {
-            player.health += Float(amount)
+            player.health += amount
         }
         
+        consume()
+    }
+    
+    func consume() {
         isConsumed = true
         timeSinceConsumed = 0
     }

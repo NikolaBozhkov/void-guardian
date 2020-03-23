@@ -28,11 +28,10 @@ class StageManager {
     private var spawnPeriod: TimeInterval = 0
     private var stageTime: TimeInterval = Constants.baseStageDuration
     
-    private(set) var stage = 0
+    private(set) var isStageCleared = false
+    private(set) var timeSinceStageCleared: TimeInterval = 0
     
-    var spawningEnded: Bool {
-        stageTime >= spawnPeriod
-    }
+    private(set) var stage = 0
     
     init(spawner: Spawner) {
         self.spawner = spawner
@@ -64,24 +63,33 @@ class StageManager {
     }
     
     func update(deltaTime: TimeInterval) {
+        if isStageCleared {
+            timeSinceStageCleared += deltaTime
+        }
+        
         guard isActive else { return }
         stageTime += deltaTime
         
         if stageTime >= stageDuration {
-//            advanceStage()
+            advanceStage()
         }
         
         spawner.update(deltaTime: deltaTime)
     }
     
     func advanceStage() {
-        stage += 1
         stageDuration = Constants.baseStageDuration
         stageTime = 0
+
+        stage += 1
         spawnPeriod = stageDuration * 0.34
         budget = StageManager.getBudget(for: stage)
         
         spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
+        
+        isActive = true
+        isStageCleared = false
+        timeSinceStageCleared = 0
         
         delegate?.didAdvanceStage(to: stage)
     }
@@ -92,5 +100,10 @@ class StageManager {
         advanceStage()
         
 //        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)
+    }
+    
+    func clearStage() {
+        isActive = false
+        isStageCleared = true
     }
 }

@@ -63,6 +63,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
                             constant float &timeSinceHit [[buffer(11)]],
                             constant float &lastHealth [[buffer(10)]],
                             constant float &dmgReceived [[buffer(12)]],
+                            constant float &seed [[buffer(13)]],
                             texture2d<float> fbmr [[texture(1)]],
                             texture2d<float> simplex [[texture(3)]])
 {
@@ -79,8 +80,8 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     float r = length(st);
     float ang = atan2(st.y, st.x);
     
-    float noiseAng = ang - uniforms.time * 0.2;
-    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F;
+    float noiseAng = ang - uniforms.time * 0.2 - seed / 100;
+    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F + seed / 230;
     float2 nPos = 0.5 + 0.5 * float2(cos(noiseAng), sin(noiseAng));
     float2 nPos1 = 0.5 + 0.5 * float2(cos(noiseAng1), sin(noiseAng1));
     float n = -1.0 + 2.0 * simplex.sample(s, nPos).x;
@@ -89,8 +90,8 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     float r1 = r;
     float r2 = r;
     
-    r1 += sin(ang * 5.0) * 0.01 + n * 0.02;
-    r2 += sin(ang * 5.0 + M_PI_F) * 0.01 + n1 * 0.02;
+    r1 += sin(ang * 5.0 + seed) * 0.01 + n * 0.02;
+    r2 += sin(ang * 5.0 + M_PI_F + seed) * 0.01 + n1 * 0.02;
     
     const float mid = 2 * 90 / 750.0;
     const float aa = 0.017;
@@ -116,23 +117,6 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     f += v * damagedPart * (1 + 3 * impulse);
     
     enemy += f * 0.9;
-    
-    // TEST
-    
-    r1 = r;
-    r2 = r;
-    
-    r1 += sin(ang * 5.0) * 0.007 + n * 0.015;
-    r2 += sin(ang * 5.0 + M_PI_F) * 0.007 + n1 * 0.015;
-    
-    float m = 2 * 160 / 750.0;
-    float a = 0.007;
-    v = smoothstep(m - a, m, r1) - smoothstep(m, m + a, r1);
-    v += smoothstep(m - a, m, r2) - smoothstep(m, m + a, r2);
-    
-//    enemy += v * 1;
-    
-    // END TEST
     
     float h = 1 - (dmgReceived + 0.08);
     float dmgCurve = 1 - h*h*h;

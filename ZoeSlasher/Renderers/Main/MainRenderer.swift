@@ -288,6 +288,7 @@ extension MainRenderer {
         var lastHealth = lastHealth
         var timeSinceHit = timeSinceHit
         var dmgReceived = dmgReceived
+        var seed = enemy.seed
         renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
         renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
         renderEncoder.setFragmentBytes(&timeAlive, length: MemoryLayout<Float>.size, index: 7)
@@ -296,6 +297,7 @@ extension MainRenderer {
         renderEncoder.setFragmentBytes(&lastHealth, length: MemoryLayout<Float>.size, index: 10)
         renderEncoder.setFragmentBytes(&timeSinceHit, length: MemoryLayout<Float>.size, index: 11)
         renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 12)
+        renderEncoder.setFragmentBytes(&seed, length: MemoryLayout<Float>.size, index: 13)
         enemyRenderer.draw(enemy, with: renderEncoder)
     }
     

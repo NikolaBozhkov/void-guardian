@@ -22,7 +22,7 @@ class FavorGainLabel: SKNode, GainLabel {
         amountLabel.frame.height
     }
     
-    init(amount: Int, fontSize: CGFloat) {
+    init(amount: Int, fontSize: CGFloat, rightAligned: Bool = false) {
 //        let color = vector_float3(0.259, 0.541, 1.000) ICY COLOR
         let color = Colors.voidFavor
         margin = -fontSize * 0.2
@@ -35,7 +35,7 @@ class FavorGainLabel: SKNode, GainLabel {
         amountLabel.horizontalAlignmentMode = .left
         
         symbol = SKSpriteNode(texture: SKGameScene.voidFavorTexture)
-        symbol.anchorPoint = CGPoint(x: 0, y: 0.5)
+        symbol.anchorPoint = CGPoint(x: rightAligned ? 1 : 0, y: 0.5)
         symbol.colorBlendFactor = 1
         symbol.color = amountLabel.fontColor!
         symbol.zPosition = 1
@@ -65,8 +65,8 @@ class FavorGainLabel: SKNode, GainLabel {
         addChild(amountLabel)
         addChild(symbol)
         
-        amountLabel.position.offset(dx: width / 2 - amountLabel.frame.width, dy: 0)
-        symbol.position.offset(dx: -width / 2, dy: 0)
+        amountLabel.position.offset(dx: rightAligned ? -width / 2 : width / 2 - amountLabel.frame.width, dy: 0)
+        symbol.position.offset(dx: rightAligned ? width / 2 : -width / 2, dy: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {

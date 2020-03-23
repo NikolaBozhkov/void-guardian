@@ -23,6 +23,7 @@ class GameScene: Scene {
     
     let stageManager: StageManager
     let spawner = Spawner()
+    let potionConsumer = PotionConsumer()
     let player = Player()
     
     var enemies = Set<Enemy>()
@@ -34,6 +35,7 @@ class GameScene: Scene {
     var enemyHitsForMove = 0
     var shouldHandleCombo = false
     var shouldResetHitEnemies = false
+    var shouldConsumeAllPotions = false
     var comboMultiplier = 0
     
     var favor: Float = 0 {
@@ -44,10 +46,12 @@ class GameScene: Scene {
     }
     
     var isGameOver = false
+    var isStageCleared = false
     
     var prevPlayerPosition: vector_float2 = .zero
     
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
+        
         stageManager = StageManager(spawner: spawner)
         
         super.init()
@@ -59,9 +63,11 @@ class GameScene: Scene {
         SceneConstants.safeAreaInsets = safeAreaInsets
         
         skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
-        stageManager.delegate = skGameScene
         
         spawner.scene = self
+        potionConsumer.delegate = self
+        stageManager.delegate = self
+        
         skGameScene.gameScene = self
         
         background.size = size
@@ -80,7 +86,9 @@ class GameScene: Scene {
     func update(deltaTime: TimeInterval) {
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
         
-        favor -= Float(deltaTime) * (favor / 15)
+        if !stageManager.isStageCleared {
+            favor -= Float(deltaTime) * (favor / 15)
+        }
         
         if shouldResetHitEnemies {
             resetHitEnemies()
@@ -122,46 +130,50 @@ class GameScene: Scene {
         player.advanceStage()
         
         // Check for game over
-//        if player.health == 0 && !isGameOver {
-//            
-//            enemies.forEach { removeEnemy($0) }
-//            player.removeFromParent()
-//            
-//            isGameOver = true
-//            skGameScene.didGameOver()
-//            
-//            stageManager.isActive = false
-//        }
-        
-        stageManager.update(deltaTime: deltaTime)
-        
-        // Enemies don't contain an alive enemy
-        if !enemies.contains(where: { !$0.shouldRemove }) {
-            if stageManager.spawningEnded {
-                stageManager.advanceStage()
-                player.health = 100
-                player.energy = 100
-                
-                var angle = Float.random(in: -.pi...(.pi))
-                var offset = vector_float2(cos(angle), sin(angle)) * 220
-                skGameScene.didRegenEnergy(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
-                
-                let direction = sign(Float.random(in: -1...1))
-                let range: ClosedRange<Float>
-                if direction == -1 {
-                    range = -.pi * 1.5...(-.pi / 2)
-                } else {
-                    range = .pi / 2...(.pi * 1.5)
-                }
-                
-                angle += Float.random(in: range)
-                offset = vector_float2(cos(angle), sin(angle)) * 220
-                skGameScene.didRegenHealth(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
-            } else if spawner.availableBudget <= 0 {
-                spawner.advance()
-            }
+        if player.health == 0 && !isGameOver {
+            
+            enemies.forEach { removeEnemy($0) }
+            player.removeFromParent()
+            
+            isGameOver = true
+            skGameScene.didGameOver()
+            
+            stageManager.isActive = false
         }
         
+        stageManager.update(deltaTime: deltaTime)
+        potionConsumer.update(deltaTime: deltaTime)
+        
+        // Stage is cleared
+        if stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
+            stageManager.clearStage()
+            skGameScene.didClearStage()
+        }
+        
+        if stageManager.timeSinceStageCleared >= 1 && !potionConsumer.didConsumeAlready {
+            potionConsumer.consume(potions)
+        }
+        
+        if potionConsumer.didFinishConsuming {
+            stageManager.advanceStage()
+            potionConsumer.didFinishConsuming = false
+        }
+            
+//            var angle = Float.random(in: -.pi...(.pi))
+//            var offset = vector_float2(cos(angle), sin(angle)) * 220
+//            skGameScene.didRegenEnergy(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
+//
+//            let direction = sign(Float.random(in: -1...1))
+//            let range: ClosedRange<Float>
+//            if direction == -1 {
+//                range = -.pi * 1.5...(-.pi / 2)
+//            } else {
+//                range = .pi / 2...(.pi * 1.5)
+//            }
+//
+//            angle += Float.random(in: range)
+//            offset = vector_float2(cos(angle), sin(angle)) * 220
+//            skGameScene.didRegenHealth(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
         
         skGameScene.update()
     }
@@ -265,12 +277,7 @@ class GameScene: Scene {
                 potion.apply(to: player)
                 
                 skGameScene.shake(1)
-                
-                if potion.type == .energy {
-                    skGameScene.didRegenEnergy(potion.amount, at: CGPoint(potion.position))
-                } else if potion.type == .health {
-                    skGameScene.didRegenHealth(potion.amount, at: CGPoint(potion.position))
-                }
+                skGameScene.didConsumePotion(potion)
             }
         }
     }
@@ -303,7 +310,7 @@ class GameScene: Scene {
         
         guard enemyHitsForMove >= 2 else { return }
         
-        let energy = (enemyHitsForMove - 1) * 4
+        let energy = (enemyHitsForMove - 1) * 5
         player.energy += Float(energy)
         
         let favor = pow(Float(enemyHitsForMove), 1.9)
@@ -355,5 +362,23 @@ extension GameScene: EnemyDelegate {
                            powerFactor: min(damage / enemy.maxHealth, 1.0),
                            at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
                            color: .white)
+    }
+}
+
+extension GameScene: PotionConsumerDelegate {
+    func didConsumePotion(_ potion: Potion) {
+//        potion.amount *= 2
+        potion.apply(to: player)
+        
+        let favorGain = 10
+        favor += Float(favorGain)
+        
+        skGameScene.didConsumePotion(potion, withFavor: favorGain)
+    }
+}
+
+extension GameScene: StageManagerDelegate {
+    func didAdvanceStage(to stage: Int) {
+        skGameScene.didAdvanceStage(to: stage)
     }
 }

@@ -22,7 +22,7 @@ class HealthGainLabel: SKNode, GainLabel {
         amountLabel.frame.height
     }
     
-    init(amount: Int, fontSize: CGFloat, rightAligned: Bool = false) {
+    init(amount: Int, fontSize: CGFloat) {
         margin = -fontSize * 0.35
         
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
@@ -30,7 +30,7 @@ class HealthGainLabel: SKNode, GainLabel {
         amountLabel.fontSize = fontSize
         amountLabel.fontColor = SKColor(mix(Colors.player, .one, t: 0.8))
         amountLabel.verticalAlignmentMode = .center
-        amountLabel.horizontalAlignmentMode = rightAligned ? .right : .left
+        amountLabel.horizontalAlignmentMode = .left
         
         symbol = SKSpriteNode(texture: SKGameScene.balanceSymbolTexture)
         symbol.anchorPoint = CGPoint(x: 1, y: 0.5)
@@ -44,8 +44,7 @@ class HealthGainLabel: SKNode, GainLabel {
         let glowColor = SKColor(mix(Colors.player, .one, t: 0.0))
         let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
         glow.size = amountLabel.frame.size + .one * 240
-        glow.position.offset(dx: rightAligned ? -amountLabel.frame.width / 2 : amountLabel.frame.width / 2,
-                             dy: 0)
+        glow.position.offset(dx: amountLabel.frame.width / 2, dy: 0)
         glow.alpha = 0.5
         glow.color = glowColor
         glow.colorBlendFactor = 1.0
@@ -64,7 +63,7 @@ class HealthGainLabel: SKNode, GainLabel {
         addChild(amountLabel)
         addChild(symbol)
         
-        amountLabel.position.offset(dx: rightAligned ? -width / 2 + amountLabel.frame.width : -width / 2, dy: 0)
+        amountLabel.position.offset(dx: -width / 2, dy: 0)
         symbol.position.offset(dx: width / 2, dy: 0)
     }
     

@@ -200,28 +200,32 @@ class SKGameScene: SKScene {
         return dmgLabel
     }
     
-    func didRegenEnergy(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero, followsPlayer: Bool = false) {
-        let label = EnergyGainLabel(amount: amount, fontSize: 133)
-        configureRegenLabel(label, size: label.size, position: position, offset: offset)
-        if followsPlayer {
-            followPlayerNode.addChild(label)
+    func didConsumePotion(_ potion: Potion, withFavor favor: Int = 0) {
+        let potionLabel: GainLabel
+        if potion.type == .energy {
+            potionLabel = EnergyGainLabel(amount: potion.amount, fontSize: 133)
         } else {
-            addChild(label)
+            potionLabel = HealthGainLabel(amount: potion.amount, fontSize: 133)
+        }
+        
+        potionLabel.position = CGPoint(potion.position)
+        
+        configureRegenLabel(potionLabel)
+        
+        addChild(potionLabel)
+        
+        if favor > 0 {
+            let favorLabel = FavorGainLabel(amount: favor, fontSize: 100, rightAligned: true)
+            let yOffset = (potionLabel.height + favorLabel.height) / 2 + 70
+            favorLabel.position = potionLabel.position.offsetted(dx: 0, dy: yOffset)
+            
+            configureRegenLabel(favorLabel)
+            
+            addChild(favorLabel)
         }
     }
     
-    func didRegenHealth(_ amount: Int, at position: CGPoint, offset: CGPoint = .zero, followsPlayer: Bool = false) {
-        let label = HealthGainLabel(amount: amount, fontSize: 133)
-        configureRegenLabel(label, size: label.size, position: position, offset: offset)
-        if followsPlayer {
-            followPlayerNode.addChild(label)
-        } else {
-            addChild(label)
-        }
-    }
-    
-    private func configureRegenLabel(_ label: SKNode, size: CGSize, position: CGPoint, offset: CGPoint) {
-        label.position = position + offset + offset.normalized * CGPoint(size / 2)
+    private func configureRegenLabel(_ label: SKNode) {
         label.setScale(0.7)
         
         let randomX = CGFloat.random(in: -20...20)
@@ -298,28 +302,6 @@ class SKGameScene: SKScene {
         indicatorToEnemyMap[indicator] = enemy
         
         followPlayerNode.addChild(indicator)
-    }
-    
-    func didRestoreResources() {
-        let fontSize: CGFloat = 100
-        let label = makeLabel(text: "Health & Energy restored", fontSize: fontSize, fontName: UIConstants.muliFont)
-        label.fontColor = SKColor(mix(vector_float3(0.3, 1, 0.3), .one, t: 0.5))
-        
-        let offset: CGFloat = 270
-        let moveDistance = offset / 2
-        let positionInfo = getPositionInfoAroundPlayer(withOffset: offset,
-                                                       forSize: CGSize(width: label.frame.width, height: label.frame.height),
-                                                       padding: CGPoint(x: 0, y: moveDistance))
-        label.position = positionInfo.position
-        
-        let direction = positionInfo.direction
-        label.run(SKAction.moveBy(x: 0, y: (direction.y + abs(direction.x)) * offset / 2, duration: 2))
-        label.run(SKAction.sequence([
-            SKAction.fadeOut(withDuration: 1),
-            SKAction.removeFromParent()
-        ]))
-        
-        addChild(label)
     }
     
     func getPositionInfoAroundPlayer(withOffset offset: CGFloat,
@@ -433,5 +415,17 @@ class SKGameScene: SKScene {
 extension SKGameScene: StageManagerDelegate {
     func didAdvanceStage(to stage: Int) {
         score = stage
+    }
+    
+    func didClearStage() {
+        let label = makeLabel(text: "Stage cleared!", fontSize: 400, fontName: UIConstants.fontName)
+        let y = size.height / 2 - label.frame.height / 2 - 500
+        label.position = CGPoint(x: 0, y: y)
+        
+        label.run(SKAction.sequence([
+            SKAction.wait(forDuration: 1),
+            SKAction.fadeOut(withDuration: 0.5)
+        ]))
+        addChild(label)
     }
 }
