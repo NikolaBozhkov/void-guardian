@@ -30,7 +30,7 @@ class StageManager {
     private var stageTime: TimeInterval = Constants.baseStageDuration
     
     private(set) var isStageCleared = false
-    private(set) var timeSinceStageCleared: TimeInterval = -1
+    private(set) var timeSinceStageCleared: TimeInterval = 1000
     
     private(set) var stage = 0
     
@@ -64,8 +64,10 @@ class StageManager {
     }
     
     func update(deltaTime: TimeInterval) {
-        if isStageCleared {
-            timeSinceStageCleared += deltaTime
+        timeSinceStageCleared += deltaTime
+        
+        if isStageCleared && timeSinceStageCleared >= SKGameScene.clearStageLabelDuration {
+            advanceStage()
         }
         
         guard isActive else { return }
@@ -90,7 +92,6 @@ class StageManager {
         
         isActive = true
         isStageCleared = false
-        timeSinceStageCleared = -1
         
         delegate?.didAdvanceStage(to: stage)
     }

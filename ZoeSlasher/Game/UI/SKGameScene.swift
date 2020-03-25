@@ -17,6 +17,10 @@ enum UIConstants {
     static let announcementTopOffset: CGFloat = 600
 }
 
+protocol UIDelegate {
+    func didFinishClearStageImpactAnimation()
+}
+
 class SKGameScene: SKScene {
     
     static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
@@ -436,7 +440,7 @@ extension SKGameScene: StageManagerDelegate {
     
     func didClearStage() {
         let label = makeAnnouncementLabel(text: "Stage cleared", fontSize: 450)
-        label.color = UIColor(mix(vector_float3(0.345, 1.000, 0.129), .one, t: 0.6))
+        label.fontColor = UIColor(mix(vector_float3(0.345, 1.000, 0.129), .one, t: 0.9))
         
         label.setScale(2.3)
         label.alpha = 0
@@ -448,6 +452,7 @@ extension SKGameScene: StageManagerDelegate {
             SKAction.scale(to: 0.98, duration: 0.07, timingMode: .easeInEaseOut),
             SKAction.run {
                 self.shake(0.7)
+                self.gameScene.didFinishClearStageImpactAnimation()
             },
             SKAction.scale(to: 1, duration: 0.03, timingMode: .easeIn),
             SKAction.wait(forDuration: 0.5),

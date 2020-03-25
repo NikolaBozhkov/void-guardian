@@ -106,11 +106,11 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     
     h = min(h, 1.0);
     
-    const float k1 = 7;
+    const float k1 = 6;
     float i = expImpulse(timeSinceLastEnergyUse + 1.0 / k1, k1);
     float energyFlash = i * (1.0 - smoothstep(0.0, 1.0, r));
     
-    float3 baseColor = float3(0.345, 1.000, 0.129);
+    float3 baseColor = mix(float3(0.345, 1.000, 0.129), float3(0.898, 1.000, 0.000), energyFlash);
     float3 healthColor = mix(baseColor, float3(1, 0, 0), damagedPart * 0.7);
     return float4(mix(baseColor, healthColor, h), player);
 }
