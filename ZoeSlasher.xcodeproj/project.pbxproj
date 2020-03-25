@@ -38,6 +38,7 @@
 		24D7FF5D242150A9007743C6 /* HealthGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */; };
 		24D7FF5F24225970007743C6 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF5E24225970007743C6 /* Colors.swift */; };
 		24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF60242511A7007743C6 /* PotionConsumer.swift */; };
+		24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF67242B244A007743C6 /* SKAction+Extensions.swift */; };
 		24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */; };
 		24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E85E23C1C8B500CB6638 /* MainRenderer.swift */; };
 		24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E86023C1C8B500CB6638 /* GameViewController.swift */; };
@@ -88,6 +89,7 @@
 		24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF5E24225970007743C6 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		24D7FF60242511A7007743C6 /* PotionConsumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionConsumer.swift; sourceTree = "<group>"; };
+		24D7FF67242B244A007743C6 /* SKAction+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKAction+Extensions.swift"; sourceTree = "<group>"; };
 		24D9E85823C1C8B500CB6638 /* ZoeSlasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZoeSlasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D9E85B23C1C8B500CB6638 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24D9E85D23C1C8B500CB6638 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */,
 				2498112724127D2C00900AE9 /* UIColor+Extensions.swift */,
 				24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */,
+				24D7FF67242B244A007743C6 /* SKAction+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */,
 				24D7FF5D242150A9007743C6 /* HealthGainLabel.swift in Sources */,
 				24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */,
+				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,

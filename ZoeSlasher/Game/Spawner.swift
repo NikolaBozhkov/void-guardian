@@ -51,23 +51,23 @@ class Spawner {
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
-//        if timeSinceLastEnergyPotion >= energyPotionInterval {
-//            let potion = Potion(type: .energy, amount: 25)
-//            potion.position = scene.randomPosition(padding: [300, 200])
-//            scene.rootNode.add(childNode: potion)
-//            scene.potions.insert(potion)
-//            
-//            timeSinceLastEnergyPotion = 0
-//        }
-//        
-//        if timeSinceLastHealthPotion >= healthPotionInterval {
-//            let potion = Potion(type: .health, amount: 10)
-//            potion.position = scene.randomPosition(padding: [300, 200])
-//            scene.rootNode.add(childNode: potion)
-//            scene.potions.insert(potion)
-//            
-//            timeSinceLastHealthPotion = 0
-//        }
+        if timeSinceLastEnergyPotion >= energyPotionInterval {
+            let potion = Potion(type: .energy, amount: 25)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
+            
+            timeSinceLastEnergyPotion = 0
+        }
+        
+        if timeSinceLastHealthPotion >= healthPotionInterval {
+            let potion = Potion(type: .health, amount: 10)
+            potion.position = scene.randomPosition(padding: [300, 200])
+            scene.rootNode.add(childNode: potion)
+            scene.potions.insert(potion)
+            
+            timeSinceLastHealthPotion = 0
+        }
         
         guard currentPeriodTime < spawnPeriod else { return }
         
@@ -99,8 +99,11 @@ class Spawner {
         self.spawnPeriod = spawnPeriod
         allowance = 0
         spent = 0
-        spawnStage = 0
-        currentPeriodTime = 0
+        spawnStage = 3
+        currentPeriodTime = 0.75 * spawnPeriod
+        timeSinceLastSpawn = .infinity
+        timeSinceLastEnergyPotion = 0
+        timeSinceLastHealthPotion = 0
     }
 
     func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {

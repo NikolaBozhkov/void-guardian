@@ -13,6 +13,8 @@ enum UIConstants {
     static let sanosFont = "SansExtended"
     static let besomFont = "Besom"
     static let muliFont = "Muli-Regular"
+    
+    static let announcementTopOffset: CGFloat = 600
 }
 
 class SKGameScene: SKScene {
@@ -26,6 +28,8 @@ class SKGameScene: SKScene {
     static let voidFavorTexture = SKTexture(imageNamed: "void-favor-image")
     static let voidFavorGlowTexture = SKTexture(imageNamed: "void-favor-glow-image")
     static let oilBackgroundTexture = SKTexture(imageNamed: "oil-background-image")
+    
+    static private(set) var clearStageLabelDuration: TimeInterval = 1.5
     
     unowned var gameScene: GameScene!
     
@@ -415,17 +419,49 @@ class SKGameScene: SKScene {
 extension SKGameScene: StageManagerDelegate {
     func didAdvanceStage(to stage: Int) {
         score = stage
+        
+        let label = makeAnnouncementLabel(text: "Stage \(stage)", fontSize: 350)
+        
+        label.alpha = 0
+        
+        label.run(SKAction.sequence([
+            SKAction.fadeIn(withDuration: 0.5, timingMode: .easeIn),
+            SKAction.wait(forDuration: 0.5),
+            SKAction.fadeOut(withDuration: 0.5, timingMode: .easeOut),
+            SKAction.removeFromParent()
+        ]))
+        
+        addChild(label)
     }
     
     func didClearStage() {
-        let label = makeLabel(text: "Stage cleared!", fontSize: 400, fontName: UIConstants.fontName)
-        let y = size.height / 2 - label.frame.height / 2 - 500
-        label.position = CGPoint(x: 0, y: y)
+        let label = makeAnnouncementLabel(text: "Stage cleared", fontSize: 450)
+        label.color = UIColor(mix(vector_float3(0.345, 1.000, 0.129), .one, t: 0.6))
+        
+        label.setScale(2.3)
+        label.alpha = 0
+        
+        label.run(SKAction.fadeIn(withDuration: 0.5, timingMode: .easeIn))
         
         label.run(SKAction.sequence([
-            SKAction.wait(forDuration: 1),
-            SKAction.fadeOut(withDuration: 0.5)
+            SKAction.scale(to: 1.3, duration: 0.43, timingMode: .easeIn),
+            SKAction.scale(to: 0.98, duration: 0.07, timingMode: .easeInEaseOut),
+            SKAction.run {
+                self.shake(0.7)
+            },
+            SKAction.scale(to: 1, duration: 0.03, timingMode: .easeIn),
+            SKAction.wait(forDuration: 0.5),
+            SKAction.fadeOut(withDuration: 0.5, timingMode: .easeIn),
+            SKAction.removeFromParent()
         ]))
+        
         addChild(label)
+    }
+    
+    func makeAnnouncementLabel(text: String, fontSize: CGFloat) -> SKLabelNode {
+        let label = makeLabel(text: text, fontSize: fontSize, fontName: UIConstants.fontName)
+        let y = size.height / 2 - UIConstants.announcementTopOffset
+        label.position = CGPoint(x: 0, y: y)
+        return label
     }
 }

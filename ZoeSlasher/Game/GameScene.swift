@@ -73,7 +73,7 @@ class GameScene: Scene {
         background.size = size
         background.zPosition = 10
         background.renderFunction = { [unowned self] in
-            $0.renderBackground(self.background)
+            $0.renderBackground(self.background, timeSinceStageCleared: self.stageManager.timeSinceStageCleared)
         }
         
         rootNode.add(childNode: background)
@@ -147,17 +147,6 @@ class GameScene: Scene {
         // Stage is cleared
         if stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.clearStage()
-            skGameScene.didClearStage()
-        }
-        
-        if stageManager.timeSinceStageCleared >= 1 && !potionConsumer.didConsumeAlready {
-            potionConsumer.consume(potions)
-        }
-        
-        if potionConsumer.didFinishConsuming {
-            stageManager.advanceStage()
-            potionConsumer.didFinishConsuming = false
-        }
             
 //            var angle = Float.random(in: -.pi...(.pi))
 //            var offset = vector_float2(cos(angle), sin(angle)) * 220
@@ -174,6 +163,17 @@ class GameScene: Scene {
 //            angle += Float.random(in: range)
 //            offset = vector_float2(cos(angle), sin(angle)) * 220
 //            skGameScene.didRegenHealth(100, at: .zero, offset: CGPoint(offset), followsPlayer: true)
+        }
+        
+        if stageManager.timeSinceStageCleared >= SKGameScene.clearStageLabelDuration && !potionConsumer.didConsumeAlready {
+//            potionConsumer.consume(potions)
+            stageManager.advanceStage()
+        }
+        
+        if potionConsumer.didFinishConsuming {
+            stageManager.advanceStage()
+            potionConsumer.didFinishConsuming = false
+        }
         
         skGameScene.update()
     }
@@ -187,16 +187,8 @@ class GameScene: Scene {
         
         player.move(to: location)
         
-//        GameScene.i += 1
-//        if GameScene.i == 11 {
-//            GameScene.i = 2
-//        }
-//
-//        skGameScene.didCombo(multiplier: GameScene.i, energy: (GameScene.i - 1) * 4, favor: Int(pow(Float(GameScene.i), 1.7)))
-        
-//        skGameScene.showNoEnergyLabel()
-//        skGameScene.didRegenHealth(15, at: CGPoint(player.position), offset: CGPoint(x: 0, y: 210))
-//        skGameScene.didRegenEnergy(15, at: CGPoint(player.position), offset: CGPoint(x: 0, y: 210))
+//        stageManager.clearStage()
+//        skGameScene.didClearStage()
     }
     
     func reloadScene() {
@@ -275,8 +267,6 @@ class GameScene: Scene {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
                 potion.apply(to: player)
-                
-                skGameScene.shake(1)
                 skGameScene.didConsumePotion(potion)
             }
         }
@@ -368,7 +358,7 @@ extension GameScene: EnemyDelegate {
 extension GameScene: PotionConsumerDelegate {
     func didConsumePotion(_ potion: Potion) {
 //        potion.amount *= 2
-        potion.apply(to: player)
+//        potion.apply(to: player)
         
         let favorGain = 10
         favor += Float(favorGain)
@@ -380,5 +370,11 @@ extension GameScene: PotionConsumerDelegate {
 extension GameScene: StageManagerDelegate {
     func didAdvanceStage(to stage: Int) {
         skGameScene.didAdvanceStage(to: stage)
+    }
+    
+    func didClearStage() {
+        skGameScene.didClearStage()
+        player.health = 100
+        player.energy = 100
     }
 }

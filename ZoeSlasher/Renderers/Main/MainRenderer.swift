@@ -234,7 +234,9 @@ class MainRenderer: NSObject {
 // MARK: - SceneRenderer
 extension MainRenderer {
     
-    func renderBackground(_ node: Node) {
+    func renderBackground(_ node: Node, timeSinceStageCleared: TimeInterval) {
+        var timeSinceStageCleared = Float(timeSinceStageCleared)
+        renderEncoder.setFragmentBytes(&timeSinceStageCleared, length: MemoryLayout<Float>.size, index: 5)
         backgroundRenderer.draw(node, with: renderEncoder)
     }
     

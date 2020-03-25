@@ -13,6 +13,7 @@ private enum Constants {
 
 protocol StageManagerDelegate {
     func didAdvanceStage(to stage: Int)
+    func didClearStage()
 }
 
 class StageManager {
@@ -29,7 +30,7 @@ class StageManager {
     private var stageTime: TimeInterval = Constants.baseStageDuration
     
     private(set) var isStageCleared = false
-    private(set) var timeSinceStageCleared: TimeInterval = 0
+    private(set) var timeSinceStageCleared: TimeInterval = -1
     
     private(set) var stage = 0
     
@@ -89,7 +90,7 @@ class StageManager {
         
         isActive = true
         isStageCleared = false
-        timeSinceStageCleared = 0
+        timeSinceStageCleared = -1
         
         delegate?.didAdvanceStage(to: stage)
     }
@@ -105,5 +106,7 @@ class StageManager {
     func clearStage() {
         isActive = false
         isStageCleared = true
+        timeSinceStageCleared = 0
+        delegate?.didClearStage()
     }
 }

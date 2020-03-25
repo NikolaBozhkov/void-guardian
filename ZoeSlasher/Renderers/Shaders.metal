@@ -35,6 +35,7 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                                 constant float &timeSinceStageCleared [[buffer(5)]],
                                  texture2d<float> texture [[texture(0)]],
                                  texture2d<float> fbmr [[texture(1)]])
 {
@@ -46,10 +47,15 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     
     float f = texture.sample(s, st).x;
     float n = pow(1. - fbmr.sample(s, st).x, 2.5);
-    f = 0.04 + f*n*n*n*0.25;
 //    f += n*0.01;
     
-    return float4(float3(color.xyz), f);
+    float k = 4;
+    float h = expImpulse(timeSinceStageCleared - 0.5 + 1 / k, k);
+    float3 col = mix(color.xyz, float3(0.345, 1.000, 0.129), h);
+    
+    f = 0.04 + f*n*n*n*(0.25 + max(0.75 * h, 0.0));
+    
+    return float4(col, f);
 }
 
 fragment float4 enemyShader(VertexOut in [[stage_in]],
