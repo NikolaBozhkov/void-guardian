@@ -98,7 +98,7 @@ class StageManager {
     
     func reset() {
         isActive = true
-        stage = 15
+        stage = 33
         advanceStage()
         
 //        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)

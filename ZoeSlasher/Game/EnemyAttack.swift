@@ -10,28 +10,52 @@ import Foundation
 
 class EnemyAttack: Node {
     
-    private let speed: Float = 7500
-    
-    private let targetPosition: vector_float2
-    private var progress: Float = 0
-    
     let enemy: Enemy
     let corruption: Float
+    
+    var speed: Float = 7000
+    var aspectRatio: Float = 0
     var tipPoint: vector_float2 = .zero
+    var progress: Float = 0.5
+    var cutOff: Float = 0
     
     var didReachTarget = false
     
+    var fadeOutTimePassed: TimeInterval = 0
+    var shouldRemove = false
+    var active = true
+    
+    private let shotSize: Float = 12
+    private let fadeOutDuration: TimeInterval = 1
+    
+    private let delta: vector_float2
+    private let direction: vector_float2
+    
+    var radius: Float {
+        shotSize / 2
+    }
+    
     init(enemy: Enemy, targetPosition: vector_float2, corruption: Float) {
         self.enemy = enemy
-        self.targetPosition = targetPosition
         self.corruption = corruption
         
+        delta = targetPosition - enemy.position
+        direction = normalize(delta)
+        
         super.init()
+        
+        zPosition = -5
         
         color.xyz = enemy.ability.color
         position = enemy.position
         tipPoint = position
-        size = [0, 8]
+        
+        size = [length(delta), shotSize]
+        aspectRatio = size.x / size.y
+        cutOff = aspectRatio
+        
+        rotation = atan2(direction.y, direction.x)
+        position = enemy.position + delta / 2
         
         renderFunction = { [unowned self] in
             $0.renderEnemyAttack(self)
@@ -39,14 +63,24 @@ class EnemyAttack: Node {
     }
     
     func update(deltaTime: TimeInterval) {
-        size.x += speed * Float(deltaTime)
+        progress += Float(deltaTime) * speed / size.y
         
-        let delta = targetPosition - enemy.position
-        let direction = normalize(delta)
-        rotation = atan2(direction.y, direction.x)
-        position = enemy.position + direction * size.x / 2
-        tipPoint = enemy.position + direction * size.x
+        guard !didReachTarget else {
+            fadeOutTimePassed += deltaTime
+            if fadeOutTimePassed >= fadeOutDuration {
+                shouldRemove = true
+            }
+            
+            return
+        }
         
-        didReachTarget = size.x >= length(delta)
+        tipPoint += direction * speed * Float(deltaTime)
+        
+        didReachTarget = distance(tipPoint, enemy.positionBeforeImpact) >= size.x
+    }
+    
+    func remove() {
+        active = false
+        cutOff = progress
     }
 }

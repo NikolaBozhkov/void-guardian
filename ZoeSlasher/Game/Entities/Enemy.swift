@@ -52,6 +52,7 @@ class Enemy: Node {
     private var timeSinceLastSymbolFlash: TimeInterval
     private var timeSinceLastTrigger: TimeInterval = 0
     private var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
+    private var timeSinceLastImpactLock: TimeInterval = 1000
     private var timeAlive: Float = 0
     
     private var positionDelta = vector_float2.zero
@@ -134,14 +135,7 @@ class Enemy: Node {
         health -= damage
         dmgReceivedNormalized = min(damage / maxHealth, 1.0)
         
-        if !isImpactLocked {
-            positionBeforeImpact = position
-            isImpactLocked = true
-        }
-        
-        position += impact
-        
-        symbols.forEach { updateSymbolPosition($0) }
+        impactLock(with: impact)
         
         timeSinceLastHit = 0
         isImmune = true
@@ -158,14 +152,25 @@ class Enemy: Node {
         shouldRemove = true
     }
     
+    func impactLock(with impact: vector_float2) {
+        if !isImpactLocked {
+            positionBeforeImpact = position
+            isImpactLocked = true
+        }
+        
+        position += impact
+        timeSinceLastImpactLock = 0
+    }
+    
     func update(deltaTime: TimeInterval) {
         timeAlive += Float(deltaTime)
         
         timeSinceLastTrigger += deltaTime
         timeSinceLastSymbolFlash += deltaTime
         timeSinceLastHit += deltaTime
+        timeSinceLastImpactLock += deltaTime
         
-        if isImpactLocked && timeSinceLastHit > 0.085 {
+        if isImpactLocked && timeSinceLastImpactLock > 0.085 {
             isImpactLocked = false
             position = positionBeforeImpact
         }
@@ -229,7 +234,7 @@ class Enemy: Node {
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.8 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.2 * f
+        symbol.color.w = 0.75 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.25 * f
         
         if symbol.name == "stage" {
             symbol.color.w = 1 * min(timeAlive * 0.75 - 0.5, 1.0)

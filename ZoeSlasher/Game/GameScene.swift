@@ -101,11 +101,6 @@ class GameScene: Scene {
         player.update(deltaTime: deltaTime)
         
         for enemy in enemies {
-            // Boundary check
-            if isOutsideBoundary(node: enemy) {
-                enemy.angle -= .pi
-            }
-            
             enemy.update(deltaTime: deltaTime)
         }
         
@@ -128,16 +123,16 @@ class GameScene: Scene {
         player.advanceStage()
         
         // Check for game over
-        if player.health == 0 && !isGameOver {
-            
-            enemies.forEach { removeEnemy($0) }
-            player.removeFromParent()
-            
-            isGameOver = true
-            skGameScene.didGameOver()
-            
-            stageManager.isActive = false
-        }
+//        if player.health == 0 && !isGameOver {
+//
+//            enemies.forEach { removeEnemy($0) }
+//            player.removeFromParent()
+//
+//            isGameOver = true
+//            skGameScene.didGameOver()
+//
+//            stageManager.isActive = false
+//        }
         
         stageManager.update(deltaTime: deltaTime)
         
@@ -170,6 +165,10 @@ class GameScene: Scene {
         isGameOver = false
         
         stageManager.reset()
+        
+        spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
+        spawner.spawnEnemy(for: MachineGunAbility.stage1Config)
+        spawner.spawnEnemy(for: CannonAbility.stage1Config)
     }
     
     private func testPlayerEnemyCollision() {
@@ -197,7 +196,7 @@ class GameScene: Scene {
                         hitEnemies.insert(enemy)
                     }
                     
-                    if enemy.health == 0 {
+                    if enemy.health < 1 {
                         removeEnemy(enemy)
                     }
                 }
@@ -213,14 +212,21 @@ class GameScene: Scene {
     
     private func testPlayerEnemyAttackCollision() {
         for attack in attacks {
-            var shouldRemoveAttack = false
-            if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 {
-                player.receiveDamage(attack.corruption)
-                shouldRemoveAttack = true
-                skGameScene.didPlayerReceivedDamage(attack.corruption, from: attack.enemy)
+            if attack.active {
+                var shouldRemoveAttack = false
+                
+                if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 + attack.radius {
+                    player.receiveDamage(attack.corruption)
+                    shouldRemoveAttack = true
+                    skGameScene.didPlayerReceivedDamage(attack.corruption, from: attack.enemy)
+                }
+                
+                if attack.didReachTarget || shouldRemoveAttack {
+                    attack.remove()
+                }
             }
             
-            if attack.didReachTarget || shouldRemoveAttack {
+            if attack.shouldRemove {
                 removeEnemyAttack(attack)
             }
         }

@@ -45,6 +45,7 @@ class MainRenderer: NSObject {
     let backgroundRenderer: SpriteRenderer
     let playerRenderer: SpriteRenderer
     let enemyRenderer: SpriteRenderer
+    let enemyAttackRenderer: SpriteRenderer
     let energyBarRenderer: SpriteRenderer
     let anchorRenderer: SpriteRenderer
     let textureRenderer: SpriteRenderer
@@ -136,6 +137,7 @@ class MainRenderer: NSObject {
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
         enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
+        enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
         textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
@@ -303,8 +305,16 @@ extension MainRenderer {
         enemyRenderer.draw(enemy, with: renderEncoder)
     }
     
-    func renderEnemyAttack(_ node: Node) {
-        clearColorRenderer.draw(node, with: renderEncoder)
+    func renderEnemyAttack(_ attack: EnemyAttack) {
+        var progress = attack.progress
+        var aspectRatio = attack.aspectRatio
+        var cutOff = attack.cutOff
+        var speed = attack.speed
+        renderEncoder.setFragmentBytes(&progress, length: MemoryLayout<Float>.size, index: 5)
+        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 6)
+        renderEncoder.setFragmentBytes(&cutOff, length: MemoryLayout<Float>.size, index: 7)
+        renderEncoder.setFragmentBytes(&speed, length: MemoryLayout<Float>.size, index: 8)
+        enemyAttackRenderer.draw(attack, with: renderEncoder)
     }
     
     func renderDefault(_ node: Node) {

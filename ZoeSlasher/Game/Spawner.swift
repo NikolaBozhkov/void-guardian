@@ -99,8 +99,8 @@ class Spawner {
         self.spawnPeriod = spawnPeriod
         allowance = 0
         spent = 0
-        spawnStage = 3
-        currentPeriodTime = 0.75 * spawnPeriod
+        spawnStage = 0
+        currentPeriodTime = 0
         timeSinceLastSpawn = .infinity
         timeSinceLastEnergyPotion = 0
         timeSinceLastHealthPotion = 0

@@ -54,7 +54,7 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     float h = expImpulse(animationTime + 1 / k, k) * step(0, animationTime);
     float3 col = mix(color.xyz, float3(0.345, 1.000, 0.129), h);
     
-    f = 0.04 + f*n*n*n*(0.25 + max(0.65 * h, 0.0));
+    f = 0.03 + f*n*n*n*(0.25 + max(0.65 * h, 0.0));
     
     return float4(col, f);
 }
@@ -101,7 +101,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     r2 += sin(ang * 5.0 + M_PI_F + seed) * 0.01 + n1 * 0.02;
     
     const float mid = 2 * 90 / 750.0;
-    const float aa = 0.017;
+    const float aa = 0.018;
     
     float f = 0.0;
     f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.15;
@@ -123,7 +123,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     float impulse = expImpulse(timeSinceHit + 1 / k, k);
     f += v * damagedPart * (1 + 3 * impulse);
     
-    enemy += f * 0.9;
+    enemy += f * 0.75;
     
     float h = 1 - (dmgReceived + 0.08);
     float dmgCurve = 1 - h*h*h;
@@ -181,6 +181,35 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     col += (1.0 - f) * (1.0 - stops) * float3(0.35) * color.xyz;
     
     return float4(col, s);
+}
+
+fragment float4 enemyAttackShader(VertexOut in [[stage_in]],
+                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
+                                  constant float &progress [[buffer(5)]],
+                                  constant float &aspectRatio [[buffer(6)]],
+                                  constant float &cutOff [[buffer(7)]],
+                                  constant float &speed [[buffer(8)]])
+{
+    float2 st = in.uv;
+    st.x *= aspectRatio;
+    
+    float r = distance(float2(progress, 0.5), st);
+    float a = 0.47;
+    float f = 1 - smoothstep(a, 0.5, r);
+    
+    float tail = progress - speed * 0.034;
+    float localX = clamp(st.x - progress, 0.0, 0.5);
+    float localY = abs(st.y - 0.5);
+    float shotHalf = 0.5 * max(0.0, cos(atan2(localY, localX)));
+    float xIntensity = smoothstep(tail, progress, st.x) - step(progress + shotHalf, st.x);
+    float w = 1 - smoothstep(smoothstep(tail, progress, st.x) * a, 0.5, localY);
+    w *= xIntensity;
+    f += w;
+    
+    f *= 1 - smoothstep(cutOff - 1, cutOff, st.x);
+    f *= smoothstep(0, 7, st.x);
+    
+    return float4(color.xyz, f);
 }
 
 fragment float4 textureShader(VertexOut in [[stage_in]],

@@ -20,7 +20,11 @@ class MachineGunAbility: Ability {
     
     let corruption: Float
     
-    required init<C>(scene: GameScene, config: C) where C : MachineGunAbilityConfig {
+    required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
+        guard let config = config as? MachineGunAbilityConfig else {
+            return nil
+        }
+        
         self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
@@ -29,6 +33,7 @@ class MachineGunAbility: Ability {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
+        enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 15)
     }
 }
 
@@ -38,10 +43,6 @@ extension MachineGunAbility {
         
         config.interval = 1
         config.healthModifier = 0.5
-        
-        config.symbolVelocityGain = 15.0
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 10.0
         
         config.cost = 2
         config.spawnChanceFunction = { gameStage in
@@ -59,10 +60,6 @@ extension MachineGunAbility {
         config.interval = 1
         config.healthModifier = 1
         
-        config.symbolVelocityGain = 15.0
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 10.0
-        
         config.cost = 2.8
         config.spawnChanceFunction = { gameStage in
             let startStage: Float = 17
@@ -79,10 +76,6 @@ extension MachineGunAbility {
         
         config.interval = 1
         config.healthModifier = 2
-        
-        config.symbolVelocityGain = 15.0
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 10.0
         
         config.cost = 3.5
         config.spawnChanceFunction = { gameStage in

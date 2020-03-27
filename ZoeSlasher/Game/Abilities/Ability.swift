@@ -16,13 +16,19 @@ class Ability {
         
         var symbol: String = ""
         var symbolVelocityGain: Float = 0
-        var symbolVelocityRecoil: Float = 0
+        var symbolVelocityRecoil: Float = -.pi
         
         var color: vector_float3 = .zero
         var colorScale: Float = 0
         var impulseSharpness: Float = 0
         
-        var interval: TimeInterval = 0
+        var interval: TimeInterval = 0 {
+            didSet {
+                symbolVelocityGain = Float(12 / interval)
+                impulseSharpness = Float(12 / interval)
+            }
+        }
+        
         var healthModifier: Float = 0
         
         var stage: Int = 0
@@ -39,7 +45,7 @@ class Ability {
         }
         
         private func createAbility<T: Ability>(_ type: T.Type, for scene: GameScene) -> T {
-            type.init(scene: scene, config: self)
+            type.init(scene: scene, config: self)!
         }
     }
     
@@ -71,7 +77,7 @@ class Ability {
     let stage: Int
     let cost: Float
     
-    required init<C>(scene: GameScene, config: C) where C: Configuration {
+    required init?<C>(scene: GameScene, config: C) where C: Configuration {
         self.scene = scene
         symbol = config.symbol
         symbolVelocityGain = config.symbolVelocityGain

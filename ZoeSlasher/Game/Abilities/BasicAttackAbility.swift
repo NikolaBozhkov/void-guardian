@@ -21,7 +21,11 @@ class BasicAttackAbility: Ability {
     
     let corruption: Float
     
-    required init<C>(scene: GameScene, config: C) where C : BasicAttackAbilityConfig {
+    required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
+        guard let config = config as? BasicAttackAbilityConfig else {
+            return nil
+        }
+        
         self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
@@ -30,6 +34,7 @@ class BasicAttackAbility: Ability {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
+        enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 30)
     }
 }
 
@@ -39,10 +44,6 @@ extension BasicAttackAbility {
         
         config.interval = 6
         config.healthModifier = 1
-        
-        config.symbolVelocityGain = 1.2
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 6.0
         
         config.cost = 1
         config.spawnChanceFunction = { _ in 1 }
@@ -57,10 +58,6 @@ extension BasicAttackAbility {
         
         config.interval = 6
         config.healthModifier = 1.7
-        
-        config.symbolVelocityGain = 1.2
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 6.0
         
         config.cost = 1
         config.spawnChanceFunction = { gameStage in
@@ -78,10 +75,6 @@ extension BasicAttackAbility {
         
         config.interval = 5
         config.healthModifier = 2.5
-        
-        config.symbolVelocityGain = 1.3
-        config.symbolVelocityRecoil = -.pi
-        config.impulseSharpness = 6.0
         
         config.cost = 1.5
         config.spawnChanceFunction = { gameStage in

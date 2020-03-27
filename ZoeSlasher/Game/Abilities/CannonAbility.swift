@@ -18,7 +18,11 @@ class CannonAbility: Ability {
 
     let corruption: Float
     
-    required init<C>(scene: GameScene, config: C) where C : CannonAbilityConfig {
+    required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
+        guard let config = config as? CannonAbilityConfig else {
+            return nil
+        }
+        
         self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
@@ -27,6 +31,7 @@ class CannonAbility: Ability {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
+        enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 45)
     }
 }
 
@@ -36,10 +41,6 @@ extension CannonAbility {
         
         config.interval = 12
         config.healthModifier = 2.5
-        
-        config.symbolVelocityGain = 1.2
-        config.symbolVelocityRecoil = -.pi * 1.5
-        config.impulseSharpness = 3.0
         
         config.cost = 2
         config.spawnChanceFunction = { gameStage in
@@ -57,10 +58,6 @@ extension CannonAbility {
         config.interval = 10
         config.healthModifier = 3.2
         
-        config.symbolVelocityGain = 1.3
-        config.symbolVelocityRecoil = -.pi * 1.5
-        config.impulseSharpness = 4.0
-        
         config.cost = 3
         config.spawnChanceFunction = { gameStage in
             0.05 * step(gameStage, edge: 17) + min(0.05 * (gameStage - 17), 0.25)
@@ -76,10 +73,6 @@ extension CannonAbility {
         
         config.interval = 10
         config.healthModifier = 4
-        
-        config.symbolVelocityGain = 1.3
-        config.symbolVelocityRecoil = -.pi * 1.5
-        config.impulseSharpness = 4.0
         
         config.cost = 3.7
         config.spawnChanceFunction = { gameStage in
