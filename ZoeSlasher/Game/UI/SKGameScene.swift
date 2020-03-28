@@ -274,7 +274,7 @@ class SKGameScene: SKScene {
     
     func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
         let label = createLossGainLabel(amount: Int(damage),
-                                        at: CGPoint(gameScene.player.position + [0, 210]),
+                                        at: CGPoint(gameScene.player.position + [0, 240]),
                                         xRange: -40...40,
                                         yRange: 0...30,
                                         color: SKColor(vector_float3(1.0, 0.3, 0.3)))
