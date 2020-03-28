@@ -54,7 +54,7 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     float h = expImpulse(animationTime + 1 / k, k) * step(0, animationTime);
     float3 col = mix(color.xyz, float3(0.345, 1.000, 0.129), h);
     
-    f = 0.03 + f*n*n*n*(0.25 + max(0.65 * h, 0.0));
+    f = 0.035 + f*n*n*n*(0.25 + max(0.65 * h, 0.0));
     
     return float4(col, f);
 }

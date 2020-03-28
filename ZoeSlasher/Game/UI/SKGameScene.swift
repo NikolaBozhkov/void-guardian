@@ -146,7 +146,7 @@ class SKGameScene: SKScene {
                                                        padding: CGPoint(x: 0, y: moveDistance))
         comboLabel.position = positionInfo.position
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.6)
+        let fadeOut = SKAction.fadeOut(withDuration: 1)
         fadeOut.timingMode = .easeIn
         
         let direction = positionInfo.direction
@@ -178,17 +178,17 @@ class SKGameScene: SKScene {
         
         dmgLabel.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.7)
+        let fadeOut = SKAction.fadeOut(withDuration: 1.2)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
         scaleUp.timingMode = .easeOut
         
-        let scaleDown = SKAction.scale(to: 0.85, duration: 1.05)
+        let scaleDown = SKAction.scale(to: 0.8, duration: 1.55)
         
         let moveBy = SKAction.moveBy(x: 0,
-                                     y: 26,
-                                     duration: 1.2)
+                                     y: 34,
+                                     duration: 1.7)
         moveBy.timingMode = .easeOut
         
         dmgLabel.run(SKAction.sequence([
@@ -241,7 +241,7 @@ class SKGameScene: SKScene {
         
         label.position.offset(dx: randomX, dy: randomY)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 0.4)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
         fadeOut.timingMode = .easeIn
         
         let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
@@ -296,10 +296,12 @@ class SKGameScene: SKScene {
         let size: CGFloat = 660
         indicator.size = CGSize(width: size, height: size)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 1.0)
+        let fadeOut = SKAction.fadeOut(withDuration: 2)
         fadeOut.timingMode = .easeIn
         
         indicator.run(SKAction.sequence([
+            SKAction.scale(to: 1.05, duration: 0.07, timingMode: .easeOut),
+            SKAction.scale(to: 1, duration: 0.05, timingMode: .easeIn),
             fadeOut,
             SKAction.removeFromParent(),
             SKAction.run { [unowned self] in
