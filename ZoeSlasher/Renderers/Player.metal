@@ -101,7 +101,7 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     
     // Flash
     
-    float j = 0.6 + dmgReceived;
+    float j = 0.7 + dmgReceived;
     float dmgFlash = dmgImpulse * (1.0 - smoothstep(0.0, 1.0, r)) * j;
     player += dmgFlash;
     
@@ -111,7 +111,7 @@ fragment float4 playerShader(VertexOut in [[stage_in]],
     float i = expImpulse(timeSinceLastEnergyUse + 1.0 / k1, k1);
     float energyFlash = i * (1.0 - smoothstep(0.0, 1.0, r));
     
-    float3 baseColor = mix(float3(0.345, 1.000, 0.129), float3(1.0, 0.0, 0.0), dmgFlash);
+    float3 baseColor = mix(float3(0.345, 1.000, 0.129), float3(1), dmgFlash);
     baseColor = mix(baseColor, float3(0.898, 1.000, 0.000), energyFlash * (1 - step(0.01, dmgFlash)));
     float3 healthColor = mix(baseColor, float3(1, 0, 0), damagedPart * 0.7);
     return float4(mix(baseColor, healthColor, h), player);
