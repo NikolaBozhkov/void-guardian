@@ -10,11 +10,12 @@ import Foundation
 
 class Particle: Node {
     
-    private let lifetime = TimeInterval.random(in: 1...2)
     private let speedMod = Float.random(in: 0.7...1.2)
     private let minImpulse = Float.random(in: 0...0.08)
     private let seed = Float.random(in: 0...1000)
+    var lifetime = TimeInterval.random(in: 1...2)
     private var timeAlive: TimeInterval = 0
+    private let k: Float = 5.7
     
     var shouldRemove: Bool {
         timeAlive >= lifetime
@@ -34,12 +35,6 @@ class Particle: Node {
     func update(deltaTime: TimeInterval) {
         timeAlive += deltaTime
         
-        let f = Float(timeAlive / lifetime)
-        
-//        color.w = 1 - pow(f, 1.0)
-//        scale = 1 - pow(f, 1.6)
-    
-        let k: Float = 5.7
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))
         
         let speed = speedMod * impulse * 750

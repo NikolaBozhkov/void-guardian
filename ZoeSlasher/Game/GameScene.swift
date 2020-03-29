@@ -260,13 +260,22 @@ class GameScene: Scene {
         }
         
         // Particles
-        let count = Int.random(in: 3...5)
+        let count = Int.random(in: 4...6)
         for _ in 0..<count {
             let particle = Particle()
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
             particles.insert(particle)
         }
+        
+//        for _ in 0..<Int.random(in: 2...3) {
+//            let particle = Particle()
+//            particle.scale = 0.7
+//            particle.lifetime -= 0.5
+//            particle.position = enemy.positionBeforeImpact
+//            particle.color.xyz = enemy.ability.color
+//            particles.insert(particle)
+//        }
     }
     
     private func removeEnemyAttack(_ attack: EnemyAttack) {
@@ -350,6 +359,8 @@ extension GameScene: EnemyDelegate {
         let count = 1 + Int(powerFactor * 2.5)
         for _ in 0..<count {
             let particle = Particle()
+            particle.scale = 0.6
+//            particle.lifetime -= 0.3
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
             particles.insert(particle)

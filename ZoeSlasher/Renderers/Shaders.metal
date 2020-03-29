@@ -191,7 +191,6 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     
     
     float3 healthColor = mix(baseColor, float3(1, 1, 1), damagedPart * 0.5);
-//    float3 buffColor = mix(healthColor, float3(0.3, 0.4, 0.9), v);
     return float4(mix(color.xyz, healthColor, f), enemy);
 }
 

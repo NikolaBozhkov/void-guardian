@@ -150,6 +150,10 @@ class Enemy: Node {
     func destroy() {
         timeAlive = -1
         shouldRemove = true
+        
+        symbols.forEach {
+            $0.color.xyz = .one
+        }
     }
     
     func impactLock(with impact: vector_float2) {
@@ -177,7 +181,7 @@ class Enemy: Node {
         
         guard !shouldRemove else {
             symbols.forEach {
-                $0.color.w = simd_mix(0.5, 0.0, (1 + timeAlive) * 2)
+                $0.color.w = simd_mix(0.9, 0.0, (1 + timeAlive) * 2)
                 updateSymbolPosition($0)
             }
             
