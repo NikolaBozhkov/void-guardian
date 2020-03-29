@@ -24,6 +24,7 @@ typedef struct
     float4 position [[position]];
     float2 uv;
     float4 color;
+    float progress;
 } ParticleOut;
 
 #endif /* SpriteRendererShared_h */

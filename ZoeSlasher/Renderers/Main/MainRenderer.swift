@@ -492,8 +492,14 @@ extension MainRenderer: MTKViewDelegate {
         
         drawNodes(scene.children)
         
-        let particleData = scene.particles.map { ParticleData(worldTransform: $0.worldTransform, size: $0.size, color: $0.color) }
-        particleRenderer.draw(particleData, with: renderEncoder)
+        let particleData = scene.particles.map {
+            ParticleData(worldTransform: $0.worldTransform,
+                         size: $0.size,
+                         color: $0.color,
+                         progress: $0.progress)
+        }
+        
+        particleRenderer.draw(particleData, with: renderEncoder, commandBuffer: commandBuffer)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
         skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,

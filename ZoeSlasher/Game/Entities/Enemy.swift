@@ -60,7 +60,7 @@ class Enemy: Node {
     private var symbolsAngleVelocity: Float
     private var symbols = Set<Node>()
     
-    private var lastHealth: Float = 0
+    var lastHealth: Float = 0
     
     var positionBeforeImpact: vector_float2 = .zero
     var isImpactLocked = false
@@ -170,7 +170,7 @@ class Enemy: Node {
         timeSinceLastHit += deltaTime
         timeSinceLastImpactLock += deltaTime
         
-        if isImpactLocked && timeSinceLastImpactLock > 0.085 {
+        if isImpactLocked && timeSinceLastImpactLock > 0.09 {
             isImpactLocked = false
             position = positionBeforeImpact
         }

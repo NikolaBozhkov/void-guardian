@@ -10,7 +10,7 @@ import Metal
 
 class ParticlesRenderer {
     
-    let pipelineState: MTLRenderPipelineState
+    private let pipelineState: MTLRenderPipelineState
     private let vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
@@ -22,7 +22,14 @@ class ParticlesRenderer {
         [ 0.5, -0.5, 1.0, 0.0]
     ]
     
+    private let device: MTLDevice
+    
+    private var maxParticles = 1024
+    private var particleDataBuffer: MTLBuffer
+    
     init(device: MTLDevice, library: MTLLibrary) {
+        self.device = device
+        
         // Build pipeline state
         guard
             let vertexFunction = library.makeFunction(name: "vertexParticle"),
@@ -54,10 +61,19 @@ class ParticlesRenderer {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        
+        particleDataBuffer = device.makeBuffer(length: MemoryLayout<ParticleData>.stride * 1024, options: .storageModeShared)!
     }
     
-    func draw(_ particles: [ParticleData], with renderEncoder: MTLRenderCommandEncoder) {
+    func draw(_ particles: [ParticleData], with renderEncoder: MTLRenderCommandEncoder, commandBuffer: MTLCommandBuffer) {
         guard !particles.isEmpty else { return }
+        
+        if particles.count > maxParticles {
+            maxParticles *= 2
+            particleDataBuffer = device.makeBuffer(length: MemoryLayout<ParticleData>.stride * maxParticles, options: .storageModeShared)!
+        }
+        
+        particleDataBuffer.contents().copyMemory(from: particles, byteCount: MemoryLayout<ParticleData>.stride * particles.count)
         
         renderEncoder.setRenderPipelineState(pipelineState)
         
@@ -65,10 +81,7 @@ class ParticlesRenderer {
                                      length: MemoryLayout<vector_float4>.stride * vertices.count,
                                      index: 0)
         
-        var particles = particles
-        renderEncoder.setVertexBytes(&particles,
-                                     length: MemoryLayout<ParticleData>.stride * particles.count,
-                                     index: 1)
+        renderEncoder.setVertexBuffer(particleDataBuffer, offset: 0, index: 1)
         
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,

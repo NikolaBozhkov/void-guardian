@@ -44,25 +44,22 @@ vertex ParticleOut vertexParticle(constant float4 *vertices [[buffer(0)]],
     out.position = uniforms.projectionMatrix * particle.worldTransform * float4(vertices[vid].xy * particle.size, 0.0, 1.0);
     out.color = particle.color;
     out.uv = vertices[vid].zw;
+    out.progress = particle.progress;
     
     return out;
 }
 
 fragment float4 fragmentParticle(ParticleOut in [[stage_in]])
 {
-//    float r = distance(in.uv, float2(0.5));
-//    float f = 1 - smoothstep(0, 0.5, r);
-//
-//    float h = 1 - smoothstep(0.08, 0.1, r);
-//    f += h;
-//
-//    float w = step(0.001, h);
-//    in.color.xyz = in.color.xyz * (1 - w) + w * mix(in.color.xyz, float3(1), 0.9);
-//    return float4(in.color.xyz, f * in.color.w);
-    
     float r = distance(in.uv, float2(0.5)) * 2;
-    float f = exp(0.15 - 4.0 * r);
+    
+    float t = in.progress;
+    t = t * t * t;
+    float core = 0.18 * (1 - t);
+    float f = exp(core - (4.0 + t * 100) * r);
     f *= 1.0 - smoothstep(0.9, 1.0, r);
+    
+    f *= 1 - smoothstep(1.0 - t, 2.0 - t * 2, r);
     
     float w = step(0.98, f);
     in.color.xyz = in.color.xyz * (1 - w) + w * mix(in.color.xyz, float3(1), 0.9);
@@ -138,7 +135,7 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     r2 += sin(ang * 5.0 + M_PI_F + seed) * 0.01 + n1 * 0.02;
     
     const float mid = 2 * 90 / 750.0;
-    const float aa = 0.018;
+    const float aa = 0.019;
     
     float f = 0.0;
     f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.15;

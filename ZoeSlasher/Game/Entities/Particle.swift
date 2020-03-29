@@ -20,10 +20,14 @@ class Particle: Node {
         timeAlive >= lifetime
     }
     
+    var progress: Float {
+        Float(timeAlive / lifetime)
+    }
+    
     override init() {
         super.init()
         
-        size = [1, 1] * Float.random(in: 400...550)
+        size = [1, 1] * Float.random(in: 520...620)
         rotation = .random(in: -.pi...(.pi))
     }
     
@@ -32,8 +36,8 @@ class Particle: Node {
         
         let f = Float(timeAlive / lifetime)
         
-        color.w = 1 - f
-        scale = 1 - pow(f, 1.6)
+//        color.w = 1 - pow(f, 1.0)
+//        scale = 1 - pow(f, 1.6)
     
         let k: Float = 5.7
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))

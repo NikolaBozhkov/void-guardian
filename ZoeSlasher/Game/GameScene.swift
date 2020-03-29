@@ -336,10 +336,24 @@ extension GameScene: EnemyDelegate {
     }
     
     func didReceiveDmg(_ enemy: Enemy, damage: Float) {
+        let powerFactor = min(damage / enemy.maxHealth, 1.0)
         skGameScene.didDmg(damage,
-                           powerFactor: min(damage / enemy.maxHealth, 1.0),
+                           powerFactor: powerFactor,
                            at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
                            color: .white)
+        
+        if enemy.health < 1 {
+            return
+        }
+        
+        // Particles
+        let count = 1 + Int(powerFactor * 2.5)
+        for _ in 0..<count {
+            let particle = Particle()
+            particle.position = enemy.positionBeforeImpact
+            particle.color.xyz = enemy.ability.color
+            particles.insert(particle)
+        }
     }
 }
 
