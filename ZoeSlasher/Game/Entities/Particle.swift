@@ -31,10 +31,9 @@ class Particle: Node {
         timeAlive += deltaTime
         
         let f = Float(timeAlive / lifetime)
-        let visibility = 1 - f * f
         
-        color.w = visibility
-        scale = visibility
+        color.w = 1 - f
+        scale = 1 - pow(f, 1.6)
     
         let k: Float = 5.7
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))
