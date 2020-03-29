@@ -32,6 +32,43 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
     return out;
 }
 
+vertex ParticleOut vertexParticle(constant float4 *vertices [[buffer(0)]],
+                                  constant ParticleData *particles [[buffer(1)]],
+                                  constant Uniforms &uniforms [[buffer(2)]],
+                                  uint vid [[vertex_id]],
+                                  uint iid [[instance_id]])
+{
+    ParticleOut out;
+    
+    ParticleData particle = particles[iid];
+    out.position = uniforms.projectionMatrix * particle.worldTransform * float4(vertices[vid].xy * particle.size, 0.0, 1.0);
+    out.color = particle.color;
+    out.uv = vertices[vid].zw;
+    
+    return out;
+}
+
+fragment float4 fragmentParticle(ParticleOut in [[stage_in]])
+{
+//    float r = distance(in.uv, float2(0.5));
+//    float f = 1 - smoothstep(0, 0.5, r);
+//
+//    float h = 1 - smoothstep(0.08, 0.1, r);
+//    f += h;
+//
+//    float w = step(0.001, h);
+//    in.color.xyz = in.color.xyz * (1 - w) + w * mix(in.color.xyz, float3(1), 0.9);
+//    return float4(in.color.xyz, f * in.color.w);
+    
+    float r = distance(in.uv, float2(0.5)) * 2;
+    float f = exp(0.15 - 4.0 * r);
+    f *= 1.0 - smoothstep(0.9, 1.0, r);
+    
+    float w = step(0.98, f);
+    in.color.xyz = in.color.xyz * (1 - w) + w * mix(in.color.xyz, float3(1), 0.9);
+    return float4(in.color.xyz, f * in.color.w);
+}
+
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],

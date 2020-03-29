@@ -42,6 +42,8 @@ class MainRenderer: NSObject {
     var runningTime: TimeInterval = 0
     var prevTime: TimeInterval = 0
     
+    let particleRenderer: ParticlesRenderer
+    
     let backgroundRenderer: SpriteRenderer
     let playerRenderer: SpriteRenderer
     let enemyRenderer: SpriteRenderer
@@ -133,6 +135,8 @@ class MainRenderer: NSObject {
         self.simplexPipelineState = simplexPipelineState
         
         skRenderer = SKRenderer(device: device)
+        
+        particleRenderer = ParticlesRenderer(device: device, library: library)
         
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -487,6 +491,9 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
         drawNodes(scene.children)
+        
+        let particleData = scene.particles.map { ParticleData(worldTransform: $0.worldTransform, size: $0.size, color: $0.color) }
+        particleRenderer.draw(particleData, with: renderEncoder)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
         skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,

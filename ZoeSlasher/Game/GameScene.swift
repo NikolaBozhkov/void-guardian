@@ -30,6 +30,8 @@ class GameScene: Scene {
     
     var potions = Set<Potion>()
     
+    var particles = Set<Particle>()
+    
     var hitEnemies = Set<Enemy>()
     var enemyHitsForMove = 0
     var shouldHandleCombo = false
@@ -142,6 +144,13 @@ class GameScene: Scene {
         }
         
         skGameScene.update()
+        
+        particles.forEach {
+            $0.update(deltaTime: deltaTime)
+            if $0.shouldRemove {
+                particles.remove($0)
+            }
+        }
     }
     
     func didTap(at location: vector_float2) {
@@ -248,6 +257,15 @@ class GameScene: Scene {
         // Remove attack related to enemy
         if let attack = attacks.first(where: { $0.enemy === enemy }) {
             removeEnemyAttack(attack)
+        }
+        
+        // Particles
+        let count = Int.random(in: 3...5)
+        for _ in 0..<count {
+            let particle = Particle()
+            particle.position = enemy.positionBeforeImpact
+            particle.color.xyz = enemy.ability.color
+            particles.insert(particle)
         }
     }
     

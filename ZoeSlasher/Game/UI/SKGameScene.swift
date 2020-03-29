@@ -300,7 +300,7 @@ class SKGameScene: SKScene {
         fadeOut.timingMode = .easeIn
         
         indicator.run(SKAction.sequence([
-            SKAction.scale(to: 1.05, duration: 0.07, timingMode: .easeOut),
+            SKAction.scale(to: 1.08, duration: 0.07, timingMode: .easeOut),
             SKAction.scale(to: 1, duration: 0.05, timingMode: .easeIn),
             fadeOut,
             SKAction.removeFromParent(),

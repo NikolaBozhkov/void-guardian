@@ -31,6 +31,8 @@
 		2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112F24156A1500900AE9 /* Muli-Regular.ttf */; };
 		24981132241820CA00900AE9 /* Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24981131241820CA00900AE9 /* Potion.swift */; };
 		249811352418271F00900AE9 /* Potion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249811342418271F00900AE9 /* Potion.metal */; };
+		24AEB5102430801400EC37F4 /* ParticlesRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB50F2430801400EC37F4 /* ParticlesRenderer.swift */; };
+		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
 		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
 		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
@@ -82,6 +84,8 @@
 		2498112F24156A1500900AE9 /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
 		24981131241820CA00900AE9 /* Potion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Potion.swift; sourceTree = "<group>"; };
 		249811342418271F00900AE9 /* Potion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Potion.metal; sourceTree = "<group>"; };
+		24AEB50F2430801400EC37F4 /* ParticlesRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesRenderer.swift; sourceTree = "<group>"; };
+		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 				24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */,
 				2469393423C465B0001A6CAE /* SpriteRenderer.swift */,
 				247D704623E1D4BC00480199 /* SpriteRendererShared.h */,
+				24AEB50F2430801400EC37F4 /* ParticlesRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -265,6 +270,7 @@
 				249811332418270F00900AE9 /* Potion */,
 				2469393823C5D126001A6CAE /* Player.swift */,
 				247D705223E70FAA00480199 /* Enemy.swift */,
+				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -373,6 +379,7 @@
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
+				24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */,
 				247D705A23F009DD00480199 /* SKGameScene.swift in Sources */,
 				24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */,
 				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
@@ -388,6 +395,7 @@
 				24D7FF5F24225970007743C6 /* Colors.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
+				24AEB5102430801400EC37F4 /* ParticlesRenderer.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,

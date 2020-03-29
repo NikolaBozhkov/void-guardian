@@ -45,6 +45,13 @@ struct Uniforms
     float enemySize;
 };
 
+struct ParticleData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    simd_float4 color;
+};
+
 //typedef struct
 //{
 //    vector_float2 position;

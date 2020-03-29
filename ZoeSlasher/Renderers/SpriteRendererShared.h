@@ -19,4 +19,11 @@ typedef struct
     float2 uv;
 } VertexOut;
 
+typedef struct
+{
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+} ParticleOut;
+
 #endif /* SpriteRendererShared_h */
