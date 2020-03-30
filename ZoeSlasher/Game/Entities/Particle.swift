@@ -28,7 +28,7 @@ class Particle: Node {
     override init() {
         super.init()
         
-        size = [1, 1] * Float.random(in: 520...620)
+        size = [1, 1] * Float.random(in: 580...680)
         rotation = .random(in: -.pi...(.pi))
     }
     

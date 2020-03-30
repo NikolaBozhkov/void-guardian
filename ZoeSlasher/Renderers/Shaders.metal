@@ -169,9 +169,9 @@ fragment float4 enemyShader(VertexOut in [[stage_in]],
     float spawnProgress = min(timeAlive * 0.5, 2.0);
     float visible = 1.0 - smoothstep(spawnProgress, spawnProgress + 0.3, r + 0.3);
     
-    // Destroy progress 1 to 0
-//    r += fbmrSample;
-    float destroyProgress = smoothstep(0.0, 1.0, -timeAlive) * 2 - 1.0;
+    // Destroy progress 0 to -1, timeAlive goes from -1 to 0
+    float destroyProgress = (-timeAlive - 1) * 1.2;
+    destroyProgress = pow(destroyProgress, 3.0);
     float destroy = 1.0 - smoothstep(destroyProgress, destroyProgress + 1.0, r);
     
     if (timeAlive >= 0)

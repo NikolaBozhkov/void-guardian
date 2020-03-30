@@ -152,7 +152,7 @@ class Enemy: Node {
         shouldRemove = true
         
         symbols.forEach {
-            $0.color.xyz = .one
+            $0.color.xyz = mix(self.ability.color, .one, t: 0.9)
         }
     }
     
@@ -181,7 +181,10 @@ class Enemy: Node {
         
         guard !shouldRemove else {
             symbols.forEach {
-                $0.color.w = simd_mix(0.9, 0.0, (1 + timeAlive) * 2)
+                // timeAlive goes from -1 to 0 when destroyed, remap to 0 to 1 (0.5 sec)
+                var t = (timeAlive + 1) * 1.3
+                t = t*t*t
+                $0.color.w = simd_mix(0.9, 0.0, t)
                 updateSymbolPosition($0)
             }
             

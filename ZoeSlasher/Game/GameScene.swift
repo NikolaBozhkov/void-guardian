@@ -260,7 +260,7 @@ class GameScene: Scene {
         }
         
         // Particles
-        let count = Int.random(in: 4...6)
+        let count = Int.random(in: 5...6)
         for _ in 0..<count {
             let particle = Particle()
             particle.position = enemy.positionBeforeImpact
