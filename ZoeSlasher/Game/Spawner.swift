@@ -81,9 +81,8 @@ class Spawner {
         
         if availableBudget > 0 && timeSinceLastSpawn >= spawnInterval {
             
-            for config in Ability.allConfigs {
-                let roll = Float.random(in: 0..<1)
-                if availableBudget >= config.cost && roll < config.spawnChance(for: stage) {
+            for configManager in AbilityConfigManager.all {
+                if let config = configManager.getConfig(forStage: stage, budget: availableBudget) {
                     spawnEnemy(for: config)
                     spent += config.cost
                     timeSinceLastSpawn = 0

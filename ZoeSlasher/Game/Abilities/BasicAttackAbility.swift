@@ -40,6 +40,11 @@ class BasicAttackAbility: Ability {
 }
 
 extension BasicAttackAbility {
+    
+    static let configManager: AbilityConfigManager = {
+        AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
+    }()
+    
     static let stage1Config: BasicAttackAbilityConfig = {
         let config = getCoreConfig(stage: 1)
         
@@ -47,7 +52,6 @@ extension BasicAttackAbility {
         config.healthModifier = 1
         
         config.cost = 1
-        config.spawnChanceFunction = { _ in 1 }
         
         config.corruption = 6
         
@@ -60,11 +64,11 @@ extension BasicAttackAbility {
         config.interval = 6
         config.healthModifier = 1.7
         
-        config.cost = 1
-        config.spawnChanceFunction = { gameStage in
-            let startStage: Float = 16
-            return 0.2 * step(gameStage, edge: startStage) + min(0.2 * (gameStage - startStage), 0.8)
-        }
+        config.cost = 1.5
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
+                                                            baseChance: 0.2,
+                                                            chanceGrowth: 0.08,
+                                                            max: 1)
         
         config.corruption = 9
         
@@ -77,11 +81,11 @@ extension BasicAttackAbility {
         config.interval = 5
         config.healthModifier = 2.5
         
-        config.cost = 1.5
-        config.spawnChanceFunction = { gameStage in
-            let startStage: Float = 25
-            return 0.05 * step(gameStage, edge: startStage) + min(0.085 * (gameStage - startStage), 0.75)
-        }
+        config.cost = 1.7
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
+                                                            baseChance: 0.2,
+                                                            chanceGrowth: 0.08,
+                                                            max: 0.8)
         
         config.corruption = 9
         

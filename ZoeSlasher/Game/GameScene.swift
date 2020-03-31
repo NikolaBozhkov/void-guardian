@@ -125,16 +125,16 @@ class GameScene: Scene {
         player.advanceStage()
         
         // Check for game over
-//        if player.health == 0 && !isGameOver {
-//
-//            enemies.forEach { removeEnemy($0) }
-//            player.removeFromParent()
-//
-//            isGameOver = true
-//            skGameScene.didGameOver()
-//
-//            stageManager.isActive = false
-//        }
+        if player.health == 0 && !isGameOver {
+
+            enemies.forEach { removeEnemy($0) }
+            player.removeFromParent()
+
+            isGameOver = true
+            skGameScene.didGameOver()
+
+            stageManager.isActive = false
+        }
         
         stageManager.update(deltaTime: deltaTime)
         
@@ -175,9 +175,9 @@ class GameScene: Scene {
         
         stageManager.reset()
         
-        spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
-        spawner.spawnEnemy(for: MachineGunAbility.stage1Config)
-        spawner.spawnEnemy(for: CannonAbility.stage1Config)
+//        spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
+//        spawner.spawnEnemy(for: MachineGunAbility.stage1Config)
+//        spawner.spawnEnemy(for: CannonAbility.stage1Config)
     }
     
     private func testPlayerEnemyCollision() {
@@ -348,7 +348,7 @@ extension GameScene: EnemyDelegate {
         let powerFactor = min(damage / enemy.maxHealth, 1.0)
         skGameScene.didDmg(damage,
                            powerFactor: powerFactor,
-                           at: CGPoint(enemy.positionBeforeImpact + [0, 150]),
+                           at: CGPoint(enemy.positionBeforeImpact + [0, 170]),
                            color: .white)
         
         if enemy.health < 1 {
@@ -360,7 +360,6 @@ extension GameScene: EnemyDelegate {
         for _ in 0..<count {
             let particle = Particle()
             particle.scale = 0.6
-//            particle.lifetime -= 0.3
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
             particles.insert(particle)

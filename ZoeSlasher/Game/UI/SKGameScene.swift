@@ -168,7 +168,7 @@ class SKGameScene: SKScene {
                              color: SKColor,
                              symbol: SKSpriteNode? = nil,
                              symbolSizeFactor: CGFloat = 0) -> SKLabelNode {
-        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 100, fontName: UIConstants.sanosFont)
+        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 105, fontName: UIConstants.sanosFont)
         dmgLabel.position = position
         dmgLabel.fontColor = color
         dmgLabel.setScale(0.7)

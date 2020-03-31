@@ -34,7 +34,7 @@ class Player: Node {
     private let chargeSpeed: Float = 900
     private let pierceSpeed: Float = 7500
     private let energyRechargePerSecond: Float = 6
-    private let energyUsagePerShot: Float = 0
+    private let energyUsagePerShot: Float = 25
     
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero

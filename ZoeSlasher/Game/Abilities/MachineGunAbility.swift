@@ -39,16 +39,23 @@ class MachineGunAbility: Ability {
 }
 
 extension MachineGunAbility {
+    
+    static let configManager: AbilityConfigManager = {
+        let configManager = AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
+        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
+                                                                   baseChance: 0.05,
+                                                                   chanceGrowth: 0.05,
+                                                                   max: 0.25)
+        return configManager
+    }()
+    
     static let stage1Config: MachineGunAbilityConfig = {
         let config = getCoreConfig(stage: 1)
         
         config.interval = 1
         config.healthModifier = 0.5
         
-        config.cost = 2
-        config.spawnChanceFunction = { gameStage in
-            0.1 * step(gameStage, edge: 5) + min(0.04 * (gameStage - 5), 0.1)
-        }
+        config.cost = 1.3
         
         config.corruption = 1
         
@@ -61,11 +68,11 @@ extension MachineGunAbility {
         config.interval = 1
         config.healthModifier = 1
         
-        config.cost = 2.8
-        config.spawnChanceFunction = { gameStage in
-            let startStage: Float = 17
-            return 0.06 * step(gameStage, edge: startStage) + min(0.04 * (gameStage - startStage), 0.2)
-        }
+        config.cost = 1.8
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
+                                                            baseChance: 0.5,
+                                                            chanceGrowth: 0.05,
+                                                            max: 1)
         
         config.corruption = 2
         
@@ -78,11 +85,11 @@ extension MachineGunAbility {
         config.interval = 1
         config.healthModifier = 2
         
-        config.cost = 3.5
-        config.spawnChanceFunction = { gameStage in
-            let startStage: Float = 33
-            return 0.04 * step(gameStage, edge: startStage) + min(0.02 * (gameStage - startStage), 0.18)
-        }
+        config.cost = 2.7
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
+                                                            baseChance: 0.3,
+                                                            chanceGrowth: 0.05,
+                                                            max: 0.8)
         
         config.corruption = 3
         

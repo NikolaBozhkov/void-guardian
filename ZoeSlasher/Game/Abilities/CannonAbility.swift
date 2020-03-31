@@ -37,18 +37,25 @@ class CannonAbility: Ability {
 }
 
 extension CannonAbility {
+    
+    static let configManager: AbilityConfigManager = {
+        let configManager = AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
+        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 3,
+                                                                   baseChance: 0.1,
+                                                                   chanceGrowth: 0.05,
+                                                                   max: 0.3)
+        return configManager
+    }()
+    
     static let stage1Config: CannonAbilityConfig = {
         let config = getCoreConfig(stage: 1)
         
         config.interval = 12
         config.healthModifier = 2.5
         
-        config.cost = 2
-        config.spawnChanceFunction = { gameStage in
-            0.15 * step(gameStage, edge: 3) + min(0.05 * (gameStage - 3), 0.15)
-        }
+        config.cost = 1.5
 
-        config.corruption = 20
+        config.corruption = 15
         
         return config
     }()
@@ -59,10 +66,11 @@ extension CannonAbility {
         config.interval = 10
         config.healthModifier = 3.2
         
-        config.cost = 3
-        config.spawnChanceFunction = { gameStage in
-            0.05 * step(gameStage, edge: 17) + min(0.05 * (gameStage - 17), 0.25)
-        }
+        config.cost = 2.5
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
+                                                            baseChance: 0.5,
+                                                            chanceGrowth: 0.05,
+                                                            max: 1)
 
         config.corruption = 20
         
@@ -75,11 +83,12 @@ extension CannonAbility {
         config.interval = 10
         config.healthModifier = 4
         
-        config.cost = 3.7
-        config.spawnChanceFunction = { gameStage in
-            0.02 * step(gameStage, edge: 31) + min(0.02 * (gameStage - 31), 0.22)
-        }
-
+        config.cost = 3.2
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
+                                                            baseChance: 0.2,
+                                                            chanceGrowth: 0.05,
+                                                            max: 0.8)
+        
         config.corruption = 25
         
         return config

@@ -13,7 +13,7 @@ class Particle: Node {
     private let speedMod = Float.random(in: 0.7...1.2)
     private let minImpulse = Float.random(in: 0...0.08)
     private let seed = Float.random(in: 0...1000)
-    var lifetime = TimeInterval.random(in: 1...2)
+    var lifetime = TimeInterval.random(in: 1.3...2.3)
     private var timeAlive: TimeInterval = 0
     private let k: Float = 5.7
     

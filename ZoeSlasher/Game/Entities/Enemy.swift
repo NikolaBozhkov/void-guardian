@@ -184,7 +184,7 @@ class Enemy: Node {
                 // timeAlive goes from -1 to 0 when destroyed, remap to 0 to 1 (0.5 sec)
                 var t = (timeAlive + 1) * 1.3
                 t = t*t*t
-                $0.color.w = simd_mix(0.9, 0.0, t)
+                $0.color.w = simd_mix(0.95, 0.0, t)
                 updateSymbolPosition($0)
             }
             
