@@ -42,18 +42,19 @@ class MainRenderer: NSObject {
     var runningTime: TimeInterval = 0
     var prevTime: TimeInterval = 0
     
-    let particleRenderer: ParticleRenderer
+    let particleRenderer: Renderer<ParticleData>
+    let enemyRenderer: Renderer<EnemyData>
+    let enemyAttackRenderer: Renderer<AttackData>
+    
+    var potionTypeToRendererMap: [PotionType: PotionRenderer] = [:]
+    var textureToRendererMap: [String: TextureRenderer] = [:]
     
     let backgroundRenderer: SpriteRenderer
     let playerRenderer: SpriteRenderer
-    let enemyRenderer: SpriteRenderer
-    let enemyAttackRenderer: SpriteRenderer
     let energyBarRenderer: SpriteRenderer
     let anchorRenderer: SpriteRenderer
-    let textureRenderer: SpriteRenderer
     let clearColorRenderer: SpriteRenderer
     let energySymbolRenderer: SpriteRenderer
-    let potionRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
     
@@ -76,11 +77,6 @@ class MainRenderer: NSObject {
     
     let energySymbolTexture: MTLTexture
     let energyGlowTexture: MTLTexture
-    let basicSymbolTexture: MTLTexture
-    let machineGunSymbolTexture: MTLTexture
-    let cannonSymbolTexture: MTLTexture
-    let splitterSymbolTexture: MTLTexture
-    var stageTextures: [String: MTLTexture] = [:]
     let balanceSymbolTexture: MTLTexture
     
     var scene: GameScene!
@@ -92,8 +88,6 @@ class MainRenderer: NSObject {
             let commandQueue = device.makeCommandQueue() else {
                 return nil
         }
-        
-//        self.camera = camera
         
         metalKitView.depthStencilPixelFormat = BufferFormats.depthStencil
         metalKitView.colorPixelFormat = BufferFormats.color
@@ -136,32 +130,48 @@ class MainRenderer: NSObject {
         
         skRenderer = SKRenderer(device: device)
         
-        particleRenderer = ParticleRenderer(device: device, library: library)
+        particleRenderer = Renderer(device: device,
+                                    library: library,
+                                    vertexFunction: "vertexParticle",
+                                    fragmentFunction: "fragmentParticle",
+                                    maxInstances: 1024)
+        
+        enemyRenderer = Renderer(device: device,
+                                 library: library,
+                                 vertexFunction: "vertexEnemy",
+                                 fragmentFunction: "fragmentEnemy",
+                                 maxInstances: 64)
+        
+        enemyAttackRenderer = Renderer(device: device,
+                                       library: library,
+                                       vertexFunction: "vertexAttack",
+                                       fragmentFunction: "fragmentAttack",
+                                       maxInstances: 64)
         
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
-        enemyRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyShader")
-        enemyAttackRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "enemyAttackShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
-        textureRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "textureShader")
-        textureRenderer.currentPipelineState = textureRenderer.symbolPipelineState
         clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
         energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
-        potionRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "potionShader")
+        
+        var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon", "splitter", "balance"]
+        for i in 2...6 {
+            textureNames.append("stage\(i)")
+        }
+        
+        for textureName in textureNames {
+            let texture = createTexture(device: device, filePath: textureName)
+            let textureRenderer = TextureRenderer(device: device, library: library, texture: texture)
+            textureToRendererMap[textureName] = textureRenderer
+        }
         
         energySymbolTexture = createTexture(device: device, filePath: "energy")
         energyGlowTexture = createTexture(device: device, filePath: "energy-glow")
-        basicSymbolTexture = createTexture(device: device, filePath: "basic")
-        machineGunSymbolTexture = createTexture(device: device, filePath: "machine-gun")
-        cannonSymbolTexture = createTexture(device: device, filePath: "cannon")
-        splitterSymbolTexture = createTexture(device: device, filePath: "splitter")
-        
-        for i in 2...6 {
-            stageTextures["stage\(i)"] = createTexture(device: device, filePath: "stage\(i)")
-        }
-        
         balanceSymbolTexture = createTexture(device: device, filePath: "balance")
+        
+        potionTypeToRendererMap[.energy] = PotionRenderer(device: device, library: library, texture: energySymbolTexture)
+        potionTypeToRendererMap[.health] = PotionRenderer(device: device, library: library, texture: balanceSymbolTexture)
         
         super.init()
     }
@@ -278,69 +288,8 @@ extension MainRenderer {
         anchorRenderer.draw(node, with: renderEncoder)
     }
     
-    func renderEnemy(_ enemy: Enemy,
-                     position: vector_float2,
-                     positionDelta: vector_float2,
-                     timeAlive: Float,
-                     baseColor: vector_float3,
-                     health: Float,
-                     lastHealth: Float,
-                     timeSinceHit: Float,
-                     dmgReceived: Float) {
-        
-        var positionDelta = positionDelta
-        var timeAlive = timeAlive
-        var position = normalizeWorldPosition(enemy.worldPosition)
-        var baseColor = baseColor
-        var health = health
-        var lastHealth = lastHealth
-        var timeSinceHit = timeSinceHit
-        var dmgReceived = dmgReceived
-        var seed = enemy.seed
-        renderEncoder.setFragmentBytes(&position, length: MemoryLayout<vector_float2>.stride, index: 5)
-        renderEncoder.setFragmentBytes(&positionDelta, length: MemoryLayout<vector_float2>.stride, index: 6)
-        renderEncoder.setFragmentBytes(&timeAlive, length: MemoryLayout<Float>.size, index: 7)
-        renderEncoder.setFragmentBytes(&baseColor, length: MemoryLayout<vector_float3>.stride, index: 8)
-        renderEncoder.setFragmentBytes(&health, length: MemoryLayout<Float>.size, index: 9)
-        renderEncoder.setFragmentBytes(&lastHealth, length: MemoryLayout<Float>.size, index: 10)
-        renderEncoder.setFragmentBytes(&timeSinceHit, length: MemoryLayout<Float>.size, index: 11)
-        renderEncoder.setFragmentBytes(&dmgReceived, length: MemoryLayout<Float>.size, index: 12)
-        renderEncoder.setFragmentBytes(&seed, length: MemoryLayout<Float>.size, index: 13)
-        enemyRenderer.draw(enemy, with: renderEncoder)
-    }
-    
-    func renderEnemyAttack(_ attack: EnemyAttack) {
-        var progress = attack.progress
-        var aspectRatio = attack.aspectRatio
-        var cutOff = attack.cutOff
-        var speed = attack.speed
-        renderEncoder.setFragmentBytes(&progress, length: MemoryLayout<Float>.size, index: 5)
-        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 6)
-        renderEncoder.setFragmentBytes(&cutOff, length: MemoryLayout<Float>.size, index: 7)
-        renderEncoder.setFragmentBytes(&speed, length: MemoryLayout<Float>.size, index: 8)
-        enemyAttackRenderer.draw(attack, with: renderEncoder)
-    }
-    
     func renderDefault(_ node: Node) {
         clearColorRenderer.draw(node, with: renderEncoder)
-    }
-    
-    func renderTexture(_ node: Node, _ textureName: String) {
-        var texture: MTLTexture!
-        if textureName == "basic" {
-            texture = basicSymbolTexture
-        } else if textureName == "machine-gun" {
-            texture = machineGunSymbolTexture
-        } else if textureName == "cannon" {
-            texture = cannonSymbolTexture
-        } else if textureName == "splitter" {
-            texture = splitterSymbolTexture
-        } else {
-            texture = stageTextures[textureName]!
-        }
-        
-        renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
-        textureRenderer.draw(node, with: renderEncoder)
     }
     
     func renderEnergySymbol(_ node: EnergySymbol) {
@@ -352,35 +301,6 @@ extension MainRenderer {
                                        index: 5)
         
         energySymbolRenderer.draw(node, with: renderEncoder)
-    }
-    
-    func renderPotion(_ potion: Potion) {
-        var symbol: MTLTexture!
-        if potion.type == .energy {
-            symbol = energySymbolTexture
-        } else if potion.type == .health {
-            symbol = balanceSymbolTexture
-        }
-        
-        renderEncoder.setFragmentTexture(symbol, index: 5)
-        
-        var physicsSizeNormalized = potion.physicsSize / potion.size
-        renderEncoder.setFragmentBytes(&physicsSizeNormalized,
-                                       length: MemoryLayout<vector_float2>.stride,
-                                       index: 5)
-        
-        var symbolColor = potion.symbolColor
-        var glowColor = potion.glowColor
-        renderEncoder.setFragmentBytes(&symbolColor, length: MemoryLayout<vector_float3>.stride, index: 6)
-        renderEncoder.setFragmentBytes(&glowColor, length: MemoryLayout<vector_float3>.stride, index: 7)
-        
-        var worldPos = normalizeWorldPosition(potion.worldPosition)
-        renderEncoder.setFragmentBytes(&worldPos, length: MemoryLayout<vector_float2>.stride, index: 8)
-        
-        var timeSinceConsumed = potion.timeSinceConsumed
-        renderEncoder.setFragmentBytes(&timeSinceConsumed, length: MemoryLayout<Float>.size, index: 9)
-        
-        potionRenderer.draw(potion, with: renderEncoder)
     }
     
     private func normalizeWorldPosition(_ pos: vector_float2) -> vector_float2 {
@@ -499,7 +419,75 @@ extension MainRenderer: MTKViewDelegate {
                          progress: $0.progress)
         }
         
-        particleRenderer.draw(particleData, with: renderEncoder, commandBuffer: commandBuffer)
+        particleRenderer.draw(data: particleData, renderEncoder: renderEncoder)
+        
+        var enemyDataArr: [EnemyData] = []
+        
+        for enemy in scene.enemies {
+            let enemyData = EnemyData(worldTransform: enemy.worldTransform,
+                                      size: enemy.size,
+                                      color: enemy.color,
+                                      worldPosNorm: normalizeWorldPosition(enemy.worldPosition),
+                                      positionDelta: enemy.positionDelta,
+                                      baseColor: enemy.ability.color,
+                                      timeAlive: enemy.timeAlive,
+                                      health: enemy.health / enemy.maxHealth,
+                                      lastHealth: enemy.lastHealth / enemy.maxHealth,
+                                      timeSinceHit: Float(enemy.timeSinceLastHit),
+                                      dmgReceived: enemy.dmgReceivedNormalized,
+                                      seed: enemy.seed)
+            enemyDataArr.append(enemyData)
+            
+            for symbol in enemy.symbols {
+                let symbolData = TextureData(worldTransform: symbol.worldTransform,
+                                             size: symbol.size,
+                                             color: symbol.color)
+                
+                if let textureName = symbol.textureName {
+                    textureToRendererMap[textureName]?.data.append(symbolData)
+                }
+            }
+        }
+        
+        enemyRenderer.draw(data: enemyDataArr, renderEncoder: renderEncoder)
+        
+        let enemyAttackData = scene.attacks.map {
+            AttackData(worldTransform: $0.worldTransform,
+                       size: $0.size,
+                       color: $0.color,
+                       progress: $0.progress,
+                       aspectRatio: $0.aspectRatio,
+                       cutOff: $0.cutOff,
+                       speed: $0.speed)
+        }
+        
+        enemyAttackRenderer.draw(data: enemyAttackData, renderEncoder: renderEncoder)
+        
+        for textureRenderer in textureToRendererMap.values {
+            textureRenderer.draw(renderEncoder: renderEncoder)
+        }
+        
+        var energyPotionsData = [PotionData]()
+        var healthPotionsData = [PotionData]()
+        
+        for potion in scene.potions {
+            let data = PotionData(worldTransform: potion.worldTransform,
+                                  size: potion.size,
+                                  physicsSize: potion.physicsSize / potion.size,
+                                  worldPos: normalizeWorldPosition(potion.worldPosition),
+                                  symbolColor: potion.symbolColor,
+                                  glowColor: potion.glowColor,
+                                  timeSinceConsumed: potion.timeSinceConsumed)
+            
+            if potion.type == .energy {
+                energyPotionsData.append(data)
+            } else if potion.type == .health {
+                healthPotionsData.append(data)
+            }
+        }
+        
+        potionTypeToRendererMap[.energy]!.draw(data: energyPotionsData, renderEncoder: renderEncoder)
+        potionTypeToRendererMap[.health]!.draw(data: healthPotionsData, renderEncoder: renderEncoder)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
         skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,

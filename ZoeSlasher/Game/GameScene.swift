@@ -113,7 +113,6 @@ class GameScene: Scene {
         potions.forEach { potion in
             potion.update(deltaTime: deltaTime)
             if potion.timeSinceConsumed >= 2 {
-                potion.removeFromParent()
                 potions.remove(potion)
             }
         }
@@ -265,6 +264,7 @@ class GameScene: Scene {
             let particle = Particle()
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
+            particle.parent = rootNode
             particles.insert(particle)
         }
         
@@ -362,6 +362,7 @@ extension GameScene: EnemyDelegate {
             particle.scale = 0.6
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
+            particle.parent = rootNode
             particles.insert(particle)
         }
     }

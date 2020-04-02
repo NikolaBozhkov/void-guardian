@@ -32,6 +32,29 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
     return out;
 }
 
+vertex TextureOut vertexTexture(constant float4 *vertices [[buffer(0)]],
+                                constant TextureData *textures [[buffer(1)]],
+                                constant Uniforms &uniforms [[buffer(2)]],
+                                uint vid [[vertex_id]],
+                                uint iid [[instance_id]])
+{
+    TextureOut out;
+    
+    TextureData texture = textures[iid];
+    out.position = uniforms.projectionMatrix * texture.worldTransform * float4(vertices[vid].xy * texture.size, 0.0, 1.0);
+    out.color = texture.color;
+    out.uv = vertices[vid].zw;
+    
+    return out;
+}
+
+fragment float4 fragmentTexture(TextureOut in [[stage_in]],
+                                texture2d<float> texture [[texture(TextureIndexSprite)]])
+{
+    constexpr sampler s(filter::linear, address::repeat);
+    return float4(in.color.xyz, texture.sample(s, in.uv).a * in.color.a);
+}
+
 vertex ParticleOut vertexParticle(constant float4 *vertices [[buffer(0)]],
                                   constant ParticleData *particles [[buffer(1)]],
                                   constant Uniforms &uniforms [[buffer(2)]],
@@ -66,6 +89,167 @@ fragment float4 fragmentParticle(ParticleOut in [[stage_in]])
     return float4(in.color.xyz, f * in.color.w);
 }
 
+vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(0)]],
+                            constant EnemyData *enemies [[buffer(1)]],
+                            constant Uniforms &uniforms [[buffer(2)]],
+                            uint vid [[vertex_id]],
+                            uint iid [[instance_id]])
+{
+    EnemyOut out;
+    
+    EnemyData enemy = enemies[iid];
+    out.position = uniforms.projectionMatrix * enemy.worldTransform * float4(vertices[vid].xy * enemy.size, 0.0, 1.0);
+    out.color = enemy.color;
+    out.uv = vertices[vid].zw;
+    out.worldPosNorm = enemy.worldPosNorm;
+    out.positionDelta = enemy.positionDelta;
+    out.baseColor = enemy.baseColor;
+    out.timeAlive = enemy.timeAlive;
+    out.health = enemy.health;
+    out.lastHealth = enemy.lastHealth;
+    out.timeSinceHit = enemy.timeSinceHit;
+    out.dmgReceived = enemy.dmgReceived;
+    out.seed = enemy.seed;
+    
+    return out;
+}
+
+fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
+                              constant Uniforms &uniforms [[buffer(2)]],
+                              texture2d<float> fbmr [[texture(1)]],
+                              texture2d<float> simplex [[texture(3)]])
+{
+    float2 st = in.uv * 2.0 - 1.0;
+    
+    float2 stWorldNorm = 0.5 * st * (float2(750.0) / uniforms.size);
+    stWorldNorm += in.worldPosNorm;
+    
+    float enemy = entity(st, uniforms.enemySize, stWorldNorm, uniforms, -.9, fbmr, in.positionDelta);
+    
+    constexpr sampler s(filter::linear, address::repeat);
+    
+    // Health
+    float r = length(st);
+    float ang = atan2(st.y, st.x);
+    
+    float noiseAng = ang - uniforms.time * 0.2 - in.seed / 100;
+    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F + in.seed / 230;
+    float2 nPos = 0.5 + 0.5 * float2(cos(noiseAng), sin(noiseAng));
+    float2 nPos1 = 0.5 + 0.5 * float2(cos(noiseAng1), sin(noiseAng1));
+    float n = -1.0 + 2.0 * simplex.sample(s, nPos).x;
+    float n1 = -1.0 + 2.0 * simplex.sample(s, nPos1).x;
+    
+    float r1 = r;
+    float r2 = r;
+    
+    r1 += sin(ang * 5.0 + in.seed) * 0.01 + n * 0.02;
+    r2 += sin(ang * 5.0 + M_PI_F + in.seed) * 0.01 + n1 * 0.02;
+    
+    const float mid = 2 * 90 / 750.0;
+    const float aa = 0.019;
+    
+    float f = 0.0;
+    f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.15;
+    
+    float v = smoothstep(mid - aa, mid, r1) - smoothstep(mid, mid + aa, r1);
+    v += smoothstep(mid - aa, mid, r2) - smoothstep(mid, mid + aa, r2);
+    
+    ang = fmod(ang + M_PI_F * 1.5, M_PI_F * 2);
+    
+    f += v * step((1 - in.health) * M_PI_F * 2, ang);
+    
+    const float k = 7;
+    float t = 1.5 * in.timeSinceHit;
+    float catchUp = t * t * t;
+    
+    float damagedPart = step((1 - in.lastHealth + (in.lastHealth - in.health) * catchUp) * M_PI_F * 2 , ang)
+        - step((1 - in.health) * M_PI_F * 2, ang);
+    damagedPart = max(damagedPart, 0.0);
+    
+    float impulse = expImpulse(in.timeSinceHit + 1 / k, k);
+    f += v * damagedPart * (1 + 3 * impulse);
+    
+    enemy += f * 0.75;
+    
+    float h = 1 - (in.dmgReceived + 0.08);
+    float dmgCurve = 1 - h*h*h;
+    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1 * dmgCurve;
+    
+    // Spawning
+    float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;
+    r += fbmrSample;
+    float spawnProgress = min(in.timeAlive * 0.5, 2.0);
+    float visible = 1.0 - smoothstep(spawnProgress, spawnProgress + 0.3, r + 0.3);
+    
+    // Destroy progress 0 to -1, timeAlive goes from -1 to 0
+    float destroyProgress = (-in.timeAlive - 1) * 1.2;
+    destroyProgress = pow(destroyProgress, 3.0);
+    float destroy = 1.0 - smoothstep(destroyProgress, destroyProgress + 1.0, r);
+    
+    if (in.timeAlive >= 0)
+    {
+        enemy *= visible;
+    }
+    else
+    {
+        enemy *= destroy;
+    }
+    
+    //    enemy = visible;
+    
+    f = min(f, 1.0);
+    
+    v = min(v, 1.0);
+    
+    
+    float3 healthColor = mix(in.baseColor, float3(1, 1, 1), damagedPart * 0.5);
+    return float4(mix(in.color.xyz, healthColor, f), enemy);
+}
+
+vertex AttackOut vertexAttack(constant float4 *vertices [[buffer(0)]],
+                              constant AttackData *attacks [[buffer(1)]],
+                              constant Uniforms &uniforms [[buffer(2)]],
+                              uint vid [[vertex_id]],
+                              uint iid [[instance_id]])
+{
+    AttackOut out;
+    
+    AttackData attack = attacks[iid];
+    out.position = uniforms.projectionMatrix * attack.worldTransform * float4(vertices[vid].xy * attack.size, 0.0, 1.0);
+    out.color = attack.color;
+    out.uv = vertices[vid].zw;
+    out.progress = attack.progress;
+    out.aspectRatio = attack.aspectRatio;
+    out.cutOff = attack.cutOff;
+    out.speed = attack.speed;
+    
+    return out;
+}
+
+fragment float4 fragmentAttack(AttackOut in [[stage_in]])
+{
+    float2 st = in.uv;
+    st.x *= in.aspectRatio;
+    
+    float r = distance(float2(in.progress, 0.5), st);
+    float a = 0.47;
+    float f = 1 - smoothstep(a, 0.5, r);
+    
+    float tail = in.progress - in.speed * 0.034;
+    float localX = clamp(st.x - in.progress, 0.0, 0.5);
+    float localY = abs(st.y - 0.5);
+    float shotHalf = 0.5 * max(0.0, cos(atan2(localY, localX)));
+    float xIntensity = smoothstep(tail, in.progress, st.x) - step(in.progress + shotHalf, st.x);
+    float w = 1 - smoothstep(smoothstep(tail, in.progress, st.x) * a, 0.5, localY);
+    w *= xIntensity;
+    f += w;
+    
+    f *= 1 - smoothstep(in.cutOff - 1, in.cutOff, st.x);
+    f *= smoothstep(0, 7, st.x);
+    
+    return float4(in.color.xyz, f);
+}
+
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
@@ -93,107 +277,6 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     return float4(col, f);
 }
 
-fragment float4 enemyShader(VertexOut in [[stage_in]],
-                            constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                            constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                            constant float2 &worldPosNorm [[buffer(5)]],
-                            constant float2 &positionDelta [[buffer(6)]],
-                            constant float &timeAlive [[buffer(7)]],
-                            constant float3 &baseColor [[buffer(8)]],
-                            constant float &health [[buffer(9)]],
-                            constant float &timeSinceHit [[buffer(11)]],
-                            constant float &lastHealth [[buffer(10)]],
-                            constant float &dmgReceived [[buffer(12)]],
-                            constant float &seed [[buffer(13)]],
-                            texture2d<float> fbmr [[texture(1)]],
-                            texture2d<float> simplex [[texture(3)]])
-{
-    float2 st = in.uv * 2.0 - 1.0;
-    
-    float2 stWorldNorm = 0.5 * st * (float2(750.0) / uniforms.size);
-    stWorldNorm += worldPosNorm;
-    
-    float enemy = entity(st, uniforms.enemySize, stWorldNorm, uniforms, -.9, fbmr, positionDelta);
-    
-    constexpr sampler s(filter::linear, address::repeat);
-    
-    // Health
-    float r = length(st);
-    float ang = atan2(st.y, st.x);
-    
-    float noiseAng = ang - uniforms.time * 0.2 - seed / 100;
-    float noiseAng1 = ang + uniforms.time * 0.15 + M_PI_F + seed / 230;
-    float2 nPos = 0.5 + 0.5 * float2(cos(noiseAng), sin(noiseAng));
-    float2 nPos1 = 0.5 + 0.5 * float2(cos(noiseAng1), sin(noiseAng1));
-    float n = -1.0 + 2.0 * simplex.sample(s, nPos).x;
-    float n1 = -1.0 + 2.0 * simplex.sample(s, nPos1).x;
-    
-    float r1 = r;
-    float r2 = r;
-    
-    r1 += sin(ang * 5.0 + seed) * 0.01 + n * 0.02;
-    r2 += sin(ang * 5.0 + M_PI_F + seed) * 0.01 + n1 * 0.02;
-    
-    const float mid = 2 * 90 / 750.0;
-    const float aa = 0.019;
-    
-    float f = 0.0;
-    f += (smoothstep(mid - aa, mid, r) - smoothstep(mid, mid + aa, r)) * 0.15;
-    
-    float v = smoothstep(mid - aa, mid, r1) - smoothstep(mid, mid + aa, r1);
-    v += smoothstep(mid - aa, mid, r2) - smoothstep(mid, mid + aa, r2);
-    
-    ang = fmod(ang + M_PI_F * 1.5, M_PI_F * 2);
-    
-    f += v * step((1 - health) * M_PI_F * 2, ang);
-    
-    const float k = 7;
-    float t = 1.5 * timeSinceHit;
-    float catchUp = t * t * t;
-    
-    float damagedPart = step((1 - lastHealth + (lastHealth - health) * catchUp) * M_PI_F * 2 , ang) - step((1 - health) * M_PI_F * 2, ang);
-    damagedPart = max(damagedPart, 0.0);
-    
-    float impulse = expImpulse(timeSinceHit + 1 / k, k);
-    f += v * damagedPart * (1 + 3 * impulse);
-    
-    enemy += f * 0.75;
-    
-    float h = 1 - (dmgReceived + 0.08);
-    float dmgCurve = 1 - h*h*h;
-    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1 * dmgCurve;
-    
-    // Spawning
-    float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;
-    r += fbmrSample;
-    float spawnProgress = min(timeAlive * 0.5, 2.0);
-    float visible = 1.0 - smoothstep(spawnProgress, spawnProgress + 0.3, r + 0.3);
-    
-    // Destroy progress 0 to -1, timeAlive goes from -1 to 0
-    float destroyProgress = (-timeAlive - 1) * 1.2;
-    destroyProgress = pow(destroyProgress, 3.0);
-    float destroy = 1.0 - smoothstep(destroyProgress, destroyProgress + 1.0, r);
-    
-    if (timeAlive >= 0)
-    {
-        enemy *= visible;
-    }
-    else
-    {
-        enemy *= destroy;
-    }
-    
-//    enemy = visible;
-    
-    f = min(f, 1.0);
-    
-    v = min(v, 1.0);
-    
-    
-    float3 healthColor = mix(baseColor, float3(1, 1, 1), damagedPart * 0.5);
-    return float4(mix(color.xyz, healthColor, f), enemy);
-}
-
 fragment float4 energyBarShader(VertexOut in [[stage_in]],
                                 constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                 constant float &energyPct [[buffer(4)]])
@@ -214,43 +297,6 @@ fragment float4 energyBarShader(VertexOut in [[stage_in]],
     col += (1.0 - f) * (1.0 - stops) * float3(0.35) * color.xyz;
     
     return float4(col, s);
-}
-
-fragment float4 enemyAttackShader(VertexOut in [[stage_in]],
-                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                                  constant float &progress [[buffer(5)]],
-                                  constant float &aspectRatio [[buffer(6)]],
-                                  constant float &cutOff [[buffer(7)]],
-                                  constant float &speed [[buffer(8)]])
-{
-    float2 st = in.uv;
-    st.x *= aspectRatio;
-    
-    float r = distance(float2(progress, 0.5), st);
-    float a = 0.47;
-    float f = 1 - smoothstep(a, 0.5, r);
-    
-    float tail = progress - speed * 0.034;
-    float localX = clamp(st.x - progress, 0.0, 0.5);
-    float localY = abs(st.y - 0.5);
-    float shotHalf = 0.5 * max(0.0, cos(atan2(localY, localX)));
-    float xIntensity = smoothstep(tail, progress, st.x) - step(progress + shotHalf, st.x);
-    float w = 1 - smoothstep(smoothstep(tail, progress, st.x) * a, 0.5, localY);
-    w *= xIntensity;
-    f += w;
-    
-    f *= 1 - smoothstep(cutOff - 1, cutOff, st.x);
-    f *= smoothstep(0, 7, st.x);
-    
-    return float4(color.xyz, f);
-}
-
-fragment float4 textureShader(VertexOut in [[stage_in]],
-                              constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                              texture2d<float> texture [[texture(TextureIndexSprite)]])
-{
-    constexpr sampler s(filter::linear, address::repeat);
-    return float4(color.xyz, texture.sample(s, in.uv).a * color.a);
 }
 
 fragment float4 clearColorShader(VertexOut in [[stage_in]],

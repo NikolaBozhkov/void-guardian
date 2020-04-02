@@ -56,10 +56,6 @@ class EnemyAttack: Node {
         
         rotation = atan2(direction.y, direction.x)
         position = enemy.position + delta / 2
-        
-        renderFunction = { [unowned self] in
-            $0.renderEnemyAttack(self)
-        }
     }
     
     func update(deltaTime: TimeInterval) {

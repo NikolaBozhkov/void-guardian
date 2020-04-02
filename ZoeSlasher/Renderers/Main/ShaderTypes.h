@@ -58,14 +58,44 @@ struct EnemyData
     matrix_float4x4 worldTransform;
     simd_float2 size;
     simd_float4 color;
-    simd_float2 position;
+    simd_float2 worldPosNorm;
     simd_float2 positionDelta;
     simd_float3 baseColor;
+    float timeAlive;
     float health;
     float lastHealth;
     float timeSinceHit;
     float dmgReceived;
     float seed;
+};
+
+struct TextureData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    simd_float4 color;
+};
+
+struct PotionData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    simd_float2 physicsSize;
+    simd_float2 worldPos;
+    simd_float3 symbolColor;
+    simd_float3 glowColor;
+    float timeSinceConsumed;
+};
+
+struct AttackData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    simd_float4 color;
+    float progress;
+    float aspectRatio;
+    float cutOff;
+    float speed;
 };
 
 //typedef struct

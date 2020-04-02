@@ -10,8 +10,13 @@ import Metal
 
 class Renderer<T> {
     
-    let pipelineState: MTLRenderPipelineState
-    let vertices: [vector_float4] = [
+    private let device: MTLDevice
+    
+    private var maxInstances: Int
+    private var dataBuffer: MTLBuffer
+    
+    private let pipelineState: MTLRenderPipelineState
+    private let vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
         [ 0.5, -0.5, 1.0, 0.0],
@@ -22,7 +27,10 @@ class Renderer<T> {
         [ 0.5, -0.5, 1.0, 0.0]
     ]
     
-    init(device: MTLDevice, library: MTLLibrary, vertexFunction: String, fragmentFunction: String) {
+    init(device: MTLDevice, library: MTLLibrary, vertexFunction: String, fragmentFunction: String, maxInstances: Int) {
+        self.device = device
+        self.maxInstances = maxInstances
+        
         // Build pipeline state
         guard
             let vertexFunction = library.makeFunction(name: vertexFunction),
@@ -54,5 +62,31 @@ class Renderer<T> {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        
+        dataBuffer = device.makeBuffer(length: MemoryLayout<T>.stride * maxInstances, options: .storageModeShared)!
+    }
+    
+    func draw(data: [T], renderEncoder: MTLRenderCommandEncoder) {
+        guard !data.isEmpty else { return }
+        
+        if data.count > maxInstances {
+            maxInstances *= 2
+            dataBuffer = device.makeBuffer(length: MemoryLayout<T>.stride * maxInstances, options: .storageModeShared)!
+        }
+        
+        dataBuffer.contents().copyMemory(from: data, byteCount: MemoryLayout<T>.stride * data.count)
+        
+        renderEncoder.setRenderPipelineState(pipelineState)
+        
+        renderEncoder.setVertexBytes(vertices,
+                                     length: MemoryLayout<vector_float4>.stride * vertices.count,
+                                     index: 0)
+        
+        renderEncoder.setVertexBuffer(dataBuffer, offset: 0, index: 1)
+        
+        renderEncoder.drawPrimitives(type: .triangle,
+                                     vertexStart: 0,
+                                     vertexCount: vertices.count,
+                                     instanceCount: data.count)
     }
 }

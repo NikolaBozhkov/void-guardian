@@ -51,20 +51,20 @@ class Enemy: Node {
     
     private var timeSinceLastSymbolFlash: TimeInterval
     private var timeSinceLastTrigger: TimeInterval = 0
-    private var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
+    var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
     private var timeSinceLastImpactLock: TimeInterval = 1000
-    private var timeAlive: Float = 0
+    var timeAlive: Float = 0
     
-    private var positionDelta = vector_float2.zero
+    var positionDelta = vector_float2.zero
     
     private var symbolsAngleVelocity: Float
-    private var symbols = Set<Node>()
+    var symbols = Set<Node>()
     
     var lastHealth: Float = 0
     
     var positionBeforeImpact: vector_float2 = .zero
     var isImpactLocked = false
-    private var dmgReceivedNormalized: Float = 0
+    var dmgReceivedNormalized: Float = 0
     
     init(position: vector_float2, ability: Ability) {
         self.ability = ability
@@ -97,9 +97,9 @@ class Enemy: Node {
             symbol.zPosition = -1
             symbol.color.xyz = ability.color
             symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3
+            symbol.parent = self
             updateSymbol(symbol, 0)
             symbols.insert(symbol)
-            add(childNode: symbol)
         }
         
         if ability.stage > 1 {
@@ -109,23 +109,11 @@ class Enemy: Node {
                 symbol.color.xyz = mix(ability.color, .one, t: 0.3)
                 symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3 + .pi / 3
                 symbol.name = "stage"
+                symbol.parent = self
                 updateSymbol(symbol, 0)
                 symbols.insert(symbol)
-                add(childNode: symbol)
             }
         }
-    }
-    
-    override func acceptRenderer(_ renderer: MainRenderer) {
-        renderer.renderEnemy(self,
-                             position: position,
-                             positionDelta: positionDelta,
-                             timeAlive: timeAlive,
-                             baseColor: ability.color,
-                             health: health / maxHealth,
-                             lastHealth: lastHealth / maxHealth,
-                             timeSinceHit: Float(timeSinceLastHit),
-                             dmgReceived: dmgReceivedNormalized)
     }
     
     func receiveDamage(_ damage: Float, impact: vector_float2) {

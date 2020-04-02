@@ -28,8 +28,9 @@ class BasicAttackAbility: Ability {
     override func trigger(for enemy: Enemy) {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
         attack.speed = 5500
+        attack.parent = scene.rootNode
         scene.attacks.insert(attack)
-        scene.add(childNode: attack)
+        
         enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 30)
     }
 }

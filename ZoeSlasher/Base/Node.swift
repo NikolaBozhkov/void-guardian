@@ -32,15 +32,11 @@ class Node: Renderable, Hashable {
     
     var color = vector_float4.one
     
-    var parent: Node?
+    unowned var parent: Node?
     var children = Set<Node>()
     
     lazy var renderFunction: (MainRenderer) -> Void = { [unowned self] renderer in
-        if let textureName = self.textureName {
-            renderer.renderTexture(self, textureName)
-        } else {
-            renderer.renderDefault(self)
-        }
+        renderer.renderDefault(self)
     }
     
     private var uniformsDirty = true

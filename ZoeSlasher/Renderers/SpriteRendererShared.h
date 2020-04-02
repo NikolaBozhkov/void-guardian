@@ -27,4 +27,49 @@ typedef struct
     float progress;
 } ParticleOut;
 
+typedef struct
+{
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+    float2 worldPosNorm;
+    float2 positionDelta;
+    float3 baseColor;
+    float timeAlive;
+    float health;
+    float lastHealth;
+    float timeSinceHit;
+    float dmgReceived;
+    float seed;
+} EnemyOut;
+
+typedef struct
+{
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+} TextureOut;
+
+typedef struct
+{
+    float4 position [[position]];
+    float2 uv;
+    float2 physicsSize;
+    float2 worldPos;
+    float3 symbolColor;
+    float3 glowColor;
+    float timeSinceConsumed;
+} PotionOut;
+
+typedef struct {
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+    float progress;
+    float aspectRatio;
+    float cutOff;
+    float speed;
+} AttackOut;
+
+
 #endif /* SpriteRendererShared_h */

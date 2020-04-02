@@ -54,7 +54,7 @@ class Spawner {
         if timeSinceLastEnergyPotion >= energyPotionInterval {
             let potion = Potion(type: .energy, amount: 25)
             potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
+            potion.parent = scene.rootNode
             scene.potions.insert(potion)
             
             timeSinceLastEnergyPotion = 0
@@ -63,7 +63,7 @@ class Spawner {
         if timeSinceLastHealthPotion >= healthPotionInterval {
             let potion = Potion(type: .health, amount: 10)
             potion.position = scene.randomPosition(padding: [300, 200])
-            scene.rootNode.add(childNode: potion)
+            potion.parent = scene.rootNode
             scene.potions.insert(potion)
             
             timeSinceLastHealthPotion = 0
@@ -101,15 +101,15 @@ class Spawner {
         spawnStage = 0
         currentPeriodTime = 0
         timeSinceLastSpawn = .infinity
-        timeSinceLastEnergyPotion = 0
-        timeSinceLastHealthPotion = 0
+//        timeSinceLastEnergyPotion = 0
+//        timeSinceLastHealthPotion = 0
     }
 
     func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {
         let enemy = Enemy(position: position ?? scene.randomPosition(padding: [150, 150]),
                           ability: config.createAbility(for: scene))
         enemy.delegate = scene
+        enemy.parent = scene.rootNode
         scene.enemies.insert(enemy)
-        scene.rootNode.add(childNode: enemy)
     }
 }

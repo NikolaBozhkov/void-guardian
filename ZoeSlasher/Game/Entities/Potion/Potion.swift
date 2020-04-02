@@ -6,7 +6,7 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-enum PotionType: String {
+enum PotionType: String, CaseIterable {
     case energy = "energy-potion"
     case health = "health-potion"
 }
@@ -45,10 +45,6 @@ class Potion: Node {
         
         size = [375, 375]
         physicsSize = [200, 200]
-    }
-    
-    override func acceptRenderer(_ renderer: MainRenderer) {
-        renderer.renderPotion(self)
     }
     
     func apply(to player: Player, multiplier: Float = 1) {
