@@ -53,6 +53,21 @@ struct ParticleData
     float progress;
 };
 
+struct EnemyData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    simd_float4 color;
+    simd_float2 position;
+    simd_float2 positionDelta;
+    simd_float3 baseColor;
+    float health;
+    float lastHealth;
+    float timeSinceHit;
+    float dmgReceived;
+    float seed;
+};
+
 //typedef struct
 //{
 //    vector_float2 position;

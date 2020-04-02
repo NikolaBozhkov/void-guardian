@@ -8,7 +8,7 @@
 
 import Metal
 
-class ParticlesRenderer {
+class ParticleRenderer {
     
     private let pipelineState: MTLRenderPipelineState
     private let vertices: [vector_float4] = [

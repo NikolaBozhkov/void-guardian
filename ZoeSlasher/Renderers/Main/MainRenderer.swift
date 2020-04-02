@@ -42,7 +42,7 @@ class MainRenderer: NSObject {
     var runningTime: TimeInterval = 0
     var prevTime: TimeInterval = 0
     
-    let particleRenderer: ParticlesRenderer
+    let particleRenderer: ParticleRenderer
     
     let backgroundRenderer: SpriteRenderer
     let playerRenderer: SpriteRenderer
@@ -136,7 +136,7 @@ class MainRenderer: NSObject {
         
         skRenderer = SKRenderer(device: device)
         
-        particleRenderer = ParticlesRenderer(device: device, library: library)
+        particleRenderer = ParticleRenderer(device: device, library: library)
         
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
