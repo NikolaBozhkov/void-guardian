@@ -12,25 +12,20 @@ class MachineGunAbilityConfig: Ability.Configuration {
     override class var abilityType: Ability.Type {
         MachineGunAbility.self
     }
-    
-    var corruption: Float = 0
 }
 
 class MachineGunAbility: Ability {
-    
-    let corruption: Float
     
     required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
         guard let config = config as? MachineGunAbilityConfig else {
             return nil
         }
         
-        self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
     
     override func trigger(for enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
+        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
         attack.speed = 3000
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
@@ -45,7 +40,7 @@ extension MachineGunAbility {
         configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
                                                                    baseChance: 0.05,
                                                                    chanceGrowth: 0.05,
-                                                                   max: 0.25)
+                                                                   max: 0.3)
         return configManager
     }()
     
@@ -54,10 +49,9 @@ extension MachineGunAbility {
         
         config.interval = 1
         config.healthModifier = 0.5
+        config.damage = 1
         
-        config.cost = 1.3
-        
-        config.corruption = 1
+        config.calculateCost()
         
         return config
     }()
@@ -67,14 +61,14 @@ extension MachineGunAbility {
                
         config.interval = 1
         config.healthModifier = 1
+        config.damage = 2
         
-        config.cost = 1.8
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
-                                                            baseChance: 0.5,
+                                                            baseChance: 0.2,
                                                             chanceGrowth: 0.05,
                                                             max: 1)
-        
-        config.corruption = 2
         
         return config
     }()
@@ -84,14 +78,14 @@ extension MachineGunAbility {
         
         config.interval = 1
         config.healthModifier = 2
+        config.damage = 3
         
-        config.cost = 2.7
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
-                                                            baseChance: 0.3,
+                                                            baseChance: 0.2,
                                                             chanceGrowth: 0.05,
-                                                            max: 0.8)
-        
-        config.corruption = 3
+                                                            max: 0.9)
         
         return config
     }()

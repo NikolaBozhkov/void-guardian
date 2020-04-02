@@ -10,25 +10,20 @@ class CannonAbilityConfig: Ability.Configuration {
     override class var abilityType: Ability.Type {
         CannonAbility.self
     }
-    
-    var corruption: Float = 0
 }
 
 class CannonAbility: Ability {
 
-    let corruption: Float
-    
     required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
         guard let config = config as? CannonAbilityConfig else {
             return nil
         }
         
-        self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
     
     override func trigger(for enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
+        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
         attack.speed = 8000
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
@@ -43,7 +38,7 @@ extension CannonAbility {
         configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 3,
                                                                    baseChance: 0.1,
                                                                    chanceGrowth: 0.05,
-                                                                   max: 0.3)
+                                                                   max: 0.42)
         return configManager
     }()
     
@@ -52,10 +47,9 @@ extension CannonAbility {
         
         config.interval = 12
         config.healthModifier = 2.5
+        config.damage = 15
         
-        config.cost = 1.5
-
-        config.corruption = 15
+        config.calculateCost()
         
         return config
     }()
@@ -65,14 +59,14 @@ extension CannonAbility {
         
         config.interval = 10
         config.healthModifier = 3.2
+        config.damage = 20
         
-        config.cost = 2.5
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
-                                                            baseChance: 0.5,
+                                                            baseChance: 0.2,
                                                             chanceGrowth: 0.05,
                                                             max: 1)
-
-        config.corruption = 20
         
         return config
     }()
@@ -82,14 +76,31 @@ extension CannonAbility {
         
         config.interval = 10
         config.healthModifier = 4
+        config.damage = 25
         
-        config.cost = 3.2
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
                                                             baseChance: 0.2,
                                                             chanceGrowth: 0.05,
-                                                            max: 0.8)
+                                                            max: 0.9)
         
-        config.corruption = 25
+        return config
+    }()
+    
+    static let stage4Config: CannonAbilityConfig = {
+        let config = getCoreConfig(stage: 4)
+        
+        config.interval = 10
+        config.healthModifier = 4
+        config.damage = 25
+        
+        config.calculateCost()
+        
+        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
+                                                            baseChance: 0.2,
+                                                            chanceGrowth: 0.05,
+                                                            max: 0.9)
         
         return config
     }()

@@ -30,6 +30,7 @@ class Ability {
         }
         
         var healthModifier: Float = 0
+        var damage: Float = 0
         
         var stage: Int = 0
         var cost: Float = 0
@@ -42,6 +43,15 @@ class Ability {
         
         func spawnChance(forStage stage: Int) -> Float {
             spawnChanceFunction(stage)
+        }
+        
+        func calculateCost() {
+            let healthFactor = healthModifier * 0.44
+            
+            let dps = damage / Float(interval)
+            let damageFactor = 0.5 * dps
+            let attackIntervalFactor = 0.5 * dps / Float(interval)
+            cost = healthFactor + damageFactor + attackIntervalFactor
         }
         
         private func createAbility<T: Ability>(_ type: T.Type, for scene: GameScene) -> T {
@@ -61,6 +71,7 @@ class Ability {
     
     let interval: TimeInterval
     let healthModifier: Float
+    let damage: Float
     
     let stage: Int
     let cost: Float
@@ -77,6 +88,7 @@ class Ability {
         
         interval = config.interval
         healthModifier = config.healthModifier
+        damage = config.damage
         
         stage = config.stage
         cost = config.cost

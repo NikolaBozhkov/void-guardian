@@ -296,7 +296,7 @@ class SKGameScene: SKScene {
         let size: CGFloat = 660
         indicator.size = CGSize(width: size, height: size)
         
-        let fadeOut = SKAction.fadeOut(withDuration: 2)
+        let fadeOut = SKAction.fadeOut(withDuration: 1.3)
         fadeOut.timingMode = .easeIn
         
         indicator.run(SKAction.sequence([

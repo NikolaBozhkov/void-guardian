@@ -13,25 +13,20 @@ class BasicAttackAbilityConfig: Ability.Configuration {
     override class var abilityType: Ability.Type {
         BasicAttackAbility.self
     }
-    
-    var corruption: Float = 0
 }
 
 class BasicAttackAbility: Ability {
-    
-    let corruption: Float
     
     required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
         guard let config = config as? BasicAttackAbilityConfig else {
             return nil
         }
         
-        self.corruption = config.corruption
         super.init(scene: scene, config: config)
     }
     
     override func trigger(for enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: corruption)
+        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
         attack.speed = 5500
         scene.attacks.insert(attack)
         scene.add(childNode: attack)
@@ -50,10 +45,9 @@ extension BasicAttackAbility {
         
         config.interval = 6
         config.healthModifier = 1
+        config.damage = 6
         
-        config.cost = 1
-        
-        config.corruption = 6
+        config.calculateCost()
         
         return config
     }()
@@ -63,14 +57,14 @@ extension BasicAttackAbility {
         
         config.interval = 6
         config.healthModifier = 1.7
+        config.damage = 9
         
-        config.cost = 1.5
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
                                                             baseChance: 0.2,
                                                             chanceGrowth: 0.08,
                                                             max: 1)
-        
-        config.corruption = 9
         
         return config
     }()
@@ -80,14 +74,14 @@ extension BasicAttackAbility {
         
         config.interval = 5
         config.healthModifier = 2.5
+        config.damage = 9
         
-        config.cost = 1.7
+        config.calculateCost()
+        
         config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
                                                             baseChance: 0.2,
                                                             chanceGrowth: 0.08,
-                                                            max: 0.8)
-        
-        config.corruption = 9
+                                                            max: 1)
         
         return config
     }()

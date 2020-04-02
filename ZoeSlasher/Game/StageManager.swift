@@ -7,7 +7,7 @@
 //
 
 private enum Constants {
-    static let baseBudget: Float = 10
+    static let baseBudget: Float = 8
     static let baseStageDuration: TimeInterval = 30
 }
 
@@ -18,7 +18,7 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
-    static let stageBudgetTargets: [Int: Float] = [1: 7, 13: 16, 25: 22, 37: 30, 49: 35]
+    static let thresholdToBudgetGrowthMap = [0: 0, 1: 0.7, 12: 0.7, 24: 0.7].sorted(by: { $0.key > $1.key })
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?
@@ -34,33 +34,18 @@ class StageManager {
     
     private(set) var stage = 0
     
-    init(spawner: Spawner) {
-        self.spawner = spawner
+    private var budgetGrowth: Float {
+        for (key, value) in StageManager.thresholdToBudgetGrowthMap {
+            if stage >= key {
+                return Float(value)
+            }
+        }
+        
+        return 1
     }
     
-    static func getBudget(for stage: Int) -> Float {
-        let keys = stageBudgetTargets.keys.sorted()
-        var lowerStage: Int = keys.first!
-        var higherStage: Int = keys.last!
-        
-        for (s, _) in stageBudgetTargets {
-            if stage >= s && s > lowerStage {
-                lowerStage = s
-            }
-            
-            if stage <= s && s < higherStage {
-                higherStage = s
-            }
-        }
-        
-        let progress: Float
-        if lowerStage != higherStage {
-             progress = Float(stage - lowerStage) / Float(higherStage - lowerStage)
-        } else {
-            progress = 0
-        }
-        
-        return simd_mix(stageBudgetTargets[lowerStage]!, stageBudgetTargets[higherStage]!, progress)
+    init(spawner: Spawner) {
+        self.spawner = spawner
     }
     
     func update(deltaTime: TimeInterval) {
@@ -85,8 +70,9 @@ class StageManager {
         stageTime = 0
 
         stage += 1
+        budget += budgetGrowth
+        
         spawnPeriod = stageDuration * 0.34
-        budget = StageManager.getBudget(for: stage)
         
         spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
         
@@ -99,6 +85,14 @@ class StageManager {
     func reset() {
         isActive = true
         stage = 0
+        
+        let toStage = stage
+        stage = 0
+        for _ in 0..<toStage {
+            budget += budgetGrowth
+            stage += 1
+        }
+        
         advanceStage()
         
 //        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)
