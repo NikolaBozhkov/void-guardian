@@ -247,19 +247,4 @@ class Enemy: Node {
         let intensity = vector_float3(repeating: dot(color, W))
         return mix(intensity, color, t: scale)
     }
-    
-    private func expImpulse(_ x: Float, _ k: Float) -> Float {
-        let h = k * x;
-        return h * exp(1.0 - h);
-    }
-    
-    private func random(_ x: Float) -> Float {
-        simd_fract(sin(x) * 43758.5453123)
-    }
-    
-    private func noise(_ x: Float) -> Float {
-        let i = floor(x)
-        let f = simd_fract(x)
-        return simd_smoothstep(random(i), random(i + 1), f)
-    }
 }

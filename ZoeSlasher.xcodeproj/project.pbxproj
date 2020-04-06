@@ -13,6 +13,7 @@
 		2465E7772435E2490019CE02 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E7762435E2490019CE02 /* Renderer.swift */; };
 		2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E7782435F20D0019CE02 /* TextureRenderer.swift */; };
 		2465E77B24360EF10019CE02 /* PotionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E77A24360EF10019CE02 /* PotionRenderer.swift */; };
+		2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E77C2437458E0019CE02 /* GlobalHelpers.swift */; };
 		2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393023C32C41001A6CAE /* MathLibrary.swift */; };
 		2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393423C465B0001A6CAE /* SpriteRenderer.swift */; };
 		2469393723C4A544001A6CAE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393623C4A544001A6CAE /* Node.swift */; };
@@ -66,6 +67,7 @@
 		2465E7762435E2490019CE02 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		2465E7782435F20D0019CE02 /* TextureRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureRenderer.swift; sourceTree = "<group>"; };
 		2465E77A24360EF10019CE02 /* PotionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionRenderer.swift; sourceTree = "<group>"; };
+		2465E77C2437458E0019CE02 /* GlobalHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHelpers.swift; sourceTree = "<group>"; };
 		2469393023C32C41001A6CAE /* MathLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathLibrary.swift; sourceTree = "<group>"; };
 		2469393423C465B0001A6CAE /* SpriteRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRenderer.swift; sourceTree = "<group>"; };
 		2469393623C4A544001A6CAE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			children = (
 				2469393023C32C41001A6CAE /* MathLibrary.swift */,
 				24629E66240D6CD4009A465B /* Extensions */,
+				2465E77C2437458E0019CE02 /* GlobalHelpers.swift */,
 			);
 			path = Utlity;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
+				2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,

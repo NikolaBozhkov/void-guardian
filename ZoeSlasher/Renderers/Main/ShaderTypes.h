@@ -69,7 +69,7 @@ struct EnemyData
     float seed;
 };
 
-struct TextureData
+struct SpriteData
 {
     matrix_float4x4 worldTransform;
     simd_float2 size;

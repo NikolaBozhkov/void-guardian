@@ -33,14 +33,14 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
 }
 
 vertex TextureOut vertexTexture(constant float4 *vertices [[buffer(0)]],
-                                constant TextureData *textures [[buffer(1)]],
+                                constant SpriteData *textures [[buffer(1)]],
                                 constant Uniforms &uniforms [[buffer(2)]],
                                 uint vid [[vertex_id]],
                                 uint iid [[instance_id]])
 {
     TextureOut out;
     
-    TextureData texture = textures[iid];
+    SpriteData texture = textures[iid];
     out.position = uniforms.projectionMatrix * texture.worldTransform * float4(vertices[vid].xy * texture.size, 0.0, 1.0);
     out.color = texture.color;
     out.uv = vertices[vid].zw;

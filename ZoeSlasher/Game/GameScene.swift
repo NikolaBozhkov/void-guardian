@@ -51,6 +51,9 @@ class GameScene: Scene {
     
     var prevPlayerPosition: vector_float2 = .zero
     
+//    var nextParticleInterval = TimeInterval.random(in: 1...4)
+//    var timeSinceLastParticle: TimeInterval = 0
+    
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
         
         stageManager = StageManager(spawner: spawner)
@@ -85,6 +88,15 @@ class GameScene: Scene {
     
     func update(deltaTime: TimeInterval) {
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
+        
+//        timeSinceLastParticle += deltaTime
+//        if timeSinceLastParticle >= nextParticleInterval {
+//            let particle = AmbientParticle()
+//            particle.position = randomPosition(padding: [500, 500])
+//            particle.parent = rootNode
+//            particles.insert(particle)
+//            timeSinceLastParticle = 0
+//        }
         
         if !stageManager.isStageCleared {
             favor -= Float(deltaTime) * (favor / 15)
@@ -158,9 +170,6 @@ class GameScene: Scene {
         guard !isGameOver, !consumed else { return }
         
         player.move(to: location)
-        
-//        stageManager.clearStage()
-//        skGameScene.didClearStage()
     }
     
     func reloadScene() {

@@ -8,9 +8,9 @@
 
 import Metal
 
-class TextureRenderer: Renderer<TextureData> {
+class TextureRenderer: Renderer<SpriteData> {
     
-    var data: [TextureData] = []
+    var data: [SpriteData] = []
     
     private let texture: MTLTexture
     

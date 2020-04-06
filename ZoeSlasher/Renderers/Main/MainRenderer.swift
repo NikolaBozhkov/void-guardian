@@ -439,7 +439,7 @@ extension MainRenderer: MTKViewDelegate {
             enemyDataArr.append(enemyData)
             
             for symbol in enemy.symbols {
-                let symbolData = TextureData(worldTransform: symbol.worldTransform,
+                let symbolData = SpriteData(worldTransform: symbol.worldTransform,
                                              size: symbol.size,
                                              color: symbol.color)
                 

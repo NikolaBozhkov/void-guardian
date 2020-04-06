@@ -232,11 +232,6 @@ class Player: Node {
         guard nextStage != stage else { return }
         stage = nextStage
     }
-    
-    private func expImpulse(_ x: Float, _ k: Float) -> Float {
-        let h = k * x
-        return h * exp(1.0 - h)
-    }
 }
 
 class EnergySymbol: Node {
@@ -284,10 +279,5 @@ class EnergySymbol: Node {
         
         rotation -= angularVelocity * deltaTime
         update(forEnergy: energy)
-    }
-    
-    private func expImpulse(_ x: Float, _ k: Float) -> Float {
-        let h = k * x
-        return h * exp(1.0 - h)
     }
 }
