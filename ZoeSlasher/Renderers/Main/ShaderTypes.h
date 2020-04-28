@@ -62,6 +62,7 @@ struct EnemyData
     simd_float2 positionDelta;
     simd_float3 baseColor;
     float timeAlive;
+    float maxHealthMod;
     float health;
     float lastHealth;
     float timeSinceHit;

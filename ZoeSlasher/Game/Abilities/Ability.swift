@@ -32,7 +32,27 @@ class Ability {
         var healthModifier: Float = 0
         var damage: Float = 0
         
-        var stage: Int = 0
+        var stage: Int = 0 {
+            didSet {
+                let startStage = 1 + (stage - 1) * 7
+                
+                var baseChance: Float = 1
+                if stage != 1 {
+                    baseChance = 0.2 - Float(stage - 1) * 0.2
+                }
+                
+                let maxChance = 1.0 - Float(stage - 1) * 0.1
+                let chanceGrowth = (maxChance - baseChance) / 5
+                
+                spawnChanceFunction = Configuration.getSpawnChanceFunction(startStage: startStage,
+                                                                           baseChance: baseChance,
+                                                                           chanceGrowth: chanceGrowth,
+                                                                           max: maxChance)
+                
+                cost = 1 + Float(stage - 1) * 0.5
+            }
+        }
+        
         var cost: Float = 0
         
         var spawnChanceFunction: (_ stage: Int) -> Float = { _ in 1 }
@@ -45,17 +65,18 @@ class Ability {
             spawnChanceFunction(stage)
         }
         
-        func calculateCost() {
-            let healthFactor = healthModifier * 0.44
-            
-            let dps = damage / Float(interval)
-            let damageFactor = 0.5 * dps
-            let attackIntervalFactor = 0.5 * dps / Float(interval)
-            cost = healthFactor + damageFactor + attackIntervalFactor
-        }
-        
         private func createAbility<T: Ability>(_ type: T.Type, for scene: GameScene) -> T {
             type.init(scene: scene, config: self)!
+        }
+        
+        private static func getSpawnChanceFunction(startStage: Int, baseChance: Float, chanceGrowth: Float, max: Float) -> (Int) -> Float {
+            let startStage = Float(startStage)
+            return { stage in
+                let stage = Float(stage)
+                let base = baseChance * step(stage, edge: startStage)
+                let growth = chanceGrowth * (stage - startStage)
+                return min(base + growth, max)
+            }
         }
     }
     
@@ -97,10 +118,6 @@ class Ability {
     func trigger(for enemy: Enemy) {
         
     }
-    
-    func getConfig(forStage stage: Int, budget: Float) -> Ability.Configuration? {
-        nil
-    }
 }
 
 extension Ability {
@@ -132,9 +149,9 @@ class AbilityConfigManager {
     }
     
     func getConfig(forStage stage: Int, budget: Float) -> Ability.Configuration? {
-        guard Float.random(in: 0..<1) < spawnChanceFunction(stage) else {
-            return nil
-        }
+//        guard Float.random(in: 0..<1) < spawnChanceFunction(stage) else {
+//            return nil
+//        }
         
         for config in configs {
             let roll = Float.random(in: 0..<1)

@@ -26,7 +26,6 @@ class MachineGunAbility: Ability {
     
     override func trigger(for enemy: Enemy) {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
-        attack.speed = 3000
         attack.parent = scene.rootNode
         scene.attacks.insert(attack)
         
@@ -37,66 +36,33 @@ class MachineGunAbility: Ability {
 extension MachineGunAbility {
     
     static let configManager: AbilityConfigManager = {
-        let configManager = AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
+        var configs = [MachineGunAbilityConfig]()
+        for s in 1...6 {
+            configs.append(getConfig(forStage: s))
+        }
+        
+        configs.reverse()
+        
+        let configManager = AbilityConfigManager(withConfigs: configs)
         configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
                                                                    baseChance: 0.05,
                                                                    chanceGrowth: 0.05,
-                                                                   max: 0.3)
+                                                                   max: 0.33)
         return configManager
     }()
     
-    static let stage1Config: MachineGunAbilityConfig = {
-        let config = getCoreConfig(stage: 1)
-        
-        config.interval = 1
-        config.healthModifier = 0.5
-        config.damage = 1
-        
-        config.calculateCost()
-        
-        return config
-    }()
-    
-    static let stage2Config: MachineGunAbilityConfig = {
-        let config = getCoreConfig(stage: 2)
-               
-        config.interval = 1
-        config.healthModifier = 1
-        config.damage = 2
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.05,
-                                                            max: 1)
-        
-        return config
-    }()
-    
-    static let stage3Config: MachineGunAbilityConfig = {
-        let config = getCoreConfig(stage: 3)
-        
-        config.interval = 1
-        config.healthModifier = 2
-        config.damage = 3
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.05,
-                                                            max: 0.9)
-        
-        return config
-    }()
-    
-    private static func getCoreConfig(stage: Int) -> MachineGunAbilityConfig {
+    private static func getConfig(forStage stage: Int) -> MachineGunAbilityConfig {
         let config = MachineGunAbilityConfig()
+        
         config.symbol = "machine-gun"
         config.color = vector_float3(1.000, 0.537, 0.047)
         config.colorScale = 0.9
         config.stage = stage
+        
+        config.interval = 2
+        config.healthModifier = 1
+        config.damage = Float(stage) * 2
+        
         return config
     }
 }

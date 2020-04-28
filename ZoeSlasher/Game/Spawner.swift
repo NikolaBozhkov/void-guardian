@@ -12,12 +12,7 @@ class Spawner {
     private let healthPotionInterval: TimeInterval = 55
     private let spawnInterval: TimeInterval = 0.1
     
-    private let stagesConfig: [(allowance: Float, threshold: Double)] = [
-        (0.20, 0.00),
-        (0.45, 0.25),
-        (0.65, 0.50),
-        (1.00, 0.75)
-    ]
+    private var stagesConfig: [(allowance: Float, threshold: Double)] = []
     
     unowned var scene: GameScene!
     
@@ -41,7 +36,21 @@ class Spawner {
     
     var spawningEnded: Bool {
         currentPeriodTime >= spawnPeriod
+//        currentPeriodTime >= 1
     }
+    
+    init() {
+        let segments: Float = 7
+        for i in 1...Int(segments) {
+            let allowance = (1 / segments) * Float(i)
+            let threshold = (1 / segments) * Float(i - 1)
+            stagesConfig.append((allowance, Double(threshold)))
+        }
+        
+//        stagesConfig = [(1.0, 0.0)]
+    }
+    
+    var spawned = 0
     
     func update(deltaTime: TimeInterval) {
         currentPeriodTime += deltaTime
@@ -81,13 +90,13 @@ class Spawner {
         
         if availableBudget > 0 && timeSinceLastSpawn >= spawnInterval {
             
-            for configManager in AbilityConfigManager.all {
-                if let config = configManager.getConfig(forStage: stage, budget: availableBudget) {
-                    spawnEnemy(for: config)
-                    spent += config.cost
-                    timeSinceLastSpawn = 0
-                    break
-                }
+            let configManager = AbilityConfigManager.all.randomElement()!
+//            let configManager = AbilityConfigManager.all[1]
+            if let config = configManager.getConfig(forStage: stage, budget: availableBudget) {
+                spawnEnemy(for: config)
+                spent += config.cost
+                timeSinceLastSpawn = 0
+                spawned += 1
             }
         }
     }
@@ -103,6 +112,9 @@ class Spawner {
         timeSinceLastSpawn = .infinity
 //        timeSinceLastEnergyPotion = 0
 //        timeSinceLastHealthPotion = 0
+        
+        print(stage - 1, spawned)
+        spawned = 0
     }
 
     func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {

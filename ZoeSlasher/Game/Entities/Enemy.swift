@@ -106,7 +106,7 @@ class Enemy: Node {
             for i in 0..<3 {
                 let symbol = Node(size: [1, 1] * 65, textureName: "stage\(ability.stage)")
                 symbol.zPosition = -1
-                symbol.color.xyz = mix(ability.color, .one, t: 0.3)
+                symbol.color.xyz = mix(ability.color, .one, t: 0.45)
                 symbol.rotation = initialAngle + Float(i) * .pi * 2.0 / 3 + .pi / 3
                 symbol.name = "stage"
                 symbol.parent = self
@@ -229,7 +229,7 @@ class Enemy: Node {
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {
-        symbol.color.w = 0.75 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.25 * f
+        symbol.color.w = 0.82 * min(timeAlive * 0.75 - 0.5, 1.0) + 0.18 * f
         
         if symbol.name == "stage" {
             symbol.color.w = 1 * min(timeAlive * 0.75 - 0.5, 1.0)

@@ -7,8 +7,8 @@
 //
 
 private enum Constants {
-    static let baseBudget: Float = 8
-    static let baseStageDuration: TimeInterval = 30
+    static let baseBudget: Float = 10
+    static let baseStageDuration: TimeInterval = 60
 }
 
 protocol StageManagerDelegate {
@@ -18,7 +18,7 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
-    static let thresholdToBudgetGrowthMap = [0: 0, 1: 0.7].sorted(by: { $0.key > $1.key })
+    static let thresholdToBudgetGrowthMap = [0: 0, 1: 1, 8: 0.9].sorted(by: { $0.key > $1.key })
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?
@@ -83,6 +83,7 @@ class StageManager {
     }
     
     func reset() {
+        budget = Constants.baseBudget
         isActive = true
         stage = 0
         

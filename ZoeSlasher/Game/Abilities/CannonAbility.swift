@@ -24,7 +24,6 @@ class CannonAbility: Ability {
     
     override func trigger(for enemy: Enemy) {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
-        attack.speed = 8000
         attack.parent = scene.rootNode
         scene.attacks.insert(attack)
         
@@ -35,83 +34,33 @@ class CannonAbility: Ability {
 extension CannonAbility {
     
     static let configManager: AbilityConfigManager = {
-        let configManager = AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
-        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 3,
-                                                                   baseChance: 0.1,
+        var configs = [CannonAbilityConfig]()
+        for s in 1...6 {
+            configs.append(getConfig(forStage: s))
+        }
+        
+        configs.reverse()
+        
+        let configManager = AbilityConfigManager(withConfigs: configs)
+        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
+                                                                   baseChance: 0.05,
                                                                    chanceGrowth: 0.05,
-                                                                   max: 0.42)
+                                                                   max: 0.49)
         return configManager
     }()
     
-    static let stage1Config: CannonAbilityConfig = {
-        let config = getCoreConfig(stage: 1)
-        
-        config.interval = 12
-        config.healthModifier = 2.5
-        config.damage = 15
-        
-        config.calculateCost()
-        
-        return config
-    }()
-    
-    static let stage2Config: CannonAbilityConfig = {
-        let config = getCoreConfig(stage: 2)
-        
-        config.interval = 10
-        config.healthModifier = 3.2
-        config.damage = 20
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.05,
-                                                            max: 1)
-        
-        return config
-    }()
-    
-    static let stage3Config: CannonAbilityConfig = {
-        let config = getCoreConfig(stage: 3)
-        
-        config.interval = 10
-        config.healthModifier = 4
-        config.damage = 25
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.05,
-                                                            max: 0.9)
-        
-        return config
-    }()
-    
-    static let stage4Config: CannonAbilityConfig = {
-        let config = getCoreConfig(stage: 4)
-        
-        config.interval = 10
-        config.healthModifier = 4
-        config.damage = 25
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.05,
-                                                            max: 0.9)
-        
-        return config
-    }()
-    
-    private static func getCoreConfig(stage: Int) -> CannonAbilityConfig {
+    private static func getConfig(forStage stage: Int) -> CannonAbilityConfig {
         let config = CannonAbilityConfig()
+        
         config.symbol = "cannon"
         config.color = vector_float3(0.898, 0.016, 0.929)
         config.colorScale = 0.9
         config.stage = stage
+        
+        config.interval = 12
+        config.healthModifier = 5
+        config.damage = 10 + Float(stage - 1) * 5
+        
         return config
     }
 }

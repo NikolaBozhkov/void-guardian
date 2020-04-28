@@ -36,6 +36,7 @@ typedef struct
     float2 positionDelta;
     float3 baseColor;
     float timeAlive;
+    float maxHealthMod;
     float health;
     float lastHealth;
     float timeSinceHit;

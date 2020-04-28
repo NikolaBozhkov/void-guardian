@@ -431,6 +431,7 @@ extension MainRenderer: MTKViewDelegate {
                                       positionDelta: enemy.positionDelta,
                                       baseColor: enemy.ability.color,
                                       timeAlive: enemy.timeAlive,
+                                      maxHealthMod: enemy.maxHealth / 5,
                                       health: enemy.health / enemy.maxHealth,
                                       lastHealth: enemy.lastHealth / enemy.maxHealth,
                                       timeSinceHit: Float(enemy.timeSinceLastHit),

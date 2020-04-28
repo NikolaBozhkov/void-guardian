@@ -39,6 +39,9 @@ class EnemyAttack: Node {
         self.enemy = enemy
         self.corruption = corruption
         
+        speed = 1600 * pow(1.0218, corruption - 1)
+//        speed = 2000
+        
         delta = targetPosition - enemy.position
         direction = normalize(delta)
         

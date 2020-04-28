@@ -27,7 +27,6 @@ class BasicAttackAbility: Ability {
     
     override func trigger(for enemy: Enemy) {
         let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
-        attack.speed = 5500
         attack.parent = scene.rootNode
         scene.attacks.insert(attack)
         
@@ -38,61 +37,28 @@ class BasicAttackAbility: Ability {
 extension BasicAttackAbility {
     
     static let configManager: AbilityConfigManager = {
-        AbilityConfigManager(withConfigs: [stage3Config, stage2Config, stage1Config])
+        var configs = [BasicAttackAbilityConfig]()
+        for s in 1...6 {
+            configs.append(getConfig(forStage: s))
+        }
+        
+        configs.reverse()
+        
+        return AbilityConfigManager(withConfigs: configs)
     }()
     
-    static let stage1Config: BasicAttackAbilityConfig = {
-        let config = getCoreConfig(stage: 1)
-        
-        config.interval = 6
-        config.healthModifier = 1
-        config.damage = 6
-        
-        config.calculateCost()
-        
-        return config
-    }()
-    
-    static let stage2Config: BasicAttackAbilityConfig = {
-        let config = getCoreConfig(stage: 2)
-        
-        config.interval = 6
-        config.healthModifier = 1.7
-        config.damage = 9
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 13,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.08,
-                                                            max: 1)
-        
-        return config
-    }()
-    
-    static let stage3Config: BasicAttackAbilityConfig = {
-        let config = getCoreConfig(stage: 3)
-        
-        config.interval = 5
-        config.healthModifier = 2.5
-        config.damage = 9
-        
-        config.calculateCost()
-        
-        config.spawnChanceFunction = getSpawnChanceFunction(startStage: 25,
-                                                            baseChance: 0.2,
-                                                            chanceGrowth: 0.08,
-                                                            max: 1)
-        
-        return config
-    }()
-    
-    private static func getCoreConfig(stage: Int) -> BasicAttackAbilityConfig {
+    private static func getConfig(forStage stage: Int) -> BasicAttackAbilityConfig {
         let config = BasicAttackAbilityConfig()
+        
         config.symbol = "basic"
         config.color = vector_float3(1.0, 0.048, 0.061)
         config.colorScale = 0.9
         config.stage = stage
+        
+        config.interval = 7
+        config.healthModifier = 3
+        config.damage = 6 + Float(stage - 1) * 3.5
+        
         return config
     }
 }

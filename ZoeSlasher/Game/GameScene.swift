@@ -154,6 +154,11 @@ class GameScene: Scene {
             stageManager.clearStage()
         }
         
+//        if spawner.spawningEnded {
+//            enemies.forEach(removeEnemy(_:))
+//            stageManager.advanceStage()
+//        }
+        
         skGameScene.update()
         
         particles.forEach {
@@ -306,7 +311,7 @@ class GameScene: Scene {
         
         guard enemyHitsForMove >= 2 else { return }
         
-        let energy = (enemyHitsForMove - 1) * 5
+        let energy = (enemyHitsForMove - 1) * 6
         player.energy += Float(energy)
         
         let favor = pow(Float(enemyHitsForMove), 1.9)

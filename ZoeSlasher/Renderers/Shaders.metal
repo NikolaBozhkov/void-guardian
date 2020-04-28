@@ -105,6 +105,7 @@ vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(0)]],
     out.positionDelta = enemy.positionDelta;
     out.baseColor = enemy.baseColor;
     out.timeAlive = enemy.timeAlive;
+    out.maxHealthMod = enemy.maxHealthMod;
     out.health = enemy.health;
     out.lastHealth = enemy.lastHealth;
     out.timeSinceHit = enemy.timeSinceHit;
