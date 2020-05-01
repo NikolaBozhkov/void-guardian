@@ -37,7 +37,7 @@ extension MachineGunAbility {
     
     static let configManager: AbilityConfigManager = {
         var configs = [MachineGunAbilityConfig]()
-        for s in 1...6 {
+        for s in 1...11 {
             configs.append(getConfig(forStage: s))
         }
         
@@ -60,7 +60,7 @@ extension MachineGunAbility {
         config.stage = stage
         
         config.interval = 2
-        config.healthModifier = 1
+        config.healthModifier = 1.7
         config.damage = Float(stage) * 2
         
         return config

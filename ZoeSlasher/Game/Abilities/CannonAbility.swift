@@ -35,7 +35,7 @@ extension CannonAbility {
     
     static let configManager: AbilityConfigManager = {
         var configs = [CannonAbilityConfig]()
-        for s in 1...6 {
+        for s in 1...11 {
             configs.append(getConfig(forStage: s))
         }
         
@@ -58,8 +58,8 @@ extension CannonAbility {
         config.stage = stage
         
         config.interval = 12
-        config.healthModifier = 5
-        config.damage = 10 + Float(stage - 1) * 5
+        config.healthModifier = 5.75
+        config.damage = 10 + Float(stage - 1) * 3
         
         return config
     }

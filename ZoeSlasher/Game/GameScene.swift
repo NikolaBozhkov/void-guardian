@@ -155,7 +155,7 @@ class GameScene: Scene {
         }
         
 //        if spawner.spawningEnded {
-//            enemies.forEach(removeEnemy(_:))
+//            enemies.forEach(removeEnemy)
 //            stageManager.advanceStage()
 //        }
         

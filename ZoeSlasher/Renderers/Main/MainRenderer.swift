@@ -156,7 +156,7 @@ class MainRenderer: NSObject {
         energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
         
         var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon", "splitter", "balance"]
-        for i in 2...6 {
+        for i in 2...11 {
             textureNames.append("stage\(i)")
         }
         

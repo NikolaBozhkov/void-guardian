@@ -41,7 +41,11 @@ class Ability {
                     baseChance = 0.2 - Float(stage - 1) * 0.2
                 }
                 
-                let maxChance = 1.0 - Float(stage - 1) * 0.1
+                if stage == 11 {
+                    baseChance = 0
+                }
+                
+                let maxChance = 1.0 - Float(stage - 1) * 0.07
                 let chanceGrowth = (maxChance - baseChance) / 5
                 
                 spawnChanceFunction = Configuration.getSpawnChanceFunction(startStage: startStage,

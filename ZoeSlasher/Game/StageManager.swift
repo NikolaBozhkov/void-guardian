@@ -18,7 +18,7 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
-    static let thresholdToBudgetGrowthMap = [0: 0, 1: 1, 8: 0.9].sorted(by: { $0.key > $1.key })
+    static let thresholdToBudgetGrowthMap = [0: 0, 1: 0.9, 75: 0.2].sorted(by: { $0.key > $1.key })
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?
@@ -85,7 +85,7 @@ class StageManager {
     func reset() {
         budget = Constants.baseBudget
         isActive = true
-        stage = 0
+        stage = 50
         
         let toStage = stage
         stage = 0

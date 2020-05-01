@@ -38,7 +38,7 @@ extension BasicAttackAbility {
     
     static let configManager: AbilityConfigManager = {
         var configs = [BasicAttackAbilityConfig]()
-        for s in 1...6 {
+        for s in 1...11 {
             configs.append(getConfig(forStage: s))
         }
         
@@ -56,8 +56,8 @@ extension BasicAttackAbility {
         config.stage = stage
         
         config.interval = 7
-        config.healthModifier = 3
-        config.damage = 6 + Float(stage - 1) * 3.5
+        config.healthModifier = 3.75
+        config.damage = 6 + Float(stage - 1) * 3
         
         return config
     }
