@@ -194,7 +194,12 @@ class MainRenderer: NSObject {
         scene.update(deltaTime: deltaTime)
         
         uniforms[0].projectionMatrix = projectionMatrix
-        uniforms[0].time = Float(runningTime)
+        
+        if !scene.isPaused {
+            uniforms[0].time = Float(runningTime)
+        }
+        
+        uniforms[0].unpausableTime = Float(runningTime)
         uniforms[0].aspectRatio = scene.size.x / scene.size.y
         uniforms[0].playerSize = scene.player.physicsSize.x / scene.player.size.x
         uniforms[0].enemySize = 150.0 / 750.0

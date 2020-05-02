@@ -57,6 +57,8 @@
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
 		24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B5240588CF007A66D2 /* Ability.swift */; };
 		24E7D8B824066093007A66D2 /* StageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B724066093007A66D2 /* StageManager.swift */; };
+		24EBD46B245C725000410D1E /* PauseOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46A245C724F00410D1E /* PauseOverlay.swift */; };
+		24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +117,8 @@
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
 		24E7D8B5240588CF007A66D2 /* Ability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 		24E7D8B724066093007A66D2 /* StageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageManager.swift; sourceTree = "<group>"; };
+		24EBD46A245C724F00410D1E /* PauseOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseOverlay.swift; sourceTree = "<group>"; };
+		24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,7 @@
 				2498112724127D2C00900AE9 /* UIColor+Extensions.swift */,
 				24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */,
 				24D7FF67242B244A007743C6 /* SKAction+Extensions.swift */,
+				24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -150,6 +155,7 @@
 				24D7FF5A241BC2F7007743C6 /* GainLabel.swift */,
 				24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */,
 				24D7FF5E24225970007743C6 /* Colors.swift */,
+				24EBD46A245C724F00410D1E /* PauseOverlay.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -371,6 +377,7 @@
 				246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */,
 				24D7FF5D242150A9007743C6 /* HealthGainLabel.swift in Sources */,
 				24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */,
+				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
@@ -409,6 +416,7 @@
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
+				24EBD46B245C725000410D1E /* PauseOverlay.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
 			);

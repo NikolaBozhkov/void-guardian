@@ -39,6 +39,7 @@ struct Uniforms
 {
     matrix_float4x4 projectionMatrix;
     float time;
+    float unpausableTime;
     float aspectRatio;
     simd_float2 size;
     float playerSize;

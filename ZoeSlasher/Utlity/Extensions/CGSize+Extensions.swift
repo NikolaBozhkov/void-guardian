@@ -32,4 +32,8 @@ extension CGSize {
     init(repeating size: CGFloat) {
         self.init(width: size, height: size)
     }
+    
+    init(_ size: vector_float2) {
+        self.init(width: CGFloat(size.x), height: CGFloat(size.y))
+    }
 }

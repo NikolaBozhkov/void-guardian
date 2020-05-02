@@ -47,6 +47,10 @@ class GameViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
         mtkView.addGestureRecognizer(tapGestureRecognizer)
         
+        let twoFingerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTwoFingerTap))
+        twoFingerTapRecognizer.numberOfTouchesRequired = 2
+        mtkView.addGestureRecognizer(twoFingerTapRecognizer)
+        
         self.mtkView = mtkView
     }
     
@@ -64,5 +68,9 @@ class GameViewController: UIViewController {
         // Map [0;1] to [-.5;.5]
         normalizedLocation -= [0.5, 0.5]
         renderer.didTap(at: normalizedLocation)
+    }
+    
+    @objc func didTwoFingerTap(_ sender: UITapGestureRecognizer) {
+        renderer.scene.pause()
     }
 }

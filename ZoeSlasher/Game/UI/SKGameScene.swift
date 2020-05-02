@@ -51,6 +51,8 @@ class SKGameScene: SKScene {
         }
     }
     
+    private let pauseOverlay = PauseOverlay()
+    
     override func sceneDidLoad() {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
@@ -95,6 +97,8 @@ class SKGameScene: SKScene {
 //                print(font)
 //            }
 //        }
+        
+        pauseOverlay.delegate = self
     }
     
     func update() {
@@ -130,6 +134,11 @@ class SKGameScene: SKScene {
             childNode(withName: "gameOverLabel")?.removeFromParent()
             
             gameScene.reloadScene()
+            return true
+        }
+        
+        if gameScene.isPaused {
+            pauseOverlay.handleTap(at: location)
             return true
         }
         
@@ -372,6 +381,11 @@ class SKGameScene: SKScene {
         favorLabel.text = "\(Int(newValue))"
     }
     
+    func didPause() {
+        addChild(pauseOverlay)
+        isPaused = true
+    }
+    
     func shake(_ powerFactor: Float) {
         let f = 1 - powerFactor
         let powerFactor = 1 - f*f*f
@@ -470,5 +484,13 @@ extension SKGameScene: StageManagerDelegate {
         let y = size.height / 2 - UIConstants.announcementTopOffset
         label.position = CGPoint(x: 0, y: y)
         return label
+    }
+}
+
+extension SKGameScene: PauseOverlayDelegate {
+    func didUnpause() {
+        pauseOverlay.removeFromParent()
+        isPaused = false
+        gameScene.unpause()
     }
 }

@@ -46,13 +46,11 @@ class GameScene: Scene {
         }
     }
     
+    var isPaused = false
     var isGameOver = false
     var isStageCleared = false
     
     var prevPlayerPosition: vector_float2 = .zero
-    
-//    var nextParticleInterval = TimeInterval.random(in: 1...4)
-//    var timeSinceLastParticle: TimeInterval = 0
     
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
         
@@ -66,7 +64,7 @@ class GameScene: Scene {
         SceneConstants.size = size
         SceneConstants.safeAreaInsets = safeAreaInsets
         
-        skGameScene = SKGameScene(size: CGSize(width: CGFloat(size.x), height: CGFloat(size.y)))
+        skGameScene = SKGameScene(size: CGSize(size))
         
         spawner.scene = self
         stageManager.delegate = self
@@ -83,20 +81,15 @@ class GameScene: Scene {
         
         player.delegate = self
         
+        NotificationCenter.default.addObserver(self, selector: #selector(pause), name: .willResignActive, object: nil)
+        
         reloadScene()
     }
     
     func update(deltaTime: TimeInterval) {
-        rootNode.position = vector_float2(skGameScene.shakeNode.position)
+        guard !isPaused else { return }
         
-//        timeSinceLastParticle += deltaTime
-//        if timeSinceLastParticle >= nextParticleInterval {
-//            let particle = AmbientParticle()
-//            particle.position = randomPosition(padding: [500, 500])
-//            particle.parent = rootNode
-//            particles.insert(particle)
-//            timeSinceLastParticle = 0
-//        }
+        rootNode.position = vector_float2(skGameScene.shakeNode.position)
         
         if !stageManager.isStageCleared {
             favor -= Float(deltaTime) * (favor / 15)
@@ -170,11 +163,22 @@ class GameScene: Scene {
     }
     
     func didTap(at location: vector_float2) {
-        let consumed = skGameScene.didTap(at: CGPoint(x: CGFloat(location.x), y: CGFloat(location.y)))
+        let consumed = skGameScene.didTap(at: CGPoint(location))
         
         guard !isGameOver, !consumed else { return }
         
         player.move(to: location)
+    }
+    
+    @objc func pause() {
+        guard !isPaused else { return }
+        
+        isPaused = true
+        skGameScene.didPause()
+    }
+    
+    func unpause() {
+        isPaused = false
     }
     
     func reloadScene() {
@@ -187,10 +191,6 @@ class GameScene: Scene {
         isGameOver = false
         
         stageManager.reset()
-        
-//        spawner.spawnEnemy(for: BasicAttackAbility.stage1Config)
-//        spawner.spawnEnemy(for: MachineGunAbility.stage1Config)
-//        spawner.spawnEnemy(for: CannonAbility.stage1Config)
     }
     
     private func testPlayerEnemyCollision() {
@@ -281,15 +281,6 @@ class GameScene: Scene {
             particle.parent = rootNode
             particles.insert(particle)
         }
-        
-//        for _ in 0..<Int.random(in: 2...3) {
-//            let particle = Particle()
-//            particle.scale = 0.7
-//            particle.lifetime -= 0.5
-//            particle.position = enemy.positionBeforeImpact
-//            particle.color.xyz = enemy.ability.color
-//            particles.insert(particle)
-//        }
     }
     
     private func removeEnemyAttack(_ attack: EnemyAttack) {
