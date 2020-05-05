@@ -10,6 +10,7 @@ import SpriteKit
 
 protocol PauseScreenDelegate: class {
     func didUnpause()
+    func didTapReturnHome()
 }
 
 class PauseScreen: SKNode, Screen {
@@ -21,9 +22,9 @@ class PauseScreen: SKNode, Screen {
     
     override init() {
         
-        unpauseButton = Button(text: "resume", fontSize: 200, color: UIColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 1.0))
+        unpauseButton = Button(text: "resume", fontSize: 200, color: Button.yesColor)
         
-        returnHomeButton = Button(text: "return home", fontSize: 160, color: UIColor(red: 1.0, green: 0.2, blue: 0.05, alpha: 1.0))
+        returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
         returnHomeButton.position = CGPoint(x: 0, y: -unpauseButton.size.height / 2 - 175)
         
         super.init()
@@ -53,6 +54,8 @@ class PauseScreen: SKNode, Screen {
     func handleTap(at location: CGPoint) {
         if unpauseButton.contains(location) {
             delegate?.didUnpause()
+        } else if returnHomeButton.contains(location) {
+            delegate?.didTapReturnHome()
         }
     }
 }

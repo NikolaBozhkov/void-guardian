@@ -17,6 +17,7 @@ class Coordinator {
     
     private let overlayBackground: SKSpriteNode
     private let pauseScreen = PauseScreen()
+    private let returnHomeConfirmScreen = ReturnHomeConfirmScreen()
     
     init(gameScene: GameScene, overlayScene: OverlayScene) {
         self.gameScene = gameScene
@@ -29,6 +30,7 @@ class Coordinator {
     
     func configure() {
         pauseScreen.delegate = self
+        returnHomeConfirmScreen.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: .willResignActive, object: nil)
     }
     
@@ -77,5 +79,26 @@ extension Coordinator: PauseScreenDelegate {
         activeScreen = nil
         
         gameScene.unpause()
+    }
+    
+    func didTapReturnHome() {
+        pauseScreen.removeFromParent()
+        
+        activeScreen = returnHomeConfirmScreen
+        overlayBackground.addChild(returnHomeConfirmScreen)
+    }
+}
+
+// MARK: - ReturnHomeConfirmScreenDelegate
+
+extension Coordinator: ReturnHomeConfirmScreenDelegate {
+    func didTapYes() {
+        
+    }
+    
+    func didTapNo() {
+        returnHomeConfirmScreen.removeFromParent()
+        activeScreen = pauseScreen
+        overlayBackground.addChild(pauseScreen)
     }
 }

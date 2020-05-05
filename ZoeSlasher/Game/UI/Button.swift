@@ -23,6 +23,9 @@ class Button: SKNode {
         return shader
     }()
     
+    static let yesColor = UIColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 1.0)
+    static let noColor = UIColor(red: 1.0, green: 0.2, blue: 0.05, alpha: 1.0)
+    
     private let label = SKLabelNode(fontNamed: UIConstants.fontName)
     private let border = SKSpriteNode()
     

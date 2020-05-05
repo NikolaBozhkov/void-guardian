@@ -45,7 +45,7 @@ void main() {
     float d = sdRoundBox(st, vec2(a_aspectRatio, 1.0), 1.0);
     float inner = 1.0 - smoothstep(-0.1, 0.0, d);
     
-    vec3 color = vec3(1.0) * inner;
+    vec3 color = v_color_mix * inner;
     
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color, 0.0);
 }

@@ -54,6 +54,7 @@ class Title: SKNode {
     
     private func createLine(forLabel label: SKLabelNode, position: LinePosition) {
         let line = SKSpriteNode()
+        line.color = label.fontColor!
         line.shader = Title.lineShader
         
         let lineMargin = label.fontSize * 0.2
