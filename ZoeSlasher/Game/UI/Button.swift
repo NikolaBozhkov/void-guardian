@@ -26,6 +26,10 @@ class Button: SKNode {
     private let label = SKLabelNode(fontNamed: UIConstants.fontName)
     private let border = SKSpriteNode()
     
+    var size: CGSize {
+        border.size
+    }
+    
     init(text: String, fontSize: CGFloat, color: UIColor) {
         super.init()
         
@@ -39,7 +43,7 @@ class Button: SKNode {
         
         border.shader = Button.borderShader
         border.color = color
-        border.size = label.frame.size * CGSize(width: 1.75, height: 3)
+        border.size = label.frame.size + CGSize(width: 2, height: 1.5) * fontSize
         border.setValue(SKAttributeValue(float: Float(border.size.width / border.size.height)),
                         forAttribute: "a_aspectRatio")
         addChild(border)

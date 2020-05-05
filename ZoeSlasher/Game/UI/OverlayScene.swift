@@ -17,5 +17,6 @@ class OverlayScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         Button.borderShader.uniforms[0].floatValue = Float(currentTime)
+        Title.lineShader.uniforms[0].floatValue = Float(currentTime)
     }
 }
