@@ -20,6 +20,7 @@ class GameScene: Scene {
 
     var skGameScene: SKGameScene!
     let background = Node()
+    let overlay = Node()
     
     let stageManager: StageManager
     let spawner = Spawner()
@@ -31,6 +32,8 @@ class GameScene: Scene {
     var potions = Set<Potion>()
     
     var particles = Set<Particle>()
+    
+    var buttonBorders = Set<Node>()
     
     var hitEnemies = Set<Enemy>()
     var enemyHitsForMove = 0
@@ -66,9 +69,9 @@ class GameScene: Scene {
         
         skGameScene = SKGameScene(size: CGSize(size))
         
-        spawner.scene = self
-        stageManager.delegate = self
+        stageManager.delegate = skGameScene
         
+        spawner.scene = self
         skGameScene.gameScene = self
         
         background.size = size
@@ -77,11 +80,14 @@ class GameScene: Scene {
             $0.renderBackground(self.background, timeSinceStageCleared: self.stageManager.timeSinceStageCleared)
         }
         
+        overlay.size = size
+        overlay.zPosition = -99
+        overlay.color = vector_float4(-10, -10, -10, 0.8)
+        overlay.isHidden = true
+        
         rootNode.add(childNode: background)
         
         player.delegate = self
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(pause), name: .willResignActive, object: nil)
         
         reloadScene()
     }
@@ -163,22 +169,19 @@ class GameScene: Scene {
     }
     
     func didTap(at location: vector_float2) {
-        let consumed = skGameScene.didTap(at: CGPoint(location))
-        
-        guard !isGameOver, !consumed else { return }
+        guard !isGameOver else { return }
         
         player.move(to: location)
     }
     
-    @objc func pause() {
-        guard !isPaused else { return }
-        
+    func pause() {
         isPaused = true
-        skGameScene.didPause()
+        skGameScene.isPaused = true
     }
     
     func unpause() {
         isPaused = false
+        skGameScene.isPaused = false
     }
     
     func reloadScene() {
@@ -370,16 +373,6 @@ extension GameScene: EnemyDelegate {
             particle.parent = rootNode
             particles.insert(particle)
         }
-    }
-}
-
-extension GameScene: StageManagerDelegate {
-    func didAdvanceStage(to stage: Int) {
-        skGameScene.didAdvanceStage(to: stage)
-    }
-    
-    func didClearStage() {
-        skGameScene.didClearStage()
     }
 }
 

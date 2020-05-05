@@ -13,6 +13,7 @@ import MetalKit
 class GameViewController: UIViewController {
 
     var renderer: MainRenderer!
+    var coordinator: Coordinator!
     var mtkView: MTKView!
 
     override func viewDidLoad() {
@@ -67,10 +68,10 @@ class GameViewController: UIViewController {
         
         // Map [0;1] to [-.5;.5]
         normalizedLocation -= [0.5, 0.5]
-        renderer.didTap(at: normalizedLocation)
+        renderer.coordinator.propagateTap(at: normalizedLocation)
     }
     
     @objc func didTwoFingerTap(_ sender: UITapGestureRecognizer) {
-        renderer.scene.pause()
+        renderer.coordinator.didPause()
     }
 }

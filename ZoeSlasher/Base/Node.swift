@@ -32,6 +32,8 @@ class Node: Renderable, Hashable {
     
     var color = vector_float4.one
     
+    var isHidden = false
+    
     unowned var parent: Node?
     var children = Set<Node>()
     

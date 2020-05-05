@@ -251,6 +251,41 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     return float4(in.color.xyz, f);
 }
 
+vertex ButtonBorderOut vertexButtonBorder(constant float4 *vertices [[buffer(0)]],
+                                          constant SpriteData *buttonBorders [[buffer(1)]],
+                                          constant Uniforms &uniforms [[buffer(2)]],
+                                          uint vid [[vertex_id]],
+                                          uint iid [[instance_id]])
+{
+    ButtonBorderOut out;
+    
+    SpriteData buttonBorder = buttonBorders[iid];
+    out.position = uniforms.projectionMatrix * buttonBorder.worldTransform * float4(vertices[vid].xy * buttonBorder.size, 0.0, 1.0);
+    out.color = buttonBorder.color;
+    out.uv = vertices[vid].zw;
+    out.aspectRatio = buttonBorder.size.x / buttonBorder.size.y;
+    
+    return out;
+}
+
+float sdRoundBox(float2 p, float2 b, float r)
+{
+    float2 q = abs(p)-b+r;
+    return min(max(q.x,q.y),0.0) + length(max(q,0.0)) - r;
+}
+
+fragment float4 fragmentButtonBorder(ButtonBorderOut in [[stage_in]])
+{
+    float2 st = in.uv * 2. - 1.;
+//    st.x *= in.aspectRatio;
+    
+    float d = sdRoundBox(st, float2(0.9, 0.9), 0.03);
+    float f = 1.0 - smoothstep(0.0, 0.03, abs(d));
+    
+    return float4(1.0);
+    return float4(in.color.xyz, f);
+}
+
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],

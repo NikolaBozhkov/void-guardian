@@ -28,6 +28,7 @@ class MainRenderer: NSObject {
     var renderEncoder: MTLRenderCommandEncoder!
     var dynamicUniformBuffer: MTLBuffer
     var depthState: MTLDepthStencilState
+    var writingDepthState: MTLDepthStencilState
     
     let semaphore = DispatchSemaphore(value: maxBuffersInFlight)
     
@@ -39,12 +40,15 @@ class MainRenderer: NSObject {
     
     var safeAreaInsets = UIEdgeInsets.zero
     
-    var runningTime: TimeInterval = 0
+    var pausableTime: TimeInterval = CACurrentMediaTime()
+    var pausableTimeMetal: TimeInterval = 0
+    var runningTime: CFTimeInterval = 0
     var prevTime: TimeInterval = 0
     
     let particleRenderer: Renderer<ParticleData>
     let enemyRenderer: Renderer<EnemyData>
     let enemyAttackRenderer: Renderer<AttackData>
+    let buttonBorderRenderer: Renderer<SpriteData>
     
     var potionTypeToRendererMap: [PotionType: PotionRenderer] = [:]
     var textureToRendererMap: [String: TextureRenderer] = [:]
@@ -57,6 +61,7 @@ class MainRenderer: NSObject {
     let energySymbolRenderer: SpriteRenderer
     
     let skRenderer: SKRenderer
+    let overlaySkRenderer: SKRenderer
     
     var backgroundFbmPipelineState: MTLComputePipelineState!
     var backgroundFbmThreadsPerGroup: MTLSize!
@@ -80,6 +85,7 @@ class MainRenderer: NSObject {
     let balanceSymbolTexture: MTLTexture
     
     var scene: GameScene!
+    var coordinator: Coordinator!
     
     init?(metalKitView: MTKView) {
         guard
@@ -108,12 +114,20 @@ class MainRenderer: NSObject {
         uniforms = dynamicUniformBuffer.contents().bindMemory(to: Uniforms.self, capacity: 1)
         
         let depthStateDesciptor = MTLDepthStencilDescriptor()
-        depthStateDesciptor.depthCompareFunction = .less
+        depthStateDesciptor.depthCompareFunction = .always
         depthStateDesciptor.isDepthWriteEnabled = false
-        guard let depthState = device.makeDepthStencilState(descriptor:depthStateDesciptor) else {
+        
+        guard let depthState = device.makeDepthStencilState(descriptor: depthStateDesciptor) else {
             return nil
         }
+        
+        depthStateDesciptor.isDepthWriteEnabled = true
+        guard let writingDepthState = device.makeDepthStencilState(descriptor: depthStateDesciptor) else {
+            return nil
+        }
+        
         self.depthState = depthState
+        self.writingDepthState = writingDepthState
         
         guard let backgroundFbmFunction = library.makeFunction(name: "backgroundFbmKernel"),
             let backgroundFbmPipelineState = try? device.makeComputePipelineState(function: backgroundFbmFunction),
@@ -129,6 +143,7 @@ class MainRenderer: NSObject {
         self.simplexPipelineState = simplexPipelineState
         
         skRenderer = SKRenderer(device: device)
+        overlaySkRenderer = SKRenderer(device: device)
         
         particleRenderer = Renderer(device: device,
                                     library: library,
@@ -148,11 +163,20 @@ class MainRenderer: NSObject {
                                        fragmentFunction: "fragmentAttack",
                                        maxInstances: 64)
         
+        buttonBorderRenderer = Renderer(device: device,
+                                        library: library,
+                                        vertexFunction: "vertexButtonBorder",
+                                        fragmentFunction: "fragmentButtonBorder",
+                                        maxInstances: 8)
+        
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
         energyBarRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energyBarShader")
         anchorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "anchorShader")
+        
         clearColorRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "clearColorShader")
+        clearColorRenderer.currentPipelineState = clearColorRenderer.overlayPipelineState
+        
         energySymbolRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "energySymbolShader")
         
         var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon", "splitter", "balance"]
@@ -176,10 +200,6 @@ class MainRenderer: NSObject {
         super.init()
     }
     
-    func didTap(at normalizedPoint: vector_float2) {
-        scene.didTap(at: scene.size * normalizedPoint)
-    }
-    
     private func updateDynamicBufferState() {
         uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
         uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
@@ -196,9 +216,14 @@ class MainRenderer: NSObject {
         uniforms[0].projectionMatrix = projectionMatrix
         
         if !scene.isPaused {
-            uniforms[0].time = Float(runningTime)
+            pausableTime += deltaTime
+            pausableTimeMetal += deltaTime
         }
         
+        skRenderer.update(atTime: pausableTime)
+        overlaySkRenderer.update(atTime: CACurrentMediaTime())
+        
+        uniforms[0].time = Float(pausableTimeMetal)
         uniforms[0].unpausableTime = Float(runningTime)
         uniforms[0].aspectRatio = scene.size.x / scene.size.y
         uniforms[0].playerSize = scene.player.physicsSize.x / scene.player.size.x
@@ -325,7 +350,13 @@ extension MainRenderer: MTKViewDelegate {
                                           bottom: (safeAreaInsets.bottom / view.frame.size.height) * CGFloat(sceneSize.y),
                                           right: (safeAreaInsets.right / view.frame.size.width) * CGFloat(sceneSize.x))
         scene = GameScene(size: sceneSize, safeAreaInsets: adjustedInsets)
+        
+        let overlayScene = OverlayScene(size: CGSize(sceneSize))
+        coordinator = Coordinator(gameScene: scene, overlayScene: overlayScene)
+        coordinator.configure()
+        
         skRenderer.scene = scene.skGameScene
+        overlaySkRenderer.scene = overlayScene
         
         projectionMatrix = float4x4.makeOrtho(left: -scene.size.x / 2, right:   scene.size.x / 2,
                                               top:   scene.size.y / 2, bottom: -scene.size.y / 2,
@@ -393,8 +424,6 @@ extension MainRenderer: MTKViewDelegate {
         
         updateDynamicBufferState()
         updateGameState()
-        
-        skRenderer.update(atTime: CACurrentMediaTime())
         
         guard
             let renderPassDescriptor = view.currentRenderPassDescriptor,
@@ -498,6 +527,9 @@ extension MainRenderer: MTKViewDelegate {
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
         skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,
                           renderPassDescriptor: renderPassDescriptor, commandQueue: commandQueue)
+        
+        overlaySkRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,
+                                 renderPassDescriptor: renderPassDescriptor, commandQueue: commandQueue)
         
         renderEncoder.endEncoding()
         

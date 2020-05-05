@@ -14,6 +14,12 @@
 		2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E7782435F20D0019CE02 /* TextureRenderer.swift */; };
 		2465E77B24360EF10019CE02 /* PotionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E77A24360EF10019CE02 /* PotionRenderer.swift */; };
 		2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2465E77C2437458E0019CE02 /* GlobalHelpers.swift */; };
+		2468E3A5245E99F2004042AD /* OverlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2468E3A4245E99F2004042AD /* OverlayScene.swift */; };
+		2468E3A7245EDA58004042AD /* ButtonBorderShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */; };
+		2468E3A9245FD85F004042AD /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2468E3A8245FD85F004042AD /* Button.swift */; };
+		2468E3AB245FDC02004042AD /* Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2468E3AA245FDC01004042AD /* Title.swift */; };
+		2468E3AD24612EF1004042AD /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2468E3AC24612EF1004042AD /* Coordinator.swift */; };
+		2468E3B124613D63004042AD /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2468E3B024613D63004042AD /* Screen.swift */; };
 		2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393023C32C41001A6CAE /* MathLibrary.swift */; };
 		2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393423C465B0001A6CAE /* SpriteRenderer.swift */; };
 		2469393723C4A544001A6CAE /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2469393623C4A544001A6CAE /* Node.swift */; };
@@ -57,7 +63,7 @@
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
 		24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B5240588CF007A66D2 /* Ability.swift */; };
 		24E7D8B824066093007A66D2 /* StageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B724066093007A66D2 /* StageManager.swift */; };
-		24EBD46B245C725000410D1E /* PauseOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46A245C724F00410D1E /* PauseOverlay.swift */; };
+		24EBD46B245C725000410D1E /* PauseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46A245C724F00410D1E /* PauseScreen.swift */; };
 		24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +75,12 @@
 		2465E7782435F20D0019CE02 /* TextureRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureRenderer.swift; sourceTree = "<group>"; };
 		2465E77A24360EF10019CE02 /* PotionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionRenderer.swift; sourceTree = "<group>"; };
 		2465E77C2437458E0019CE02 /* GlobalHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHelpers.swift; sourceTree = "<group>"; };
+		2468E3A4245E99F2004042AD /* OverlayScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayScene.swift; sourceTree = "<group>"; };
+		2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = ButtonBorderShader.fsh; sourceTree = "<group>"; };
+		2468E3A8245FD85F004042AD /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		2468E3AA245FDC01004042AD /* Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Title.swift; sourceTree = "<group>"; };
+		2468E3AC24612EF1004042AD /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		2468E3B024613D63004042AD /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		2469393023C32C41001A6CAE /* MathLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathLibrary.swift; sourceTree = "<group>"; };
 		2469393423C465B0001A6CAE /* SpriteRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRenderer.swift; sourceTree = "<group>"; };
 		2469393623C4A544001A6CAE /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
@@ -117,7 +129,7 @@
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
 		24E7D8B5240588CF007A66D2 /* Ability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ability.swift; sourceTree = "<group>"; };
 		24E7D8B724066093007A66D2 /* StageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageManager.swift; sourceTree = "<group>"; };
-		24EBD46A245C724F00410D1E /* PauseOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseOverlay.swift; sourceTree = "<group>"; };
+		24EBD46A245C724F00410D1E /* PauseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseScreen.swift; sourceTree = "<group>"; };
 		24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,13 +161,19 @@
 			isa = PBXGroup;
 			children = (
 				247D705923F009DD00480199 /* SKGameScene.swift */,
+				2468E3A4245E99F2004042AD /* OverlayScene.swift */,
 				2464427B24127BFB004CF697 /* ComboLabel.swift */,
 				24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */,
 				24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */,
 				24D7FF5A241BC2F7007743C6 /* GainLabel.swift */,
 				24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */,
 				24D7FF5E24225970007743C6 /* Colors.swift */,
-				24EBD46A245C724F00410D1E /* PauseOverlay.swift */,
+				24EBD46A245C724F00410D1E /* PauseScreen.swift */,
+				2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */,
+				2468E3A8245FD85F004042AD /* Button.swift */,
+				2468E3AA245FDC01004042AD /* Title.swift */,
+				2468E3AC24612EF1004042AD /* Coordinator.swift */,
+				2468E3B024613D63004042AD /* Screen.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -363,6 +381,7 @@
 				24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */,
 				247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,
+				2468E3A7245EDA58004042AD /* ButtonBorderShader.fsh in Resources */,
 				24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,6 +408,7 @@
 				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				2465E77B24360EF10019CE02 /* PotionRenderer.swift in Sources */,
+				2468E3A9245FD85F004042AD /* Button.swift in Sources */,
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				2465E7772435E2490019CE02 /* Renderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
@@ -407,16 +427,20 @@
 				249811352418271F00900AE9 /* Potion.metal in Sources */,
 				2464427C24127BFB004CF697 /* ComboLabel.swift in Sources */,
 				247D704823E6B20B00480199 /* GameScene.swift in Sources */,
+				2468E3AD24612EF1004042AD /* Coordinator.swift in Sources */,
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
 				24D7FF5F24225970007743C6 /* Colors.swift in Sources */,
+				2468E3A5245E99F2004042AD /* OverlayScene.swift in Sources */,
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
+				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
+				2468E3B124613D63004042AD /* Screen.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
-				24EBD46B245C725000410D1E /* PauseOverlay.swift in Sources */,
+				24EBD46B245C725000410D1E /* PauseScreen.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
 			);

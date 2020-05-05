@@ -72,5 +72,12 @@ typedef struct {
     float speed;
 } AttackOut;
 
+typedef struct {
+    float4 position [[position]];
+    float2 uv;
+    float4 color;
+    float aspectRatio;
+} ButtonBorderOut;
+
 
 #endif /* SpriteRendererShared_h */

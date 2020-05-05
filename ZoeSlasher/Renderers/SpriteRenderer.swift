@@ -12,7 +12,7 @@ class SpriteRenderer {
     
     var currentPipelineState: MTLRenderPipelineState
     let pipelineState: MTLRenderPipelineState
-    let symbolPipelineState: MTLRenderPipelineState
+    let overlayPipelineState: MTLRenderPipelineState
     private let vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
@@ -57,10 +57,10 @@ class SpriteRenderer {
             fatalError(error.localizedDescription)
         }
         
-        descriptor.colorAttachments[0].destinationRGBBlendFactor = .one
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
         
         do {
-            symbolPipelineState = try device.makeRenderPipelineState(descriptor: descriptor)
+            overlayPipelineState = try device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
             fatalError(error.localizedDescription)
         }

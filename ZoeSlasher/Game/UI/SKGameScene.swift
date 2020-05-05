@@ -35,23 +35,21 @@ class SKGameScene: SKScene {
     
     static private(set) var clearStageLabelDuration: TimeInterval = 1.5
     
-    unowned var gameScene: GameScene!
-    
     let shakeNode = SKNode()
     let followPlayerNode = SKNode()
     
     var indicatorToEnemyMap: [SKSpriteNode: Node] = [:]
     
-    private var favorLabel: SKLabelNode!
+    unowned var gameScene: GameScene!
     
+    private var favorLabel: SKLabelNode!
     private var scoreLabel: SKLabelNode!
+    
     private var score = 0 {
         didSet {
             scoreLabel.text = "\(score)"
         }
     }
-    
-    private let pauseOverlay = PauseOverlay()
     
     override func sceneDidLoad() {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -97,8 +95,6 @@ class SKGameScene: SKScene {
 //                print(font)
 //            }
 //        }
-        
-        pauseOverlay.delegate = self
     }
     
     func update() {
@@ -113,36 +109,27 @@ class SKGameScene: SKScene {
     }
     
     func didGameOver() {
-        let gameOverLabel = makeLabel(text: "game over", fontSize: 400)
-        gameOverLabel.name = "gameOverLabel"
-        gameOverLabel.fontColor = .red
-        gameOverLabel.position = CGPoint(x: 0, y: gameOverLabel.frame.height / 2 + 70)
-        addChild(gameOverLabel)
-        
-        let replayLabel = makeLabel(text: "play again", fontSize: 300)
-        replayLabel.name = "replayLabel"
-        replayLabel.position = CGPoint(x: 0, y: -replayLabel.frame.height / 2 - 70)
-        addChild(replayLabel)
+//        let gameOverLabel = makeLabel(text: "game over", fontSize: 400)
+//        gameOverLabel.name = "gameOverLabel"
+//        gameOverLabel.fontColor = .red
+//        gameOverLabel.position = CGPoint(x: 0, y: gameOverLabel.frame.height / 2 + 70)
+//        addChild(gameOverLabel)
+//
+//        let replayLabel = makeLabel(text: "play again", fontSize: 300)
+//        replayLabel.name = "replayLabel"
+//        replayLabel.position = CGPoint(x: 0, y: -replayLabel.frame.height / 2 - 70)
+//        addChild(replayLabel)
     }
     
-    func didTap(at location: CGPoint) -> Bool {
-        if let replayLabel = childNode(withName: "replayLabel"),
-            replayLabel.contains(location) {
-            
-            score = 0
-            replayLabel.removeFromParent()
-            childNode(withName: "gameOverLabel")?.removeFromParent()
-            
-            gameScene.reloadScene()
-            return true
-        }
+    func update(playerPosition: vector_float2) {
+        followPlayerNode.position = CGPoint(playerPosition)
         
-        if gameScene.isPaused {
-            pauseOverlay.handleTap(at: location)
-            return true
+        for indicator in indicatorToEnemyMap.keys {
+            if let enemy = indicatorToEnemyMap[indicator] {
+                let delta = enemy.position - playerPosition
+                indicator.zRotation = CGFloat(atan2(delta.y, delta.x)) - .pi / 2
+            }
         }
-        
-        return false
     }
     
     func didCombo(multiplier: Int, energy: Int, favor: Int) {
@@ -240,39 +227,6 @@ class SKGameScene: SKScene {
             
             addChild(favorLabel)
         }
-    }
-    
-    private func configureRegenLabel(_ label: SKNode) {
-        label.setScale(0.7)
-        
-        let randomX = CGFloat.random(in: -20...20)
-        let randomY = CGFloat.random(in: -20...20)
-        
-        label.position.offset(dx: randomX, dy: randomY)
-        
-        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
-        fadeOut.timingMode = .easeIn
-        
-        let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
-        scaleUp.timingMode = .easeOut
-        
-        let scaleDown = SKAction.scale(to: 0.85, duration: 1.1)
-        
-        let moveBy = SKAction.moveBy(x: 0, y: 30, duration: 1.25)
-        moveBy.timingMode = .easeOut
-        
-        label.run(SKAction.sequence([
-            scaleUp,
-            scaleDown
-        ]))
-        
-        label.run(moveBy)
-        
-        label.run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.85),
-            fadeOut,
-            SKAction.removeFromParent()
-        ]))
     }
     
     func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
@@ -381,11 +335,6 @@ class SKGameScene: SKScene {
         favorLabel.text = "\(Int(newValue))"
     }
     
-    func didPause() {
-        addChild(pauseOverlay)
-        isPaused = true
-    }
-    
     func shake(_ powerFactor: Float) {
         let f = 1 - powerFactor
         let powerFactor = 1 - f*f*f
@@ -411,10 +360,7 @@ class SKGameScene: SKScene {
         shakeNode.run(SKAction.sequence(actions))
     }
     
-    private func expImpulse(_ x: Float, _ k: Float) -> Float {
-        let h = k * x;
-        return h * exp(1.0 - h);
-    }
+    
     
     private func makeLabel(text: String, fontSize: CGFloat, fontName: String = UIConstants.fontName) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: fontName)
@@ -423,6 +369,39 @@ class SKGameScene: SKScene {
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
         return label
+    }
+    
+    private func configureRegenLabel(_ label: SKNode) {
+        label.setScale(0.7)
+        
+        let randomX = CGFloat.random(in: -20...20)
+        let randomY = CGFloat.random(in: -20...20)
+        
+        label.position.offset(dx: randomX, dy: randomY)
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 0.8)
+        fadeOut.timingMode = .easeIn
+        
+        let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
+        scaleUp.timingMode = .easeOut
+        
+        let scaleDown = SKAction.scale(to: 0.85, duration: 1.1)
+        
+        let moveBy = SKAction.moveBy(x: 0, y: 30, duration: 1.25)
+        moveBy.timingMode = .easeOut
+        
+        label.run(SKAction.sequence([
+            scaleUp,
+            scaleDown
+        ]))
+        
+        label.run(moveBy)
+        
+        label.run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.85),
+            fadeOut,
+            SKAction.removeFromParent()
+        ]))
     }
     
     private func addGlow(to label: SKLabelNode, color: SKColor) {
@@ -435,6 +414,8 @@ class SKGameScene: SKScene {
         label.addChild(glow)
     }
 }
+
+// MARK: - StageManagerDelegate
 
 extension SKGameScene: StageManagerDelegate {
     func didAdvanceStage(to stage: Int) {
@@ -484,13 +465,5 @@ extension SKGameScene: StageManagerDelegate {
         let y = size.height / 2 - UIConstants.announcementTopOffset
         label.position = CGPoint(x: 0, y: y)
         return label
-    }
-}
-
-extension SKGameScene: PauseOverlayDelegate {
-    func didUnpause() {
-        pauseOverlay.removeFromParent()
-        isPaused = false
-        gameScene.unpause()
     }
 }
