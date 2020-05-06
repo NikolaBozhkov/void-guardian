@@ -55,7 +55,7 @@ extension BasicAttackAbility {
         config.colorScale = 0.9
         config.stage = stage
         
-        config.interval = 7
+        config.interval = 6
         config.healthModifier = 3.75
         config.damage = 6 + Float(stage - 1) * 3
         

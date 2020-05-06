@@ -31,6 +31,7 @@ class Coordinator {
     func configure() {
         pauseScreen.delegate = self
         returnHomeConfirmScreen.delegate = self
+        gameScene.skGameScene.sceneDelegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: .willResignActive, object: nil)
     }
     
@@ -100,5 +101,32 @@ extension Coordinator: ReturnHomeConfirmScreenDelegate {
         returnHomeConfirmScreen.removeFromParent()
         activeScreen = pauseScreen
         overlayBackground.addChild(pauseScreen)
+    }
+}
+
+// MARK: - SKGameSceneDelegate
+
+extension Coordinator: SKGameSceneDelegate {
+    func didGameOver(stageReached: Int) {
+        let gameOverScreen = GameOverScreen(stageReached: stageReached)
+        gameOverScreen.delegate = self
+        
+        overlayScene.addChild(gameOverScreen)
+        activeScreen = gameOverScreen
+    }
+}
+
+// MARK: - GameOverScreenDelegate
+
+extension Coordinator: GameOverScreenDelegate {
+    func didTapTryAgain() {
+        gameScene.reloadScene()
+        
+        activeScreen?.removeFromParent()
+        activeScreen = nil
+    }
+    
+    func didTapReturnHomeFromGameOver() {
+        
     }
 }

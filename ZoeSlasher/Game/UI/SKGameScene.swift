@@ -21,6 +21,10 @@ protocol UIDelegate {
     func didFinishClearStageImpactAnimation()
 }
 
+protocol SKGameSceneDelegate: class {
+    func didGameOver(stageReached: Int)
+}
+
 class SKGameScene: SKScene {
     
     static let energySymbolTexture = SKTexture(imageNamed: "energy-image")
@@ -41,8 +45,10 @@ class SKGameScene: SKScene {
     var indicatorToEnemyMap: [SKSpriteNode: Node] = [:]
     
     unowned var gameScene: GameScene!
+    weak var sceneDelegate: SKGameSceneDelegate?
     
     private var favorLabel: SKLabelNode!
+    private var favorSymbol: SKSpriteNode!
     private var scoreLabel: SKLabelNode!
     
     private var score = 0 {
@@ -68,6 +74,7 @@ class SKGameScene: SKScene {
         favorSymbol.size = .one * favorLabel.fontSize * 1.2
         favorSymbol.color = favorLabel.fontColor!
         favorSymbol.colorBlendFactor = 1
+        self.favorSymbol = favorSymbol
         
         let favorSymbolGlow = SKSpriteNode(texture: SKGameScene.voidFavorGlowTexture)
         favorSymbolGlow.size = favorSymbol.size
@@ -83,12 +90,8 @@ class SKGameScene: SKScene {
         
         favorLabel.position = favorSymbol.position.offsetted(dx: favorSymbol.size.width * 0.92, dy: 0)
         
-        addChild(favorLabel)
-        addChild(favorSymbol)
-        
         scoreLabel = makeLabel(text: "1", fontSize: 200)
         scoreLabel.position = CGPoint(x: 0, y: size.height / 2 - scoreLabel.frame.height - 20)
-        addChild(scoreLabel)
         
 //        for family in UIFont.familyNames {
 //            for font in UIFont.fontNames(forFamilyName: family) {
@@ -109,6 +112,16 @@ class SKGameScene: SKScene {
     }
     
     func didGameOver() {
+        indicatorToEnemyMap.keys.forEach {
+            $0.removeFromParent()
+            indicatorToEnemyMap.removeValue(forKey: $0)
+        }
+        
+        scoreLabel.removeFromParent()
+        favorLabel.removeFromParent()
+        favorSymbol.removeFromParent()
+        
+        sceneDelegate?.didGameOver(stageReached: score)
 //        let gameOverLabel = makeLabel(text: "game over", fontSize: 400)
 //        gameOverLabel.name = "gameOverLabel"
 //        gameOverLabel.fontColor = .red
@@ -119,6 +132,12 @@ class SKGameScene: SKScene {
 //        replayLabel.name = "replayLabel"
 //        replayLabel.position = CGPoint(x: 0, y: -replayLabel.frame.height / 2 - 70)
 //        addChild(replayLabel)
+    }
+    
+    func didReloadScene() {
+        addChild(scoreLabel)
+        addChild(favorLabel)
+        addChild(favorSymbol)
     }
     
     func update(playerPosition: vector_float2) {

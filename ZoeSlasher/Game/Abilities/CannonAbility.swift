@@ -57,7 +57,7 @@ extension CannonAbility {
         config.colorScale = 0.9
         config.stage = stage
         
-        config.interval = 12
+        config.interval = 10.5
         config.healthModifier = 5.75
         config.damage = 10 + Float(stage - 1) * 3
         

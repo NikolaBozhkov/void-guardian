@@ -50,7 +50,10 @@ class GameScene: Scene {
     }
     
     var isPaused = false
+    
     var isGameOver = false
+    var timeSinceGameOver: TimeInterval = 0
+    
     var isStageCleared = false
     
     var prevPlayerPosition: vector_float2 = .zero
@@ -93,6 +96,10 @@ class GameScene: Scene {
     }
     
     func update(deltaTime: TimeInterval) {
+        if isGameOver {
+            timeSinceGameOver += deltaTime
+        }
+        
         guard !isPaused else { return }
         
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
@@ -136,10 +143,25 @@ class GameScene: Scene {
         
         // Check for game over
         if player.health == 0 && !isGameOver {
-
-            enemies.forEach { removeEnemy($0) }
             player.removeFromParent()
+            player.anchor?.removeFromParent()
+            
+            // Particles
+            let count = Int.random(in: 25...30)
+            for _ in 0..<count {
+                let particle = Particle()
+                particle.lifetime = TimeInterval.random(in: 1.7...3.0)
+                particle.scale = 0.6
+                particle.position = player.position
+                particle.color.xyz = vector_float3(0.345, 1.000, 0.129)
+                particle.parent = rootNode
+                particles.insert(particle)
+            }
+            
+            potions.forEach { $0.consume() }
 
+            enemies.forEach(removeEnemy)
+            
             isGameOver = true
             skGameScene.didGameOver()
 
@@ -192,8 +214,10 @@ class GameScene: Scene {
         rootNode.add(childNode: player)
         
         isGameOver = false
+        favor = 0
         
         stageManager.reset()
+        skGameScene.didReloadScene()
     }
     
     private func testPlayerEnemyCollision() {
@@ -279,7 +303,7 @@ class GameScene: Scene {
         let count = Int.random(in: 5...6)
         for _ in 0..<count {
             let particle = Particle()
-            particle.position = enemy.positionBeforeImpact
+            particle.position = enemy.isImpactLocked ? enemy.positionBeforeImpact : enemy.position
             particle.color.xyz = enemy.ability.color
             particle.parent = rootNode
             particles.insert(particle)

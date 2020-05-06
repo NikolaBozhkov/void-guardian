@@ -85,7 +85,7 @@ class StageManager {
     func reset() {
         budget = Constants.baseBudget
         isActive = true
-        stage = 0
+        stage = 80
         
         let toStage = stage
         stage = 0

@@ -290,6 +290,8 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
                                  constant float4 &color [[buffer(BufferIndexSpriteColor)]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                                  constant float &timeSinceStageCleared [[buffer(5)]],
+                                 constant float &timeSinceGameOver [[buffer(6)]],
+                                 constant float &playerHealth [[buffer(7)]],
                                  texture2d<float> texture [[texture(0)]],
                                  texture2d<float> fbmr [[texture(1)]])
 {
@@ -306,7 +308,10 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     float k = 2.5;
     float animationTime = timeSinceStageCleared - 0.5;
     float h = expImpulse(animationTime + 1 / k, k) * step(0, animationTime);
-    float3 col = mix(color.xyz, float3(0.345, 1.000, 0.129), h);
+    
+    float health = smoothstep(0.0, 0.75, playerHealth);
+    float3 baseCol = mix(float3(1.0, 0.1, 0.0), color.xyz, health);
+    float3 col = mix(baseCol, float3(0.345, 1.000, 0.129), h);
     
     f = 0.04 + f*n*n*n*(0.25 + max(0.65 * h, 0.0));
     

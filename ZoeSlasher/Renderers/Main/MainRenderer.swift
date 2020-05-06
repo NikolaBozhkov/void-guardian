@@ -282,7 +282,11 @@ extension MainRenderer {
     
     func renderBackground(_ node: Node, timeSinceStageCleared: TimeInterval) {
         var timeSinceStageCleared = Float(timeSinceStageCleared)
+        var timeSinceGameOver = Float(scene.timeSinceGameOver)
+        var playerHealth = scene.player.health / scene.player.maxHealth
         renderEncoder.setFragmentBytes(&timeSinceStageCleared, length: MemoryLayout<Float>.size, index: 5)
+        renderEncoder.setFragmentBytes(&timeSinceGameOver, length: MemoryLayout<Float>.size, index: 6)
+        renderEncoder.setFragmentBytes(&playerHealth, length: MemoryLayout<Float>.size, index: 7)
         backgroundRenderer.draw(node, with: renderEncoder)
     }
     

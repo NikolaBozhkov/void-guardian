@@ -8,6 +8,6 @@
 
 import SpriteKit
 
-protocol Screen {
+protocol Screen: SKNode {
     func handleTap(at location: CGPoint)
 }
