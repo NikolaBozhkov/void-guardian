@@ -22,8 +22,8 @@ class GameOverScreen: SKNode, Screen {
     
     init(stageReached: Int) {
         
-        tryAgainButton = Button(text: "try again (\(stageReached - 7))", fontSize: 170, color: Button.yesColor)
-        returnHomeButton = Button(text: "return home", fontSize: 150, color: Button.noColor)
+        tryAgainButton = Button(text: "try again (\(stageReached - 7))", fontSize: 200, color: Button.yesColor)
+        returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
         
         super.init()
         
@@ -33,14 +33,14 @@ class GameOverScreen: SKNode, Screen {
         title.position = CGPoint(x: 0, y: CGFloat(SceneConstants.size.y / 2) - titleYOffTop)
         
         let message = SKLabelNode(fontNamed: UIConstants.fontName)
-        message.text = "Stage reached: \(stageReached)"
+        message.text = "Stage \(stageReached)"
         message.fontSize = 250
         message.verticalAlignmentMode = .center
         message.horizontalAlignmentMode = .center
-        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - message.fontSize * 1)
+        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - message.fontSize * 1.2)
          
-        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -tryAgainButton.size.height * 1.2)
-        returnHomeButton.position = tryAgainButton.position.offsetted(dx: 0, dy: -tryAgainButton.size.height / 2 - 175)
+        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -tryAgainButton.size.height * 1.07)
+        returnHomeButton.position = tryAgainButton.position.offsetted(dx: 0, dy: -tryAgainButton.size.height / 2 - 150)
         
         addChild(title)
         addChild(message)

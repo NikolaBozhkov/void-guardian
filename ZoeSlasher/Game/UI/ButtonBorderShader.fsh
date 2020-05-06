@@ -42,14 +42,14 @@ void main() {
     vec2 st = v_tex_coord * 2.0 - 1.0;
     st.x *= a_aspectRatio;
         
-    float wi = 0.04;
-    float wg = 0.2;
+    float wi = a_innerWidth;
+    float wg = wi * 4.5;
     
-    float noisePower = 0.14;
+    float noisePower = 0.13;
     float padding = noisePower + wg;
     float rad = 1.0 - padding;
     float d = sdRoundBox(st, vec2(a_aspectRatio, 1.0) - padding, rad);
-    float n = noise(vec3(st * 4.0, time));
+    float n = noise(vec3(st * 3.4, time));
     d += noisePower * n;
     
     float inner = 1.0 - smoothstep(0.0, wi, abs(d));

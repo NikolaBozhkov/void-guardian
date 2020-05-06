@@ -13,7 +13,8 @@ class Button: SKNode {
     static let borderShader: SKShader = {
         let shader = SKShader(fileNamed: "ButtonBorderShader.fsh")
         shader.attributes = [
-            SKAttribute(name: "a_aspectRatio", type: .float)
+            SKAttribute(name: "a_aspectRatio", type: .float),
+            SKAttribute(name: "a_innerWidth", type: .float)
         ]
         
         shader.uniforms = [
@@ -49,6 +50,8 @@ class Button: SKNode {
         border.size = label.frame.size + CGSize(width: 2, height: 1.5) * fontSize
         border.setValue(SKAttributeValue(float: Float(border.size.width / border.size.height)),
                         forAttribute: "a_aspectRatio")
+        border.setValue(SKAttributeValue(float: Float(20 / border.size.height)),
+                        forAttribute: "a_innerWidth")
         addChild(border)
     }
     
