@@ -150,8 +150,7 @@ class GameScene: Scene {
             let count = Int.random(in: 25...30)
             for _ in 0..<count {
                 let particle = Particle()
-                particle.lifetime = TimeInterval.random(in: 1.7...3.0)
-                particle.scale = 0.6
+                particle.scale = 0.5
                 particle.position = player.position
                 particle.color.xyz = vector_float3(0.345, 1.000, 0.129)
                 particle.parent = rootNode
@@ -193,6 +192,7 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
         
+        player.health = 0
         player.move(to: location)
     }
     

@@ -122,16 +122,6 @@ class SKGameScene: SKScene {
         favorSymbol.removeFromParent()
         
         sceneDelegate?.didGameOver(stageReached: score)
-//        let gameOverLabel = makeLabel(text: "game over", fontSize: 400)
-//        gameOverLabel.name = "gameOverLabel"
-//        gameOverLabel.fontColor = .red
-//        gameOverLabel.position = CGPoint(x: 0, y: gameOverLabel.frame.height / 2 + 70)
-//        addChild(gameOverLabel)
-//
-//        let replayLabel = makeLabel(text: "play again", fontSize: 300)
-//        replayLabel.name = "replayLabel"
-//        replayLabel.position = CGPoint(x: 0, y: -replayLabel.frame.height / 2 - 70)
-//        addChild(replayLabel)
     }
     
     func didReloadScene() {

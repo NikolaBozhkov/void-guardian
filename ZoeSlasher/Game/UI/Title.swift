@@ -29,6 +29,8 @@ class Title: SKNode {
     
     private let label = SKLabelNode(fontNamed: UIConstants.fontName)
     
+    private var lines = [SKSpriteNode]()
+    
     var halfHeight: CGFloat {
         label.frame.height / 2
     }
@@ -52,6 +54,13 @@ class Title: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func scaleLines(duration: TimeInterval, timingMode: SKActionTimingMode) {
+        lines.forEach {
+            $0.xScale = 0
+            $0.run(SKAction.scaleX(to: 1, duration: duration, timingMode: timingMode))
+        }
+    }
+    
     private func createLine(forLabel label: SKLabelNode, position: LinePosition) {
         let line = SKSpriteNode()
         line.color = label.fontColor!
@@ -71,5 +80,6 @@ class Title: SKNode {
                       forAttribute: "a_aspectRatio")
         
         addChild(line)
+        lines.append(line)
     }
 }

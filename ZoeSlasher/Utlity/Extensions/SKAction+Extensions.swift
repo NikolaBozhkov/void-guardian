@@ -26,4 +26,16 @@ extension SKAction {
         scale.timingMode = timingMode
         return scale
     }
+    
+    static func scaleX(to newScale: CGFloat, duration: TimeInterval, timingMode: SKActionTimingMode) -> SKAction {
+        let scale = SKAction.scaleX(to: newScale, duration: duration)
+        scale.timingMode = timingMode
+        return scale
+    }
+    
+    static func move(by delta: CGVector, duration: TimeInterval, timingMode: SKActionTimingMode) -> SKAction {
+        let move = SKAction.move(by: delta, duration: duration)
+        move.timingMode = timingMode
+        return move
+    }
 }
