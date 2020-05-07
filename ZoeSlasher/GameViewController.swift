@@ -45,9 +45,6 @@ class GameViewController: UIViewController {
 
         mtkView.delegate = renderer
         
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        mtkView.addGestureRecognizer(tapGestureRecognizer)
-        
         let twoFingerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTwoFingerTap))
         twoFingerTapRecognizer.numberOfTouchesRequired = 2
         mtkView.addGestureRecognizer(twoFingerTapRecognizer)
@@ -60,18 +57,36 @@ class GameViewController: UIViewController {
         renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
     }
     
-    @objc func didTap(_ sender: UITapGestureRecognizer) {
-        let location = sender.location(in: view)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first!
+        let point = normalizeTouchLocation(touch)
+        renderer.coordinator.touchBegan(at: point)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first!
+        let point = normalizeTouchLocation(touch)
+        renderer.coordinator.touchMoved(at: point)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first!
+        let point = normalizeTouchLocation(touch)
+        renderer.coordinator.touchEnded(at: point)
+    }
+    
+    @objc func didTwoFingerTap(_ sender: UITapGestureRecognizer) {
+        renderer.coordinator.didPause()
+    }
+    
+    private func normalizeTouchLocation(_ touch: UITouch) -> vector_float2 {
+        let location = touch.location(in: view)
         
         var normalizedLocation = vector_float2(Float(location.x) / Float(view.frame.width),
                                                1 - Float(location.y) / Float(view.frame.height))
         
         // Map [0;1] to [-.5;.5]
         normalizedLocation -= [0.5, 0.5]
-        renderer.coordinator.propagateTap(at: normalizedLocation)
-    }
-    
-    @objc func didTwoFingerTap(_ sender: UITapGestureRecognizer) {
-        renderer.coordinator.didPause()
+        return normalizedLocation
     }
 }

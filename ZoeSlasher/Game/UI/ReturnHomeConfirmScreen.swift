@@ -53,10 +53,10 @@ class ReturnHomeConfirmScreen: SKNode, Screen {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func handleTap(at location: CGPoint) {
-        if yesButton.contains(location) {
+    func handleTap(at point: CGPoint) {
+        if yesButton.consumeTap(at: point) {
             delegate?.didTapYes()
-        } else if noButton.contains(location) {
+        } else if noButton.consumeTap(at: point) {
             delegate?.didTapNo()
         }
     }

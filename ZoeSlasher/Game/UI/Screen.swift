@@ -9,5 +9,19 @@
 import SpriteKit
 
 protocol Screen: SKNode {
-    func handleTap(at location: CGPoint)
+    func handleTap(at point: CGPoint)
+    func handleHover(at point: CGPoint)
+}
+
+extension Screen {
+    func handleHover(at point: CGPoint) {
+        children.forEach {
+            guard let button = $0 as? Button else { return }
+            if button.contains(point) {
+                button.highlight()
+            } else if button.xScale > 1 {
+                button.unhighlight()
+            }
+        }
+    }
 }

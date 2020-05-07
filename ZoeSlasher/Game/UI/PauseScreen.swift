@@ -51,10 +51,10 @@ class PauseScreen: SKNode, Screen {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func handleTap(at location: CGPoint) {
-        if unpauseButton.contains(location) {
+    func handleTap(at point: CGPoint) {
+        if unpauseButton.consumeTap(at: point) {
             delegate?.didUnpause()
-        } else if returnHomeButton.contains(location) {
+        } else if returnHomeButton.consumeTap(at: point) {
             delegate?.didTapReturnHome()
         }
     }

@@ -66,10 +66,10 @@ class GameOverScreen: SKNode, Screen {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func handleTap(at location: CGPoint) {
-        if tryAgainButton.contains(location) {
+    func handleTap(at point: CGPoint) {
+        if tryAgainButton.consumeTap(at: point) {
             delegate?.didTapTryAgain()
-        } else if returnHomeButton.contains(location) {
+        } else if returnHomeButton.consumeTap(at: point) {
             delegate?.didTapReturnHomeFromGameOver()
         }
     }

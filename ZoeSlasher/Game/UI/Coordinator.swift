@@ -52,7 +52,15 @@ class Coordinator {
         activeScreen = pauseScreen
     }
     
-    func propagateTap(at normalizedPoint: vector_float2) {
+    func touchBegan(at normalizedPoint: vector_float2) {
+        activeScreen?.handleHover(at: CGPoint(gameScene.size * normalizedPoint))
+    }
+    
+    func touchMoved(at normalizedPoint: vector_float2) {
+        activeScreen?.handleHover(at: CGPoint(gameScene.size * normalizedPoint))
+    }
+    
+    func touchEnded(at normalizedPoint: vector_float2) {
         let scenePosition = gameScene.size * normalizedPoint
         
         if let activeScreen = activeScreen {

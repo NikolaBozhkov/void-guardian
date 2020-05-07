@@ -174,15 +174,15 @@
 				24D7FF5A241BC2F7007743C6 /* GainLabel.swift */,
 				24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */,
 				24D7FF5E24225970007743C6 /* Colors.swift */,
-				24EBD46A245C724F00410D1E /* PauseScreen.swift */,
 				2468E3A8245FD85F004042AD /* Button.swift */,
 				2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */,
 				2468E3AA245FDC01004042AD /* Title.swift */,
 				2468E3B424617529004042AD /* TitleLineShader.fsh */,
 				2468E3AC24612EF1004042AD /* Coordinator.swift */,
-				2468E3B024613D63004042AD /* Screen.swift */,
+				24EBD46A245C724F00410D1E /* PauseScreen.swift */,
 				2468E3B6246193F7004042AD /* ReturnHomeConfirmScreen.swift */,
 				2468E3B82462AAA1004042AD /* GameOverScreen.swift */,
+				2468E3B024613D63004042AD /* Screen.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";

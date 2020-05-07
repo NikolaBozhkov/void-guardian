@@ -58,4 +58,26 @@ class Button: SKNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func consumeTap(at point: CGPoint) -> Bool {
+        if contains(point) {
+            reset()
+            return true
+        }
+        
+        return false
+    }
+    
+    func highlight() {
+        run(SKAction.scale(to: 1.1, duration: 0.1, timingMode: .easeOut))
+    }
+    
+    func unhighlight() {
+        run(SKAction.scale(to: 1.0, duration: 0.1, timingMode: .easeOut))
+    }
+    
+    func reset() {
+        removeAllActions()
+        setScale(1)
+    }
 }
