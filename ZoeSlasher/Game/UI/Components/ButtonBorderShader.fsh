@@ -63,5 +63,7 @@ void main() {
     f = 3.7 * pow(f, 5.0);
     color += 0.25 * vec3(v_color_mix) * smoothstep(-0.2, 1.0, -d);
     
-    gl_FragColor = vec4(color * v_color_mix.a, 0.0);
+    float alpha = smoothstep(-0.2, 0.5, -d);
+    
+    gl_FragColor = vec4(color * v_color_mix.a, alpha);
 }

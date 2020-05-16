@@ -22,6 +22,7 @@ protocol UIDelegate {
 }
 
 protocol SKGameSceneDelegate: class {
+    func confirmNextStage()
     func didGameOver(stageReached: Int)
 }
 
@@ -37,6 +38,7 @@ class SKGameScene: SKScene {
     static let voidFavorGlowTexture = SKTexture(imageNamed: "void-favor-glow-image")
     static let oilBackgroundTexture = SKTexture(imageNamed: "oil-background-image")
     
+    static var canStartNextStage = true
     static private(set) var clearStageLabelDuration: TimeInterval = 1.5
     
     let shakeNode = SKNode()
@@ -463,7 +465,10 @@ extension SKGameScene: StageManagerDelegate {
             SKAction.scale(to: 1, duration: 0.03, timingMode: .easeIn),
             SKAction.wait(forDuration: 0.5),
             SKAction.fadeOut(withDuration: 0.5, timingMode: .easeIn),
-            SKAction.removeFromParent()
+            SKAction.removeFromParent(),
+            SKAction.run {
+                self.sceneDelegate?.confirmNextStage()
+            }
         ]))
         
         addChild(label)

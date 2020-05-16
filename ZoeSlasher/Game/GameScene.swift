@@ -33,8 +33,6 @@ class GameScene: Scene {
     
     var particles = Set<Particle>()
     
-    var buttonBorders = Set<Node>()
-    
     var hitEnemies = Set<Enemy>()
     var enemyHitsForMove = 0
     var shouldHandleCombo = false
@@ -104,7 +102,7 @@ class GameScene: Scene {
         
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
         
-        if !stageManager.isStageCleared {
+        if stageManager.isActive {
             favor -= Float(deltaTime) * (favor / 15)
         }
         
@@ -192,7 +190,8 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
         
-//        player.health = 0
+        enemies.forEach(removeEnemy)
+        stageManager.clearStage()
         player.move(to: location)
     }
     
@@ -204,6 +203,10 @@ class GameScene: Scene {
     func unpause() {
         isPaused = false
         skGameScene.isPaused = false
+    }
+    
+    func advanceStage() {
+        stageManager.advanceStage()
     }
     
     func reloadScene() {

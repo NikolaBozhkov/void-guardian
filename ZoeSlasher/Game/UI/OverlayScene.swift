@@ -10,13 +10,21 @@ import SpriteKit
 
 class OverlayScene: SKScene {
     
+    private var time: Float = 0
+    private var lastSystemTime: TimeInterval = 0
+    
     override func sceneDidLoad() {
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         isPaused = false
     }
     
     override func update(_ currentTime: TimeInterval) {
-        Button.borderShader.uniforms[0].floatValue = Float(currentTime)
-        Title.lineShader.uniforms[0].floatValue = Float(currentTime)
+        let deltaT = lastSystemTime == 0 ? 0 : currentTime - lastSystemTime
+        time += Float(deltaT)
+        
+        Button.borderShader.uniforms[0].floatValue = time
+        Title.lineShader.uniforms[0].floatValue = time
+        
+        lastSystemTime = currentTime
     }
 }

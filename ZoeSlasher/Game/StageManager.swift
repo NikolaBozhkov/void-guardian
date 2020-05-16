@@ -29,7 +29,6 @@ class StageManager {
     private var spawnPeriod: TimeInterval = 0
     private var stageTime: TimeInterval = Constants.baseStageDuration
     
-    private(set) var isStageCleared = false
     private(set) var timeSinceStageCleared: TimeInterval = 1000
     
     private(set) var stage = 0
@@ -51,11 +50,8 @@ class StageManager {
     func update(deltaTime: TimeInterval) {
         timeSinceStageCleared += deltaTime
         
-        if isStageCleared && timeSinceStageCleared >= SKGameScene.clearStageLabelDuration {
-            advanceStage()
-        }
-        
         guard isActive else { return }
+        
         stageTime += deltaTime
         
         if stageTime >= stageDuration {
@@ -66,6 +62,8 @@ class StageManager {
     }
     
     func advanceStage() {
+        isActive = true
+        
         stageDuration = Constants.baseStageDuration
         stageTime = 0
 
@@ -73,12 +71,8 @@ class StageManager {
         budget += budgetGrowth
         
         spawnPeriod = stageDuration * 0.34
-        
         spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
-        
-        isActive = true
-        isStageCleared = false
-        
+    
         delegate?.didAdvanceStage(to: stage)
     }
     
@@ -101,7 +95,6 @@ class StageManager {
     
     func clearStage() {
         isActive = false
-        isStageCleared = true
         timeSinceStageCleared = 0
         delegate?.didClearStage()
     }

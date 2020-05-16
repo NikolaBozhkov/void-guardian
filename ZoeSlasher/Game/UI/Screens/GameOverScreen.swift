@@ -9,8 +9,8 @@
 import SpriteKit
 
 protocol GameOverScreenDelegate: class {
-    func didTapTryAgain()
-    func didTapReturnHomeFromGameOver()
+    func restartGame()
+    func returnHomeFromGameOver()
 }
 
 class GameOverScreen: SKNode, Screen {
@@ -68,9 +68,9 @@ class GameOverScreen: SKNode, Screen {
     
     func handleTap(at point: CGPoint) {
         if tryAgainButton.consumeTap(at: point) {
-            delegate?.didTapTryAgain()
+            delegate?.restartGame()
         } else if returnHomeButton.consumeTap(at: point) {
-            delegate?.didTapReturnHomeFromGameOver()
+            delegate?.returnHomeFromGameOver()
         }
     }
     

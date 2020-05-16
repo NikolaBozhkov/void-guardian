@@ -9,8 +9,8 @@
 import SpriteKit
 
 protocol PauseScreenDelegate: class {
-    func didUnpause()
-    func didTapReturnHome()
+    func unpause()
+    func returnHomeFromPause()
 }
 
 class PauseScreen: SKNode, Screen {
@@ -53,9 +53,9 @@ class PauseScreen: SKNode, Screen {
     
     func handleTap(at point: CGPoint) {
         if unpauseButton.consumeTap(at: point) {
-            delegate?.didUnpause()
+            delegate?.unpause()
         } else if returnHomeButton.consumeTap(at: point) {
-            delegate?.didTapReturnHome()
+            delegate?.returnHomeFromPause()
         }
     }
 }

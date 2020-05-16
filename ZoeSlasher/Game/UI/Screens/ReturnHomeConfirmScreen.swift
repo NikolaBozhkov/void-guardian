@@ -9,8 +9,8 @@
 import SpriteKit
 
 protocol ReturnHomeConfirmScreenDelegate: class {
-    func didTapYes()
-    func didTapNo()
+    func didConfirmReturnHome()
+    func didCancelReturnHome()
 }
 
 class ReturnHomeConfirmScreen: SKNode, Screen {
@@ -24,7 +24,7 @@ class ReturnHomeConfirmScreen: SKNode, Screen {
     
     override init() {
         yesButton = Button(text: "yes", fontSize: buttonFontSize, color: Button.yesColor)
-        noButton = Button(text: "no", fontSize: buttonFontSize, color: Button.noColor)
+        noButton = Button(text: "YEs", fontSize: buttonFontSize, color: Button.noColor)
         
         super.init()
         
@@ -55,9 +55,9 @@ class ReturnHomeConfirmScreen: SKNode, Screen {
     
     func handleTap(at point: CGPoint) {
         if yesButton.consumeTap(at: point) {
-            delegate?.didTapYes()
+            delegate?.didConfirmReturnHome()
         } else if noButton.consumeTap(at: point) {
-            delegate?.didTapNo()
+            delegate?.didCancelReturnHome()
         }
     }
     

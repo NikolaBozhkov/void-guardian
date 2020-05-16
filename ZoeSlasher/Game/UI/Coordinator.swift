@@ -44,7 +44,7 @@ class Coordinator {
     }
     
     func didPause() {
-        guard !gameScene.isPaused else { return }
+        guard !gameScene.isPaused, gameScene.stageManager.isActive else { return }
         
         gameScene.pause()
         
@@ -82,7 +82,7 @@ class Coordinator {
 // MARK: - PauseScreenDelegate
 
 extension Coordinator: PauseScreenDelegate {
-    func didUnpause() {
+    func unpause() {
         pauseScreen.removeFromParent()
         overlayBackground.removeFromParent()
         activeScreen = nil
@@ -90,7 +90,7 @@ extension Coordinator: PauseScreenDelegate {
         gameScene.unpause()
     }
     
-    func didTapReturnHome() {
+    func returnHomeFromPause() {
         pauseScreen.removeFromParent()
         
         activeScreen = returnHomeConfirmScreen
@@ -101,11 +101,11 @@ extension Coordinator: PauseScreenDelegate {
 // MARK: - ReturnHomeConfirmScreenDelegate
 
 extension Coordinator: ReturnHomeConfirmScreenDelegate {
-    func didTapYes() {
+    func didConfirmReturnHome() {
         
     }
     
-    func didTapNo() {
+    func didCancelReturnHome() {
         returnHomeConfirmScreen.removeFromParent()
         activeScreen = pauseScreen
         overlayBackground.addChild(pauseScreen)
@@ -122,19 +122,41 @@ extension Coordinator: SKGameSceneDelegate {
         overlayScene.addChild(gameOverScreen)
         activeScreen = gameOverScreen
     }
+    
+    func confirmNextStage() {
+        let confirmStageScreen = StageConfirmScreen()
+        confirmStageScreen.delegate = self
+        
+        overlayScene.addChild(confirmStageScreen)
+        activeScreen = confirmStageScreen
+    }
 }
 
 // MARK: - GameOverScreenDelegate
 
 extension Coordinator: GameOverScreenDelegate {
-    func didTapTryAgain() {
+    func restartGame() {
         gameScene.reloadScene()
         
         activeScreen?.removeFromParent()
         activeScreen = nil
     }
     
-    func didTapReturnHomeFromGameOver() {
+    func returnHomeFromGameOver() {
         
+    }
+}
+
+// MARK: -
+
+extension Coordinator: StageConfirmScreenDelegate {
+    func didConfirmNextStage() {
+        gameScene.advanceStage()
+        
+        activeScreen?.removeFromParent()
+        activeScreen = nil
+    }
+    
+    func didCancelNextStage() {
     }
 }
