@@ -106,14 +106,6 @@ class GameScene: Scene {
             favor -= Float(deltaTime) * (favor / 15)
         }
         
-        if shouldResetHitEnemies {
-            resetHitEnemies()
-        }
-        
-        if shouldHandleCombo {
-            handleCombo()
-        }
-        
         prevPlayerPosition = player.position
         
         player.update(deltaTime: deltaTime)
@@ -136,6 +128,19 @@ class GameScene: Scene {
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
         testPlayerPotionCollision()
+        
+        let didPlayerStageChange = player.prevStage != player.stage
+        if didPlayerStageChange {
+            enemies.forEach { $0.resetHitImmunity() }
+            hitEnemies.removeAll()
+        }
+        
+        let didPlayerStageChangeToIdle = player.prevStage == .piercing && player.stage == .idle
+        if didPlayerStageChangeToIdle {
+            handleCombo()
+        }
+        
+        player.prevStage = player.stage
         
         // Check for game over
         if player.health == 0 && !isGameOver {
@@ -316,12 +321,6 @@ class GameScene: Scene {
         attacks.remove(attack)
     }
     
-    private func resetHitEnemies() {
-        enemyHitsForMove += hitEnemies.count
-        hitEnemies.removeAll()
-        shouldResetHitEnemies = false
-    }
-    
     private func handleCombo() {
         defer {
             enemyHitsForMove = 0
@@ -355,17 +354,6 @@ class GameScene: Scene {
 }
 
 extension GameScene: PlayerDelegate {
-    func didEnterStage(_ stage: Player.Stage) {
-        enemies.forEach { $0.resetHitImmunity() }
-        
-        if stage == .idle {
-            shouldHandleCombo = true
-            shouldResetHitEnemies = true
-        } else if stage == .piercing {
-            shouldResetHitEnemies = true
-        }
-    }
-    
     func didTryToMoveWithoutEnergy() {
         skGameScene.showNoEnergyLabel()
     }

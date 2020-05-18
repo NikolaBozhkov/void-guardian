@@ -7,7 +7,6 @@
 //
 
 protocol PlayerDelegate {
-    func didEnterStage(_ stage: Player.Stage)
     func didTryToMoveWithoutEnergy()
 }
 
@@ -22,10 +21,10 @@ class Player: Node {
     
     var delegate: PlayerDelegate?
     
-    var nextStage: Stage = .idle
+    var prevStage: Stage = .idle
     private(set) var stage: Stage = .idle {
         didSet {
-            delegate?.didEnterStage(stage)
+            prevStage = oldValue
         }
     }
     
@@ -34,7 +33,7 @@ class Player: Node {
     private let chargeSpeed: Float = 1000
     private let pierceSpeed: Float = 12000
     private let energyRechargePerSecond: Float = 6
-    private let energyUsagePerShot: Float = 25
+    private let energyUsagePerShot: Float = 0
     
     private var desiredPosition = vector_float2.zero
     private var force = vector_float2.zero
@@ -68,9 +67,9 @@ class Player: Node {
     
     // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
     var damage: Float {
-        if stage == .charging {
+        if stage == .charging || prevStage == .charging {
             return chargingDamage
-        } else if stage == .piercing || wasPiercing {
+        } else if stage == .piercing || prevStage == .piercing {
             let distanceMod = 1 + 2 * distance(pierceInitial, position) / SceneConstants.size.x
             return piercingDamage * distanceMod
         } else {
@@ -135,8 +134,6 @@ class Player: Node {
         
         energy += energyRechargePerSecond * deltaTime
         
-        wasPiercing = stage == .piercing
-        
         if stage == .idle {
             timeSinceLastMove += deltaTime
         }
@@ -165,7 +162,7 @@ class Player: Node {
             
             if stage == .charging {
                 if forceMagnitude < chargeSpeed {
-                    force = chargeDirection * min(forceMagnitude + deltaTime * (chargeSpeed / 0.15), chargeSpeed)
+                    force = chargeDirection * min(forceMagnitude + deltaTime * (chargeSpeed / 0.05), chargeSpeed)
                 }
                 
                 position += force * deltaTime
@@ -178,7 +175,7 @@ class Player: Node {
                 }
             } else if stage == .piercing {
                 if forceMagnitude < pierceSpeed {
-                    force = pierceDirection * min(forceMagnitude + deltaTime * (pierceSpeed / 0.15), pierceSpeed)
+                    force = pierceDirection * min(forceMagnitude + deltaTime * (pierceSpeed / 0.05), pierceSpeed)
                 }
                 
                 position += force * deltaTime
