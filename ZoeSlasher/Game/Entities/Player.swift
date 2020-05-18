@@ -31,10 +31,13 @@ class Player: Node {
     
     private(set) var anchor: Node?
     
-    private let chargeSpeed: Float = 900
-    private let pierceSpeed: Float = 7500
+    private let chargeSpeed: Float = 1000
+    private let pierceSpeed: Float = 12000
     private let energyRechargePerSecond: Float = 6
     private let energyUsagePerShot: Float = 25
+    
+    private var desiredPosition = vector_float2.zero
+    private var force = vector_float2.zero
     
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
@@ -46,11 +49,12 @@ class Player: Node {
     private var pierceDirection = vector_float2.zero
     private var pierceDistance: Float = 0
     
+    private var moveFinished = true
     private var positionDelta = vector_float2.zero
     
     private var chargingDamage = Player.baseChargingDamage
     private var piercingDamage = Player.basePiercingDamage
-    private var wasPiercing = false
+    var wasPiercing = false
     
     private var energySymbols = Set<EnergySymbol>()
     
@@ -66,7 +70,7 @@ class Player: Node {
     var damage: Float {
         if stage == .charging {
             return chargingDamage
-        } else if stage == .piercing {
+        } else if stage == .piercing || wasPiercing {
             let distanceMod = 1 + 2 * distance(pierceInitial, position) / SceneConstants.size.x
             return piercingDamage * distanceMod
         } else {
@@ -133,24 +137,60 @@ class Player: Node {
         
         wasPiercing = stage == .piercing
         
-        if stage == .charging {
-            let delta = deltaTime * chargeSpeed * chargeDirection
-            position += delta
-            
-            if distance(chargeInitial, position) >= chargeDistance {
-                // Prevent overshooting
-                position = chargeInitial + chargeDelta
+        if stage == .idle {
+            timeSinceLastMove += deltaTime
+        }
+        
+        if moveFinished {
+            let dist = distance(desiredPosition, position)
+            var direction = normalize(desiredPosition - position)
+            if direction.x.isNaN {
+                direction = .zero
             }
-        } else if stage == .piercing {
-            let delta = deltaTime * pierceSpeed * pierceDirection
-            position += delta
             
-            if distance(pierceInitial, position) >= pierceDistance {
-                position = pierceInitial + pierceDelta
-                nextStage = .idle
+            let forceChange = direction * 900 * pow(1.1, 1 + dist / 200) * dist
+            let currentDirection = force == .zero ? .zero : normalize(force)
+            
+            force += -currentDirection * length(force) * 25 * deltaTime
+            force += forceChange * deltaTime
+            
+            position += force * deltaTime
+            
+            if length(force) < 10 && dist < 1 {
+                position = desiredPosition
+                force = .zero
             }
         } else {
-            timeSinceLastMove += deltaTime
+            let forceMagnitude = length(force)
+            
+            if stage == .charging {
+                if forceMagnitude < chargeSpeed {
+                    force = chargeDirection * min(forceMagnitude + deltaTime * (chargeSpeed / 0.15), chargeSpeed)
+                }
+                
+                position += force * deltaTime
+                desiredPosition = position
+                
+                if distance(chargeInitial, position) >= chargeDistance {
+                    position = chargeInitial + chargeDelta
+                    desiredPosition = position
+                    moveFinished = true
+                }
+            } else if stage == .piercing {
+                if forceMagnitude < pierceSpeed {
+                    force = pierceDirection * min(forceMagnitude + deltaTime * (pierceSpeed / 0.15), pierceSpeed)
+                }
+                
+                position += force * deltaTime
+                desiredPosition = position
+                
+                if distance(pierceInitial, position) >= pierceDistance {
+                    position = pierceInitial + pierceDelta
+                    desiredPosition = position
+                    stage = .idle
+                    moveFinished = true
+                }
+            }
         }
         
         let currentPositionDelta = position - prevPosition
@@ -168,6 +208,11 @@ class Player: Node {
         let k = 1.5 * timeSinceLastHit
         let catchUp = min(k * k * k, 1.0)
         healthDmgIndicator = health + (lastHealth - health) * (1 - catchUp)
+    }
+    
+    func setPosition(_ position: vector_float2) {
+        self.position = position
+        desiredPosition = position
     }
     
     func move(to target: vector_float2) {
@@ -196,10 +241,12 @@ class Player: Node {
             chargeDistance = length(chargeDelta)
             
             energy -= energyUsagePerShot
-            nextStage = .charging
+            stage = .charging
             
             timeSinceLastMove = 0
             timeSinceLastEnergyUse = 0
+            moveFinished = false
+            force = .zero
             
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
@@ -218,19 +265,16 @@ class Player: Node {
             
             pierceDistance = length(pierceDelta)
             
-            nextStage = .piercing
+            stage = .piercing
+            moveFinished = false
+            force = .zero
         }
     }
     
     func interruptCharging() {
         anchor?.removeFromParent()
         anchor = nil
-        nextStage = .idle
-    }
-    
-    func advanceStage() {
-        guard nextStage != stage else { return }
-        stage = nextStage
+        stage = .idle
     }
 }
 

@@ -137,8 +137,6 @@ class GameScene: Scene {
         testPlayerEnemyAttackCollision()
         testPlayerPotionCollision()
         
-        player.advanceStage()
-        
         // Check for game over
         if player.health == 0 && !isGameOver {
             player.removeFromParent()
@@ -190,8 +188,8 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
         
-        enemies.forEach(removeEnemy)
-        stageManager.clearStage()
+//        enemies.forEach(removeEnemy)
+//        stageManager.clearStage()
         player.move(to: location)
     }
     
@@ -211,7 +209,7 @@ class GameScene: Scene {
     
     func reloadScene() {
         player.interruptCharging()
-        player.position = .zero
+        player.setPosition(.zero)
         player.energy = 100
         player.health = 100
         rootNode.add(childNode: player)
@@ -244,7 +242,7 @@ class GameScene: Scene {
                     let impactMod = 150 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
-                    if player.stage != .idle {
+                    if player.stage != .idle || player.wasPiercing {
                         hitEnemies.insert(enemy)
                     }
                     

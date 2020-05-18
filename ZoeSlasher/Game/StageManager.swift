@@ -89,8 +89,6 @@ class StageManager {
         }
         
         advanceStage()
-        
-//        spawner.spawnEnemy(for: CannonAbility.stage1Config, withPosition: .zero)
     }
     
     func clearStage() {
