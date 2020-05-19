@@ -62,6 +62,7 @@
 		24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86723C1C8B600CB6638 /* Assets.xcassets */; };
 		24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */; };
 		24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */; };
+		24DCFD362473B24B00FE2FC1 /* TrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */; };
 		24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */; };
 		24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */; };
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
@@ -132,6 +133,7 @@
 		24D9E86A23C1C8B600CB6638 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24D9E86C23C1C8B600CB6638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferFormats.swift; sourceTree = "<group>"; };
+		24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailHandler.swift; sourceTree = "<group>"; };
 		24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAttackAbility.swift; sourceTree = "<group>"; };
 		24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineGunAbility.swift; sourceTree = "<group>"; };
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				2469393823C5D126001A6CAE /* Player.swift */,
 				247D705223E70FAA00480199 /* Enemy.swift */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
+				24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				2468E3B7246193F7004042AD /* ReturnHomeConfirmScreen.swift in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
+				24DCFD362473B24B00FE2FC1 /* TrailHandler.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,

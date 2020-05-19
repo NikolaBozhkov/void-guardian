@@ -21,6 +21,8 @@ class Player: Node {
     
     var delegate: PlayerDelegate?
     
+    var trailHandler: TrailHandler!
+    
     var prevStage: Stage = .idle
     private(set) var stage: Stage = .idle {
         didSet {
@@ -104,6 +106,8 @@ class Player: Node {
             energySymbols.insert(energySymbol)
             add(childNode: energySymbol)
         }
+        
+        trailHandler = TrailHandler(target: self)
     }
     
     override func acceptRenderer(_ renderer: MainRenderer) {
@@ -205,6 +209,8 @@ class Player: Node {
         let k = 1.5 * timeSinceLastHit
         let catchUp = min(k * k * k, 1.0)
         healthDmgIndicator = health + (lastHealth - health) * (1 - catchUp)
+        
+        trailHandler.update()
     }
     
     func setPosition(_ position: vector_float2) {
@@ -245,6 +251,8 @@ class Player: Node {
             moveFinished = false
             force = .zero
             
+            trailHandler.reset()
+            
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
             delegate?.didTryToMoveWithoutEnergy()
@@ -265,6 +273,8 @@ class Player: Node {
             stage = .piercing
             moveFinished = false
             force = .zero
+            
+            trailHandler.updateNextParticlePosition(forDirection: pierceDirection)
         }
     }
     

@@ -10,13 +10,16 @@ import Foundation
 
 class Particle: Node {
     
-    private let speedMod = Float.random(in: 0.7...1.2)
-    private let minImpulse = Float.random(in: 0...0.08)
-    private let seed = Float.random(in: 0...1000)
+    var speedMod = Float.random(in: 0.7...1.2)
+    var speed: Float = 750
+    var minImpulse = Float.random(in: 0...0.08)
     var lifetime = TimeInterval.random(in: 1.3...2.3)
+    var k: Float = 5.7
     
     private var timeAlive: TimeInterval = 0
-    private let k: Float = 5.7
+    
+    private let seed = Float.random(in: 0...1000)
+    private let constantMovement: Bool
     
     var shouldRemove: Bool {
         timeAlive >= lifetime
@@ -26,7 +29,9 @@ class Particle: Node {
         Float(timeAlive / lifetime)
     }
     
-    override init() {
+    init(constantMovement: Bool = false) {
+        self.constantMovement = constantMovement
+        
         super.init()
         
         size = [1, 1] * Float.random(in: 580...680)
@@ -38,7 +43,7 @@ class Particle: Node {
         
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))
         
-        let speed = speedMod * impulse * 750
+        let speed = speedMod * (constantMovement ? 1 : impulse) * self.speed
         let rotation = self.rotation + impulse * noise(seed + Float(timeAlive * 2)) * 2
         position += vector_float2(cos(rotation), sin(rotation)) * Float(deltaTime) * speed
     }

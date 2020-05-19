@@ -19,11 +19,13 @@ class GameScene: Scene {
     let comboThreshold = 1
 
     var skGameScene: SKGameScene!
+    
     let background = Node()
     let overlay = Node()
     
     let stageManager: StageManager
     let spawner = Spawner()
+    
     let player = Player()
     
     var enemies = Set<Enemy>()
@@ -89,6 +91,7 @@ class GameScene: Scene {
         rootNode.add(childNode: background)
         
         player.delegate = self
+        player.trailHandler.scene = self
         
         reloadScene()
     }
