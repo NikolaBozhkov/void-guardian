@@ -63,6 +63,8 @@
 		24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */; };
 		24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */; };
 		24DCFD362473B24B00FE2FC1 /* TrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */; };
+		24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD372474FC4200FE2FC1 /* TrailManager.swift */; };
+		24DCFD3A2475353100FE2FC1 /* TrailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD392475353100FE2FC1 /* TrailRenderer.swift */; };
 		24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */; };
 		24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */; };
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
@@ -134,6 +136,8 @@
 		24D9E86C23C1C8B600CB6638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferFormats.swift; sourceTree = "<group>"; };
 		24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailHandler.swift; sourceTree = "<group>"; };
+		24DCFD372474FC4200FE2FC1 /* TrailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailManager.swift; sourceTree = "<group>"; };
+		24DCFD392475353100FE2FC1 /* TrailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailRenderer.swift; sourceTree = "<group>"; };
 		24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAttackAbility.swift; sourceTree = "<group>"; };
 		24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineGunAbility.swift; sourceTree = "<group>"; };
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
@@ -202,6 +206,7 @@
 				2465E7762435E2490019CE02 /* Renderer.swift */,
 				2465E7782435F20D0019CE02 /* TextureRenderer.swift */,
 				2465E77A24360EF10019CE02 /* PotionRenderer.swift */,
+				24DCFD392475353100FE2FC1 /* TrailRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				247D705223E70FAA00480199 /* Enemy.swift */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
 				24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */,
+				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -426,6 +432,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */,
+				24DCFD3A2475353100FE2FC1 /* TrailRenderer.swift in Sources */,
 				24D7FF5D242150A9007743C6 /* HealthGainLabel.swift in Sources */,
 				24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */,
 				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
@@ -455,6 +462,7 @@
 				24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */,
 				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
 				2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */,
+				24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */,
 				24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */,
 				2468E3B92462AAA1004042AD /* GameOverScreen.swift in Sources */,
 				24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */,

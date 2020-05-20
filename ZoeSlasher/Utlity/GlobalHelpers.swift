@@ -20,3 +20,12 @@ func noise(_ x: Float) -> Float {
     let f = simd_fract(x)
     return simd_smoothstep(random(i), random(i + 1), f)
 }
+
+func safeNormalize(_ v: vector_float2) -> vector_float2 {
+    var normalized = normalize(v)
+    if normalized.x.isNaN {
+        normalized = .zero
+    }
+    
+    return normalized
+}

@@ -48,7 +48,7 @@ class MainRenderer: NSObject {
     let particleRenderer: Renderer<ParticleData>
     let enemyRenderer: Renderer<EnemyData>
     let enemyAttackRenderer: Renderer<AttackData>
-    let buttonBorderRenderer: Renderer<SpriteData>
+    let trailRenderer: TrailRenderer
     
     var potionTypeToRendererMap: [PotionType: PotionRenderer] = [:]
     var textureToRendererMap: [String: TextureRenderer] = [:]
@@ -163,11 +163,7 @@ class MainRenderer: NSObject {
                                        fragmentFunction: "fragmentAttack",
                                        maxInstances: 64)
         
-        buttonBorderRenderer = Renderer(device: device,
-                                        library: library,
-                                        vertexFunction: "vertexButtonBorder",
-                                        fragmentFunction: "fragmentButtonBorder",
-                                        maxInstances: 8)
+        trailRenderer = TrailRenderer(device: device, library: library)
         
         backgroundRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = SpriteRenderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -449,6 +445,9 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
         drawNodes(scene.children)
+        
+        trailRenderer.generateVertices(from: scene.player.trailManager.points)
+        trailRenderer.draw(renderEncoder: renderEncoder)
         
         let particleData = scene.particles.map {
             ParticleData(worldTransform: $0.worldTransform,

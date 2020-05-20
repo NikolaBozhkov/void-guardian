@@ -171,7 +171,7 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-        stageManager.update(deltaTime: deltaTime)
+//        stageManager.update(deltaTime: deltaTime)
         
         // Clear stage if possible
         if stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {

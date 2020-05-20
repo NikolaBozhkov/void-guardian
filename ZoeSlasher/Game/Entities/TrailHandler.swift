@@ -26,6 +26,7 @@ class TrailHandler {
         prevParticlePosition = target.position
         nextParticlePosition = target.position
         prevPosition = target.position
+        nextParticleDistance = Float.random(in: particleDistanceRange)
     }
     
     func update() {
@@ -38,10 +39,10 @@ class TrailHandler {
         while distanceBuffer >= nextParticleDistance {
             distanceBuffer -= nextParticleDistance
             nextParticleDistance = Float.random(in: particleDistanceRange)
-            spawnParticle()
+            nextParticlePosition += direction * nextParticleDistance
+//            spawnParticle()
             
             prevParticlePosition = nextParticlePosition
-            nextParticlePosition += direction * nextParticleDistance
         }
         
         prevPosition = target.position

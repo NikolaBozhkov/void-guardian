@@ -22,6 +22,7 @@ class Player: Node {
     var delegate: PlayerDelegate?
     
     var trailHandler: TrailHandler!
+    var trailManager: TrailManager!
     
     var prevStage: Stage = .idle
     private(set) var stage: Stage = .idle {
@@ -38,7 +39,7 @@ class Player: Node {
     private let energyUsagePerShot: Float = 0
     
     private var desiredPosition = vector_float2.zero
-    private var force = vector_float2.zero
+    private(set) var force = vector_float2.zero
     
     private var chargeInitial = vector_float2.zero
     private var chargeDelta = vector_float2.zero
@@ -50,8 +51,10 @@ class Player: Node {
     private var pierceDirection = vector_float2.zero
     private var pierceDistance: Float = 0
     
-    private var moveFinished = true
+    private(set) var moveFinished = true
     private var positionDelta = vector_float2.zero
+    private(set) var prevPosition = vector_float2.zero
+    private(set) var direction = vector_float2.zero
     
     private var chargingDamage = Player.baseChargingDamage
     private var piercingDamage = Player.basePiercingDamage
@@ -108,6 +111,7 @@ class Player: Node {
         }
         
         trailHandler = TrailHandler(target: self)
+        trailManager = TrailManager(player: self)
     }
     
     override func acceptRenderer(_ renderer: MainRenderer) {
@@ -134,7 +138,7 @@ class Player: Node {
         timeSinceLastHit += deltaTime
         timeSinceLastEnergyUse += deltaTime
         
-        let prevPosition = position
+        prevPosition = position
         
         energy += energyRechargePerSecond * deltaTime
         
@@ -198,6 +202,8 @@ class Player: Node {
         let deltaDelta = currentPositionDelta - positionDelta
         positionDelta += deltaDelta * deltaTime * 20.0
         
+        direction = safeNormalize(currentPositionDelta)
+        
         energySymbols.forEach {
             $0.angularK = stage == .charging ? 6 : 12
             $0.timeSinceLastMove = timeSinceLastMove
@@ -211,6 +217,7 @@ class Player: Node {
         healthDmgIndicator = health + (lastHealth - health) * (1 - catchUp)
         
         trailHandler.update()
+        trailManager.update(deltaTime: TimeInterval(deltaTime))
     }
     
     func setPosition(_ position: vector_float2) {
@@ -252,6 +259,7 @@ class Player: Node {
             force = .zero
             
             trailHandler.reset()
+            trailManager.addAnchor(at: position)
             
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
@@ -275,6 +283,7 @@ class Player: Node {
             force = .zero
             
             trailHandler.updateNextParticlePosition(forDirection: pierceDirection)
+            trailManager.addAnchor(at: position)
         }
     }
     

@@ -19,6 +19,10 @@ extension SIMD4 {
             z = newValue.z
         }
     }
+    
+    init(_ v: SIMD2<Scalar>, _ z: Scalar, _ w: Scalar) {
+        self.init([v.x, v.y, z, w])
+    }
 }
 
 extension float4x4 {

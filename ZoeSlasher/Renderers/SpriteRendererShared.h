@@ -75,9 +75,8 @@ typedef struct {
 typedef struct {
     float4 position [[position]];
     float2 uv;
-    float4 color;
-    float aspectRatio;
-} ButtonBorderOut;
+    float aliveness;
+} TrailOut;
 
 
 #endif /* SpriteRendererShared_h */

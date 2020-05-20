@@ -16,7 +16,7 @@ class Renderer<T> {
     private var dataBuffer: MTLBuffer
     
     private let pipelineState: MTLRenderPipelineState
-    private let vertices: [vector_float4] = [
+    public var vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
         [ 0.5, -0.5, 1.0, 0.0],

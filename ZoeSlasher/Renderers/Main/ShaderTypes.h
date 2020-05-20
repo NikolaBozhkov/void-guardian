@@ -100,6 +100,15 @@ struct AttackData
     float speed;
 };
 
+struct EmptyData {};
+
+struct TrailVertex
+{
+    vector_float2 position;
+    vector_float2 uv;
+    float aliveness;
+};
+
 //typedef struct
 //{
 //    vector_float2 position;
