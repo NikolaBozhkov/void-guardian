@@ -16,6 +16,7 @@ class TrailRenderer {
     private let pipelineState: MTLRenderPipelineState
     
     private var vertices = [TrailVertex]()
+    private var trailLength: Float = 0
     
     init(device: MTLDevice, library: MTLLibrary) {
         self.device = device
@@ -61,6 +62,9 @@ class TrailRenderer {
         renderEncoder.setVertexBytes(vertices,
                                      length: MemoryLayout<TrailVertex>.stride * vertices.count,
                                      index: 0)
+        
+        var aspectRatio = trailLength / (width * 2)
+        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 5)
         
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,
@@ -145,18 +149,24 @@ class TrailRenderer {
             
             let segmentLength = distance(anchors[i].point, anchors[i + 1].point)
             
-            let currentAnchorX = currentLength / fullLength
+            let currentX = currentLength / fullLength
             
             currentLength += segmentLength
-            let nextAnchorX = currentLength / fullLength
+            let nextX = currentLength / fullLength
             
-            vertices.append(TrailVertex(position: a, uv: [currentAnchorX, 1], aliveness: trailPoints[i].aliveness))
-            vertices.append(TrailVertex(position: c, uv: [nextAnchorX, 0], aliveness: trailPoints[i + 1].aliveness))
-            vertices.append(TrailVertex(position: d, uv: [currentAnchorX, 0], aliveness: trailPoints[i].aliveness))
+            let vertexA = TrailVertex(position: a, uv: [currentX, 1], aliveness: trailPoints[i].aliveness)
+            let vertexB = TrailVertex(position: b, uv: [nextX, 1], aliveness: trailPoints[i + 1].aliveness)
+            let vertexC = TrailVertex(position: c, uv: [nextX, 0], aliveness: trailPoints[i + 1].aliveness)
+            let vertexD = TrailVertex(position: d, uv: [currentX, 0], aliveness: trailPoints[i].aliveness)
+            vertices.append(vertexA)
+            vertices.append(vertexC)
+            vertices.append(vertexD)
             
-            vertices.append(TrailVertex(position: a, uv: [currentAnchorX, 1], aliveness: trailPoints[i].aliveness))
-            vertices.append(TrailVertex(position: b, uv: [nextAnchorX, 0], aliveness: trailPoints[i + 1].aliveness))
-            vertices.append(TrailVertex(position: c, uv: [nextAnchorX, 0], aliveness: trailPoints[i + 1].aliveness))
+            vertices.append(vertexA)
+            vertices.append(vertexB)
+            vertices.append(vertexC)
         }
+        
+        trailLength = fullLength
     }
 }

@@ -264,8 +264,18 @@ vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(0)]],
     return out;
 }
 
-fragment float4 fragmentTrail(TrailOut in [[stage_in]]) {
-    return float4(float3(in.aliveness), 1.0);
+fragment float4 fragmentTrail(TrailOut in [[stage_in]],
+                              constant float &aspectRatio [[buffer(5)]]) {
+    float f = in.aliveness;
+    
+    float2 st = in.uv * 2.0 - 1.0;
+    st.x *= aspectRatio;
+    
+    f *= 1.0 - smoothstep(0.0, 1.0, abs(st.y));
+    
+    float3 col = float3(0.2, 0.7, 0.1) * f;
+    
+    return float4(col, 0.5);
 }
 
 fragment float4 backgroundShader(VertexOut in [[stage_in]],
