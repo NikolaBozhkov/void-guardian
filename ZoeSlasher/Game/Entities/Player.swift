@@ -38,7 +38,7 @@ class Player: Node {
     private let energyRechargePerSecond: Float = 6
     private let energyUsagePerShot: Float = 0
     
-    private var desiredPosition = vector_float2.zero
+    private(set) var desiredPosition = vector_float2.zero
     private(set) var force = vector_float2.zero
     
     private var chargeInitial = vector_float2.zero
@@ -115,6 +115,17 @@ class Player: Node {
     }
     
     override func acceptRenderer(_ renderer: MainRenderer) {
+//        renderer.renderPlayer(self,
+//                              position: position,
+//                              positionDelta: positionDelta,
+//                              health: health / maxHealth,
+//                              fromHealth: healthDmgIndicator / maxHealth,
+//                              timeSinceHit: timeSinceLastHit,
+//                              dmgReceived: dmgReceivedNormalized,
+//                              timeSinceLastEnergyUse: timeSinceLastEnergyUse)
+    }
+    
+    func draw(_ renderer: MainRenderer) {
         renderer.renderPlayer(self,
                               position: position,
                               positionDelta: positionDelta,
@@ -259,7 +270,7 @@ class Player: Node {
             force = .zero
             
             trailHandler.reset()
-            trailManager.addAnchor(at: position)
+            trailManager.addAnchor(at: position, beginsMovement: true)
             
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
@@ -283,7 +294,7 @@ class Player: Node {
             force = .zero
             
             trailHandler.updateNextParticlePosition(forDirection: pierceDirection)
-            trailManager.addAnchor(at: position)
+            trailManager.addAnchor(at: position, beginsMovement: true) 
         }
     }
     

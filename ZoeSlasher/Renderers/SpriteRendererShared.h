@@ -76,6 +76,7 @@ typedef struct {
     float4 position [[position]];
     float2 uv;
     float aliveness;
+    float2 worldPosNorm;
 } TrailOut;
 
 

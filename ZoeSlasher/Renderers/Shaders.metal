@@ -260,22 +260,49 @@ vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(0)]],
     out.position = uniforms.projectionMatrix * float4(vertices[vid].position, 0.0, 1.0);
     out.uv = vertices[vid].uv;
     out.aliveness = vertices[vid].aliveness;
+    out.worldPosNorm = (uniforms.size / 2 + vertices[vid].position) / uniforms.size;
     
     return out;
 }
 
 fragment float4 fragmentTrail(TrailOut in [[stage_in]],
-                              constant float &aspectRatio [[buffer(5)]]) {
+                              constant float &aspectRatio [[buffer(5)]],
+                              texture2d<float> texture [[texture(0)]],
+                              texture2d<float> fbmr [[texture(1)]]) {
     float f = in.aliveness;
     
     float2 st = in.uv * 2.0 - 1.0;
     st.x *= aspectRatio;
     
+    constexpr sampler s(filter::linear, address::repeat);
+    
+    float distort = texture.sample(s, in.worldPosNorm).x;
+    float n = pow(1. - fbmr.sample(s, in.worldPosNorm).x, 2.5);
+    
+    f = n*n*distort;
     f *= 1.0 - smoothstep(0.0, 1.0, abs(st.y));
+    f += (1.0 - smoothstep(0.0, 0.9 * in.aliveness, abs(st.y))) * 0.7;
     
-    float3 col = float3(0.2, 0.7, 0.1) * f;
+    float centerLine = 1.0 - smoothstep(0.2 * in.aliveness, 0.25 * in.aliveness, abs(st.y));
+    f += centerLine * 0.9;
     
-    return float4(col, 0.5);
+    // aspectRatio is the player center X because the last vertex is offset after the uvs get mapped
+    float r = distance(st, float2(aspectRatio, 0.0));
+    f *= 1.0 - step(aspectRatio, st.x);
+    
+    float core = 1.0 - smoothstep(0.3, 1.0, r);
+    f += core;
+    
+    f *= in.aliveness;
+    
+    float bright = step(0.01, core + centerLine);
+    
+    float3 col = mix(float3(0.345, 1.000, 0.129), float3(1.0), bright * 0.5);
+//    float3 col = float3(0.345, 1.000, 0.129) * f;
+    
+//    col = mix(float3(1.0), float3(1.0, 0.0, 0.0), 1.0 - step(0.1, <#metal::float3 x#>))
+    return float4(float3(1.0), in.aliveness);
+//    return float4(col, f);
 }
 
 fragment float4 backgroundShader(VertexOut in [[stage_in]],

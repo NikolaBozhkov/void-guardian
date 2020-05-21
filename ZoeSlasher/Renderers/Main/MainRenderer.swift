@@ -444,10 +444,13 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
-        drawNodes(scene.children)
+        scene.player.draw(self)
         
         trailRenderer.generateVertices(from: scene.player.trailManager.points)
         trailRenderer.draw(renderEncoder: renderEncoder)
+        
+        drawNodes(scene.children)
+        
         
         let particleData = scene.particles.map {
             ParticleData(worldTransform: $0.worldTransform,

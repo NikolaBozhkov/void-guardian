@@ -18,6 +18,9 @@ class TrailRenderer {
     private var vertices = [TrailVertex]()
     private var trailLength: Float = 0
     
+    private var maxVertices = 300
+    private var vertexBuffer: MTLBuffer
+    
     init(device: MTLDevice, library: MTLLibrary) {
         self.device = device
         
@@ -38,11 +41,8 @@ class TrailRenderer {
         
         descriptor.colorAttachments[0].isBlendingEnabled = true
         descriptor.colorAttachments[0].rgbBlendOperation = .add
-        descriptor.colorAttachments[0].alphaBlendOperation = .add
         descriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
         descriptor.colorAttachments[0].destinationRGBBlendFactor = .one
-        descriptor.colorAttachments[0].sourceAlphaBlendFactor = .sourceAlpha
-        descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
         
         descriptor.depthAttachmentPixelFormat = BufferFormats.depthStencil
         descriptor.stencilAttachmentPixelFormat = BufferFormats.depthStencil
@@ -52,16 +52,24 @@ class TrailRenderer {
         } catch let error {
             fatalError(error.localizedDescription)
         }
+        
+        vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * 300, options: .storageModeShared)!
     }
     
     func draw(renderEncoder: MTLRenderCommandEncoder) {
         guard !vertices.isEmpty else { return }
         
+        if vertices.count > 100 {
+            maxVertices *= 2
+            vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * maxVertices, options: .storageModeShared)!
+        }
+        
+//        print(vertices.count)
+        vertexBuffer.contents().copyMemory(from: vertices, byteCount: MemoryLayout<TrailVertex>.stride * vertices.count)
+        
         renderEncoder.setRenderPipelineState(pipelineState)
         
-        renderEncoder.setVertexBytes(vertices,
-                                     length: MemoryLayout<TrailVertex>.stride * vertices.count,
-                                     index: 0)
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         
         var aspectRatio = trailLength / (width * 2)
         renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 5)
@@ -72,8 +80,8 @@ class TrailRenderer {
     }
     
     func generateVertices(from trailPoints: [TrailManager.Point]) {
-        let points = trailPoints.map { $0.position }
-        
+        var points = trailPoints.map { $0.position }
+
         vertices = []
         
         guard points.count >= 2 else { return }
@@ -110,7 +118,7 @@ class TrailRenderer {
                 
                 out = normalOut * (width / length(cross(direction2, normalOut)))
                 
-                if dot(direction2, direction1) > 0.9 {
+                if dot(direction2, direction1) > 0.8 {
                     let direction = safeNormalize(points[i + 1] - points[i])
                     out = vector_float2(-direction.y, direction.x) * width
                 }
@@ -142,6 +150,10 @@ class TrailRenderer {
             //   |   |
             // d *---* c
             
+            if i + 1 == anchors.count - 1 {
+                anchors[i + 1].point += safeNormalize(anchors[i + 1].point - anchors[i].point) * width
+            }
+            
             let a = anchors[i].point + anchors[i].out
             let b = anchors[i + 1].point + anchors[i + 1].out
             let c = anchors[i + 1].point - anchors[i + 1].out
@@ -154,10 +166,10 @@ class TrailRenderer {
             currentLength += segmentLength
             let nextX = currentLength / fullLength
             
-            let vertexA = TrailVertex(position: a, uv: [currentX, 1], aliveness: trailPoints[i].aliveness)
+            let vertexA = TrailVertex(position: a, uv: [currentX, 1], aliveness: trailPoints[i].alivenessNext)
             let vertexB = TrailVertex(position: b, uv: [nextX, 1], aliveness: trailPoints[i + 1].aliveness)
             let vertexC = TrailVertex(position: c, uv: [nextX, 0], aliveness: trailPoints[i + 1].aliveness)
-            let vertexD = TrailVertex(position: d, uv: [currentX, 0], aliveness: trailPoints[i].aliveness)
+            let vertexD = TrailVertex(position: d, uv: [currentX, 0], aliveness: trailPoints[i].alivenessNext)
             vertices.append(vertexA)
             vertices.append(vertexC)
             vertices.append(vertexD)

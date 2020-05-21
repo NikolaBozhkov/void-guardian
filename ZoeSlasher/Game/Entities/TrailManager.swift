@@ -13,11 +13,23 @@ class TrailManager {
     class Point {
         var position: vector_float2
         var speed: Float
+        
         var lifetime: TimeInterval
+        
+        var timeAliveNext: TimeInterval = 0 {
+            didSet {
+                timeAliveNext = min(timeAliveNext, lifetime)
+            }
+        }
+        
         var timeAlive: TimeInterval = 0 {
             didSet {
                 timeAlive = min(timeAlive, lifetime)
             }
+        }
+        
+        var alivenessNext: Float {
+            1 - Float(timeAliveNext / lifetime)
         }
         
         var aliveness: Float {
@@ -29,6 +41,11 @@ class TrailManager {
             self.speed = speed
             self.lifetime = lifetime
         }
+        
+        func update(deltaTime: TimeInterval) {
+            timeAlive += deltaTime
+            timeAliveNext += deltaTime
+        }
     }
     
     unowned let player: Player
@@ -39,8 +56,12 @@ class TrailManager {
         self.player = player
     }
     
-    func addAnchor(at position: vector_float2) {
+    func addAnchor(at position: vector_float2, beginsMovement: Bool = false) {
         points.append(Point(position))
+        
+        if beginsMovement && points.count > 1 {
+            points[points.count - 2].timeAliveNext = 0
+        }
         
         if points.count == 1 {
             points.append(Point(position))
@@ -49,16 +70,24 @@ class TrailManager {
     
     func update(deltaTime: TimeInterval) {
         if points.count >= 2 {
-            points.forEach { $0.timeAlive += deltaTime }
+            points.forEach { $0.update(deltaTime: deltaTime) }
             
             if player.direction != .zero {
-                points[points.count - 1].position = player.position
-                points[points.count - 1].timeAlive = 0
+                points[points.count - 1].position = player.desiredPosition
+                
+                if !player.moveFinished {
+                    points[points.count - 1].timeAlive = 0
+                }
             }
             
             points[points.count - 2].speed = max(length(player.force), points[points.count - 2].speed)
             
-            guard points[0].timeAlive >= points[0].lifetime else { return }
+//            if points[0].needsSync {
+//                points[0].timeAlive = points[0].syncTimeAlive
+//                points[0].needsSync = false
+//            }
+            
+            guard points[0].aliveness <= 0 && points[0].alivenessNext <= 0 else { return }
             
             let direction = safeNormalize(points[1].position - points[0].position)
             
@@ -82,6 +111,6 @@ class TrailManager {
             }
         }
         
-//        print("\(points.map { "\($0.x), \($0.y)" } ))")
+//        print("\(points.map { "\($0.position.x), \($0.position.y)" })")
     }
 }
