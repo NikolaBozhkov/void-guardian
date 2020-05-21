@@ -36,7 +36,7 @@ class TrailManager {
             1 - Float(timeAlive / lifetime)
         }
         
-        init(_ position: vector_float2, speed: Float = 0, lifetime: TimeInterval = 0.5) {
+        init(_ position: vector_float2, speed: Float = 0, lifetime: TimeInterval = 0.4) {
             self.position = position
             self.speed = speed
             self.lifetime = lifetime

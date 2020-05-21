@@ -118,7 +118,7 @@ class TrailRenderer {
                 
                 out = normalOut * (width / length(cross(direction2, normalOut)))
                 
-                if dot(direction2, direction1) > 0.8 {
+                if dot(direction2, direction1) > 0.6 {
                     let direction = safeNormalize(points[i + 1] - points[i])
                     out = vector_float2(-direction.y, direction.x) * width
                 }

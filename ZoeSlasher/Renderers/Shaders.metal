@@ -283,7 +283,7 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     f = n*n*n*4;
 //    f += (1.0 - smoothstep(0.0, 1.0 * in.aliveness, abs(st.y))) * 0.8;
     
-    float dis = 0.4 * distort;
+    float dis = 0.3 * distort;
     
     float pctCenter = in.aliveness;
     
