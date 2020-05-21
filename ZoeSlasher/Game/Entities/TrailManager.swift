@@ -36,7 +36,7 @@ class TrailManager {
             1 - Float(timeAlive / lifetime)
         }
         
-        init(_ position: vector_float2, speed: Float = 0, lifetime: TimeInterval = 1) {
+        init(_ position: vector_float2, speed: Float = 0, lifetime: TimeInterval = 0.5) {
             self.position = position
             self.speed = speed
             self.lifetime = lifetime
@@ -57,6 +57,10 @@ class TrailManager {
     }
     
     func addAnchor(at position: vector_float2, beginsMovement: Bool = false) {
+        if points.count > 0 {
+            points[points.count - 1].position = position
+        }
+        
         points.append(Point(position))
         
         if beginsMovement && points.count > 1 {
@@ -81,12 +85,7 @@ class TrailManager {
             }
             
             points[points.count - 2].speed = max(length(player.force), points[points.count - 2].speed)
-            
-//            if points[0].needsSync {
-//                points[0].timeAlive = points[0].syncTimeAlive
-//                points[0].needsSync = false
-//            }
-            
+        
             guard points[0].aliveness <= 0 && points[0].alivenessNext <= 0 else { return }
             
             let direction = safeNormalize(points[1].position - points[0].position)

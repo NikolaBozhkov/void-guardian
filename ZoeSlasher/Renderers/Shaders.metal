@@ -290,8 +290,11 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     float r = distance(st, float2(aspectRatio, 0.0));
     f *= 1.0 - step(aspectRatio, st.x);
     
-    float core = 1.0 - smoothstep(0.3, 1.0, r);
+    float core = 1.0 - smoothstep(0.5, 1.0, r);
+    f *= 1.0 - core;
     f += core;
+    
+//    f = min(1.0, f);
     
     f *= in.aliveness;
     
@@ -301,8 +304,8 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
 //    float3 col = float3(0.345, 1.000, 0.129) * f;
     
 //    col = mix(float3(1.0), float3(1.0, 0.0, 0.0), 1.0 - step(0.1, <#metal::float3 x#>))
-    return float4(float3(1.0), in.aliveness);
-//    return float4(col, f);
+//    return float4(float3(1.0), in.uv.x);
+    return float4(col, f);
 }
 
 fragment float4 backgroundShader(VertexOut in [[stage_in]],

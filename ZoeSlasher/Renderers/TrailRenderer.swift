@@ -80,7 +80,7 @@ class TrailRenderer {
     }
     
     func generateVertices(from trailPoints: [TrailManager.Point]) {
-        var points = trailPoints.map { $0.position }
+        let points = trailPoints.map { $0.position }
 
         vertices = []
         
