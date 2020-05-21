@@ -266,6 +266,7 @@ vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(0)]],
 }
 
 fragment float4 fragmentTrail(TrailOut in [[stage_in]],
+                              constant Uniforms &uniforms [[buffer(2)]],
                               constant float &aspectRatio [[buffer(5)]],
                               texture2d<float> texture [[texture(0)]],
                               texture2d<float> fbmr [[texture(1)]]) {
@@ -279,14 +280,29 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     float distort = texture.sample(s, in.worldPosNorm).x;
     float n = pow(1. - fbmr.sample(s, in.worldPosNorm).x, 2.5);
     
-    f = n*n*distort;
-    f *= 1.0 - smoothstep(0.0, 1.0, abs(st.y));
-    f += (1.0 - smoothstep(0.0, 0.9 * in.aliveness, abs(st.y))) * 0.7;
+    f = n*n*distort*2;
+    f *= 1.0 - smoothstep(0.5 * in.aliveness, 1.0 * in.aliveness, abs(st.y));
+//    f += (1.0 - smoothstep(0.0, 1.0 * in.aliveness, abs(st.y))) * 0.8;
     
-    float centerLine = 1.0 - smoothstep(0.2 * in.aliveness, 0.25 * in.aliveness, abs(st.y));
-    f += centerLine * 0.9;
+    float dis = 0.6 * distort;
+    
+    float pctCenter = in.aliveness;
+    
+    float oy = st.y;
+    st.y = abs(st.y) + dis;
+    float centerLine = 1.0 - smoothstep(0.5 * pctCenter, 0.9 * pctCenter, st.y);
+    f += centerLine;
+    
+    float pctCenter1 = in.aliveness;
+    float centerLine1 = 1.0 - smoothstep(0.5 * pctCenter1, 0.55 * pctCenter1, st.y);
+    f += centerLine1;
+    
+    float pctCenter2 = in.aliveness * in.aliveness;
+    float centerLine2 = 1.0 - smoothstep(0.43 * pctCenter2, 0.48 * pctCenter2, st.y);
+    f += centerLine2;
     
     // aspectRatio is the player center X because the last vertex is offset after the uvs get mapped
+    st.y = oy;
     float r = distance(st, float2(aspectRatio, 0.0));
     f *= 1.0 - step(aspectRatio, st.x);
     
@@ -298,9 +314,10 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     
     f *= in.aliveness;
     
-    float bright = step(0.01, core + centerLine);
+    float bright = step(0.01, core + centerLine2);
     
-    float3 col = mix(float3(0.345, 1.000, 0.129), float3(1.0), bright * 0.5);
+    float3 col = mix(float3(0.2, 0.7, 0.05), float3(0.345, 1.000, 0.129), centerLine1);
+    col = mix(col, float3(1.0), bright * 0.6);
 //    float3 col = float3(0.345, 1.000, 0.129) * f;
     
 //    col = mix(float3(1.0), float3(1.0, 0.0, 0.0), 1.0 - step(0.1, <#metal::float3 x#>))
