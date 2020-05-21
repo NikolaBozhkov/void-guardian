@@ -10,7 +10,7 @@ import Metal
 
 class TrailRenderer {
     
-    private let width: Float = 100
+    private let width: Float = 200
     
     private let device: MTLDevice
     private let pipelineState: MTLRenderPipelineState

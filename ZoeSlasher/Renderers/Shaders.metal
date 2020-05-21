@@ -270,7 +270,7 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
                               constant float &aspectRatio [[buffer(5)]],
                               texture2d<float> texture [[texture(0)]],
                               texture2d<float> fbmr [[texture(1)]]) {
-    float f = in.aliveness;
+    float f = 0;
     
     float2 st = in.uv * 2.0 - 1.0;
     st.x *= aspectRatio;
@@ -280,25 +280,27 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     float distort = texture.sample(s, in.worldPosNorm).x;
     float n = pow(1. - fbmr.sample(s, in.worldPosNorm).x, 2.5);
     
-    f = n*n*distort*2;
-    f *= 1.0 - smoothstep(0.5 * in.aliveness, 1.0 * in.aliveness, abs(st.y));
+    f = n*n*n*4;
 //    f += (1.0 - smoothstep(0.0, 1.0 * in.aliveness, abs(st.y))) * 0.8;
     
-    float dis = 0.6 * distort;
+    float dis = 0.4 * distort;
     
     float pctCenter = in.aliveness;
     
     float oy = st.y;
     st.y = abs(st.y) + dis;
-    float centerLine = 1.0 - smoothstep(0.5 * pctCenter, 0.9 * pctCenter, st.y);
+    
+    f *= 1.0 - smoothstep(0.0 * in.aliveness, 1.0 * in.aliveness, st.y);
+    
+    float centerLine = 1.0 - smoothstep(0.25 * pctCenter, 0.45 * pctCenter, st.y);
     f += centerLine;
     
     float pctCenter1 = in.aliveness;
-    float centerLine1 = 1.0 - smoothstep(0.5 * pctCenter1, 0.55 * pctCenter1, st.y);
+    float centerLine1 = 1.0 - smoothstep(0.25 * pctCenter1, 0.275 * pctCenter1, st.y);
     f += centerLine1;
     
     float pctCenter2 = in.aliveness * in.aliveness;
-    float centerLine2 = 1.0 - smoothstep(0.43 * pctCenter2, 0.48 * pctCenter2, st.y);
+    float centerLine2 = 1.0 - smoothstep(0.215 * pctCenter2, 0.24 * pctCenter2, st.y);
     f += centerLine2;
     
     // aspectRatio is the player center X because the last vertex is offset after the uvs get mapped
@@ -306,7 +308,7 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     float r = distance(st, float2(aspectRatio, 0.0));
     f *= 1.0 - step(aspectRatio, st.x);
     
-    float core = 1.0 - smoothstep(0.5, 1.0, r);
+    float core = 1.0 - smoothstep(0.25, 0.5, r);
     f *= 1.0 - core;
     f += core;
     
