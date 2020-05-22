@@ -134,6 +134,7 @@ class GameScene: Scene {
         
         let didPlayerStageChange = player.prevStage != player.stage
         if didPlayerStageChange {
+            enemyHitsForMove += hitEnemies.count
             enemies.forEach { $0.resetHitImmunity() }
             hitEnemies.removeAll()
         }
@@ -142,6 +143,7 @@ class GameScene: Scene {
         if didPlayerStageChangeToIdle {
             handleCombo()
         }
+        
         
         player.prevStage = player.stage
         

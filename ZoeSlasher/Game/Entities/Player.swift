@@ -269,7 +269,7 @@ class Player: Node {
             moveFinished = false
             force = .zero
             
-            trailHandler.reset()
+            trailHandler.consumeDistanceBuffer()
             trailManager.addAnchor(at: position, beginsMovement: true)
             
         } else if stage == .idle && !hasEnoughEnergy {
@@ -293,7 +293,7 @@ class Player: Node {
             moveFinished = false
             force = .zero
             
-            trailHandler.updateNextParticlePosition(forDirection: pierceDirection)
+            trailHandler.consumeDistanceBuffer()
             trailManager.addAnchor(at: position, beginsMovement: true) 
         }
     }
