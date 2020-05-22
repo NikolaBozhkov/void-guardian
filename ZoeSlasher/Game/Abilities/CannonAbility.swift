@@ -58,7 +58,7 @@ extension CannonAbility {
         config.stage = stage
         
         config.interval = 10.5
-        config.healthModifier = 5.75
+        config.healthModifier = 5.7
         config.damage = 10 + Float(stage - 1) * 3
         
         return config

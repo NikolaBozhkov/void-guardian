@@ -162,7 +162,7 @@ class Enemy: Node {
         timeSinceLastHit += deltaTime
         timeSinceLastImpactLock += deltaTime
         
-        if isImpactLocked && timeSinceLastImpactLock > 0.09 {
+        if isImpactLocked && timeSinceLastImpactLock > 0.11 {
             isImpactLocked = false
             position = positionBeforeImpact
         }

@@ -173,7 +173,7 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-//        stageManager.update(deltaTime: deltaTime)
+        stageManager.update(deltaTime: deltaTime)
         
         // Clear stage if possible
         if stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
@@ -249,7 +249,7 @@ class GameScene: Scene {
                 // Intersection logic
                 let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
                 if d - 0.1 <= r {
-                    let impactMod = 150 * min(player.damage / enemy.maxHealth, 1.0)
+                    let impactMod = 210 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
                     if player.stage != .idle || player.wasPiercing {
@@ -382,10 +382,10 @@ extension GameScene: EnemyDelegate {
         }
         
         // Particles
-        let count = 1 + Int(powerFactor * 2.5)
+        let count = 2 + Int(powerFactor * 2.5)
         for _ in 0..<count {
             let particle = Particle()
-            particle.scale = 0.6
+            particle.scale = 0.7
             particle.position = enemy.positionBeforeImpact
             particle.color.xyz = enemy.ability.color
             particle.parent = rootNode
