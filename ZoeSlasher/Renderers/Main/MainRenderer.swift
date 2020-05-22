@@ -444,10 +444,13 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
-        scene.player.draw(self)
-        
-        trailRenderer.generateVertices(from: scene.player.trailManager.points)
-        trailRenderer.draw(renderEncoder: renderEncoder)
+        // Player needs to be rendered on top of the trail
+        if scene.player.parent != nil {
+            scene.player.draw(self)
+            
+            trailRenderer.generateVertices(from: scene.player.trailManager.points)
+            trailRenderer.draw(renderEncoder: renderEncoder)
+        }
         
         drawNodes(scene.children)
         

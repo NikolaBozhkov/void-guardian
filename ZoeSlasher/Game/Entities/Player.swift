@@ -144,6 +144,8 @@ class Player: Node {
     }
     
     func update(deltaTime: CFTimeInterval) {
+        guard parent != nil else { return }
+        
         let deltaTime = Float(deltaTime)
         
         timeSinceLastHit += deltaTime
