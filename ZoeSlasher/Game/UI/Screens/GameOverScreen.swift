@@ -22,8 +22,8 @@ class GameOverScreen: SKNode, Screen {
     
     init(stageReached: Int) {
         
-        tryAgainButton = Button(text: "try again (\(stageReached - 7))", fontSize: 200, color: Button.yesColor)
-        returnHomeButton = Button(text: "return home", fontSize: 180, color: Button.noColor)
+        tryAgainButton = Button(text: "try again (\(stageReached - 7))", fontSize: 175, color: Button.yesColor)
+        returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
         
         super.init()
         
@@ -38,10 +38,10 @@ class GameOverScreen: SKNode, Screen {
         
         let message = SKLabelNode(fontNamed: UIConstants.fontName)
         message.text = "Stage \(stageReached)"
-        message.fontSize = 250
+        message.fontSize = 350
         message.verticalAlignmentMode = .center
         message.horizontalAlignmentMode = .center
-        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - message.fontSize * 1.2)
+        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - message.fontSize * 1.1)
         
         message.alpha = 0
         message.run(SKAction.sequence([
@@ -50,8 +50,8 @@ class GameOverScreen: SKNode, Screen {
         ]))
         
         
-        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -tryAgainButton.size.height * 1.07)
-        returnHomeButton.position = tryAgainButton.position.offsetted(dx: 0, dy: -tryAgainButton.size.height / 2 - 175)
+        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -tryAgainButton.size.height * 1.2)
+        returnHomeButton.position = tryAgainButton.position.offsetted(dx: 0, dy: -tryAgainButton.size.height / 2 - 150)
         
         runButtonAppearAction(on: tryAgainButton, waitFor: 2.0, duration: 0.7)
         runButtonAppearAction(on: returnHomeButton, waitFor: 2.15, duration: 0.7)
