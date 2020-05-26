@@ -31,7 +31,6 @@ class GameViewController: UIViewController {
     }
     
     var touchState: TouchState = .none
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()

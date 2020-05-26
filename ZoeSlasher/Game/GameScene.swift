@@ -12,6 +12,13 @@ import GameplayKit
 enum SceneConstants {
     static var size: vector_float2 = .zero
     static var safeAreaInsets: UIEdgeInsets = .zero
+    static var safeLeft: Float = .zero
+    
+    static func set(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
+        self.size = size
+        self.safeAreaInsets = safeAreaInsets
+        safeLeft = -size.x / 2 + Float(safeAreaInsets.left)
+    }
 }
 
 class GameScene: Scene {
@@ -67,8 +74,7 @@ class GameScene: Scene {
         self.size = size
         self.safeAreaInsets = safeAreaInsets
         
-        SceneConstants.size = size
-        SceneConstants.safeAreaInsets = safeAreaInsets
+        SceneConstants.set(size: size, safeAreaInsets: safeAreaInsets)
         
         skGameScene = SKGameScene(size: CGSize(size))
         
