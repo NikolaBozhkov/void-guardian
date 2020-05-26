@@ -93,7 +93,24 @@ class GameScene: Scene {
         player.delegate = self
         player.trailHandler.scene = self
         
-        reloadScene()
+        resetToIdle()
+    }
+    
+    func resetToIdle() {
+        skGameScene.removeGameLabels()
+        stageManager.isActive = false
+        
+        player.setPosition(.zero)
+        player.interruptCharging()
+        player.health = 100
+        player.energy = 100
+        
+        if player.parent == nil {
+            rootNode.add(childNode: player)
+        }
+        
+        potions.forEach { $0.consume() }
+        enemies.forEach(removeEnemy)
     }
     
     func update(deltaTime: TimeInterval) {
@@ -196,8 +213,7 @@ class GameScene: Scene {
     
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
-        
-        player.health = 0
+
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
         player.move(to: location)
@@ -222,13 +238,16 @@ class GameScene: Scene {
         player.setPosition(.zero)
         player.energy = 100
         player.health = 100
-        rootNode.add(childNode: player)
+        
+        if player.parent == nil {
+            rootNode.add(childNode: player)
+        }
         
         isGameOver = false
         favor = 0
         
         stageManager.reset()
-        skGameScene.didReloadScene()
+        skGameScene.addGameLabels()
     }
     
     private func testPlayerEnemyCollision() {

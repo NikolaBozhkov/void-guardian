@@ -46,6 +46,13 @@ class TrailHandler {
         prevPosition = target.position
     }
     
+    func reset() {
+        distanceBuffer = 0
+        prevParticlePosition = target.position
+        prevPosition = target.position
+        nextParticleDistance = Float.random(in: particleDistanceRange)
+    }
+    
     func spawnParticle(targetDirection: vector_float2) {
         let radius = Float.random(in: 0...100)
         let angle = Float.random(in: -.pi...(.pi))

@@ -56,6 +56,10 @@ class TrailManager {
         self.player = player
     }
     
+    func reset() {
+        points.removeAll()
+    }
+    
     func addAnchor(at position: vector_float2, beginsMovement: Bool = false) {
         if points.count > 0 {
             points[points.count - 1].position = position

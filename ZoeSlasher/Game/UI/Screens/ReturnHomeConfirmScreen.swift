@@ -24,7 +24,7 @@ class ReturnHomeConfirmScreen: SKNode, Screen {
     
     override init() {
         yesButton = Button(text: "yes", fontSize: buttonFontSize, color: Button.yesColor)
-        noButton = Button(text: "YEs", fontSize: buttonFontSize, color: Button.noColor)
+        noButton = Button(text: "no", fontSize: buttonFontSize, color: Button.noColor)
         
         super.init()
         

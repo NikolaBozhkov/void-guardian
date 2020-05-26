@@ -22,7 +22,7 @@ class GameOverScreen: SKNode, Screen {
     
     init(stageReached: Int) {
         
-        tryAgainButton = Button(text: "try again (\(stageReached - 7))", fontSize: 175, color: Button.yesColor)
+        tryAgainButton = Button(text: "try again (\(max(stageReached - 7, 1)))", fontSize: 175, color: Button.yesColor)
         returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
         
         super.init()

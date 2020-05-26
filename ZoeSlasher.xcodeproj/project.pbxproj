@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24629E62240D6A87009A465B /* Sanos-Extended.ttf */; };
 		24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */; };
 		2464427C24127BFB004CF697 /* ComboLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464427B24127BFB004CF697 /* ComboLabel.swift */; };
@@ -75,6 +76,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24629E62240D6A87009A465B /* Sanos-Extended.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sanos-Extended.ttf"; sourceTree = "<group>"; };
 		24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
 		2464427B24127BFB004CF697 /* ComboLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboLabel.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				2468E3B6246193F7004042AD /* ReturnHomeConfirmScreen.swift */,
 				2468E3B82462AAA1004042AD /* GameOverScreen.swift */,
 				2468E3BA24651C42004042AD /* StageConfirmScreen.swift */,
+				243B30B6247959890015CFD1 /* HomeScreen.swift */,
 				2468E3B024613D63004042AD /* Screen.swift */,
 			);
 			path = Screens;
@@ -478,6 +481,7 @@
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
+				243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */,
 				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,

@@ -18,6 +18,7 @@ class Coordinator {
     private let overlayBackground: SKSpriteNode
     private let pauseScreen = PauseScreen()
     private let returnHomeConfirmScreen = ReturnHomeConfirmScreen()
+    private let homeScreen = HomeScreen()
     
     init(gameScene: GameScene, overlayScene: OverlayScene) {
         self.gameScene = gameScene
@@ -26,21 +27,21 @@ class Coordinator {
         overlayBackground = SKSpriteNode(color: .black, size: CGSize(SceneConstants.size))
         overlayBackground.alpha = 0.9
         overlayBackground.zPosition = 100
+        
+        activeScreen = homeScreen
+        overlayScene.addChild(homeScreen)
     }
     
     func configure() {
         pauseScreen.delegate = self
         returnHomeConfirmScreen.delegate = self
+        homeScreen.delegate = self
         gameScene.skGameScene.sceneDelegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: .willResignActive, object: nil)
     }
     
     @objc func willResignActive() {
         didPause()
-    }
-    
-    func startGame() {
-        
     }
     
     func didPause() {
@@ -102,7 +103,13 @@ extension Coordinator: PauseScreenDelegate {
 
 extension Coordinator: ReturnHomeConfirmScreenDelegate {
     func didConfirmReturnHome() {
+        activeScreen?.removeFromParent()
+        overlayBackground.removeFromParent()
         
+        gameScene.unpause()
+        gameScene.resetToIdle()
+        activeScreen = homeScreen
+        overlayScene.addChild(homeScreen)
     }
     
     func didCancelReturnHome() {
@@ -143,11 +150,16 @@ extension Coordinator: GameOverScreenDelegate {
     }
     
     func returnHomeFromGameOver() {
+        gameScene.resetToIdle()
         
+        activeScreen?.removeFromParent()
+        
+        activeScreen = homeScreen
+        overlayScene.addChild(homeScreen)
     }
 }
 
-// MARK: -
+// MARK: - StageConfirmScreenDelegate
 
 extension Coordinator: StageConfirmScreenDelegate {
     func didConfirmNextStage() {
@@ -158,5 +170,22 @@ extension Coordinator: StageConfirmScreenDelegate {
     }
     
     func didCancelNextStage() {
+        activeScreen?.removeFromParent()
+        
+        gameScene.resetToIdle()
+        
+        overlayScene.addChild(homeScreen)
+        activeScreen = homeScreen
+    }
+}
+
+// MARK: - HomeScreenDelegate
+
+extension Coordinator: HomeScreenDelegate {
+    func startGame() {
+        gameScene.reloadScene()
+        
+        activeScreen?.removeFromParent()
+        activeScreen = nil
     }
 }

@@ -22,7 +22,7 @@ class StageManager {
     
     let spawner: Spawner
     var delegate: StageManagerDelegate?
-    var isActive = true
+    var isActive = false
     
     private var budget: Float = Constants.baseBudget
     private var stageDuration: TimeInterval = Constants.baseStageDuration
@@ -79,7 +79,7 @@ class StageManager {
     func reset() {
         budget = Constants.baseBudget
         isActive = true
-        stage = 0
+        stage = max(stage - 7, 1) - 1
         
         let toStage = stage
         stage = 0

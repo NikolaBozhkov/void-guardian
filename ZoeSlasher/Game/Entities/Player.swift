@@ -304,6 +304,11 @@ class Player: Node {
         anchor?.removeFromParent()
         anchor = nil
         stage = .idle
+        timeSinceLastHit = 1000
+        timeSinceLastMove = 1000
+        timeSinceLastEnergyUse = 1000
+        trailHandler.reset()
+        trailManager.reset()
     }
 }
 

@@ -119,14 +119,18 @@ class SKGameScene: SKScene {
             indicatorToEnemyMap.removeValue(forKey: $0)
         }
         
-        scoreLabel.removeFromParent()
-        favorLabel.removeFromParent()
-        favorSymbol.removeFromParent()
+        removeGameLabels()
         
         sceneDelegate?.didGameOver(stageReached: score)
     }
     
-    func didReloadScene() {
+    func removeGameLabels() {
+        scoreLabel.removeFromParent()
+        favorLabel.removeFromParent()
+        favorSymbol.removeFromParent()
+    }
+    
+    func addGameLabels() {
         addChild(scoreLabel)
         addChild(favorLabel)
         addChild(favorSymbol)
