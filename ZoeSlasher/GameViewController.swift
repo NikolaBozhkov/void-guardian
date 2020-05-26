@@ -11,10 +11,27 @@ import MetalKit
 
 // Our iOS specific view controller
 class GameViewController: UIViewController {
+    
+    enum TouchState {
+        case doubleTap, singleTap, none
+    }
 
     var renderer: MainRenderer!
     var coordinator: Coordinator!
     var mtkView: MTKView!
+    
+    var lastTouchTime: TimeInterval = -1
+    
+    var activeTouchCount = 0 {
+        didSet {
+            if activeTouchCount == 0 {
+                touchState = .none
+            }
+        }
+    }
+    
+    var touchState: TouchState = .none
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,10 +61,7 @@ class GameViewController: UIViewController {
         renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
 
         mtkView.delegate = renderer
-        
-        let twoFingerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTwoFingerTap))
-        twoFingerTapRecognizer.numberOfTouchesRequired = 2
-        mtkView.addGestureRecognizer(twoFingerTapRecognizer)
+        mtkView.isMultipleTouchEnabled = true
         
         self.mtkView = mtkView
     }
@@ -58,24 +72,47 @@ class GameViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-        let point = normalizeTouchLocation(touch)
-        renderer.coordinator.touchBegan(at: point)
+        activeTouchCount += touches.count
+        
+        let currentTime = CACurrentMediaTime()
+        if touches.count == 2
+            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.05 {
+            
+            didTwoFingerTap()
+            touchState = .doubleTap
+            
+        } else if touches.count == 1 && touchState == .none {
+            let touch = touches.first!
+            let point = normalizeTouchLocation(touch)
+            renderer.coordinator.touchBegan(at: point)
+            
+            lastTouchTime = currentTime
+            touchState = .singleTap
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard touchState == .singleTap else { return }
+        
         let touch = touches.first!
         let point = normalizeTouchLocation(touch)
         renderer.coordinator.touchMoved(at: point)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        defer {
+            activeTouchCount -= touches.count
+        }
+        
+        guard activeTouchCount == 1 && touchState == .singleTap else { return }
+        
         let touch = touches.first!
         let point = normalizeTouchLocation(touch)
         renderer.coordinator.touchEnded(at: point)
+        touchState = .none
     }
     
-    @objc func didTwoFingerTap(_ sender: UITapGestureRecognizer) {
+    @objc func didTwoFingerTap() {
         renderer.coordinator.didPause()
     }
     

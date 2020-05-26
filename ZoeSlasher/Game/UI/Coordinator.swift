@@ -19,6 +19,7 @@ class Coordinator {
     private let pauseScreen = PauseScreen()
     private let returnHomeConfirmScreen = ReturnHomeConfirmScreen()
     private let homeScreen = HomeScreen()
+    private let confirmNextStageScreen = StageConfirmScreen()
     
     init(gameScene: GameScene, overlayScene: OverlayScene) {
         self.gameScene = gameScene
@@ -36,6 +37,7 @@ class Coordinator {
         pauseScreen.delegate = self
         returnHomeConfirmScreen.delegate = self
         homeScreen.delegate = self
+        confirmNextStageScreen.delegate = self
         gameScene.skGameScene.sceneDelegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: .willResignActive, object: nil)
     }
@@ -131,11 +133,11 @@ extension Coordinator: SKGameSceneDelegate {
     }
     
     func confirmNextStage() {
-        let confirmStageScreen = StageConfirmScreen()
-        confirmStageScreen.delegate = self
+        confirmNextStageScreen.alpha = 0
+        confirmNextStageScreen.run(SKAction.fadeIn(withDuration: 0.15, timingMode: .easeOut))
         
-        overlayScene.addChild(confirmStageScreen)
-        activeScreen = confirmStageScreen
+        overlayScene.addChild(confirmNextStageScreen)
+        activeScreen = confirmNextStageScreen
     }
 }
 
@@ -165,7 +167,11 @@ extension Coordinator: StageConfirmScreenDelegate {
     func didConfirmNextStage() {
         gameScene.advanceStage()
         
-        activeScreen?.removeFromParent()
+        confirmNextStageScreen.run(SKAction.sequence([
+            SKAction.fadeOut(withDuration: 0.15, timingMode: .easeIn),
+            SKAction.removeFromParent()
+        ]))
+        
         activeScreen = nil
     }
     

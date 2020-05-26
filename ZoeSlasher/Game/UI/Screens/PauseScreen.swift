@@ -24,7 +24,7 @@ class PauseScreen: SKNode, Screen {
         
         unpauseButton = Button(text: "resume", fontSize: 200, color: Button.yesColor)
         
-        returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
+        returnHomeButton = Button(text: "return home", fontSize: 170, color: Button.noColor)
         returnHomeButton.position = CGPoint(x: 0, y: -unpauseButton.size.height / 2 - 175)
         
         super.init()
