@@ -7,6 +7,45 @@
 //
 
 class Ability {
+    let scene: GameScene
+    
+    let symbol: String
+    let symbolVelocityGain: Float
+    let symbolVelocityRecoil: Float
+    
+    let color: vector_float3
+    let colorScale: Float
+    let impulseSharpness: Float
+    
+    let interval: TimeInterval
+    let healthModifier: Float
+    let damage: Float
+    
+    let stage: Int
+    let cost: Float
+    
+    required init?<C>(scene: GameScene, config: C) where C: Configuration {
+        self.scene = scene
+        symbol = config.symbol
+        symbolVelocityGain = config.symbolVelocityGain
+        symbolVelocityRecoil = config.symbolVelocityRecoil
+        
+        color = config.color
+        colorScale = config.colorScale
+        impulseSharpness = config.impulseSharpness
+        
+        interval = config.interval
+        healthModifier = config.healthModifier
+        damage = config.damage
+        
+        stage = config.stage
+        cost = config.cost
+    }
+    
+    func trigger(for enemy: Enemy) {}
+}
+
+extension Ability {
     
     class Configuration {
         
@@ -84,47 +123,6 @@ class Ability {
         }
     }
     
-    let scene: GameScene
-    
-    let symbol: String
-    let symbolVelocityGain: Float
-    let symbolVelocityRecoil: Float
-    
-    let color: vector_float3
-    let colorScale: Float
-    let impulseSharpness: Float
-    
-    let interval: TimeInterval
-    let healthModifier: Float
-    let damage: Float
-    
-    let stage: Int
-    let cost: Float
-    
-    required init?<C>(scene: GameScene, config: C) where C: Configuration {
-        self.scene = scene
-        symbol = config.symbol
-        symbolVelocityGain = config.symbolVelocityGain
-        symbolVelocityRecoil = config.symbolVelocityRecoil
-        
-        color = config.color
-        colorScale = config.colorScale
-        impulseSharpness = config.impulseSharpness
-        
-        interval = config.interval
-        healthModifier = config.healthModifier
-        damage = config.damage
-        
-        stage = config.stage
-        cost = config.cost
-    }
-    
-    func trigger(for enemy: Enemy) {
-        
-    }
-}
-
-extension Ability {
     static func getSpawnChanceFunction(startStage: Int, baseChance: Float, chanceGrowth: Float, max: Float) -> (Int) -> Float {
         let startStage = Float(startStage)
         return { stage in

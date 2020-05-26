@@ -53,6 +53,7 @@ class Enemy: Node {
     private var timeSinceLastTrigger: TimeInterval = 0
     var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
     private var timeSinceLastImpactLock: TimeInterval = 1000
+    private var impactLockDuration: TimeInterval = 0
     var timeAlive: Float = 0
     
     var positionDelta = vector_float2.zero
@@ -123,7 +124,7 @@ class Enemy: Node {
         health -= damage
         dmgReceivedNormalized = min(damage / maxHealth, 1.0)
         
-        impactLock(with: impact)
+        impactLock(with: impact, duration: 0.13)
         
         timeSinceLastHit = 0
         isImmune = true
@@ -144,7 +145,7 @@ class Enemy: Node {
         }
     }
     
-    func impactLock(with impact: vector_float2) {
+    func impactLock(with impact: vector_float2, duration: TimeInterval) {
         if !isImpactLocked {
             positionBeforeImpact = position
             isImpactLocked = true
@@ -152,6 +153,9 @@ class Enemy: Node {
         
         position += impact
         timeSinceLastImpactLock = 0
+        
+        // The new duration is the remaining duration if bigger than the given duration
+        impactLockDuration = max(impactLockDuration - timeSinceLastImpactLock, duration)
     }
     
     func update(deltaTime: TimeInterval) {
@@ -162,7 +166,7 @@ class Enemy: Node {
         timeSinceLastHit += deltaTime
         timeSinceLastImpactLock += deltaTime
         
-        if isImpactLocked && timeSinceLastImpactLock > 0.11 {
+        if isImpactLocked && timeSinceLastImpactLock > impactLockDuration {
             isImpactLocked = false
             position = positionBeforeImpact
         }

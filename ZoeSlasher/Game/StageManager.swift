@@ -31,7 +31,7 @@ class StageManager {
     
     private(set) var timeSinceStageCleared: TimeInterval = 1000
     
-    private(set) var stage = 0
+    private(set) var stage = 40
     
     private var budgetGrowth: Float {
         for (key, value) in StageManager.thresholdToBudgetGrowthMap {

@@ -14,7 +14,9 @@ class MachineGunAbilityConfig: Ability.Configuration {
     }
 }
 
-class MachineGunAbility: Ability {
+class MachineGunAbility: AttackAbility {
+    
+    override var kickbackForce: Float { 15 }
     
     required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
         guard let config = config as? MachineGunAbilityConfig else {
@@ -22,14 +24,6 @@ class MachineGunAbility: Ability {
         }
         
         super.init(scene: scene, config: config)
-    }
-    
-    override func trigger(for enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
-        attack.parent = scene.rootNode
-        scene.attacks.insert(attack)
-        
-        enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 15)
     }
 }
 

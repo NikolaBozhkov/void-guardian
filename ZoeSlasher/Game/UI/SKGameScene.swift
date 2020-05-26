@@ -356,7 +356,7 @@ class SKGameScene: SKScene {
         
         var actions = [SKAction]()
         var amplitude: CGFloat = 1.0
-        let power: CGFloat = 15 * CGFloat(powerFactor)
+        let power: CGFloat = 23 * CGFloat(powerFactor)
         
         for _ in 0..<3 {
             let direction = CGPoint(angle: .random(in: -.pi...(.pi)))

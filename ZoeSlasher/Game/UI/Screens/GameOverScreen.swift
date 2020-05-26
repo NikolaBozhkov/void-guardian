@@ -41,7 +41,11 @@ class GameOverScreen: SKNode, Screen {
         message.fontSize = 350
         message.verticalAlignmentMode = .center
         message.horizontalAlignmentMode = .center
-        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - message.fontSize * 1.1)
+        
+        let messageMargin: CGFloat = 200
+        let messageAreaY = message.frame.height + messageMargin * 2
+        
+        message.position = title.position.offsetted(dx: 0, dy: -title.halfHeight - messageAreaY / 2)
         
         message.alpha = 0
         message.run(SKAction.sequence([
@@ -49,8 +53,8 @@ class GameOverScreen: SKNode, Screen {
             SKAction.fadeIn(withDuration: 1, timingMode: .easeOut)
         ]))
         
-        
-        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -tryAgainButton.size.height * 1.2)
+        // + constant used to account for the empty space left by the shader's fade
+        tryAgainButton.position = message.position.offsetted(dx: 0, dy: -messageAreaY / 2 - tryAgainButton.size.height / 2 + 30)
         returnHomeButton.position = tryAgainButton.position.offsetted(dx: 0, dy: -tryAgainButton.size.height / 2 - 150)
         
         runButtonAppearAction(on: tryAgainButton, waitFor: 2.0, duration: 0.7)

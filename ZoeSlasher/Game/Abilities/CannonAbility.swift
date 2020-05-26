@@ -12,7 +12,9 @@ class CannonAbilityConfig: Ability.Configuration {
     }
 }
 
-class CannonAbility: Ability {
+class CannonAbility: AttackAbility {
+    
+    override var kickbackForce: Float { 45 }
 
     required init?<C>(scene: GameScene, config: C) where C : Ability.Configuration {
         guard let config = config as? CannonAbilityConfig else {
@@ -20,14 +22,6 @@ class CannonAbility: Ability {
         }
         
         super.init(scene: scene, config: config)
-    }
-    
-    override func trigger(for enemy: Enemy) {
-        let attack = EnemyAttack(enemy: enemy, targetPosition: scene.player.position, corruption: damage)
-        attack.parent = scene.rootNode
-        scene.attacks.insert(attack)
-        
-        enemy.impactLock(with: normalize(enemy.position - scene.player.position) * 45)
     }
 }
 
