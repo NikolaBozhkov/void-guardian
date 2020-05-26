@@ -34,6 +34,8 @@ class ProgressManager {
     }
     
     private init() {
+        UserDefaults.standard.removeObject(forKey: Key.currentStage)
+        UserDefaults.standard.removeObject(forKey: Key.bestStage)
         if UserDefaults.standard.value(forKey: Key.currentStage) == nil {
             UserDefaults.standard.set(1, forKey: Key.currentStage)
         }

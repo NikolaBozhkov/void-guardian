@@ -39,7 +39,6 @@ class GameOverScreen: SKNode, Screen {
         let message = SKLabelNode(fontNamed: UIConstants.fontName)
         message.text = "Stage \(stageReached)"
         message.fontSize = 350
-        message.fontColor = ProgressManager.shared.hasNewBest ? .yellow : .white
         message.verticalAlignmentMode = .center
         message.horizontalAlignmentMode = .center
         
@@ -53,6 +52,18 @@ class GameOverScreen: SKNode, Screen {
             SKAction.wait(forDuration: 1.5),
             SKAction.fadeIn(withDuration: 1, timingMode: .easeOut)
         ]))
+        
+        if ProgressManager.shared.hasNewBest {
+            let newBestLabel = SKLabelNode(fontNamed: UIConstants.besomFont)
+            newBestLabel.text = "New best"
+            newBestLabel.fontSize = 100
+            newBestLabel.verticalAlignmentMode = .center
+            newBestLabel.horizontalAlignmentMode = .center
+            newBestLabel.zRotation = -.pi / 6
+            newBestLabel.fontColor = UIColor(hex: "f9b42a")
+            newBestLabel.position = CGPoint(message.frame.size / 2 + 50)
+            message.addChild(newBestLabel)
+        }
         
         // + constant used to account for the empty space left by the shader's fade
         tryAgainButton.position = message.position.offsetted(dx: 0, dy: -messageAreaY / 2 - tryAgainButton.size.height / 2 + 30)
