@@ -13,7 +13,15 @@ class Coordinator {
     let overlayScene: OverlayScene
     let gameScene: GameScene
     
-    private(set) var activeScreen: Screen?
+    private(set) var activeScreen: Screen? {
+        didSet {
+            if let activeScreen = activeScreen {
+                activeScreen.present()
+            } else if let oldScreen = oldValue {
+                oldScreen.hide()
+            }
+        }
+    }
     
     private let overlayBackground: SKSpriteNode
     private let pauseScreen = PauseScreen()
@@ -31,6 +39,7 @@ class Coordinator {
         
         activeScreen = homeScreen
         overlayScene.addChild(homeScreen)
+        homeScreen.present()
     }
     
     func configure() {
@@ -178,6 +187,8 @@ extension Coordinator: StageConfirmScreenDelegate {
     func didCancelNextStage() {
         activeScreen?.removeFromParent()
         
+        ProgressManager.shared.bestStage = max(ProgressManager.shared.bestStage, gameScene.stageManager.stage)
+        ProgressManager.shared.currentStage = gameScene.stageManager.stage + 1
         gameScene.resetToIdle()
         
         overlayScene.addChild(homeScreen)

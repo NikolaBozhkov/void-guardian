@@ -22,8 +22,6 @@ class HomeScreen: SKNode, Screen {
     let currentStageLabel: SKLabelNode
     let bestStageLabel: SKLabelNode
     
-    
-    
     override init() {
         
         playButton = Button(text: "play", fontSize: 250, color: Button.yesColor)
@@ -68,12 +66,6 @@ class HomeScreen: SKNode, Screen {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func handleTap(at point: CGPoint) {
-        if playButton.consumeTap(at: point) {
-            delegate?.startGame()
-        }
-    }
-    
     private class func createStageLabel(text: String) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: UIConstants.fontName)
         label.fontSize = 0.8 * stageLabelFontSize
@@ -92,5 +84,21 @@ class HomeScreen: SKNode, Screen {
         valueLabel.position = CGPoint(x: label.frame.size.width + 30, y: -label.frame.height / 2)
         
         return label
+    }
+    
+    func present() {
+        guard let currentStageValueLabel = currentStageLabel.children.first as? SKLabelNode,
+            let bestStageValueLabel = bestStageLabel.children.first as? SKLabelNode else {
+                return
+        }
+        
+        currentStageValueLabel.text = "\(ProgressManager.shared.currentStage)"
+        bestStageValueLabel.text = "\(ProgressManager.shared.bestStage)"
+    }
+    
+    func handleTap(at point: CGPoint) {
+        if playButton.consumeTap(at: point) {
+            delegate?.startGame()
+        }
     }
 }

@@ -198,7 +198,7 @@ class GameScene: Scene {
         stageManager.update(deltaTime: deltaTime)
         
         // Clear stage if possible
-        if stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
+        if !isGameOver && stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.clearStage()
         }
         
@@ -220,8 +220,8 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
 
-//        enemies.forEach(removeEnemy)
-//        stageManager.clearStage()
+        enemies.forEach(removeEnemy)
+        stageManager.clearStage()
         player.move(to: location)
     }
     

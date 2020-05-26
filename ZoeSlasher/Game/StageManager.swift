@@ -31,7 +31,7 @@ class StageManager {
     
     private(set) var timeSinceStageCleared: TimeInterval = 1000
     
-    private(set) var stage = 40
+    private(set) var stage = 0
     
     private var budgetGrowth: Float {
         for (key, value) in StageManager.thresholdToBudgetGrowthMap {
@@ -68,6 +68,9 @@ class StageManager {
         stageTime = 0
 
         stage += 1
+        ProgressManager.shared.currentStage = max(stage - 7, 1)
+        ProgressManager.shared.bestStage = max(ProgressManager.shared.bestStage, stage)
+        
         budget += budgetGrowth
         
         spawnPeriod = stageDuration * 0.34
@@ -79,9 +82,8 @@ class StageManager {
     func reset() {
         budget = Constants.baseBudget
         isActive = true
-        stage = max(stage - 7, 1) - 1
         
-        let toStage = stage
+        let toStage = ProgressManager.shared.currentStage - 1
         stage = 0
         for _ in 0..<toStage {
             budget += budgetGrowth

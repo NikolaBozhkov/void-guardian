@@ -67,6 +67,7 @@
 		24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD372474FC4200FE2FC1 /* TrailManager.swift */; };
 		24DCFD3A2475353100FE2FC1 /* TrailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD392475353100FE2FC1 /* TrailRenderer.swift */; };
 		24E65F4D247CF28A004EE053 /* AttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E65F4C247CF28A004EE053 /* AttackAbility.swift */; };
+		24E65F4F247D1F43004EE053 /* ProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E65F4E247D1F43004EE053 /* ProgressManager.swift */; };
 		24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */; };
 		24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */; };
 		24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7D8B324057E36007A66D2 /* CannonAbility.swift */; };
@@ -142,6 +143,7 @@
 		24DCFD372474FC4200FE2FC1 /* TrailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailManager.swift; sourceTree = "<group>"; };
 		24DCFD392475353100FE2FC1 /* TrailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailRenderer.swift; sourceTree = "<group>"; };
 		24E65F4C247CF28A004EE053 /* AttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttackAbility.swift; sourceTree = "<group>"; };
+		24E65F4E247D1F43004EE053 /* ProgressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressManager.swift; sourceTree = "<group>"; };
 		24E7D8AB240545B6007A66D2 /* BasicAttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAttackAbility.swift; sourceTree = "<group>"; };
 		24E7D8B124057DC3007A66D2 /* MachineGunAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MachineGunAbility.swift; sourceTree = "<group>"; };
 		24E7D8B324057E36007A66D2 /* CannonAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonAbility.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				247D704723E6B20B00480199 /* GameScene.swift */,
 				247D705023E6CE0F00480199 /* Spawner.swift */,
 				24E7D8B724066093007A66D2 /* StageManager.swift */,
+				24E65F4E247D1F43004EE053 /* ProgressManager.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
 				24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */,
 				247D705A23F009DD00480199 /* SKGameScene.swift in Sources */,
+				24E65F4F247D1F43004EE053 /* ProgressManager.swift in Sources */,
 				24E7D8B424057E36007A66D2 /* CannonAbility.swift in Sources */,
 				24D9E85F23C1C8B500CB6638 /* MainRenderer.swift in Sources */,
 				2469393523C465B0001A6CAE /* SpriteRenderer.swift in Sources */,

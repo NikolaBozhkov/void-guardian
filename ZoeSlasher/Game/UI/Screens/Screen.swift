@@ -11,6 +11,8 @@ import SpriteKit
 protocol Screen: SKNode {
     func handleTap(at point: CGPoint)
     func handleHover(at point: CGPoint)
+    func present()
+    func hide()
 }
 
 extension Screen {
@@ -24,4 +26,8 @@ extension Screen {
             }
         }
     }
+    
+    func present() { }
+    
+    func hide() { }
 }

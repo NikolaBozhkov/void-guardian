@@ -22,7 +22,7 @@ class GameOverScreen: SKNode, Screen {
     
     init(stageReached: Int) {
         
-        tryAgainButton = Button(text: "try again (\(max(stageReached - 7, 1)))", fontSize: 175, color: Button.yesColor)
+        tryAgainButton = Button(text: "try again (\(ProgressManager.shared.currentStage))", fontSize: 175, color: Button.yesColor)
         returnHomeButton = Button(text: "return home", fontSize: 160, color: Button.noColor)
         
         super.init()
@@ -39,6 +39,7 @@ class GameOverScreen: SKNode, Screen {
         let message = SKLabelNode(fontNamed: UIConstants.fontName)
         message.text = "Stage \(stageReached)"
         message.fontSize = 350
+        message.fontColor = ProgressManager.shared.hasNewBest ? .yellow : .white
         message.verticalAlignmentMode = .center
         message.horizontalAlignmentMode = .center
         
@@ -64,6 +65,9 @@ class GameOverScreen: SKNode, Screen {
         addChild(message)
         addChild(tryAgainButton)
         addChild(returnHomeButton)
+        
+        // Reset newBest flag
+        ProgressManager.shared.hasNewBest = false
     }
     
     required init?(coder aDecoder: NSCoder) {
