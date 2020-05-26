@@ -42,6 +42,7 @@ class ProgressManager {
         
         currentStage = UserDefaults.standard.integer(forKey: Key.currentStage)
         bestStage = UserDefaults.standard.integer(forKey: Key.bestStage)
+        currentStage = 15
         hasNewBest = false
     }
 }

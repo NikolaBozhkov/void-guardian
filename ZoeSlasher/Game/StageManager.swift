@@ -66,15 +66,34 @@ class StageManager {
         
         stageDuration = Constants.baseStageDuration
         stageTime = 0
-
+        
         stage += 1
+        
+        if stage % 7 == 0 {
+            budget += 3
+        }
+
         ProgressManager.shared.currentStage = max(stage - 7, 1)
         ProgressManager.shared.bestStage = max(ProgressManager.shared.bestStage, stage)
         
         budget += budgetGrowth
         
         spawnPeriod = stageDuration * 0.34
+        
+        // Every 3 stages experience 7 stages up
+        let prevStage = stage
+        let prevBudget = budget
+        if stage % 3 == 0 {
+            for _ in stage..<stage + 21 {
+                stage += 1
+                budget += budgetGrowth
+            }
+        }
+        
         spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
+        
+        stage = prevStage
+        budget = prevBudget
     
         delegate?.didAdvanceStage(to: stage)
     }

@@ -220,7 +220,7 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
 
-        player.health = 0
+//        player.health = 0
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
         player.move(to: location)

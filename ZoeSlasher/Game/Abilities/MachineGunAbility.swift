@@ -55,7 +55,7 @@ extension MachineGunAbility {
         
         config.interval = 2
         config.healthModifier = 1.7
-        config.damage = Float(stage) * 2
+        config.damage = 5 + Float(stage - 1) * 1.5
         
         return config
     }

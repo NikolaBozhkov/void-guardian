@@ -75,16 +75,14 @@ extension Ability {
             didSet {
                 let startStage = 1 + (stage - 1) * 7
                 
-                var baseChance: Float = 1
-                if stage != 1 {
-                    baseChance = 0.2 - Float(stage - 1) * 0.2
-                }
-                
-                if stage == 11 {
-                    baseChance = 0
-                }
-                
+                // stage = [1;11]
                 let maxChance = 1.0 - Float(stage - 1) * 0.07
+                var baseChance: Float = 1
+                
+                if stage != 1 {
+                    baseChance = 0.7 * maxChance
+                }
+                
                 let chanceGrowth = (maxChance - baseChance) / 5
                 
                 spawnChanceFunction = Configuration.getSpawnChanceFunction(startStage: startStage,

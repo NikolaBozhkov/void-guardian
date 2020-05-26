@@ -53,7 +53,7 @@ extension CannonAbility {
         
         config.interval = 10.5
         config.healthModifier = 5.7
-        config.damage = 10 + Float(stage - 1) * 3
+        config.damage = 15 + Float(stage - 1) * 3.5
         
         return config
     }

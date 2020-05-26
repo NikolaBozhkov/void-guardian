@@ -51,7 +51,7 @@ extension BasicAttackAbility {
         
         config.interval = 6
         config.healthModifier = 3.65
-        config.damage = 6 + Float(stage - 1) * 3
+        config.damage = 10 + Float(stage - 1) * 2.5
         
         return config
     }
