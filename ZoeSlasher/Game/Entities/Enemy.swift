@@ -216,20 +216,6 @@ class Enemy: Node {
             $0.rotation += Float(deltaTime) * symbolsAngleVelocity
             updateSymbol($0, f)
         }
-        
-        if timeSinceLastHit > 0.15 {
-            let prevPosition = position
-            
-            let n = noise(seed + timeAlive * 0.1) * 2.0 - 1.0
-            angle += n * 0.01
-            speed = max(min(speed + n * 2, 200), 0)
-            
-//            position += vector_float2(cos(angle), sin(angle)) * speed * Float(deltaTime)
-            
-            let currentPositionDelta = position - prevPosition
-            let deltaDelta = currentPositionDelta - positionDelta
-            positionDelta += deltaDelta * 0.0167 // Fixed delta time 60 fps to prevents jumps
-        }
     }
     
     private func updateSymbol(_ symbol: Node, _ f: Float) {

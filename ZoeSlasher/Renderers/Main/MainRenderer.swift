@@ -344,7 +344,13 @@ extension MainRenderer: MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         let aspectRatio = size.width / size.height
         
-        let sceneSize = vector_float2(2000 * Float(aspectRatio), 2000)
+        // The sq root of the target area for all devices (designed on XS with height 2000)
+        let targetAreaSqRoot: Float = 2943.0142
+        let height = targetAreaSqRoot / sqrt(Float(aspectRatio))
+        let width = Float(aspectRatio) * height
+        let sceneSize = vector_float2(width, height)
+        print(sceneSize)
+        
         let adjustedInsets = UIEdgeInsets(top: (safeAreaInsets.top / view.frame.size.height) * CGFloat(sceneSize.y),
                                           left: (safeAreaInsets.left / view.frame.size.width) * CGFloat(sceneSize.x),
                                           bottom: (safeAreaInsets.bottom / view.frame.size.height) * CGFloat(sceneSize.y),
@@ -453,7 +459,6 @@ extension MainRenderer: MTKViewDelegate {
         }
         
         drawNodes(scene.children)
-        
         
         let particleData = scene.particles.map {
             ParticleData(worldTransform: $0.worldTransform,
