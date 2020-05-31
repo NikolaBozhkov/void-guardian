@@ -10,6 +10,7 @@ import SpriteKit
 
 protocol HomeScreenDelegate: class {
     func startGame()
+    func showTutorial()
 }
 
 class HomeScreen: SKNode, Screen {
@@ -19,12 +20,14 @@ class HomeScreen: SKNode, Screen {
     weak var delegate: HomeScreenDelegate?
     
     let playButton: Button
+    let tutorialButton: Button
     let currentStageLabel: SKLabelNode
     let bestStageLabel: SKLabelNode
     
     override init() {
         
         playButton = Button(text: "play", fontSize: 250, color: Button.yesColor)
+        tutorialButton = Button(questionMarkWithSize: 300)
         
         currentStageLabel = HomeScreen.createStageLabel(text: "current stage:")
         bestStageLabel = HomeScreen.createStageLabel(text: "best stage:")
@@ -55,11 +58,16 @@ class HomeScreen: SKNode, Screen {
                                              y: HomeScreen.stageLabelFontSize / 2.5)
         bestStageLabel.position = CGPoint(x: currentStageLabel.position.x, y: -currentStageLabel.position.y)
         
+        let margin: CGFloat = 50
+        tutorialButton.position = CGPoint(x: CGFloat(SceneConstants.size.x / 2) - tutorialButton.size.width / 2 - margin,
+                                          y: -halfSceneY + tutorialButton.size.height / 2 + margin)
+        
         addChild(title)
         addChild(playButton)
         addChild(stageLabelsAnchorLine)
         addChild(currentStageLabel)
         addChild(bestStageLabel)
+        addChild(tutorialButton)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -99,6 +107,8 @@ class HomeScreen: SKNode, Screen {
     func handleTap(at point: CGPoint) {
         if playButton.consumeTap(at: point) {
             delegate?.startGame()
+        } else if tutorialButton.consumeTap(at: point) {
+            delegate?.showTutorial()
         }
     }
 }

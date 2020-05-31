@@ -9,6 +9,9 @@
 import SpriteKit
 
 extension UIColor {
+    
+    static let tutorialColor = UIColor(hex: "E5C71B")
+    
     convenience init(_ color: vector_float3) {
         self.init(red: CGFloat(color.x), green: CGFloat(color.y), blue: CGFloat(color.z), alpha: 1)
     }

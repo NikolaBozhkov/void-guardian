@@ -28,6 +28,7 @@ class Coordinator {
     private let returnHomeConfirmScreen = ReturnHomeConfirmScreen()
     private let homeScreen = HomeScreen()
     private let confirmNextStageScreen = StageConfirmScreen()
+    private let tutorialScreen = TutorialScreen()
     
     init(gameScene: GameScene, overlayScene: OverlayScene) {
         self.gameScene = gameScene
@@ -46,6 +47,7 @@ class Coordinator {
         pauseScreen.delegate = self
         returnHomeConfirmScreen.delegate = self
         homeScreen.delegate = self
+        tutorialScreen.delegate = self
         confirmNextStageScreen.delegate = self
         gameScene.skGameScene.sceneDelegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: .willResignActive, object: nil)
@@ -200,9 +202,38 @@ extension Coordinator: StageConfirmScreenDelegate {
 
 extension Coordinator: HomeScreenDelegate {
     func startGame() {
-        gameScene.reloadScene()
-        
         activeScreen?.removeFromParent()
+        activeScreen = nil
+        
+        if !ProgressManager.shared.tutorialPlayed {
+            activeScreen = tutorialScreen
+            overlayScene.addChild(tutorialScreen)
+            
+            tutorialScreen.dismissHandler = { [unowned self] in
+                self.gameScene.reloadScene()
+            }
+        } else {
+            gameScene.reloadScene()
+        }
+    }
+    
+    func showTutorial() {
+        activeScreen?.removeFromParent()
+        activeScreen = tutorialScreen
+        overlayScene.addChild(tutorialScreen)
+        
+        tutorialScreen.dismissHandler = { [unowned self] in
+            self.overlayScene.addChild(self.homeScreen)
+            self.activeScreen = self.homeScreen
+        }
+    }
+}
+
+// MARK: - TutorialScreenDelegate
+
+extension Coordinator: TutorialScreenDelegate {
+    func dismissTutorial() {
+        tutorialScreen.removeFromParent()
         activeScreen = nil
     }
 }

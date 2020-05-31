@@ -113,7 +113,7 @@ class Spawner {
 //        timeSinceLastEnergyPotion = 0
 //        timeSinceLastHealthPotion = 0
         
-        print(stage - 1, spawned)
+//        print(stage - 1, spawned)
         spawned = 0
     }
 

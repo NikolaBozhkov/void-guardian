@@ -363,7 +363,7 @@ class SKGameScene: SKScene {
             let translation = direction * power * amplitude
             let moveAction = SKAction.moveBy(x: translation.x,
                                              y: translation.y,
-                                             duration: 0.0334)
+                                             duration: 0.047)
             moveAction.timingMode = .easeOut
             
             actions.append(moveAction)

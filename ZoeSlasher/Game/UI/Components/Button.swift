@@ -24,8 +24,8 @@ class Button: SKNode {
         return shader
     }()
     
-    static let yesColor = UIColor(red: 0.5, green: 0.8, blue: 0.1, alpha: 1.0)
-    static let noColor = UIColor(red: 1.0, green: 0.2, blue: 0.05, alpha: 1.0)
+    static let yesColor = UIColor(hex: "AFDB00")
+    static let noColor = UIColor(hex: "ff3f00")
     
     private let label = SKLabelNode(fontNamed: UIConstants.fontName)
     private let border = SKSpriteNode()
@@ -34,10 +34,33 @@ class Button: SKNode {
         border.size
     }
     
-    init(text: String, fontSize: CGFloat, color: UIColor) {
+    init(text: String, fontSize: CGFloat, color: UIColor, borderFactor: CGFloat = 20, lightenPercent: CGFloat = 0.25) {
         super.init()
         
         label.text = text
+        label.fontSize = fontSize
+        label.fontColor = color.lighten(byPercent: lightenPercent)
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.zPosition = 1
+        addChild(label)
+        
+        border.shader = Button.borderShader
+        border.color = color
+        border.size = label.frame.size + CGSize(width: 2, height: 1.5) * fontSize
+        border.setValue(SKAttributeValue(float: Float(border.size.width / border.size.height)),
+                        forAttribute: "a_aspectRatio")
+        border.setValue(SKAttributeValue(float: Float(borderFactor / border.size.height)),
+                        forAttribute: "a_innerWidth")
+        addChild(border)
+    }
+    
+    init(questionMarkWithSize fontSize: CGFloat) {
+        super.init()
+        
+        let color = UIColor.tutorialColor
+        
+        label.text = "?"
         label.fontSize = fontSize
         label.fontColor = color.lighten(byPercent: 0.25)
         label.verticalAlignmentMode = .center
@@ -47,7 +70,7 @@ class Button: SKNode {
         
         border.shader = Button.borderShader
         border.color = color
-        border.size = label.frame.size + CGSize(width: 2, height: 1.5) * fontSize
+        border.size = CGSize(repeating: fontSize * 1.5)
         border.setValue(SKAttributeValue(float: Float(border.size.width / border.size.height)),
                         forAttribute: "a_aspectRatio")
         border.setValue(SKAttributeValue(float: Float(20 / border.size.height)),
@@ -60,6 +83,8 @@ class Button: SKNode {
     }
     
     func consumeTap(at point: CGPoint) -> Bool {
+        guard parent != nil else { return false }
+        
         if contains(point) {
             reset()
             return true
