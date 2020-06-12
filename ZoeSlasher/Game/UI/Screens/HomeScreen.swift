@@ -47,11 +47,11 @@ class HomeScreen: SKNode, Screen {
         stageLabelsAnchorLine.zRotation = .pi / 2
         
         let halfSceneY = CGFloat(SceneConstants.size.y / 2)
-        let marginTitle = CGFloat(SceneConstants.size.y) / 4.5
+        let marginTitle = CGFloat(SceneConstants.size.y) / 5.7
         
         title.position = CGPoint(x: 0, y: halfSceneY - marginTitle)
         
-        playButton.position = CGPoint(x: 0, y: -playButton.size.height / 2 - 320)
+        playButton.position = CGPoint(x: 0, y: -playButton.size.height / 2 - 350)
         
         stageLabelsAnchorLine.position = CGPoint(x: CGFloat(SceneConstants.safeLeft + 70), y: 0)
         currentStageLabel.position = CGPoint(x: stageLabelsAnchorLine.position.x + 80,

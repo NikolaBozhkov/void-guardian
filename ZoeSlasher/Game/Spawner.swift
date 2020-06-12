@@ -8,8 +8,8 @@
 
 class Spawner {
     
-    private let energyPotionInterval: TimeInterval = 30
-    private let healthPotionInterval: TimeInterval = 55
+    private let energyPotionInterval: TimeInterval = 55
+    private let healthPotionInterval: TimeInterval = 40
     private let spawnInterval: TimeInterval = 0.1
     
     private var stagesConfig: [(allowance: Float, threshold: Double)] = []
@@ -56,7 +56,7 @@ class Spawner {
         currentPeriodTime += deltaTime
         timeSinceLastSpawn += deltaTime
         
-        let potionDeltaTime = deltaTime * TimeInterval(max(6 * scene.favor / 100, 2))
+        let potionDeltaTime = deltaTime * (1 + pow(0.0173 * Double(scene.favor), 3))
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         

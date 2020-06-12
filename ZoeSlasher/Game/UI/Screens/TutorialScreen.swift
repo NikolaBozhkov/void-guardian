@@ -31,7 +31,7 @@ class TutorialScreen: SKNode, Screen {
     
     override init() {
         let fontSize: CGFloat = 170
-        let color = UIColor.tutorialColor
+        let color = Button.tutorialColor
         let lightenPercent: CGFloat = 0.25
         prevButton = Button(text: "prev", fontSize: fontSize, color: color, lightenPercent: lightenPercent)
         nextButton = Button(text: "next", fontSize: fontSize, color: color, lightenPercent: lightenPercent)

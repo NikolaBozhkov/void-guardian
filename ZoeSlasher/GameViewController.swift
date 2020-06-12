@@ -63,6 +63,8 @@ class GameViewController: UIViewController {
         mtkView.isMultipleTouchEnabled = true
         
         self.mtkView = mtkView
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(resetTouchState), name: .willResignActive, object: nil)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -75,7 +77,7 @@ class GameViewController: UIViewController {
         
         let currentTime = CACurrentMediaTime()
         if touches.count == 2
-            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.05 {
+            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.02 {
             
             didTwoFingerTap()
             touchState = .doubleTap
@@ -108,6 +110,11 @@ class GameViewController: UIViewController {
         let touch = touches.first!
         let point = normalizeTouchLocation(touch)
         renderer.coordinator.touchEnded(at: point)
+        touchState = .none
+    }
+    
+    @objc func resetTouchState() {
+        activeTouchCount = 0
         touchState = .none
     }
     

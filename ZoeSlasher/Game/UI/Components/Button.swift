@@ -26,6 +26,7 @@ class Button: SKNode {
     
     static let yesColor = UIColor(hex: "AFDB00")
     static let noColor = UIColor(hex: "ff3f00")
+    static let tutorialColor = UIColor(hex: "F7B016")
     
     private let label = SKLabelNode(fontNamed: UIConstants.fontName)
     private let border = SKSpriteNode()
@@ -58,7 +59,7 @@ class Button: SKNode {
     init(questionMarkWithSize fontSize: CGFloat) {
         super.init()
         
-        let color = UIColor.tutorialColor
+        let color = Button.tutorialColor
         
         label.text = "?"
         label.fontSize = fontSize
