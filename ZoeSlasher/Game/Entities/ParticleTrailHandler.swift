@@ -1,38 +1,39 @@
 //
-//  TrailHandler.swift
+//  ParticleTrailHandler.swift
 //  ZoeSlasher
 //
 //  Created by Nikola Bozhkov on 19.05.20.
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-class TrailHandler {
+class ParticleTrailHandler {
     
     unowned var scene: GameScene!
-    unowned let target: Player
+    unowned var player: Player! {
+        didSet {
+            prevParticlePosition = player.position
+            prevPosition = player.position
+        }
+    }
     
     private let particleDistanceRange: ClosedRange<Float> = 150...550
     
-    private var prevPosition: vector_float2
+    private var prevPosition: vector_float2 = .zero
     private var distanceBuffer: Float = 0
     
-    private var prevParticlePosition: vector_float2
+    private var prevParticlePosition: vector_float2 = .zero
     private var nextParticleDistance: Float = 0
     
-    init(target: Player) {
-        self.target = target
-        
-        prevParticlePosition = target.position
-        prevPosition = target.position
+    init() {
         nextParticleDistance = Float.random(in: particleDistanceRange)
     }
     
     func update() {
-        let delta = target.position - prevPosition
+        let delta = player.position - prevPosition
         let distance = length(delta)
         let direction = safeNormalize(delta)
         
-        if !target.moveFinished || target.wasPiercing {
+        if !player.moveFinished || player.wasPiercing {
             distanceBuffer += distance
         }
         
@@ -43,13 +44,13 @@ class TrailHandler {
             nextParticleDistance = Float.random(in: particleDistanceRange)
         }
         
-        prevPosition = target.position
+        prevPosition = player.position
     }
     
     func reset() {
         distanceBuffer = 0
-        prevParticlePosition = target.position
-        prevPosition = target.position
+        prevParticlePosition = player.position
+        prevPosition = player.position
         nextParticleDistance = Float.random(in: particleDistanceRange)
     }
     
@@ -77,6 +78,6 @@ class TrailHandler {
         // Consume the distance buffer when changing direction
         nextParticleDistance -= distanceBuffer
         distanceBuffer = 0
-        prevParticlePosition = target.position
+        prevParticlePosition = player.position
     }
 }

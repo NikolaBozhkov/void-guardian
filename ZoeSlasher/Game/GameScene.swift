@@ -97,7 +97,7 @@ class GameScene: Scene {
         rootNode.add(childNode: background)
         
         player.delegate = self
-        player.trailHandler.scene = self
+        player.particleTrailHandler.scene = self
         
         resetToIdle()
     }
@@ -195,17 +195,12 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-        stageManager.update(deltaTime: deltaTime)
+//        stageManager.update(deltaTime: deltaTime)
         
         // Clear stage if possible
         if !isGameOver && stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
             stageManager.clearStage()
         }
-        
-//        if spawner.spawningEnded {
-//            enemies.forEach(removeEnemy)
-//            stageManager.advanceStage()
-//        }
         
         skGameScene.update()
         

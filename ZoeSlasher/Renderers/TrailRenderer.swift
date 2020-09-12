@@ -64,7 +64,6 @@ class TrailRenderer {
             vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * maxVertices, options: .storageModeShared)!
         }
         
-//        print(vertices.count)
         vertexBuffer.contents().copyMemory(from: vertices, byteCount: MemoryLayout<TrailVertex>.stride * vertices.count)
         
         renderEncoder.setRenderPipelineState(pipelineState)
@@ -166,6 +165,7 @@ class TrailRenderer {
             currentLength += segmentLength
             let nextX = currentLength / fullLength
             
+            // B & C take the aliveness of the current segment and on the next segment(A & D) they take the next segment's aliveness
             let vertexA = TrailVertex(position: a, uv: [currentX, 1], aliveness: trailPoints[i].alivenessNext)
             let vertexB = TrailVertex(position: b, uv: [nextX, 1], aliveness: trailPoints[i + 1].aliveness)
             let vertexC = TrailVertex(position: c, uv: [nextX, 0], aliveness: trailPoints[i + 1].aliveness)

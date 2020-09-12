@@ -21,8 +21,8 @@ class Player: Node {
     
     var delegate: PlayerDelegate?
     
-    var trailHandler: TrailHandler!
-    var trailManager: TrailManager!
+    let trailManager = TrailManager()
+    let particleTrailHandler = ParticleTrailHandler()
     
     var prevStage: Stage = .idle
     private(set) var stage: Stage = .idle {
@@ -33,8 +33,8 @@ class Player: Node {
     
     private(set) var anchor: Node?
     
-    private let chargeSpeed: Float = 1000
-    private let pierceSpeed: Float = 12000
+    let chargeSpeed: Float = 1000
+    let pierceSpeed: Float = 12000
     private let energyRechargePerSecond: Float = 6
     private let energyUsagePerShot: Float = 25
     
@@ -87,7 +87,7 @@ class Player: Node {
     }
     
     var energy: Float = 100 {
-        didSet { energy = max(min(energy, 100), 0) }
+        didSet { energy = max(min(energy, 100), 100) }
     }
     
     var health: Float = 100 {
@@ -110,20 +110,11 @@ class Player: Node {
             add(childNode: energySymbol)
         }
         
-        trailHandler = TrailHandler(target: self)
-        trailManager = TrailManager(player: self)
+        trailManager.player = self
+        particleTrailHandler.player = self
     }
     
-    override func acceptRenderer(_ renderer: MainRenderer) {
-//        renderer.renderPlayer(self,
-//                              position: position,
-//                              positionDelta: positionDelta,
-//                              health: health / maxHealth,
-//                              fromHealth: healthDmgIndicator / maxHealth,
-//                              timeSinceHit: timeSinceLastHit,
-//                              dmgReceived: dmgReceivedNormalized,
-//                              timeSinceLastEnergyUse: timeSinceLastEnergyUse)
-    }
+    override func acceptRenderer(_ renderer: MainRenderer) { /* rendering handled in draw method */ }
     
     func draw(_ renderer: MainRenderer) {
         renderer.renderPlayer(self,
@@ -229,8 +220,8 @@ class Player: Node {
         let catchUp = min(k * k * k, 1.0)
         healthDmgIndicator = health + (lastHealth - health) * (1 - catchUp)
         
-        trailHandler.update()
-        trailManager.update(deltaTime: TimeInterval(deltaTime))
+        particleTrailHandler.update()
+        trailManager.update(deltaTime: deltaTime)
     }
     
     func setPosition(_ position: vector_float2) {
@@ -271,8 +262,8 @@ class Player: Node {
             moveFinished = false
             force = .zero
             
-            trailHandler.consumeDistanceBuffer()
-            trailManager.addAnchor(at: position, beginsMovement: true)
+            particleTrailHandler.consumeDistanceBuffer()
+            trailManager.addAnchor()
             
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
@@ -295,8 +286,8 @@ class Player: Node {
             moveFinished = false
             force = .zero
             
-            trailHandler.consumeDistanceBuffer()
-            trailManager.addAnchor(at: position, beginsMovement: true) 
+            particleTrailHandler.consumeDistanceBuffer()
+            trailManager.addAnchor()
         }
     }
     
@@ -307,55 +298,7 @@ class Player: Node {
         timeSinceLastHit = 1000
         timeSinceLastMove = 1000
         timeSinceLastEnergyUse = 1000
-        trailHandler.reset()
+        particleTrailHandler.reset()
         trailManager.reset()
-    }
-}
-
-class EnergySymbol: Node {
-    
-    private let index: Int
-    
-    var timeSinceLastUse: Float = 100
-    var timeSinceLastMove: Float = 100
-    var timeSinceNoEnergy: Float = 1000
-    var angularK: Float = 0
-    private var kickbackForce: Float = 0
-    
-    init(index: Int) {
-        self.index = index
-        
-        super.init(size: [1, 1] * 135, textureName: "energy")
-        
-        zPosition = -1
-        rotation = Float(index) * .pi / 2
-        
-        update(forEnergy: 100)
-    }
-    
-    override func acceptRenderer(_ renderer: MainRenderer) {
-        renderer.renderEnergySymbol(self)
-    }
-    
-    func update(forEnergy energy: Float) {
-        let e = energy - Float(index) * 25
-        color.w = simd_clamp(e / 25, 0, 1)
-        let direction = vector_float2(cos(rotation + .pi / 2), sin(rotation + .pi / 2))
-        position = direction * (170 - 30 * kickbackForce)
-    }
-    
-    func update(deltaTime: Float, energy: Float) {
-        timeSinceLastUse += deltaTime
-        timeSinceNoEnergy += deltaTime
-        
-        let k: Float = 7
-        let f = expImpulse(timeSinceLastUse + 1 / k, k)
-        kickbackForce = max(f, 0.0)
-        
-        let h = expImpulse(timeSinceLastMove + 1 / 6, 6)
-        let angularVelocity = 1.0 + h * angularK
-        
-        rotation -= angularVelocity * deltaTime
-        update(forEnergy: energy)
     }
 }

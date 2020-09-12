@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB14250D091000B3299C /* EnergySymbol.swift */; };
+		2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24629E62240D6A87009A465B /* Sanos-Extended.ttf */; };
 		24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */; };
@@ -63,7 +65,6 @@
 		24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86723C1C8B600CB6638 /* Assets.xcassets */; };
 		24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24D9E86923C1C8B600CB6638 /* LaunchScreen.storyboard */; };
 		24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */; };
-		24DCFD362473B24B00FE2FC1 /* TrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */; };
 		24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD372474FC4200FE2FC1 /* TrailManager.swift */; };
 		24DCFD3A2475353100FE2FC1 /* TrailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DCFD392475353100FE2FC1 /* TrailRenderer.swift */; };
 		24E65F4D247CF28A004EE053 /* AttackAbility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E65F4C247CF28A004EE053 /* AttackAbility.swift */; };
@@ -79,6 +80,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2414AB14250D091000B3299C /* EnergySymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergySymbol.swift; sourceTree = "<group>"; };
+		2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleTrailHandler.swift; sourceTree = "<group>"; };
 		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24629E62240D6A87009A465B /* Sanos-Extended.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sanos-Extended.ttf"; sourceTree = "<group>"; };
 		24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
@@ -140,7 +143,6 @@
 		24D9E86A23C1C8B600CB6638 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24D9E86C23C1C8B600CB6638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferFormats.swift; sourceTree = "<group>"; };
-		24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailHandler.swift; sourceTree = "<group>"; };
 		24DCFD372474FC4200FE2FC1 /* TrailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailManager.swift; sourceTree = "<group>"; };
 		24DCFD392475353100FE2FC1 /* TrailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailRenderer.swift; sourceTree = "<group>"; };
 		24E65F4C247CF28A004EE053 /* AttackAbility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttackAbility.swift; sourceTree = "<group>"; };
@@ -348,8 +350,9 @@
 				247D705223E70FAA00480199 /* Enemy.swift */,
 				247D705423E7173500480199 /* EnemyAttack.swift */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
-				24DCFD352473B24B00FE2FC1 /* TrailHandler.swift */,
 				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
+				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
+				2414AB14250D091000B3299C /* EnergySymbol.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -451,7 +454,6 @@
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				2468E3B7246193F7004042AD /* ReturnHomeConfirmScreen.swift in Sources */,
 				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
-				24DCFD362473B24B00FE2FC1 /* TrailHandler.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
@@ -494,8 +496,10 @@
 				243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */,
 				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
+				2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */,
 				24E65F512483BF50004EE053 /* TutorialScreen.swift in Sources */,
 				24E65F4D247CF28A004EE053 /* AttackAbility.swift in Sources */,
+				2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */,
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
 				2468E3B124613D63004042AD /* Screen.swift in Sources */,
