@@ -41,9 +41,9 @@ class ProgressManager {
     }
     
     private init() {
-        UserDefaults.standard.removeObject(forKey: Key.currentStage)
-        UserDefaults.standard.removeObject(forKey: Key.bestStage)
-        UserDefaults.standard.removeObject(forKey: Key.tutorialPlayed)
+//        UserDefaults.standard.removeObject(forKey: Key.currentStage)
+//        UserDefaults.standard.removeObject(forKey: Key.bestStage)
+//        UserDefaults.standard.removeObject(forKey: Key.tutorialPlayed)
         
         if UserDefaults.standard.value(forKey: Key.currentStage) == nil {
             UserDefaults.standard.set(1, forKey: Key.currentStage)
@@ -53,6 +53,6 @@ class ProgressManager {
         bestStage = UserDefaults.standard.integer(forKey: Key.bestStage)
         tutorialPlayed = UserDefaults.standard.bool(forKey: Key.tutorialPlayed)
         
-        currentStage = 15
+//        currentStage = 15
     }
 }

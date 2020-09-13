@@ -33,8 +33,8 @@ class Player: Node {
     
     private(set) var anchor: Node?
     
-    let chargeSpeed: Float = 1000
-    let pierceSpeed: Float = 12000
+    let chargeSpeed: Float = 1000 // 1k
+    let pierceSpeed: Float = 12000 // 12k
     private let energyRechargePerSecond: Float = 6
     private let energyUsagePerShot: Float = 25
     

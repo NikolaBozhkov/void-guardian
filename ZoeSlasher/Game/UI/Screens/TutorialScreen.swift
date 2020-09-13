@@ -77,6 +77,7 @@ class TutorialScreen: SKNode, Screen {
             dismissHandler?()
             dismissHandler = nil
             currentPageIndex = 0
+            ProgressManager.shared.tutorialPlayed = true
         }
     }
     

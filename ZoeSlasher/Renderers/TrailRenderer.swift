@@ -18,7 +18,7 @@ class TrailRenderer {
     private var vertices = [TrailVertex]()
     private var trailLength: Float = 0
     
-    private var maxVertices = 300
+    private var maxVertices = 50
     private var vertexBuffer: MTLBuffer
     
     init(device: MTLDevice, library: MTLLibrary) {
@@ -53,13 +53,13 @@ class TrailRenderer {
             fatalError(error.localizedDescription)
         }
         
-        vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * 300, options: .storageModeShared)!
+        vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * maxVertices, options: .storageModeShared)!
     }
     
     func draw(renderEncoder: MTLRenderCommandEncoder) {
         guard !vertices.isEmpty else { return }
         
-        if vertices.count > 100 {
+        if vertices.count > maxVertices {
             maxVertices *= 2
             vertexBuffer = device.makeBuffer(length: MemoryLayout<TrailVertex>.stride * maxVertices, options: .storageModeShared)!
         }
@@ -122,15 +122,18 @@ class TrailRenderer {
                     out = vector_float2(-direction.y, direction.x) * width
                 }
                 
+                // Check consistency between out normals by checking if both resulting points
+                // lie in the same half of the plane divided by the line connecting the origin points
+                // https://math.stackexchange.com/questions/274712/calculate-on-which-side-of-a-straight-line-is-a-given-point-located
                 let a = points[i - 1]
                 let b = points[i]
                 let pA = a + anchors[i - 1].out
                 let pB = b + out
                 
-                let dPrev = (b.x - a.x) * (pA.y - a.y) - (b.y - a.y) * (pA.x - a.x)
-                let dCurrent = (b.x - a.x) * (pB.y - a.y) - (b.y - a.y) * (pB.x - a.x)
+                let dA = (b.x - a.x) * (pA.y - a.y) - (b.y - a.y) * (pA.x - a.x)
+                let dB = (b.x - a.x) * (pB.y - a.y) - (b.y - a.y) * (pB.x - a.x)
                 
-                if sign(dPrev) != sign(dCurrent) {
+                if sign(dA) != sign(dB) {
                     out *= -1
                 }
             }
@@ -142,6 +145,8 @@ class TrailRenderer {
             anchors.append((points[i], out))
         }
         
+        // Last point is offset by the width
+        fullLength += width
         var currentLength: Float = 0
         
         for i in 0..<anchors.count - 1 {
@@ -170,9 +175,15 @@ class TrailRenderer {
             let vertexB = TrailVertex(position: b, uv: [nextX, 1], aliveness: trailPoints[i + 1].aliveness)
             let vertexC = TrailVertex(position: c, uv: [nextX, 0], aliveness: trailPoints[i + 1].aliveness)
             let vertexD = TrailVertex(position: d, uv: [currentX, 0], aliveness: trailPoints[i].alivenessNext)
-            vertices.append(vertexA)
-            vertices.append(vertexC)
-            vertices.append(vertexD)
+            
+            let dA = (a.x - b.x) * (c.y - b.y) - (a.y - b.y) * (c.x - b.x)
+            let dD = (d.x - b.x) * (c.y - b.y) - (d.y - b.y) * (c.x - b.x)
+            
+            if i != 0 || sign(dA) == sign(dD) {
+                vertices.append(vertexA)
+                vertices.append(vertexC)
+                vertices.append(vertexD)
+            }
             
             vertices.append(vertexA)
             vertices.append(vertexB)

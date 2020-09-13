@@ -303,16 +303,14 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     float centerLine2 = 1.0 - smoothstep(0.215 * pctCenter2, 0.24 * pctCenter2, st.y);
     f += centerLine2;
     
-    // aspectRatio is the player center X because the last vertex is offset after the uvs get mapped
+    // aspectRatio is the player max X, 1.0 is half the height (trailManager width), since it's scaled by 2
     st.y = oy;
-    float r = distance(st, float2(aspectRatio, 0.0));
-    f *= 1.0 - step(aspectRatio, st.x);
+    float r = distance(st, float2(aspectRatio - 1.0, 0.0));
+    f *= 1.0 - step(aspectRatio - 1.0, st.x);
     
     float core = 1.0 - smoothstep(0.25, 0.5, r);
     f *= 1.0 - core;
     f += core;
-    
-//    f = min(1.0, f);
     
     f *= in.aliveness;
     
@@ -320,10 +318,6 @@ fragment float4 fragmentTrail(TrailOut in [[stage_in]],
     
     float3 col = mix(float3(0.2, 0.7, 0.05), float3(0.345, 1.000, 0.129), centerLine1);
     col = mix(col, float3(1.0), bright * 0.6);
-//    float3 col = float3(0.345, 1.000, 0.129) * f;
-    
-//    col = mix(float3(1.0), float3(1.0, 0.0, 0.0), 1.0 - step(0.1, <#metal::float3 x#>))
-//    return float4(float3(1.0), in.uv.x);
     return float4(col, f);
 }
 
