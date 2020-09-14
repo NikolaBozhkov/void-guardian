@@ -21,6 +21,11 @@ enum SceneConstants {
     }
 }
 
+protocol GameSceneInput: class {
+    func addChild(_ node: Node)
+    func addRootChild(_ node: Node)
+}
+
 class GameScene: Scene {
     
     let comboThreshold = 1
@@ -94,9 +99,10 @@ class GameScene: Scene {
         overlay.color = vector_float4(-10, -10, -10, 0.8)
         overlay.isHidden = true
         
-        rootNode.add(childNode: background)
+        rootNode.add(background)
         
         player.delegate = self
+        player.scene = self
         player.particleTrailHandler.scene = self
         
         resetToIdle()
@@ -112,7 +118,7 @@ class GameScene: Scene {
         player.energy = 100
         
         if player.parent == nil {
-            rootNode.add(childNode: player)
+            rootNode.add(player)
         }
         
         potions.forEach { $0.consume() }
@@ -172,7 +178,6 @@ class GameScene: Scene {
         // Check for game over
         if player.health == 0 && !isGameOver {
             player.removeFromParent()
-            player.anchor?.removeFromParent()
             
             // Particles
             let count = Int.random(in: 25...30)
@@ -242,7 +247,7 @@ class GameScene: Scene {
         player.health = 100
         
         if player.parent == nil {
-            rootNode.add(childNode: player)
+            rootNode.add(player)
         }
         
         isGameOver = false
@@ -419,5 +424,15 @@ extension GameScene: UIDelegate {
     func didFinishClearStageImpactAnimation() {
         player.health = 100
         player.energy = 100
+    }
+}
+
+extension GameScene: GameSceneInput {
+    func addChild(_ node: Node) {
+        add(node)
+    }
+    
+    func addRootChild(_ node: Node) {
+        rootNode.add(node)
     }
 }

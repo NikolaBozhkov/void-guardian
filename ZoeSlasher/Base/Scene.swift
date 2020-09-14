@@ -31,7 +31,7 @@ class Scene: Node {
     
     override init() {
         super.init()
-        add(childNode: rootNode)
+        add(rootNode)
     }
     
     func randomPosition(padding: vector_float2 = [0, 0]) -> vector_float2 {

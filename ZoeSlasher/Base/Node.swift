@@ -88,25 +88,25 @@ class Node: Renderable, Hashable {
         return lhs === rhs
     }
     
-    final func add(childNode: Node) {
-        children.insert(childNode)
-        childNode.parent = self
+    final func add(_ node: Node) {
+        children.insert(node)
+        node.parent = self
     }
     
-    final func remove(childNode: Node, transferChildren: Bool = false) {
-        guard let _ = children.remove(childNode) else {
+    final func remove(_ node: Node, transferChildren: Bool = false) {
+        guard let _ = children.remove(node) else {
             return
         }
         
-        childNode.parent = nil
+        node.parent = nil
         
         if transferChildren {
-            for child in childNode.children {
+            for child in node.children {
                 child.parent = self
                 children.insert(child)
             }
             
-            childNode.children = []
+            node.children = []
         }
     }
     
@@ -116,7 +116,7 @@ class Node: Renderable, Hashable {
     
     func removeFromParent() {
         guard let parent = parent else { return }
-        parent.remove(childNode: self)
+        parent.remove(self)
     }
     
     func acceptRenderer(_ renderer: MainRenderer) {

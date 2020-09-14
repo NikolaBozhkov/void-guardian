@@ -6,7 +6,7 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-protocol PlayerDelegate {
+protocol PlayerDelegate: class {
     func didTryToMoveWithoutEnergy()
 }
 
@@ -16,10 +16,29 @@ class Player: Node {
         case charging, piercing, idle
     }
     
+    struct MovementInfo {
+        let initialPosition: vector_float2
+        let target: vector_float2
+        let speed: Float
+        let delta: vector_float2
+        let direction: vector_float2
+        let distance: Float
+        
+        init(position: vector_float2, target: vector_float2, speed: Float) {
+            self.target = target
+            self.speed = speed
+            initialPosition = position
+            delta = target - position
+            direction = safeNormalize(delta)
+            distance = length(delta)
+        }
+    }
+    
     static let baseChargingDamage: Float = Enemy.baseHealth * 0.5
     static let basePiercingDamage: Float = Enemy.baseHealth
     
-    var delegate: PlayerDelegate?
+    unowned var delegate: PlayerDelegate!
+    unowned var scene: GameSceneInput!
     
     let trailManager = TrailManager()
     let particleTrailHandler = ParticleTrailHandler()
@@ -31,7 +50,16 @@ class Player: Node {
         }
     }
     
-    private(set) var anchor: Node?
+    private lazy var anchor: Node = {
+        let anchor = Node()
+        anchor.zPosition = -4
+        anchor.size = physicsSize * 0.7
+        anchor.renderFunction = { [unowned anchor] in
+            $0.renderAnchor(anchor)
+        }
+        
+        return anchor
+    }()
     
     let chargeSpeed: Float = 1000 // 1k
     let pierceSpeed: Float = 12000 // 12k
@@ -41,10 +69,7 @@ class Player: Node {
     private(set) var desiredPosition = vector_float2.zero
     private(set) var force = vector_float2.zero
     
-    private var chargeInitial = vector_float2.zero
-    private var chargeDelta = vector_float2.zero
-    private var chargeDirection = vector_float2.zero
-    private var chargeDistance: Float = 0
+    private var movementInfo: MovementInfo!
     
     private var pierceInitial = vector_float2.zero
     private var pierceDelta = vector_float2.zero
@@ -107,7 +132,7 @@ class Player: Node {
         for i in 0..<4 {
             let energySymbol = EnergySymbol(index: i)
             energySymbols.insert(energySymbol)
-            add(childNode: energySymbol)
+            add(energySymbol)
         }
         
         trailManager.player = self
@@ -170,35 +195,10 @@ class Player: Node {
                 force = .zero
             }
         } else {
-            let forceMagnitude = length(force)
+            moveFinished = handleMovement(for: movementInfo, deltaTime: deltaTime)
             
-            if stage == .charging {
-                if forceMagnitude < chargeSpeed {
-                    force = chargeDirection * min(forceMagnitude + deltaTime * (chargeSpeed / 0.05), chargeSpeed)
-                }
-                
-                position += force * deltaTime
-                desiredPosition = position
-                
-                if distance(chargeInitial, position) >= chargeDistance {
-                    position = chargeInitial + chargeDelta
-                    desiredPosition = position
-                    moveFinished = true
-                }
-            } else if stage == .piercing {
-                if forceMagnitude < pierceSpeed {
-                    force = pierceDirection * min(forceMagnitude + deltaTime * (pierceSpeed / 0.05), pierceSpeed)
-                }
-                
-                position += force * deltaTime
-                desiredPosition = position
-                
-                if distance(pierceInitial, position) >= pierceDistance {
-                    position = pierceInitial + pierceDelta
-                    desiredPosition = position
-                    stage = .idle
-                    moveFinished = true
-                }
+            if stage == .piercing && moveFinished {
+                stage = .idle
             }
         }
         
@@ -224,6 +224,25 @@ class Player: Node {
         trailManager.update(deltaTime: deltaTime)
     }
     
+    /// Returns whether the movement has finished or not
+    func handleMovement(for info: MovementInfo, deltaTime: Float) -> Bool {
+        let forceMagnitude = length(force)
+        if forceMagnitude < info.speed {
+            force = info.direction * min(forceMagnitude + deltaTime * (info.speed / 0.05), info.speed)
+        }
+        
+        position += force * deltaTime
+        desiredPosition = position
+        
+        // If the distance is covered the movement is complete
+        if distance(info.initialPosition, position) >= info.distance {
+            setPosition(info.target)
+            return true
+        }
+        
+        return false
+    }
+    
     func setPosition(_ position: vector_float2) {
         self.position = position
         desiredPosition = position
@@ -231,28 +250,10 @@ class Player: Node {
     
     func move(to target: vector_float2) {
         if stage == .idle && hasEnoughEnergy {
-            
-            // Spawn anchor
-            let anchor = Node()
-            anchor.zPosition = -4
-            anchor.size = physicsSize * 0.7
-            anchor.color = [1, 1, 0, 1]
             anchor.position = target
-            anchor.renderFunction = { [unowned self] in
-                $0.renderAnchor(self.anchor!)
-            }
+            scene.addRootChild(anchor)
             
-            self.anchor = anchor
-            parent?.add(childNode: anchor)
-            
-            chargeInitial = position
-            chargeDelta = target - position
-            chargeDirection = normalize(chargeDelta)
-            if chargeDirection.x.isNaN {
-                chargeDirection = .zero
-            }
-            
-            chargeDistance = length(chargeDelta)
+            movementInfo = MovementInfo(position: position, target: target, speed: chargeSpeed)
             
             energy -= energyUsagePerShot
             stage = .charging
@@ -270,17 +271,9 @@ class Player: Node {
             delegate?.didTryToMoveWithoutEnergy()
             
         } else if stage == .charging {
-            anchor?.removeFromParent()
-            anchor = nil
+            anchor.removeFromParent()
             
-            pierceInitial = position
-            pierceDelta = target - position
-            pierceDirection = normalize(pierceDelta)
-            if pierceDirection.x.isNaN {
-                pierceDirection = .zero
-            }
-            
-            pierceDistance = length(pierceDelta)
+            movementInfo = MovementInfo(position: position, target: target, speed: pierceSpeed)
             
             stage = .piercing
             moveFinished = false
@@ -292,8 +285,7 @@ class Player: Node {
     }
     
     func interruptCharging() {
-        anchor?.removeFromParent()
-        anchor = nil
+        anchor.removeFromParent()
         stage = .idle
         timeSinceLastHit = 1000
         timeSinceLastMove = 1000
