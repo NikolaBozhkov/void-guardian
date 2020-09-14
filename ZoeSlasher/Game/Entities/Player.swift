@@ -281,30 +281,8 @@ class Player: Node {
         }
     }
     
-    func reset(isAlive: Bool = true) {
-        anchor.removeFromParent()
-        
-        prevStage = .idle
-        stage = .idle
-        force = .zero
-        moveFinished = true
-        
-        if isAlive {
-            health = maxHealth
-            energy = 100
-            setPosition(.zero)
-        }
-        
-        visualData.timeSinceLastHit = 1000
-        visualData.timeSinceLastMove = 1000
-        visualData.timeSinceLastEnergyUse = 1000
-        
-        particleTrailHandler.reset()
-        trailManager.reset()
-    }
-    
     func destroy() {
-        reset(isAlive: false)
+        anchor.removeFromParent()
         removeFromParent()
     }
 }

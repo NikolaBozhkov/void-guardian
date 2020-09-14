@@ -84,7 +84,10 @@ class MainRenderer: NSObject {
     let energyGlowTexture: MTLTexture
     let balanceSymbolTexture: MTLTexture
     
-    var scene: GameScene!
+    var scene: GameScene {
+        coordinator.gameScene
+    }
+    
     var coordinator: Coordinator!
     
     init?(metalKitView: MTKView) {
@@ -349,17 +352,17 @@ extension MainRenderer: MTKViewDelegate {
         let height = targetAreaSqRoot / sqrt(Float(aspectRatio))
         let width = Float(aspectRatio) * height
         let sceneSize = vector_float2(width, height)
-        print(sceneSize)
         
         let adjustedInsets = UIEdgeInsets(top: (safeAreaInsets.top / view.frame.size.height) * CGFloat(sceneSize.y),
                                           left: (safeAreaInsets.left / view.frame.size.width) * CGFloat(sceneSize.x),
                                           bottom: (safeAreaInsets.bottom / view.frame.size.height) * CGFloat(sceneSize.y),
                                           right: (safeAreaInsets.right / view.frame.size.width) * CGFloat(sceneSize.x))
-        scene = GameScene(size: sceneSize, safeAreaInsets: adjustedInsets)
         
         let overlayScene = OverlayScene(size: CGSize(sceneSize))
-        coordinator = Coordinator(gameScene: scene, overlayScene: overlayScene)
+        let gameScene = GameScene(size: sceneSize, safeAreaInsets: adjustedInsets)
+        coordinator = Coordinator(gameScene: gameScene, overlayScene: overlayScene)
         coordinator.configure()
+        coordinator.delegate = self
         
         skRenderer.scene = scene.skGameScene
         overlaySkRenderer.scene = overlayScene
@@ -574,5 +577,11 @@ extension MainRenderer: MTKViewDelegate {
 //                drawNodes(node.children)
 //            }
         }
+    }
+}
+
+extension MainRenderer: CoordinatorDelegate {
+    func didRecreateGameScene() {
+        skRenderer.scene = scene.skGameScene
     }
 }

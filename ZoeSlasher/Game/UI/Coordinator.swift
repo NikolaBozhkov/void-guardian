@@ -8,8 +8,13 @@
 
 import SpriteKit
 
+protocol CoordinatorDelegate: class {
+    func didRecreateGameScene()
+}
+
 class Coordinator {
     
+    unowned var delegate: CoordinatorDelegate?
     let overlayScene: OverlayScene
     var gameScene: GameScene
     
@@ -46,6 +51,7 @@ class Coordinator {
     func recreateGameScene() {
         gameScene = GameScene(size: gameScene.size, safeAreaInsets: gameScene.safeAreaInsets)
         gameScene.skGameScene.sceneDelegate = self
+        delegate?.didRecreateGameScene()
     }
     
     func configure() {
@@ -124,8 +130,7 @@ extension Coordinator: ReturnHomeConfirmScreenDelegate {
         activeScreen?.removeFromParent()
         overlayBackground.removeFromParent()
         
-        gameScene.unpause()
-        gameScene.resetToIdle()
+        recreateGameScene()
         activeScreen = homeScreen
         overlayScene.addChild(homeScreen)
     }
@@ -197,7 +202,7 @@ extension Coordinator: StageConfirmScreenDelegate {
         
         ProgressManager.shared.bestStage = max(ProgressManager.shared.bestStage, gameScene.stageManager.stage)
         ProgressManager.shared.currentStage = gameScene.stageManager.stage + 1
-        gameScene.resetToIdle()
+        recreateGameScene()
         
         overlayScene.addChild(homeScreen)
         activeScreen = homeScreen
@@ -216,10 +221,10 @@ extension Coordinator: HomeScreenDelegate {
             overlayScene.addChild(tutorialScreen)
             
             tutorialScreen.dismissHandler = { [unowned self] in
-                self.gameScene.reloadScene()
+                self.gameScene.startGame()
             }
         } else {
-            gameScene.reloadScene()
+            gameScene.startGame()
         }
     }
     

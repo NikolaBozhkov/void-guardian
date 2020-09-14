@@ -105,59 +105,17 @@ class GameScene: Scene {
         player.scene = self
         player.particleTrailHandler.scene = self
         
-        resetToIdle()
+        rootNode.add(player)
+        
+        setToIdle()
     }
     
-    func setDefaults() {
-        clearNodeSet(&enemies)
-        clearNodeSet(&attacks)
-        clearNodeSet(&potions)
-        clearNodeSet(&particles)
-        clearNodeSet(&hitEnemies)
-        
-        enemyHitsForMove = 0
-        shouldHandleCombo = false
-        shouldResetHitEnemies = false
-        shouldConsumeAllPotions = false
-        comboMultiplier = 0
-        
-        favor = 0
-        
-        isPaused = false
-        isGameOver = false
-        timeSinceGameOver = 0
-        
-        isStageCleared = false
-        prevPlayerPosition = .zero
-    }
-    
-    func clearNodeSet<T: Node>(_ set: inout Set<T>) {
-        for node in set {
-            node.removeFromParent()
-            set.remove(node)
-        }
-    }
-    
-    func resetPlayer() {
-        player.reset()
-        
-        if player.parent == nil {
-            rootNode.add(player)
-        }
-    }
-    
-    func resetToIdle() {
-        setDefaults()
-        resetPlayer()
-        
+    func setToIdle() {
         skGameScene.removeGameLabels()
         stageManager.isActive = false
     }
     
-    func reloadScene() {
-        setDefaults()
-        resetPlayer()
-        
+    func startGame() {
         stageManager.reset()
         skGameScene.addGameLabels()
     }
