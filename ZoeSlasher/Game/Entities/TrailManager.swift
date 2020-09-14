@@ -85,15 +85,11 @@ class TrailManager {
                 points[i].timeAlive += deltaTime
                 points[i].timeAliveNext += deltaTime
             }
-            
-            if player.direction != .zero {
-                // Keep the trail on the player
-                points[points.count - 1].position = player.desiredPosition
                 
-                // While the player is still moving keep the player anchor alive
-                if !player.moveFinished {
-                    points[points.count - 1].timeAlive = 0
-                }
+            if !player.moveFinished {
+                // While the player is still moving keep the player anchor fresh and stick to player
+                points[points.count - 1].position = player.desiredPosition
+                points[points.count - 1].timeAlive = 0
             }
         
             guard points[0].aliveness <= 0 && points[0].alivenessNext <= 0 else { return }

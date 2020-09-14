@@ -11,7 +11,7 @@ import SpriteKit
 class Coordinator {
     
     let overlayScene: OverlayScene
-    let gameScene: GameScene
+    var gameScene: GameScene
     
     private(set) var activeScreen: Screen? {
         didSet {
@@ -41,6 +41,11 @@ class Coordinator {
         activeScreen = homeScreen
         overlayScene.addChild(homeScreen)
         homeScreen.present()
+    }
+    
+    func recreateGameScene() {
+        gameScene = GameScene(size: gameScene.size, safeAreaInsets: gameScene.safeAreaInsets)
+        gameScene.skGameScene.sceneDelegate = self
     }
     
     func configure() {
@@ -156,14 +161,15 @@ extension Coordinator: SKGameSceneDelegate {
 
 extension Coordinator: GameOverScreenDelegate {
     func restartGame() {
-        gameScene.reloadScene()
+        recreateGameScene()
+        gameScene.startGame()
         
         activeScreen?.removeFromParent()
         activeScreen = nil
     }
     
     func returnHomeFromGameOver() {
-        gameScene.resetToIdle()
+        recreateGameScene()
         
         activeScreen?.removeFromParent()
         

@@ -108,21 +108,58 @@ class GameScene: Scene {
         resetToIdle()
     }
     
-    func resetToIdle() {
-        skGameScene.removeGameLabels()
-        stageManager.isActive = false
+    func setDefaults() {
+        clearNodeSet(&enemies)
+        clearNodeSet(&attacks)
+        clearNodeSet(&potions)
+        clearNodeSet(&particles)
+        clearNodeSet(&hitEnemies)
         
-        player.setPosition(.zero)
-        player.interruptCharging()
-        player.health = 100
-        player.energy = 100
+        enemyHitsForMove = 0
+        shouldHandleCombo = false
+        shouldResetHitEnemies = false
+        shouldConsumeAllPotions = false
+        comboMultiplier = 0
+        
+        favor = 0
+        
+        isPaused = false
+        isGameOver = false
+        timeSinceGameOver = 0
+        
+        isStageCleared = false
+        prevPlayerPosition = .zero
+    }
+    
+    func clearNodeSet<T: Node>(_ set: inout Set<T>) {
+        for node in set {
+            node.removeFromParent()
+            set.remove(node)
+        }
+    }
+    
+    func resetPlayer() {
+        player.reset()
         
         if player.parent == nil {
             rootNode.add(player)
         }
+    }
+    
+    func resetToIdle() {
+        setDefaults()
+        resetPlayer()
         
-        potions.forEach { $0.consume() }
-        enemies.forEach(removeEnemy)
+        skGameScene.removeGameLabels()
+        stageManager.isActive = false
+    }
+    
+    func reloadScene() {
+        setDefaults()
+        resetPlayer()
+        
+        stageManager.reset()
+        skGameScene.addGameLabels()
     }
     
     func update(deltaTime: TimeInterval) {
@@ -177,7 +214,7 @@ class GameScene: Scene {
         
         // Check for game over
         if player.health == 0 && !isGameOver {
-            player.removeFromParent()
+            player.destroy()
             
             // Particles
             let count = Int.random(in: 25...30)
@@ -200,7 +237,7 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-//        stageManager.update(deltaTime: deltaTime)
+        stageManager.update(deltaTime: deltaTime)
         
         // Clear stage if possible
         if !isGameOver && stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
@@ -240,23 +277,6 @@ class GameScene: Scene {
         stageManager.advanceStage()
     }
     
-    func reloadScene() {
-        player.interruptCharging()
-        player.setPosition(.zero)
-        player.energy = 100
-        player.health = 100
-        
-        if player.parent == nil {
-            rootNode.add(player)
-        }
-        
-        isGameOver = false
-        favor = 0
-        
-        stageManager.reset()
-        skGameScene.addGameLabels()
-    }
-    
     private func testPlayerEnemyCollision() {
         let deltaPlayer = player.position - prevPlayerPosition
         let maxDistance = length(deltaPlayer)
@@ -278,7 +298,7 @@ class GameScene: Scene {
                     let impactMod = 210 * min(player.damage / enemy.maxHealth, 1.0)
                     enemy.receiveDamage(player.damage, impact: direction * impactMod)
                     
-                    if player.stage != .idle || player.wasPiercing {
+                    if player.stage != .idle || player.prevStage == .piercing {
                         hitEnemies.insert(enemy)
                     }
                     

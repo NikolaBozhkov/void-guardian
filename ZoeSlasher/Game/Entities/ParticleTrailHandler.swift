@@ -33,7 +33,7 @@ class ParticleTrailHandler {
         let distance = length(delta)
         let direction = safeNormalize(delta)
         
-        if !player.moveFinished || player.wasPiercing {
+        if !player.moveFinished || player.prevStage == .piercing {
             distanceBuffer += distance
         }
         
