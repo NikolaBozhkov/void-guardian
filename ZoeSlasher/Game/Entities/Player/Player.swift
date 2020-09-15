@@ -12,37 +12,6 @@ protocol PlayerDelegate: class {
 
 class Player: Node {
     
-    enum Stage {
-        case charging, piercing, idle
-    }
-    
-    struct MovementInfo {
-        let initialPosition: vector_float2
-        let target: vector_float2
-        let speed: Float
-        let delta: vector_float2
-        let direction: vector_float2
-        let distance: Float
-        
-        init(position: vector_float2, target: vector_float2, speed: Float) {
-            self.target = target
-            self.speed = speed
-            initialPosition = position
-            delta = target - position
-            direction = safeNormalize(delta)
-            distance = length(delta)
-        }
-    }
-    
-    private struct VisualData {
-        var timeSinceLastMove: Float = 100
-        var lastHealth: Float = 100
-        var healthDmgIndicator: Float = 100
-        var timeSinceLastHit: Float = 100
-        var dmgReceivedNormalized: Float = 0
-        var timeSinceLastEnergyUse: Float = 100
-    }
-    
     static let baseChargingDamage: Float = Enemy.baseHealth * 0.5
     static let basePiercingDamage: Float = Enemy.baseHealth
     
@@ -204,7 +173,7 @@ class Player: Node {
     }
     
     /// Returns whether the movement has finished or not
-    func handleMovement(for info: MovementInfo, deltaTime: Float) -> Bool {
+    private func handleMovement(for info: MovementInfo, deltaTime: Float) -> Bool {
         let forceMagnitude = length(force)
         if forceMagnitude < info.speed {
             force = info.direction * min(forceMagnitude + deltaTime * (info.speed / 0.05), info.speed)
@@ -284,5 +253,38 @@ class Player: Node {
     func destroy() {
         anchor.removeFromParent()
         removeFromParent()
+    }
+}
+
+extension Player {
+    enum Stage {
+        case charging, piercing, idle
+    }
+    
+    private struct MovementInfo {
+        let initialPosition: vector_float2
+        let target: vector_float2
+        let speed: Float
+        let delta: vector_float2
+        let direction: vector_float2
+        let distance: Float
+        
+        init(position: vector_float2, target: vector_float2, speed: Float) {
+            self.target = target
+            self.speed = speed
+            initialPosition = position
+            delta = target - position
+            direction = safeNormalize(delta)
+            distance = length(delta)
+        }
+    }
+    
+    private struct VisualData {
+        var timeSinceLastMove: Float = 100
+        var lastHealth: Float = 100
+        var healthDmgIndicator: Float = 100
+        var timeSinceLastHit: Float = 100
+        var dmgReceivedNormalized: Float = 0
+        var timeSinceLastEnergyUse: Float = 100
     }
 }

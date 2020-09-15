@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB14250D091000B3299C /* EnergySymbol.swift */; };
 		2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */; };
+		2414AB1B251090A400B3299C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB1A251090A400B3299C /* PlayerManager.swift */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24629E62240D6A87009A465B /* Sanos-Extended.ttf */; };
 		24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */; };
@@ -82,6 +83,7 @@
 /* Begin PBXFileReference section */
 		2414AB14250D091000B3299C /* EnergySymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergySymbol.swift; sourceTree = "<group>"; };
 		2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleTrailHandler.swift; sourceTree = "<group>"; };
+		2414AB1A251090A400B3299C /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24629E62240D6A87009A465B /* Sanos-Extended.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sanos-Extended.ttf"; sourceTree = "<group>"; };
 		24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
@@ -168,6 +170,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2414AB1825108F2200B3299C /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				2469393823C5D126001A6CAE /* Player.swift */,
+				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
+				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
+				2414AB14250D091000B3299C /* EnergySymbol.swift */,
+				2414AB1A251090A400B3299C /* PlayerManager.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		2414AB1925108F3600B3299C /* Enemy */ = {
+			isa = PBXGroup;
+			children = (
+				24E7D8AA24054592007A66D2 /* Abilities */,
+				247D705223E70FAA00480199 /* Enemy.swift */,
+				247D705423E7173500480199 /* EnemyAttack.swift */,
+			);
+			path = Enemy;
+			sourceTree = "<group>";
+		};
 		24629E66240D6CD4009A465B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,7 +280,6 @@
 			isa = PBXGroup;
 			children = (
 				2464427A24127BEA004CF697 /* UI */,
-				24E7D8AA24054592007A66D2 /* Abilities */,
 				24E7D8A324050A47007A66D2 /* Entities */,
 				247D704723E6B20B00480199 /* GameScene.swift */,
 				247D705023E6CE0F00480199 /* Spawner.swift */,
@@ -345,14 +368,10 @@
 		24E7D8A324050A47007A66D2 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				2414AB1925108F3600B3299C /* Enemy */,
+				2414AB1825108F2200B3299C /* Player */,
 				249811332418270F00900AE9 /* Potion */,
-				2469393823C5D126001A6CAE /* Player.swift */,
-				247D705223E70FAA00480199 /* Enemy.swift */,
-				247D705423E7173500480199 /* EnemyAttack.swift */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
-				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
-				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
-				2414AB14250D091000B3299C /* EnergySymbol.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -480,6 +499,7 @@
 				24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */,
 				24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */,
 				2468E3B92462AAA1004042AD /* GameOverScreen.swift in Sources */,
+				2414AB1B251090A400B3299C /* PlayerManager.swift in Sources */,
 				24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */,
 				24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */,
 				24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */,

@@ -48,6 +48,9 @@ class Coordinator {
         homeScreen.present()
     }
     
+    // Game scene is being recreated because a lot of problems arise from the need to reset the game scene state
+    // One of the biggest issues is removing labels and stuff
+    // It's much easier and safer to simply recreate the whole thing, for now it's cheap
     func recreateGameScene() {
         gameScene = GameScene(size: gameScene.size, safeAreaInsets: gameScene.safeAreaInsets)
         gameScene.skGameScene.sceneDelegate = self

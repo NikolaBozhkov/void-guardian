@@ -39,6 +39,7 @@ class GameScene: Scene {
     let spawner = Spawner()
     
     let player = Player()
+    lazy var playerManager: PlayerManager = { PlayerManager(player: player) }()
     
     var enemies = Set<Enemy>()
     var attacks = Set<EnemyAttack>()
@@ -235,77 +236,6 @@ class GameScene: Scene {
         stageManager.advanceStage()
     }
     
-    private func testPlayerEnemyCollision() {
-        let deltaPlayer = player.position - prevPlayerPosition
-        let maxDistance = length(deltaPlayer)
-        let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)
-        var distanceTravelled: Float = 0
-        
-        // Cast ray
-        while distanceTravelled <= maxDistance {
-            var minDistance: Float = .infinity
-            
-            let position = prevPlayerPosition + distanceTravelled * direction
-            
-            for enemy in enemies where !enemy.shouldRemove && !enemy.isImmune {
-                let d = distance(position, enemy.isImpactLocked ? enemy.positionBeforeImpact : enemy.position)
-                
-                // Intersection logic
-                let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
-                if d - 0.1 <= r {
-                    let impactMod = 210 * min(player.damage / enemy.maxHealth, 1.0)
-                    enemy.receiveDamage(player.damage, impact: direction * impactMod)
-                    
-                    if player.stage != .idle || player.prevStage == .piercing {
-                        hitEnemies.insert(enemy)
-                    }
-                    
-                    if enemy.health < 1 {
-                        removeEnemy(enemy)
-                    }
-                }
-                
-                if d - r < minDistance {
-                    minDistance = d - r
-                }
-            }
-            
-            distanceTravelled += minDistance
-        }
-    }
-    
-    private func testPlayerEnemyAttackCollision() {
-        for attack in attacks {
-            if attack.active {
-                var shouldRemoveAttack = false
-                
-                if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 + attack.radius {
-                    player.receiveDamage(attack.corruption)
-                    shouldRemoveAttack = true
-                    skGameScene.didPlayerReceivedDamage(attack.corruption, from: attack.enemy)
-                }
-                
-                if attack.didReachTarget || shouldRemoveAttack {
-                    attack.remove()
-                }
-            }
-            
-            if attack.shouldRemove {
-                removeEnemyAttack(attack)
-            }
-        }
-    }
-    
-    private func testPlayerPotionCollision() {
-        for potion in potions where !potion.isConsumed {
-            let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
-            if distance(potion.position, player.position) <= threshold {
-                potion.apply(to: player)
-                skGameScene.didConsumePotion(potion)
-            }
-        }
-    }
-    
     func removeEnemy(_ enemy: Enemy) {
         enemy.destroy()
         
@@ -362,11 +292,93 @@ class GameScene: Scene {
     }
 }
 
+// MARK: - Collision Testing
+
+extension GameScene {
+    private func testPlayerEnemyCollision() {
+        let deltaPlayer = player.position - prevPlayerPosition
+        let maxDistance = length(deltaPlayer)
+        let direction = maxDistance == 0 ? .zero : normalize(deltaPlayer)
+        var distanceTravelled: Float = 0
+        
+        // Cast ray
+        while distanceTravelled <= maxDistance {
+            var minDistance: Float = .infinity
+            
+            let position = prevPlayerPosition + distanceTravelled * direction
+            
+            for enemy in enemies where !enemy.shouldRemove && !enemy.isImmune {
+                let d = distance(position, enemy.isImpactLocked ? enemy.positionBeforeImpact : enemy.position)
+                
+                // Intersection logic
+                let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
+                if d - 0.1 <= r {
+                    let impactMod = 210 * min(playerManager.damage / enemy.maxHealth, 1.0)
+                    enemy.receiveDamage(playerManager.damage, impact: direction * impactMod)
+                    
+                    if player.stage != .idle || player.prevStage == .piercing {
+                        hitEnemies.insert(enemy)
+                    }
+                    
+                    if enemy.health < 1 {
+                        removeEnemy(enemy)
+                    }
+                }
+                
+                if d - r < minDistance {
+                    minDistance = d - r
+                }
+            }
+            
+            distanceTravelled += minDistance
+        }
+    }
+    
+    private func testPlayerEnemyAttackCollision() {
+        for attack in attacks {
+            if attack.active {
+                var shouldRemoveAttack = false
+                
+                if distance(attack.tipPoint, player.position) <= player.physicsSize.x / 2 + attack.radius {
+                    shouldRemoveAttack = true
+                    
+                    let attackInfo = playerManager.receiveDamage(attack.corruption)
+                    if attackInfo.didHit {
+                        skGameScene.didPlayerReceivedDamage(attackInfo.hitDamage, from: attack.enemy)
+                    }
+                }
+                
+                if attack.didReachTarget || shouldRemoveAttack {
+                    attack.remove()
+                }
+            }
+            
+            if attack.shouldRemove {
+                removeEnemyAttack(attack)
+            }
+        }
+    }
+    
+    private func testPlayerPotionCollision() {
+        for potion in potions where !potion.isConsumed {
+            let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
+            if distance(potion.position, player.position) <= threshold {
+                playerManager.consumePotion(potion)
+                skGameScene.didConsumePotion(potion)
+            }
+        }
+    }
+}
+
+// MARK: - PlayerDelegate
+
 extension GameScene: PlayerDelegate {
     func didTryToMoveWithoutEnergy() {
         skGameScene.showNoEnergyLabel()
     }
 }
+
+// MARK: - EnemyDelegate
 
 extension GameScene: EnemyDelegate {
     
@@ -398,12 +410,16 @@ extension GameScene: EnemyDelegate {
     }
 }
 
+// MARK: - UIDelegate
+
 extension GameScene: UIDelegate {
     func didFinishClearStageImpactAnimation() {
         player.health = 100
         player.energy = 100
     }
 }
+
+// MARK: - GameSceneInput
 
 extension GameScene: GameSceneInput {
     func addChild(_ node: Node) {
