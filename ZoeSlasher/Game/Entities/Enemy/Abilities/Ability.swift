@@ -149,10 +149,6 @@ class AbilityConfigManager {
     }
     
     func getConfig(forStage stage: Int, budget: Float) -> Ability.Configuration? {
-//        guard Float.random(in: 0..<1) < spawnChanceFunction(stage) else {
-//            return nil
-//        }
-        
         for config in configs {
             let roll = Float.random(in: 0..<1)
             if budget >= config.cost && roll < config.spawnChance(forStage: stage) {

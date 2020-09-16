@@ -35,8 +35,7 @@ class GameScene: Scene {
     let background = Node()
     let overlay = Node()
     
-    let stageManager: StageManager
-    let spawner = Spawner()
+    let stageManager = StageManager()
     
     let player = Player()
     lazy var playerManager: PlayerManager = { PlayerManager(player: player) }()
@@ -71,10 +70,14 @@ class GameScene: Scene {
     
     var prevPlayerPosition: vector_float2 = .zero
     
+    private var canClearStage: Bool {
+        !isGameOver
+            && stageManager.isActive
+            && stageManager.spawningEnded
+            && !enemies.contains(where: { !$0.shouldRemove })
+    }
+    
     init(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
-        
-        stageManager = StageManager(spawner: spawner)
-        
         super.init()
         
         self.size = size
@@ -84,9 +87,9 @@ class GameScene: Scene {
         
         skGameScene = SKGameScene(size: CGSize(size))
         
+        stageManager.spawner.setScene(self)
         stageManager.delegate = skGameScene
         
-        spawner.scene = self
         skGameScene.gameScene = self
         
         background.size = size
@@ -198,8 +201,7 @@ class GameScene: Scene {
         
         stageManager.update(deltaTime: deltaTime)
         
-        // Clear stage if possible
-        if !isGameOver && stageManager.isActive && spawner.spawningEnded && !enemies.contains(where: { !$0.shouldRemove }) {
+        if canClearStage {
             stageManager.clearStage()
         }
         

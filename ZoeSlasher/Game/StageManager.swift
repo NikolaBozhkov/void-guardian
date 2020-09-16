@@ -20,9 +20,13 @@ class StageManager {
     
     static let thresholdToBudgetGrowthMap = [0: 0, 1: 0.9, 75: 0.2].sorted(by: { $0.key > $1.key })
     
-    let spawner: Spawner
+    let spawner = MainSpawner()
     var delegate: StageManagerDelegate?
     var isActive = false
+    
+    var spawningEnded: Bool {
+        stageTime >= spawnPeriod
+    }
     
     private var budget: Float = Constants.baseBudget
     private var stageDuration: TimeInterval = Constants.baseStageDuration
@@ -41,10 +45,6 @@ class StageManager {
         }
         
         return 1
-    }
-    
-    init(spawner: Spawner) {
-        self.spawner = spawner
     }
     
     func update(deltaTime: TimeInterval) {
@@ -90,7 +90,7 @@ class StageManager {
             }
         }
         
-        spawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
+        spawner.enemySpawner.setState(stage: stage, budget: budget, spawnPeriod: spawnPeriod)
         
         stage = prevStage
         budget = prevBudget

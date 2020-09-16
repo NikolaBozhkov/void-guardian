@@ -10,6 +10,11 @@
 		2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB14250D091000B3299C /* EnergySymbol.swift */; };
 		2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */; };
 		2414AB1B251090A400B3299C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB1A251090A400B3299C /* PlayerManager.swift */; };
+		2414AB1D2511E14F00B3299C /* PowerUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB1C2511E14F00B3299C /* PowerUp.swift */; };
+		2414AB1F2511E18500B3299C /* PowerUpNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB1E2511E18500B3299C /* PowerUpNode.swift */; };
+		2414AB222511E5F400B3299C /* EnemySpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB212511E5F400B3299C /* EnemySpawner.swift */; };
+		2414AB242511E5FB00B3299C /* PotionSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB232511E5FB00B3299C /* PotionSpawner.swift */; };
+		2414AB262511E60600B3299C /* PowerUpSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB252511E60600B3299C /* PowerUpSpawner.swift */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24629E62240D6A87009A465B /* Sanos-Extended.ttf */; };
 		24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */; };
@@ -36,7 +41,7 @@
 		246ACBB923F7270500C947C9 /* NoiseLib.metal in Sources */ = {isa = PBXBuildFile; fileRef = 246ACBB823F7270500C947C9 /* NoiseLib.metal */; };
 		247D704423E1D2CD00480199 /* Player.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247D704323E1D2CD00480199 /* Player.metal */; };
 		247D704823E6B20B00480199 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D704723E6B20B00480199 /* GameScene.swift */; };
-		247D705123E6CE0F00480199 /* Spawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705023E6CE0F00480199 /* Spawner.swift */; };
+		247D705123E6CE0F00480199 /* MainSpawner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705023E6CE0F00480199 /* MainSpawner.swift */; };
 		247D705323E70FAA00480199 /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705223E70FAA00480199 /* Enemy.swift */; };
 		247D705523E7173500480199 /* EnemyAttack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D705423E7173500480199 /* EnemyAttack.swift */; };
 		247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */ = {isa = PBXBuildFile; fileRef = 247D705723F0086D00480199 /* Arber-Vintage-Extended.otf */; };
@@ -84,6 +89,11 @@
 		2414AB14250D091000B3299C /* EnergySymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergySymbol.swift; sourceTree = "<group>"; };
 		2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParticleTrailHandler.swift; sourceTree = "<group>"; };
 		2414AB1A251090A400B3299C /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
+		2414AB1C2511E14F00B3299C /* PowerUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUp.swift; sourceTree = "<group>"; };
+		2414AB1E2511E18500B3299C /* PowerUpNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpNode.swift; sourceTree = "<group>"; };
+		2414AB212511E5F400B3299C /* EnemySpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemySpawner.swift; sourceTree = "<group>"; };
+		2414AB232511E5FB00B3299C /* PotionSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionSpawner.swift; sourceTree = "<group>"; };
+		2414AB252511E60600B3299C /* PowerUpSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpSpawner.swift; sourceTree = "<group>"; };
 		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24629E62240D6A87009A465B /* Sanos-Extended.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sanos-Extended.ttf"; sourceTree = "<group>"; };
 		24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
@@ -111,7 +121,7 @@
 		247D704323E1D2CD00480199 /* Player.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Player.metal; sourceTree = "<group>"; };
 		247D704623E1D4BC00480199 /* SpriteRendererShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpriteRendererShared.h; sourceTree = "<group>"; };
 		247D704723E6B20B00480199 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
-		247D705023E6CE0F00480199 /* Spawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spawner.swift; sourceTree = "<group>"; };
+		247D705023E6CE0F00480199 /* MainSpawner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSpawner.swift; sourceTree = "<group>"; };
 		247D705223E70FAA00480199 /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
 		247D705423E7173500480199 /* EnemyAttack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyAttack.swift; sourceTree = "<group>"; };
 		247D705723F0086D00480199 /* Arber-Vintage-Extended.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arber-Vintage-Extended.otf"; sourceTree = "<group>"; };
@@ -178,6 +188,8 @@
 				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
 				2414AB14250D091000B3299C /* EnergySymbol.swift */,
 				2414AB1A251090A400B3299C /* PlayerManager.swift */,
+				2414AB1C2511E14F00B3299C /* PowerUp.swift */,
+				2414AB1E2511E18500B3299C /* PowerUpNode.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -190,6 +202,17 @@
 				247D705423E7173500480199 /* EnemyAttack.swift */,
 			);
 			path = Enemy;
+			sourceTree = "<group>";
+		};
+		2414AB202511E56A00B3299C /* Spawners */ = {
+			isa = PBXGroup;
+			children = (
+				247D705023E6CE0F00480199 /* MainSpawner.swift */,
+				2414AB212511E5F400B3299C /* EnemySpawner.swift */,
+				2414AB232511E5FB00B3299C /* PotionSpawner.swift */,
+				2414AB252511E60600B3299C /* PowerUpSpawner.swift */,
+			);
+			path = Spawners;
 			sourceTree = "<group>";
 		};
 		24629E66240D6CD4009A465B /* Extensions */ = {
@@ -281,8 +304,8 @@
 			children = (
 				2464427A24127BEA004CF697 /* UI */,
 				24E7D8A324050A47007A66D2 /* Entities */,
+				2414AB202511E56A00B3299C /* Spawners */,
 				247D704723E6B20B00480199 /* GameScene.swift */,
-				247D705023E6CE0F00480199 /* Spawner.swift */,
 				24E7D8B724066093007A66D2 /* StageManager.swift */,
 				24E65F4E247D1F43004EE053 /* ProgressManager.swift */,
 			);
@@ -469,10 +492,12 @@
 				24DCFD3A2475353100FE2FC1 /* TrailRenderer.swift in Sources */,
 				24D7FF5D242150A9007743C6 /* HealthGainLabel.swift in Sources */,
 				24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */,
+				2414AB1F2511E18500B3299C /* PowerUpNode.swift in Sources */,
 				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
+				2414AB262511E60600B3299C /* PowerUpSpawner.swift in Sources */,
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				2468E3B7246193F7004042AD /* ReturnHomeConfirmScreen.swift in Sources */,
-				247D705123E6CE0F00480199 /* Spawner.swift in Sources */,
+				247D705123E6CE0F00480199 /* MainSpawner.swift in Sources */,
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
@@ -481,6 +506,7 @@
 				2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */,
 				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
+				2414AB222511E5F400B3299C /* EnemySpawner.swift in Sources */,
 				2465E77B24360EF10019CE02 /* PotionRenderer.swift in Sources */,
 				2468E3A9245FD85F004042AD /* Button.swift in Sources */,
 				2468E3BB24651C42004042AD /* StageConfirmScreen.swift in Sources */,
@@ -508,6 +534,7 @@
 				247D704823E6B20B00480199 /* GameScene.swift in Sources */,
 				2468E3AD24612EF1004042AD /* Coordinator.swift in Sources */,
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
+				2414AB1D2511E14F00B3299C /* PowerUp.swift in Sources */,
 				24D7FF5F24225970007743C6 /* Colors.swift in Sources */,
 				2468E3A5245E99F2004042AD /* OverlayScene.swift in Sources */,
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
@@ -517,6 +544,7 @@
 				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
 				2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */,
+				2414AB242511E5FB00B3299C /* PotionSpawner.swift in Sources */,
 				24E65F512483BF50004EE053 /* TutorialScreen.swift in Sources */,
 				24E65F4D247CF28A004EE053 /* AttackAbility.swift in Sources */,
 				2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */,
