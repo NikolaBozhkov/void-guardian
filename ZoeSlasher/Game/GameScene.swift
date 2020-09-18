@@ -44,6 +44,7 @@ class GameScene: Scene {
     var attacks = Set<EnemyAttack>()
     
     var potions = Set<Potion>()
+    var powerUpNodes = Set<PowerUpNode>()
     
     var particles = Set<Particle>()
     
@@ -199,7 +200,7 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-        stageManager.update(deltaTime: deltaTime)
+//        stageManager.update(deltaTime: deltaTime)
         
         if canClearStage {
             stageManager.clearStage()

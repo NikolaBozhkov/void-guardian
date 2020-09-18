@@ -10,4 +10,56 @@ import Foundation
 
 class PowerUpSpawner {
     
+    unowned var scene: GameScene!
+    
+    private let powerUpIntervalRange: Range<TimeInterval> = 15..<25
+    
+    private var powerUpInterval: TimeInterval = 0
+    private var timeSinceLastPowerUp: TimeInterval = 0
+    
+    init() {
+        powerUpInterval = .random(in: powerUpIntervalRange)
+    }
+    
+    func update(deltaTime: TimeInterval) {
+        timeSinceLastPowerUp += deltaTime
+        
+        if timeSinceLastPowerUp >= powerUpInterval {
+            let powerUpNode = PowerUpNode(powerUp: getRandomPowerUp())
+            powerUpNode.position = scene.randomPosition(padding: [300, 200])
+            scene.powerUpNodes.insert(powerUpNode)
+            
+            timeSinceLastPowerUp = 0
+            powerUpInterval = .random(in: powerUpIntervalRange)
+        }
+    }
+    
+    private func getRandomPowerUp() -> PowerUp {
+        let random = Float.random(in: 0..<1)
+        
+        let powerUpChances: [PowerUp: Float] = [
+            scene.playerManager.doubleDamagePowerUp: 0.35,
+            scene.playerManager.doublePotionRestorePowerUp: 0.35,
+            scene.playerManager.shieldPowerUp: 0.2,
+            scene.playerManager.instantKillPowerUp: 0.1
+        ]
+        
+        var startChance: Float = 0
+        var endChance: Float = 0
+        for powerUpEntry in powerUpChances {
+            let powerUp = powerUpEntry.key
+            let chance = powerUpEntry.value
+            
+            endChance += chance
+            
+            if (startChance..<endChance).contains(random) {
+                return powerUp
+            }
+            
+            startChance += chance
+        }
+        
+        assert(false, "No power up was chosen at random, problem with chance ranges.")
+        return scene.playerManager.doubleDamagePowerUp
+    }
 }

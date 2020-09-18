@@ -9,7 +9,6 @@
 import Foundation
 
 class BasicAttackAbilityConfig: Ability.Configuration {
-    
     override class var abilityType: Ability.Type {
         BasicAttackAbility.self
     }

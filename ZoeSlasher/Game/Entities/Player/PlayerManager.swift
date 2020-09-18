@@ -11,31 +11,31 @@
 class PlayerManager {
     
     var damage: Float {
-        guard !instantKill.isActive else {
-            return instantKill.damage
+        guard !instantKillPowerUp.isActive else {
+            return instantKillPowerUp.damage
         }
         
         var modifiedDamage = player.damage
         
-        if doubleDamage.isActive {
-            modifiedDamage *= doubleDamage.multiplier
+        if doubleDamagePowerUp.isActive {
+            modifiedDamage *= doubleDamagePowerUp.multiplier
         }
         
         return modifiedDamage
     }
     
     private let player: Player
-    let instantKill = InstantKillPowerUp(duration: 10)
-    let doubleDamage = MultiplierPowerUp(multiplier: 2, duration: 10)
-    let shield = ShieldPowerUp(duration: 10)
-    let doublePotionPower = MultiplierPowerUp(multiplier: 2, duration: 10)
+    let instantKillPowerUp = InstantKillPowerUp(duration: 10)
+    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10)
+    let shieldPowerUp = ShieldPowerUp(duration: 10)
+    let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10)
     
     init(player: Player) {
         self.player = player
     }
     
     func receiveDamage(_ damage: Float) -> (didHit: Bool, hitDamage: Float) {
-        guard !shield.isActive else {
+        guard !shieldPowerUp.isActive else {
             return (false, 0)
         }
         
@@ -45,8 +45,8 @@ class PlayerManager {
     
     func consumePotion(_ potion: Potion) {
         var multiplier: Float = 1
-        if doublePotionPower.isActive {
-            multiplier = doublePotionPower.multiplier
+        if doublePotionRestorePowerUp.isActive {
+            multiplier = doublePotionRestorePowerUp.multiplier
         }
         
         potion.apply(to: player, multiplier: multiplier)

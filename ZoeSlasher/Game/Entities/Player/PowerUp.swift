@@ -7,6 +7,8 @@
 //
 
 class PowerUp {
+    private let uuid = UUID()
+    
     let duration: Float
     private(set) var isActive: Bool = false
     
@@ -27,6 +29,16 @@ class PowerUp {
     func activate() {
         isActive = true
         timeSinceActivated = 0
+    }
+}
+
+extension PowerUp: Hashable {
+    static func == (lhs: PowerUp, rhs: PowerUp) -> Bool {
+        return lhs.uuid == rhs.uuid
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
     }
 }
 

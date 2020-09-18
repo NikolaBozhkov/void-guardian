@@ -184,10 +184,10 @@
 			isa = PBXGroup;
 			children = (
 				2469393823C5D126001A6CAE /* Player.swift */,
+				2414AB1A251090A400B3299C /* PlayerManager.swift */,
 				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
 				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
 				2414AB14250D091000B3299C /* EnergySymbol.swift */,
-				2414AB1A251090A400B3299C /* PlayerManager.swift */,
 				2414AB1C2511E14F00B3299C /* PowerUp.swift */,
 				2414AB1E2511E18500B3299C /* PowerUpNode.swift */,
 			);
