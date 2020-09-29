@@ -32,9 +32,9 @@ vertex VertexOut vertexSprite(uint vid [[vertex_id]],
     return out;
 }
 
-vertex TextureOut vertexTexture(constant float4 *vertices [[buffer(0)]],
-                                constant SpriteData *textures [[buffer(1)]],
-                                constant Uniforms &uniforms [[buffer(2)]],
+vertex TextureOut vertexTexture(constant float4 *vertices [[buffer(BufferIndexVertices)]],
+                                constant SpriteData *textures [[buffer(BufferIndexData)]],
+                                constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                                 uint vid [[vertex_id]],
                                 uint iid [[instance_id]])
 {
@@ -55,9 +55,9 @@ fragment float4 fragmentTexture(TextureOut in [[stage_in]],
     return float4(in.color.xyz, texture.sample(s, in.uv).a * in.color.a);
 }
 
-vertex ParticleOut vertexParticle(constant float4 *vertices [[buffer(0)]],
-                                  constant ParticleData *particles [[buffer(1)]],
-                                  constant Uniforms &uniforms [[buffer(2)]],
+vertex ParticleOut vertexParticle(constant float4 *vertices [[buffer(BufferIndexVertices)]],
+                                  constant ParticleData *particles [[buffer(BufferIndexData)]],
+                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                                   uint vid [[vertex_id]],
                                   uint iid [[instance_id]])
 {
@@ -89,9 +89,9 @@ fragment float4 fragmentParticle(ParticleOut in [[stage_in]])
     return float4(in.color.xyz, f * in.color.w);
 }
 
-vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(0)]],
-                            constant EnemyData *enemies [[buffer(1)]],
-                            constant Uniforms &uniforms [[buffer(2)]],
+vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(BufferIndexVertices)]],
+                            constant EnemyData *enemies [[buffer(BufferIndexData)]],
+                            constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                             uint vid [[vertex_id]],
                             uint iid [[instance_id]])
 {
@@ -116,7 +116,7 @@ vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(0)]],
 }
 
 fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
-                              constant Uniforms &uniforms [[buffer(2)]],
+                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                               texture2d<float> fbmr [[texture(1)]],
                               texture2d<float> simplex [[texture(3)]])
 {
@@ -207,9 +207,9 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     return float4(mix(in.color.xyz, healthColor, f), enemy);
 }
 
-vertex AttackOut vertexAttack(constant float4 *vertices [[buffer(0)]],
-                              constant AttackData *attacks [[buffer(1)]],
-                              constant Uniforms &uniforms [[buffer(2)]],
+vertex AttackOut vertexAttack(constant float4 *vertices [[buffer(BufferIndexVertices)]],
+                              constant AttackData *attacks [[buffer(BufferIndexData)]],
+                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                               uint vid [[vertex_id]],
                               uint iid [[instance_id]])
 {
@@ -251,8 +251,8 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     return float4(in.color.xyz, f);
 }
 
-vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(0)]],
-                            constant Uniforms &uniforms [[buffer(2)]],
+vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(BufferIndexVertices)]],
+                            constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                             uint vid [[vertex_id]])
 {
     TrailOut out;
@@ -266,7 +266,7 @@ vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(0)]],
 }
 
 fragment float4 fragmentTrail(TrailOut in [[stage_in]],
-                              constant Uniforms &uniforms [[buffer(2)]],
+                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                               constant float &aspectRatio [[buffer(5)]],
                               texture2d<float> texture [[texture(0)]],
                               texture2d<float> fbmr [[texture(1)]]) {

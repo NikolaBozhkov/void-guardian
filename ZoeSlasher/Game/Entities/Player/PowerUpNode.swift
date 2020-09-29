@@ -15,6 +15,8 @@ class PowerUpNode: Node {
     init(powerUp: PowerUp) {
         self.powerUp = powerUp
         super.init()
+        
+        size = [200, 200]
     }
     
     func activate() {

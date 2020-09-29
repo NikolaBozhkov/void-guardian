@@ -10,12 +10,14 @@ class PowerUp {
     private let uuid = UUID()
     
     let duration: Float
+    let type: PowerUpType
     private(set) var isActive: Bool = false
     
     var timeSinceActivated: Float = 0
     
-    init(duration: Float) {
+    init(duration: Float, type: PowerUpType) {
         self.duration = duration
+        self.type = type
     }
     
     func update(deltaTime: Float) {
@@ -42,6 +44,10 @@ extension PowerUp: Hashable {
     }
 }
 
+enum PowerUpType: CaseIterable {
+    case instantKill, shield, doubleDamage, doublePotionRestore
+}
+
 class InstantKillPowerUp: PowerUp {
     let damage: Float = 9999
 }
@@ -49,9 +55,9 @@ class InstantKillPowerUp: PowerUp {
 class MultiplierPowerUp: PowerUp {
     let multiplier: Float
     
-    init(multiplier: Float, duration: Float) {
+    init(multiplier: Float, duration: Float, type: PowerUpType) {
         self.multiplier = multiplier
-        super.init(duration: duration)
+        super.init(duration: duration, type: type)
     }
 }
 

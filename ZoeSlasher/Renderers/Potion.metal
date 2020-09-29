@@ -13,9 +13,9 @@ using namespace metal;
 #import "SpriteRendererShared.h"
 #import "Main/Common.h"
 
-vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(0)]],
-                              constant PotionData *potions [[buffer(1)]],
-                              constant Uniforms &uniforms [[buffer(2)]],
+vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(BufferIndexVertices)]],
+                              constant PotionData *potions [[buffer(BufferIndexData)]],
+                              constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                               uint vid [[vertex_id]],
                               uint iid [[instance_id]])
 {
@@ -24,7 +24,7 @@ vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(0)]],
     PotionData potion = potions[iid];
     out.position = uniforms.projectionMatrix * potion.worldTransform * float4(vertices[vid].xy * potion.size, 0.0, 1.0);
     out.uv = vertices[vid].zw;
-    out.physicsSize = potion.physicsSize;
+    out.physicsSizeNorm = potion.physicsSizeNorm;
     out.worldPos = potion.worldPos;
     out.symbolColor = potion.symbolColor;
     out.glowColor = potion.glowColor;
@@ -40,12 +40,12 @@ fragment float4 fragmentPotion(PotionOut in [[stage_in]],
 {
     float2 st = in.uv * 2.0 - 1.0;
     
-    float breathW = in.physicsSize.x * 0.07;
+    float breathW = in.physicsSizeNorm.x * 0.07;
     float breath = breathW * (1 + sin(uniforms.time * 2.5));
-    float circleW = in.physicsSize.x * (0.2 + breath * 0.2);
+    float circleW = in.physicsSizeNorm.x * (0.2 + breath * 0.2);
     float margin = 0.02 + breath * 0.4;
     
-    float2 textureSize = in.physicsSize - circleW - margin - breathW + breath;
+    float2 textureSize = in.physicsSizeNorm - circleW - margin - breathW + breath;
     float textureArea = step(-textureSize.x, st.x) - step(textureSize.x, st.x);
     textureArea *= step(-textureSize.y, st.y) - step(textureSize.y, st.y);
     

@@ -27,7 +27,8 @@ typedef NS_ENUM(NSInteger, BufferIndex)
     BufferIndexSpriteModelMatrix = 1,
     BufferIndexUniforms = 2,
     BufferIndexSpriteColor = 3,
-    BufferIndexSize = 4
+    BufferIndexSize = 4,
+    BufferIndexData = 5
 };
 
 typedef NS_ENUM(NSInteger, TextureIndex)
@@ -82,7 +83,7 @@ struct PotionData
 {
     matrix_float4x4 worldTransform;
     simd_float2 size;
-    simd_float2 physicsSize;
+    simd_float2 physicsSizeNorm;
     simd_float2 worldPos;
     simd_float3 symbolColor;
     simd_float3 glowColor;
@@ -98,6 +99,12 @@ struct AttackData
     float aspectRatio;
     float cutOff;
     float speed;
+};
+
+struct PowerUpNodeData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
 };
 
 struct EmptyData {};

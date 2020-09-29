@@ -12,7 +12,7 @@ class PowerUpSpawner {
     
     unowned var scene: GameScene!
     
-    private let powerUpIntervalRange: Range<TimeInterval> = 15..<25
+    private let powerUpIntervalRange: Range<TimeInterval> = 3..<5//15..<25
     
     private var powerUpInterval: TimeInterval = 0
     private var timeSinceLastPowerUp: TimeInterval = 0
@@ -59,7 +59,7 @@ class PowerUpSpawner {
             startChance += chance
         }
         
-        assert(false, "No power up was chosen at random, problem with chance ranges.")
+        assert(false, "No power up was chosen at random, chance ranges don't fill 0..<1")
         return scene.playerManager.doubleDamagePowerUp
     }
 }

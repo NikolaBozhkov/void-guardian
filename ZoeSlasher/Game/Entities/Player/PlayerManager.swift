@@ -25,10 +25,10 @@ class PlayerManager {
     }
     
     private let player: Player
-    let instantKillPowerUp = InstantKillPowerUp(duration: 10)
-    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10)
-    let shieldPowerUp = ShieldPowerUp(duration: 10)
-    let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10)
+    let instantKillPowerUp = InstantKillPowerUp(duration: 10, type: .instantKill)
+    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10, type: .doubleDamage)
+    let shieldPowerUp = ShieldPowerUp(duration: 10, type: .shield)
+    let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10, type: .doublePotionRestore)
     
     init(player: Player) {
         self.player = player

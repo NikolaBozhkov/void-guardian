@@ -55,7 +55,7 @@ typedef struct
 {
     float4 position [[position]];
     float2 uv;
-    float2 physicsSize;
+    float2 physicsSizeNorm;
     float2 worldPos;
     float3 symbolColor;
     float3 glowColor;
@@ -79,5 +79,9 @@ typedef struct {
     float2 worldPosNorm;
 } TrailOut;
 
+typedef struct {
+    float4 position [[position]];
+    float2 uv;
+} PowerUpNodeOut;
 
 #endif /* SpriteRendererShared_h */

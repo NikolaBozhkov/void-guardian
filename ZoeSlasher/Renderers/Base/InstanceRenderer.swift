@@ -80,9 +80,9 @@ class InstanceRenderer<T> {
         
         renderEncoder.setVertexBytes(vertices,
                                      length: MemoryLayout<vector_float4>.stride * vertices.count,
-                                     index: 0)
+                                     index: BufferIndex.vertices.rawValue)
         
-        renderEncoder.setVertexBuffer(dataBuffer, offset: 0, index: 1)
+        renderEncoder.setVertexBuffer(dataBuffer, offset: 0, index: BufferIndex.data.rawValue)
         
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,

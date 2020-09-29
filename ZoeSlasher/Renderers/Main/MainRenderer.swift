@@ -51,6 +51,7 @@ class MainRenderer: NSObject {
     let enemyAttackRenderer: EnemyAttackRenderer
     let trailRenderer: TrailRenderer
     let mainPotionRenderer: MainPotionRenderer
+    let mainPowerUpNodeRenderer: MainPowerUpNodeRenderer
     
     let backgroundRenderer: Renderer
     let playerRenderer: Renderer
@@ -151,6 +152,7 @@ class MainRenderer: NSObject {
         enemyAttackRenderer = EnemyAttackRenderer(device: device, library: library)
         trailRenderer = TrailRenderer(device: device, library: library)
         mainPotionRenderer = MainPotionRenderer(device: device, library: library)
+        mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
         
         backgroundRenderer = Renderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = Renderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -433,6 +435,7 @@ extension MainRenderer: MTKViewDelegate {
         enemyAttackRenderer.draw(attacks: scene.attacks, with: renderEncoder)
         enemyRenderer.draw(enemies: scene.enemies, renderer: self)
         mainPotionRenderer.draw(potions: scene.potions, renderer: self)
+        mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, with: renderEncoder)
         mainTextureRenderer.draw(with: renderEncoder)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
