@@ -1,0 +1,12 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "levels" : [
+    {
+      "filename" : "2x-dmg.png",
+      "mipmap-level" : "base"
+    }
+  ]
+}

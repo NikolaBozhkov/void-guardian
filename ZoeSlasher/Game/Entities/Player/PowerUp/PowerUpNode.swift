@@ -17,6 +17,7 @@ class PowerUpNode: Node {
         super.init()
         
         size = [200, 200]
+        physicsSize = size
     }
     
     func activate() {

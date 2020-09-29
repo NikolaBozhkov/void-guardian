@@ -44,8 +44,11 @@ extension PowerUp: Hashable {
     }
 }
 
-enum PowerUpType: CaseIterable {
-    case instantKill, shield, doubleDamage, doublePotionRestore
+enum PowerUpType: String, CaseIterable {
+    case instantKill = "instant-kill"
+    case shield = "shield"
+    case doubleDamage = "2x-dmg"
+    case doublePotionRestore = "2x-potion"
 }
 
 class InstantKillPowerUp: PowerUp {
