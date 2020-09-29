@@ -8,7 +8,7 @@
 
 import Metal
 
-class PotionRenderer: Renderer<PotionData> {
+class PotionRenderer: InstanceRenderer<PotionData> {
     
     let texture: MTLTexture
     
@@ -21,8 +21,8 @@ class PotionRenderer: Renderer<PotionData> {
                    maxInstances: 16)
     }
     
-    override func draw(data: [PotionData], renderEncoder: MTLRenderCommandEncoder) {
+    override func draw(data: [PotionData], with renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
-        super.draw(data: data, renderEncoder: renderEncoder)
+        super.draw(data: data, with: renderEncoder)
     }
 }

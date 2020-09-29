@@ -8,7 +8,7 @@
 
 import Metal
 
-class TextureRenderer: Renderer<SpriteData> {
+class TextureRenderer: InstanceRenderer<SpriteData> {
     
     var data: [SpriteData] = []
     
@@ -23,9 +23,9 @@ class TextureRenderer: Renderer<SpriteData> {
                    maxInstances: 32)
     }
     
-    func draw(renderEncoder: MTLRenderCommandEncoder) {
+    func draw(with renderEncoder: MTLRenderCommandEncoder) {
         renderEncoder.setFragmentTexture(texture, index: TextureIndex.sprite.rawValue)
-        super.draw(data: data, renderEncoder: renderEncoder)
+        super.draw(data: data, with: renderEncoder)
         data.removeAll()
     }
 }

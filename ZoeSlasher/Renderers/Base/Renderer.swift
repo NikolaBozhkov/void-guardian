@@ -1,22 +1,19 @@
 //
-//  Renderer.swift
+//  SpriteRenderer.swift
 //  ZoeSlasher
 //
-//  Created by Nikola Bozhkov on 2.04.20.
+//  Created by Nikola Bozhkov on 7.01.20.
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
 import Metal
 
-class Renderer<T> {
+class Renderer {
     
-    private let device: MTLDevice
-    
-    private var maxInstances: Int
-    private var dataBuffer: MTLBuffer
-    
-    private let pipelineState: MTLRenderPipelineState
-    public var vertices: [vector_float4] = [
+    var currentPipelineState: MTLRenderPipelineState
+    let pipelineState: MTLRenderPipelineState
+    let overlayPipelineState: MTLRenderPipelineState
+    private let vertices: [vector_float4] = [
         // Pos       // Tex
         [-0.5,  0.5, 0.0, 1.0],
         [ 0.5, -0.5, 1.0, 0.0],
@@ -27,19 +24,16 @@ class Renderer<T> {
         [ 0.5, -0.5, 1.0, 0.0]
     ]
     
-    init(device: MTLDevice, library: MTLLibrary, vertexFunction: String, fragmentFunction: String, maxInstances: Int) {
-        self.device = device
-        self.maxInstances = maxInstances
-        
+    init(device: MTLDevice, library: MTLLibrary, fragmentFunction: String) {
         // Build pipeline state
         guard
-            let vertexFunction = library.makeFunction(name: vertexFunction),
+            let vertexFunction = library.makeFunction(name: "vertexSprite"),
             let fragmentFunction = library.makeFunction(name: fragmentFunction) else {
                 fatalError("Failed to load sprite functions")
         }
         
         let descriptor = MTLRenderPipelineDescriptor()
-        descriptor.label = "\(Self.self) Pipeline"
+        descriptor.label = "Sprite Pipeline"
         
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
@@ -63,30 +57,39 @@ class Renderer<T> {
             fatalError(error.localizedDescription)
         }
         
-        dataBuffer = device.makeBuffer(length: MemoryLayout<T>.stride * maxInstances, options: .storageModeShared)!
-    }
-    
-    func draw(data: [T], renderEncoder: MTLRenderCommandEncoder) {
-        guard !data.isEmpty else { return }
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
         
-        if data.count > maxInstances {
-            maxInstances *= 2
-            dataBuffer = device.makeBuffer(length: MemoryLayout<T>.stride * maxInstances, options: .storageModeShared)!
+        do {
+            overlayPipelineState = try device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            fatalError(error.localizedDescription)
         }
         
-        dataBuffer.contents().copyMemory(from: data, byteCount: MemoryLayout<T>.stride * data.count)
-        
-        renderEncoder.setRenderPipelineState(pipelineState)
+        currentPipelineState = pipelineState
+    }
+    
+    func draw(_ node: Node, with renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.setRenderPipelineState(currentPipelineState)
         
         renderEncoder.setVertexBytes(vertices,
                                      length: MemoryLayout<vector_float4>.stride * vertices.count,
-                                     index: 0)
+                                     index: BufferIndex.vertices.rawValue)
         
-        renderEncoder.setVertexBuffer(dataBuffer, offset: 0, index: 1)
+        var worldTransform = node.worldTransform
+        renderEncoder.setVertexBytes(&worldTransform,
+                                     length: MemoryLayout<matrix_float4x4>.stride,
+                                     index: BufferIndex.spriteModelMatrix.rawValue)
+        
+        renderEncoder.setVertexBytes(&node.size,
+                                     length: MemoryLayout<vector_float2>.stride,
+                                     index: BufferIndex.size.rawValue)
+        
+        renderEncoder.setFragmentBytes(&node.color,
+                                       length: MemoryLayout<vector_float4>.stride,
+                                       index: BufferIndex.spriteColor.rawValue)
         
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,
-                                     vertexCount: vertices.count,
-                                     instanceCount: data.count)
+                                     vertexCount: vertices.count)
     }
 }

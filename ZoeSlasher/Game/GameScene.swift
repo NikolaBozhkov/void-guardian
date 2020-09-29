@@ -200,7 +200,7 @@ class GameScene: Scene {
             stageManager.isActive = false
         }
         
-//        stageManager.update(deltaTime: deltaTime)
+        stageManager.update(deltaTime: deltaTime)
         
         if canClearStage {
             stageManager.clearStage()
