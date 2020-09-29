@@ -13,6 +13,7 @@ class TextureHolder {
     static let shared = TextureHolder()
     
     private(set) var textureNameToTextureMap = [String: MTLTexture]()
+    private(set) var powerUpNodeTextureNameToTextureMap = [String: MTLTexture]()
     
     var energy: MTLTexture {
         textureNameToTextureMap["energy"]!
@@ -28,8 +29,15 @@ class TextureHolder {
     
     private init() { }
     
+    subscript(textureName: String) -> MTLTexture {
+        get {
+            textureNameToTextureMap[textureName]!
+        }
+    }
+    
     func createTextures(device: MTLDevice) {
-        var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon", "splitter", "balance"]
+        var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon",
+                            "splitter", "balance", "shield", "instant-kill", "2x-dmg", "2x-potion"]
         for i in 2...11 {
             textureNames.append("stage\(i)")
         }

@@ -52,6 +52,7 @@ class MainRenderer: NSObject {
     let trailRenderer: TrailRenderer
     let mainPotionRenderer: MainPotionRenderer
     let mainPowerUpNodeRenderer: MainPowerUpNodeRenderer
+    let powerUpOrbRenderer: PowerUpOrbRenderer
     
     let backgroundRenderer: Renderer
     let playerRenderer: Renderer
@@ -153,6 +154,7 @@ class MainRenderer: NSObject {
         trailRenderer = TrailRenderer(device: device, library: library)
         mainPotionRenderer = MainPotionRenderer(device: device, library: library)
         mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
+        powerUpOrbRenderer = PowerUpOrbRenderer(device: device, library: library)
         
         backgroundRenderer = Renderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = Renderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -428,6 +430,11 @@ extension MainRenderer: MTKViewDelegate {
             trailRenderer.generateVertices(from: scene.player.trailManager.points)
             trailRenderer.draw(renderEncoder: renderEncoder)
         }
+        
+        powerUpOrbRenderer.draw(forPlayer: scene.player,
+                                powerUps: scene.playerManager.activePowerUps,
+                                time: Float(pausableTimeMetal),
+                                with: renderEncoder)
         
         drawNodes(scene.children)
         

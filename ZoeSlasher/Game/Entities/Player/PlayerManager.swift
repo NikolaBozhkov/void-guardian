@@ -7,7 +7,7 @@
 //
 
 /// Deals with power up augmentation and skill changes
-/// Provides an inteface to what the player can do and what it's current stats are
+/// Provides an interface to what the player can do and what it's current stats are
 class PlayerManager {
     
     var damage: Float {
@@ -25,10 +25,14 @@ class PlayerManager {
     }
     
     private let player: Player
-    let instantKillPowerUp = InstantKillPowerUp(duration: 10, type: .instantKill)
-    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10, type: .doubleDamage)
-    let shieldPowerUp = ShieldPowerUp(duration: 10, type: .shield)
+    let instantKillPowerUp = InstantKillPowerUp(duration: 4, type: .instantKill)
+    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 7, type: .doubleDamage)
+    let shieldPowerUp = ShieldPowerUp(duration: 7, type: .shield)
     let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10, type: .doublePotionRestore)
+    
+    var activePowerUps: [PowerUp] {
+        [instantKillPowerUp, doubleDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp].filter { $0.isActive }
+    }
     
     init(player: Player) {
         self.player = player

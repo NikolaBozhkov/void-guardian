@@ -105,6 +105,7 @@ struct PowerUpNodeData
 {
     matrix_float4x4 worldTransform;
     simd_float2 size;
+    simd_float3 color;
 };
 
 struct EmptyData {};

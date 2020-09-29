@@ -13,10 +13,9 @@ class MainPowerUpNodeRenderer {
     private var powerUpTypeToRendererMap = [PowerUpType: PowerUpNodeRenderer]()
     
     init(device: MTLDevice, library: MTLLibrary) {
-        powerUpTypeToRendererMap[.instantKill] = PowerUpNodeRenderer(device: device, library: library, texture: TextureHolder.shared.energy)
-        powerUpTypeToRendererMap[.shield] = PowerUpNodeRenderer(device: device, library: library, texture: TextureHolder.shared.balance)
-        powerUpTypeToRendererMap[.doubleDamage] = PowerUpNodeRenderer(device: device, library: library, texture: TextureHolder.shared.energy)
-        powerUpTypeToRendererMap[.doublePotionRestore] = PowerUpNodeRenderer(device: device, library: library, texture: TextureHolder.shared.balance)
+        PowerUpType.allCases.forEach {
+            powerUpTypeToRendererMap[$0] = PowerUpNodeRenderer(device: device, library: library, texture: TextureHolder.shared[$0.rawValue])
+        }
     }
     
     func draw(powerUpNodes: Set<PowerUpNode>, with renderEncoder: MTLRenderCommandEncoder) {
@@ -26,7 +25,9 @@ class MainPowerUpNodeRenderer {
         }
         
         for powerUpNode in powerUpNodes {
-            let data = PowerUpNodeData(worldTransform: powerUpNode.worldTransform, size: powerUpNode.size)
+            let data = PowerUpNodeData(worldTransform: powerUpNode.worldTransform,
+                                       size: powerUpNode.size,
+                                       color: powerUpNode.color.xyz)
             
             powerUpTypeToDataMap[powerUpNode.powerUp.type]?.append(data)
         }

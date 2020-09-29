@@ -16,6 +16,7 @@ class PowerUpNode: Node {
         self.powerUp = powerUp
         super.init()
         
+        color = vector_float4(powerUp.type.color, 1.0)
         size = [200, 200]
         physicsSize = size
     }

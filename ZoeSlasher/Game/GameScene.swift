@@ -136,6 +136,7 @@ class GameScene: Scene {
         
         if stageManager.isActive {
             favor -= Float(deltaTime) * (favor / 15)
+            playerManager.activePowerUps.forEach { $0.update(deltaTime: Float(deltaTime)) }
         }
         
         prevPlayerPosition = player.position
@@ -160,6 +161,7 @@ class GameScene: Scene {
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
         testPlayerPotionCollision()
+        testPlayerPowerUpCollision()
         
         let didPlayerStageChange = player.prevStage != player.stage
         if didPlayerStageChange {
@@ -368,6 +370,16 @@ extension GameScene {
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
                 skGameScene.didConsumePotion(potion)
+            }
+        }
+    }
+    
+    private func testPlayerPowerUpCollision() {
+        for powerUpNode in powerUpNodes {
+            let threshold = (player.physicsSize.x + powerUpNode.physicsSize.x) / 2
+            if distance(powerUpNode.position, player.position) <= threshold {
+                powerUpNode.activate()
+                powerUpNodes.remove(powerUpNode)
             }
         }
     }

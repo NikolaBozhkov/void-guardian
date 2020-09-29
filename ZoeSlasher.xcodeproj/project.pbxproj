@@ -24,6 +24,8 @@
 		24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */; };
 		24446498252324DF00D72EFD /* PowerUp.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24446497252324DF00D72EFD /* PowerUp.metal */; };
 		2444649E25232C1700D72EFD /* MainPowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2444649D25232C1700D72EFD /* MainPowerUpNodeRenderer.swift */; };
+		244464A325235CE400D72EFD /* PowerUpType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244464A225235CE400D72EFD /* PowerUpType.swift */; };
+		244464A82523603700D72EFD /* PowerUpOrbRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244464A72523603700D72EFD /* PowerUpOrbRenderer.swift */; };
 		24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24629E62240D6A87009A465B /* Sanos-Extended.ttf */; };
 		24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */; };
 		2464427C24127BFB004CF697 /* ComboLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2464427B24127BFB004CF697 /* ComboLabel.swift */; };
@@ -112,6 +114,8 @@
 		24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpNodeRenderer.swift; sourceTree = "<group>"; };
 		24446497252324DF00D72EFD /* PowerUp.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PowerUp.metal; sourceTree = "<group>"; };
 		2444649D25232C1700D72EFD /* MainPowerUpNodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPowerUpNodeRenderer.swift; sourceTree = "<group>"; };
+		244464A225235CE400D72EFD /* PowerUpType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpType.swift; sourceTree = "<group>"; };
+		244464A72523603700D72EFD /* PowerUpOrbRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpOrbRenderer.swift; sourceTree = "<group>"; };
 		24629E62240D6A87009A465B /* Sanos-Extended.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sanos-Extended.ttf"; sourceTree = "<group>"; };
 		24629E64240D6CCF009A465B /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
 		2464427B24127BFB004CF697 /* ComboLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboLabel.swift; sourceTree = "<group>"; };
@@ -201,13 +205,12 @@
 		2414AB1825108F2200B3299C /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				244464A125235CD100D72EFD /* PowerUp */,
 				2469393823C5D126001A6CAE /* Player.swift */,
 				2414AB1A251090A400B3299C /* PlayerManager.swift */,
 				24DCFD372474FC4200FE2FC1 /* TrailManager.swift */,
 				2414AB16250D34B000B3299C /* ParticleTrailHandler.swift */,
 				2414AB14250D091000B3299C /* EnergySymbol.swift */,
-				2414AB1C2511E14F00B3299C /* PowerUp.swift */,
-				2414AB1E2511E18500B3299C /* PowerUpNode.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -240,6 +243,16 @@
 				2465E7762435E2490019CE02 /* InstanceRenderer.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		244464A125235CD100D72EFD /* PowerUp */ = {
+			isa = PBXGroup;
+			children = (
+				2414AB1C2511E14F00B3299C /* PowerUp.swift */,
+				244464A225235CE400D72EFD /* PowerUpType.swift */,
+				2414AB1E2511E18500B3299C /* PowerUpNode.swift */,
+			);
+			path = PowerUp;
 			sourceTree = "<group>";
 		};
 		24629E66240D6CD4009A465B /* Extensions */ = {
@@ -299,6 +312,7 @@
 				24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */,
 				24446497252324DF00D72EFD /* PowerUp.metal */,
 				2444649D25232C1700D72EFD /* MainPowerUpNodeRenderer.swift */,
+				244464A72523603700D72EFD /* PowerUpOrbRenderer.swift */,
 			);
 			path = Renderers;
 			sourceTree = "<group>";
@@ -554,6 +568,7 @@
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
 				2414AB462515C72400B3299C /* EnemyAttackRenderer.swift in Sources */,
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
+				244464A82523603700D72EFD /* PowerUpOrbRenderer.swift in Sources */,
 				24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */,
 				247D705A23F009DD00480199 /* SKGameScene.swift in Sources */,
 				24E65F4F247D1F43004EE053 /* ProgressManager.swift in Sources */,
@@ -570,6 +585,7 @@
 				24E7D8AC240545B6007A66D2 /* BasicAttackAbility.swift in Sources */,
 				2414AB4A2515CD7500B3299C /* TextureHolder.swift in Sources */,
 				24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */,
+				244464A325235CE400D72EFD /* PowerUpType.swift in Sources */,
 				24446498252324DF00D72EFD /* PowerUp.metal in Sources */,
 				24F070BF2522FF7000D2954D /* MainTextureRenderer.swift in Sources */,
 				249811352418271F00900AE9 /* Potion.metal in Sources */,
