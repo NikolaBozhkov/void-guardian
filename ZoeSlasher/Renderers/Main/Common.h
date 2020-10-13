@@ -16,7 +16,14 @@ using namespace metal;
 
 //template<typename T> T mod(T x, float y);
 float expImpulse(float x, float k);
-float rand(float x);
+float hash11(float x);
+float hash21(float2 p);
+float2 hash22(float2 p);
+
+float mod(float x, float y);
+
+float2x2 rotate2d(float angle);
+
 float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta);
 float snoise(float3 v);
 float snoise(float2 p);

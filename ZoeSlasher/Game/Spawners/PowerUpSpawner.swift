@@ -12,7 +12,7 @@ class PowerUpSpawner {
     
     unowned var scene: GameScene!
     
-    private let powerUpIntervalRange: Range<TimeInterval> = 3..<5//15..<25
+    private let powerUpIntervalRange: Range<TimeInterval> = 15..<25
     
     private var powerUpInterval: TimeInterval = 0
     private var timeSinceLastPowerUp: TimeInterval = 0
@@ -25,13 +25,18 @@ class PowerUpSpawner {
         timeSinceLastPowerUp += deltaTime
         
         if timeSinceLastPowerUp >= powerUpInterval {
-            let powerUpNode = PowerUpNode(powerUp: getRandomPowerUp())
-            powerUpNode.position = scene.randomPosition(padding: [300, 200])
-            scene.powerUpNodes.insert(powerUpNode)
+            spawnPowerUp()
             
             timeSinceLastPowerUp = 0
             powerUpInterval = .random(in: powerUpIntervalRange)
         }
+    }
+    
+    func spawnPowerUp(_ powerUp: PowerUp? = nil) {
+        let powerUpNode = PowerUpNode(powerUp: powerUp ?? getRandomPowerUp())
+        powerUpNode.position = scene.randomPosition(padding: [300, 200])
+        powerUpNode.parent = scene.rootNode
+        scene.powerUpNodes.insert(powerUpNode)
     }
     
     private func getRandomPowerUp() -> PowerUp {

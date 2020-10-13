@@ -89,12 +89,6 @@ float snoise(float3 v){
                                    dot(p2,x2), dot(p3,x3) ) );
 }
 
-float2 hash(float2 p) // replace this by something better
-{
-    p = float2( dot(p,float2(127.1,311.7)), dot(p,float2(269.5,183.3)) );
-    return -1.0 + 2.0*fract(sin(p)*43758.5453123);
-}
-
 float snoise(float2 p)
 {
     const float K1 = 0.366025404; // (sqrt(3)-1)/2;
@@ -107,7 +101,7 @@ float snoise(float2 p)
     float2  b = a - o + K2;
     float2  c = a - 1.0 + 2.0*K2;
     float3  h = max( 0.5-float3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
-    float3  n = h*h*h*h*float3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+    float3  n = h*h*h*h*float3( dot(a,hash22(i+0.0)), dot(b,hash22(i+o)), dot(c,hash22(i+1.0)));
     return dot( n, float3(70.0) );
 }
 

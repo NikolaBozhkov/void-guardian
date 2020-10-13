@@ -110,7 +110,7 @@ class GameScene: Scene {
         player.scene = self
         player.particleTrailHandler.scene = self
         
-        rootNode.add(player)
+//        rootNode.add(player)
         
         setToIdle()
     }
@@ -156,6 +156,10 @@ class GameScene: Scene {
             if potion.timeSinceConsumed >= 2 {
                 potions.remove(potion)
             }
+        }
+        
+        powerUpNodes.forEach {
+            $0.update(forScene: self, deltaTime: Float(deltaTime))
         }
         
         testPlayerEnemyCollision()

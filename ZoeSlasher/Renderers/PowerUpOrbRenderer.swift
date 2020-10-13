@@ -26,7 +26,11 @@ class PowerUpOrbRenderer: InstanceRenderer<PowerUpNodeData> {
             let node = Node()
             let angle = time + Float(i) * step
             node.position = player.position + vector_float2(cos(angle), sin(angle)) * 220
-            data.append(PowerUpNodeData(worldTransform: node.worldTransform, size: [40, 40], color: powerUp.type.color))
+            data.append(PowerUpNodeData(worldTransform: node.worldTransform,
+                                        size: [40, 40],
+                                        baseColor: powerUp.type.baseColor,
+                                        brightColor: powerUp.type.brightColor,
+                                        timeAlive: 0.0))
         }
         
         super.draw(data: data, with: renderEncoder)

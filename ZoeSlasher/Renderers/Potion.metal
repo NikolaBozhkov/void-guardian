@@ -29,6 +29,7 @@ vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(BufferIndexVert
     out.symbolColor = potion.symbolColor;
     out.glowColor = potion.glowColor;
     out.timeSinceConsumed = potion.timeSinceConsumed;
+    out.timeAlive = potion.timeAlive;
     
     return out;
 }
@@ -41,7 +42,7 @@ fragment float4 fragmentPotion(PotionOut in [[stage_in]],
     float2 st = in.uv * 2.0 - 1.0;
     
     float breathW = in.physicsSizeNorm.x * 0.07;
-    float breath = breathW * (1 + sin(uniforms.time * 2.5));
+    float breath = breathW * (1 + sin(in.timeAlive * 2.5));
     float circleW = in.physicsSizeNorm.x * (0.2 + breath * 0.2);
     float margin = 0.02 + breath * 0.4;
     

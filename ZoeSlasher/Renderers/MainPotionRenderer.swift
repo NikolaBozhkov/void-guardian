@@ -25,9 +25,10 @@ class MainPotionRenderer {
                                   size: potion.size,
                                   physicsSizeNorm: potion.physicsSize / potion.size,
                                   worldPos: renderer.normalizeWorldPosition(potion.worldPosition),
-                                  symbolColor: potion.symbolColor,
-                                  glowColor: potion.glowColor,
-                                  timeSinceConsumed: potion.timeSinceConsumed)
+                                  symbolColor: potion.type.symbolColor,
+                                  glowColor: potion.type.glowColor,
+                                  timeSinceConsumed: potion.timeSinceConsumed,
+                                  timeAlive: potion.timeAlive)
             
             if potion.type == .energy {
                 energyPotionsData.append(data)

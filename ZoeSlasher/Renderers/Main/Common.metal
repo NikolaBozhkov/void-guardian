@@ -11,7 +11,17 @@ using namespace metal;
 
 #import "Common.h"
 
-float rand(float x) { return fract(sin(x) * 42758.5453123); }
+float hash11(float x) { return fract(sin(x) * 42758.5453123); }
+float hash21(float2 p) { float n = dot(p, float2(127.1, 311.7)); return fract(sin(n) * 43758.5453); }
+float2 hash22(float2 p) // replace this by something better
+{
+    p = float2( dot(p,float2(127.1,311.7)), dot(p,float2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+}
+
+float mod(float x, float y) {
+    return x - y * floor(x / y);
+}
 
 float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta) {
     constexpr sampler s(filter::linear, address::repeat);
@@ -51,4 +61,10 @@ float expImpulse(float x, float k)
 {
     float h = k * x;
     return h * exp(1.0 - h);
+}
+
+float2x2 rotate2d(float angle)
+{
+    return float2x2(cos(angle),-sin(angle),
+                    sin(angle),cos(angle));
 }

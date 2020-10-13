@@ -60,6 +60,7 @@ typedef struct
     float3 symbolColor;
     float3 glowColor;
     float timeSinceConsumed;
+    float timeAlive;
 } PotionOut;
 
 typedef struct {
@@ -82,7 +83,10 @@ typedef struct {
 typedef struct {
     float4 position [[position]];
     float2 uv;
-    float3 color;
+    float3 baseColor;
+    float3 brightColor;
+    float2 worldXY;
+    float timeAlive;
 } PowerUpNodeOut;
 
 #endif /* SpriteRendererShared_h */

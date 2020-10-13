@@ -27,7 +27,9 @@ class MainPowerUpNodeRenderer {
         for powerUpNode in powerUpNodes {
             let data = PowerUpNodeData(worldTransform: powerUpNode.worldTransform,
                                        size: powerUpNode.size,
-                                       color: powerUpNode.color.xyz)
+                                       baseColor: powerUpNode.powerUp.type.baseColor,
+                                       brightColor: powerUpNode.powerUp.type.brightColor,
+                                       timeAlive: powerUpNode.timeAlive)
             
             powerUpTypeToDataMap[powerUpNode.powerUp.type]?.append(data)
         }

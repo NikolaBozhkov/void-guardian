@@ -88,6 +88,7 @@ struct PotionData
     simd_float3 symbolColor;
     simd_float3 glowColor;
     float timeSinceConsumed;
+    float timeAlive;
 };
 
 struct AttackData
@@ -101,11 +102,17 @@ struct AttackData
     float speed;
 };
 
+#define POWERUP_IMPULSE_SCALE 0.05f
+#define POWERUP_RING_W 0.125f
+#define POWERUP_RING_GLOW_R 0.2f
+
 struct PowerUpNodeData
 {
     matrix_float4x4 worldTransform;
     simd_float2 size;
-    simd_float3 color;
+    simd_float3 baseColor;
+    simd_float3 brightColor;
+    float timeAlive;
 };
 
 struct EmptyData {};

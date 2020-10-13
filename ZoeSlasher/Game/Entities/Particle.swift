@@ -15,6 +15,7 @@ class Particle: Node {
     var minImpulse = Float.random(in: 0...0.08)
     var lifetime = TimeInterval.random(in: 1.3...2.3)
     var k: Float = 5.7
+    var rotationNoiseFactor: Float = 2.0
     
     private var timeAlive: TimeInterval = 0
     
@@ -44,7 +45,7 @@ class Particle: Node {
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))
         
         let speed = speedMod * (constantMovement ? 1 : impulse) * self.speed
-        let rotation = self.rotation + impulse * noise(seed + Float(timeAlive * 2)) * 2
+        let rotation = self.rotation + impulse * noise(seed + Float(timeAlive * 2)) * rotationNoiseFactor
         position += vector_float2(cos(rotation), sin(rotation)) * Float(deltaTime) * speed
     }
 }

@@ -11,22 +11,29 @@ import Foundation
 enum PowerUpType: String, CaseIterable {
     
     struct PowerUpVisualData {
-        var color: vector_float3
+        var baseColor: vector_float3
+        var brightColor: vector_float3
     }
     
     case instantKill = "instant-kill"
     case shield = "shield"
     case doubleDamage = "2x-dmg"
-    case doublePotionRestore = "2x-potion"
+    case doublePotionRestore = "regen-powerup"
     
     private static let typeToDataMap: [PowerUpType: PowerUpVisualData] = [
-        .instantKill: PowerUpVisualData(color: vector_float3(1.0, 0.0, 0.0)),
-        .shield: PowerUpVisualData(color: vector_float3(0.0, 1.0, 0.0)),
-        .doubleDamage: PowerUpVisualData(color: vector_float3(1.0, 0.75, 0.0)),
-        .doublePotionRestore: PowerUpVisualData(color: vector_float3(0.0, 0.3, 1.0))
+        .instantKill: PowerUpVisualData(baseColor: Colors.instantKillPowerUp,
+                                        brightColor: mix(Colors.instantKillPowerUp, .one, t: 0.8)),
+        
+        .shield: PowerUpVisualData(baseColor: Colors.shield,
+                                   brightColor: mix(Colors.shield, .one, t: 0.8)),
+        
+        .doubleDamage: PowerUpVisualData(baseColor: Colors.doubleDamagePowerUp,
+                                         brightColor: mix(Colors.doubleDamagePowerUp, .one, t: 0.8)),
+        
+        .doublePotionRestore: PowerUpVisualData(baseColor: Colors.shield,
+                                                brightColor: mix(Colors.shield, .one, t: 0.85))
     ]
     
-    var color: vector_float3 {
-        PowerUpType.typeToDataMap[self]!.color
-    }
+    var baseColor: vector_float3 { PowerUpType.typeToDataMap[self]!.baseColor }
+    var brightColor: vector_float3 { PowerUpType.typeToDataMap[self]!.brightColor }
 }

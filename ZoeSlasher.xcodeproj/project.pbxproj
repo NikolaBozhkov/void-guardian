@@ -20,6 +20,7 @@
 		2414AB462515C72400B3299C /* EnemyAttackRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB452515C72400B3299C /* EnemyAttackRenderer.swift */; };
 		2414AB482515C85900B3299C /* MainPotionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB472515C85900B3299C /* MainPotionRenderer.swift */; };
 		2414AB4A2515CD7500B3299C /* TextureHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB492515CD7500B3299C /* TextureHolder.swift */; };
+		24229632253585A2003F7F70 /* PotionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24229631253585A2003F7F70 /* PotionType.swift */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */; };
 		24446498252324DF00D72EFD /* PowerUp.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24446497252324DF00D72EFD /* PowerUp.metal */; };
@@ -110,6 +111,7 @@
 		2414AB452515C72400B3299C /* EnemyAttackRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyAttackRenderer.swift; sourceTree = "<group>"; };
 		2414AB472515C85900B3299C /* MainPotionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPotionRenderer.swift; sourceTree = "<group>"; };
 		2414AB492515CD7500B3299C /* TextureHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureHolder.swift; sourceTree = "<group>"; };
+		24229631253585A2003F7F70 /* PotionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionType.swift; sourceTree = "<group>"; };
 		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpNodeRenderer.swift; sourceTree = "<group>"; };
 		24446497252324DF00D72EFD /* PowerUp.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PowerUp.metal; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 			isa = PBXGroup;
 			children = (
 				24981131241820CA00900AE9 /* Potion.swift */,
+				24229631253585A2003F7F70 /* PotionType.swift */,
 				24D7FF60242511A7007743C6 /* PotionConsumer.swift */,
 			);
 			path = Potion;
@@ -544,6 +547,7 @@
 				2414AB1F2511E18500B3299C /* PowerUpNode.swift in Sources */,
 				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
 				2414AB262511E60600B3299C /* PowerUpSpawner.swift in Sources */,
+				24229632253585A2003F7F70 /* PotionType.swift in Sources */,
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				2468E3B7246193F7004042AD /* ReturnHomeConfirmScreen.swift in Sources */,
 				24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */,

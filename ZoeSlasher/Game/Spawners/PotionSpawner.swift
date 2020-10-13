@@ -27,12 +27,16 @@ class PotionSpawner {
         trySpawnPotion(type: .health, amount: 10, timer: &timeSinceLastHealthPotion, interval: healthPotionInterval)
     }
     
+    func spawnPotion(type: PotionType, amount: Int = 0) {
+        let potion = Potion(type: type, amount: amount)
+        potion.position = scene.randomPosition(padding: [300, 200])
+        potion.parent = scene.rootNode
+        scene.potions.insert(potion)
+    }
+    
     private func trySpawnPotion(type: PotionType, amount: Int, timer: inout TimeInterval, interval: TimeInterval) {
         if timer >= interval {
-            let potion = Potion(type: type, amount: amount)
-            potion.position = scene.randomPosition(padding: [300, 200])
-            potion.parent = scene.rootNode
-            scene.potions.insert(potion)
+            spawnPotion(type: type, amount: amount)
             
             timer = 0
         }
