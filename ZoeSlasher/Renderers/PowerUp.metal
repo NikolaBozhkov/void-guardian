@@ -96,7 +96,7 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
     float icon = texture.sample(s, samplePos).a;
     f += icon;
 
-    st *= 1.0 + 2.0 * (d - 0.3 - 0.23 * impulse);
+    st *= 1.0 + 2.0 * (d - 0.3 - 0.25 * impulse);
 
     float4 h = hexagon(5.0 * st);
     

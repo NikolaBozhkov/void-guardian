@@ -15,6 +15,7 @@ class PowerUpNode: Node {
     private(set) var timeAlive: Float = 0.0
     
     private var didSpawnParticles = false
+    private var prevImpulseTime: Float = 0.0
     
     init(powerUp: PowerUp) {
         self.powerUp = powerUp
@@ -31,13 +32,14 @@ class PowerUpNode: Node {
     func update(forScene scene: GameScene, deltaTime: Float) {
         timeAlive += deltaTime
         
-        let impulseT = simd_fract(timeAlive * 0.5) * 3.0
+        let impulseTime = simd_fract(timeAlive * 0.5) * 3.0
+        let triggerTime: Float = 0.01
         
-        if impulseT < 1.0 / 3.0 {
+        if prevImpulseTime > impulseTime {
             didSpawnParticles = false
         }
         
-        if impulseT >= 1.0 / 3 && !didSpawnParticles {
+        if impulseTime >= triggerTime && !didSpawnParticles {
             let particleCount = Int.random(in: 2...4)
             var rotation = Float.random(in: -.pi...(.pi))
             for _ in 0..<particleCount {
@@ -48,7 +50,7 @@ class PowerUpNode: Node {
                 particle.speedMod = 1.0
                 particle.k = 3.0
                 particle.minImpulse = 0.17
-                particle.lifetime = .random(in: 2.3...2.8)
+                particle.lifetime = .random(in: 2.8...3.5)
                 particle.rotationNoiseFactor = 0.5
                 particle.position = position
                 particle.color.xyz = powerUp.type.baseColor
@@ -61,5 +63,7 @@ class PowerUpNode: Node {
             
             didSpawnParticles = true
         }
+        
+        prevImpulseTime = impulseTime
     }
 }
