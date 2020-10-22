@@ -12,7 +12,7 @@ class PowerUpNode: Node {
     
     let powerUp: PowerUp
     
-    private(set) var timeAlive: Float = 0.0
+    private(set) var timeAlive: Float = .random(in: 0...5)
     
     private var didSpawnParticles = false
     private var prevImpulseTime: Float = 0.0

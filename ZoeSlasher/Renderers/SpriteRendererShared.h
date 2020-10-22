@@ -85,6 +85,8 @@ typedef struct {
     float2 uv;
     float3 baseColor;
     float3 brightColor;
+    float textureScale;
+    float textureRot;
     float2 worldXY;
     float timeAlive;
 } PowerUpNodeOut;

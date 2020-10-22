@@ -112,6 +112,8 @@ struct PowerUpNodeData
     simd_float2 size;
     simd_float3 baseColor;
     simd_float3 brightColor;
+    float textureScale;
+    float textureRot;
     float timeAlive;
 };
 

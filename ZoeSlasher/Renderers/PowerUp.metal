@@ -26,6 +26,8 @@ vertex PowerUpNodeOut vertexPowerUpNode(constant float4 *vertices [[buffer(Buffe
     out.uv = vertices[vid].zw;
     out.baseColor = powerUpNode.baseColor;
     out.brightColor = powerUpNode.brightColor;
+    out.textureScale = powerUpNode.textureScale;
+    out.textureRot = powerUpNode.textureRot;
     out.worldXY = powerUpNode.worldTransform.columns[3].xy;
     out.timeAlive = powerUpNode.timeAlive;
     
@@ -89,10 +91,14 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
     f += ring;
     f += (0.5 + 0.5 * impulse) * ringGlow;
 
-    float iconSize = (0.5 + 0.08 * impulse) * (1.0 - ringGlowR);
+    float iconSize = in.textureScale * (0.5 + 0.08 * impulse) * (1.0 - ringGlowR);
 
     constexpr sampler s(filter::linear, address::clamp_to_zero);
     float2 samplePos = 0.5 + (in.uv - 0.5) / iconSize;
+    samplePos -= 0.5;
+    samplePos = rotate2d(in.textureRot) * samplePos;
+    samplePos += 0.5;
+    
     float icon = texture.sample(s, samplePos).a;
     f += icon;
 

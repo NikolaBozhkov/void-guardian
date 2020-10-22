@@ -32,9 +32,9 @@ class PowerUpSpawner {
         }
     }
     
-    func spawnPowerUp(_ powerUp: PowerUp? = nil) {
+    func spawnPowerUp(_ powerUp: PowerUp? = nil, at position: vector_float2? = nil) {
         let powerUpNode = PowerUpNode(powerUp: powerUp ?? getRandomPowerUp())
-        powerUpNode.position = scene.randomPosition(padding: [300, 200])
+        powerUpNode.position = position ?? scene.randomPosition(padding: [300, 200])
         powerUpNode.parent = scene.rootNode
         scene.powerUpNodes.insert(powerUpNode)
     }

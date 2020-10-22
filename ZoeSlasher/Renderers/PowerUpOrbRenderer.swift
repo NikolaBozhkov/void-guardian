@@ -30,6 +30,8 @@ class PowerUpOrbRenderer: InstanceRenderer<PowerUpNodeData> {
                                         size: [40, 40],
                                         baseColor: powerUp.type.baseColor,
                                         brightColor: powerUp.type.brightColor,
+                                        textureScale: 1.0,
+                                        textureRot: 0.0,
                                         timeAlive: 0.0))
         }
         

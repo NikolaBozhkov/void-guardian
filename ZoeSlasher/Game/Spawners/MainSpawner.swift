@@ -17,11 +17,21 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
-//        potionSpawner.spawnPotion(type: .energy)
-//        potionSpawner.spawnPotion(type: .health)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.doublePotionRestorePowerUp)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.doublePotionRestorePowerUp)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.doublePotionRestorePowerUp)
+        var currentX: Float = SceneConstants.safeLeft + 300
+        let y: Float = 0
+        
+        let powerUps = [
+            ShieldPowerUp(duration: 0, type: .instantKill),
+            ShieldPowerUp(duration: 0, type: .doubleDamage),
+            ShieldPowerUp(duration: 0, type: .doublePotionRestore),
+            ShieldPowerUp(duration: 0, type: .shield),
+        ]
+        
+        for powerUp in powerUps {
+            powerUpSpawner.spawnPowerUp(powerUp, at: [currentX, y])
+            
+            currentX += 400
+        }
     }
     
     func update(deltaTime: TimeInterval) {
