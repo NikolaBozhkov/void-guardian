@@ -36,9 +36,8 @@ class TextureHolder {
     }
     
     func createTextures(device: MTLDevice) {
-        var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon",
-                            "splitter", "balance", "regen-powerup", "instant-kill-powerup", "shield",
-                            "dmg-powerup"]
+        var textureNames = ["energy", "energy-glow", "basic", "machine-gun", "cannon", "splitter", "balance",
+                            "regen-powerup", "instant-kill-powerup", "shield-powerup", "dmg-powerup"]
         
         for i in 2...11 {
             textureNames.append("stage\(i)")

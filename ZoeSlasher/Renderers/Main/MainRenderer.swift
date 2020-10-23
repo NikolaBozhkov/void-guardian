@@ -45,6 +45,8 @@ class MainRenderer: NSObject {
     var runningTime: CFTimeInterval = 0
     var prevTime: TimeInterval = 0
     
+    let recorder: Recorder
+    
     let mainTextureRenderer: MainTextureRenderer
     let particleRenderer: ParticleRenderer
     let enemyRenderer: EnemyRenderer
@@ -146,6 +148,8 @@ class MainRenderer: NSObject {
         
         skRenderer = SKRenderer(device: device)
         overlaySkRenderer = SKRenderer(device: device)
+        
+        recorder = Recorder(device: device, library: library)
         
         mainTextureRenderer = MainTextureRenderer(device: device, library: library)
         particleRenderer = ParticleRenderer(device: device, library: library)
@@ -342,6 +346,8 @@ extension MainRenderer: MTKViewDelegate {
                                               near: -100, far: 100)
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio))
+        
+        recorder.configure(withResolution: 1024, filePath: "movie")
     }
     
     func draw(in view: MTKView) {
@@ -454,6 +460,8 @@ extension MainRenderer: MTKViewDelegate {
         
         renderEncoder.endEncoding()
         
+        recorder.record(from: drawable.texture, commandBuffer: commandBuffer)
+        
         commandBuffer.present(drawable)
         commandBuffer.commit()
     }
@@ -475,10 +483,6 @@ extension MainRenderer: MTKViewDelegate {
         
         for node in nodes {
             node.acceptRenderer(self)
-            
-//            if !node.children.isEmpty {
-//                drawNodes(node.children)
-//            }
         }
     }
 }

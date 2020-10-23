@@ -65,6 +65,10 @@ class GameViewController: UIViewController {
         self.mtkView = mtkView
         
         NotificationCenter.default.addObserver(self, selector: #selector(resetTouchState), name: .willResignActive, object: nil)
+        
+        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
+        tripleTouch.numberOfTouchesRequired = 3
+        mtkView.addGestureRecognizer(tripleTouch)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -120,6 +124,17 @@ class GameViewController: UIViewController {
     
     @objc func didTwoFingerTap() {
         renderer.coordinator.didPause()
+    }
+    
+    @objc func toggleRecorder() {
+        if renderer.recorder.isRecording {
+            renderer.recorder.endRecording {
+                print("finished recording")
+            }
+        } else {
+            renderer.recorder.startRecording()
+            print("started recording")
+        }
     }
     
     private func normalizeTouchLocation(_ touch: UITouch) -> vector_float2 {

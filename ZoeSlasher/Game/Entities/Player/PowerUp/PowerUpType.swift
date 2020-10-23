@@ -18,7 +18,7 @@ enum PowerUpType: String, CaseIterable {
     }
     
     case instantKill = "instant-kill-powerup"
-    case shield = "shield"
+    case shield = "shield-powerup"
     case doubleDamage = "dmg-powerup"
     case doublePotionRestore = "regen-powerup"
     

@@ -21,6 +21,7 @@
 		2414AB482515C85900B3299C /* MainPotionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB472515C85900B3299C /* MainPotionRenderer.swift */; };
 		2414AB4A2515CD7500B3299C /* TextureHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB492515CD7500B3299C /* TextureHolder.swift */; };
 		24229632253585A2003F7F70 /* PotionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24229631253585A2003F7F70 /* PotionType.swift */; };
+		2433B4AE2541BC0A008B0B5B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2433B4AD2541BC0A008B0B5B /* HealthKit.framework */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */; };
 		24446498252324DF00D72EFD /* PowerUp.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24446497252324DF00D72EFD /* PowerUp.metal */; };
@@ -66,6 +67,8 @@
 		24981132241820CA00900AE9 /* Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24981131241820CA00900AE9 /* Potion.swift */; };
 		249811352418271F00900AE9 /* Potion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249811342418271F00900AE9 /* Potion.metal */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
+		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
+		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
 		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
 		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
@@ -112,6 +115,8 @@
 		2414AB472515C85900B3299C /* MainPotionRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPotionRenderer.swift; sourceTree = "<group>"; };
 		2414AB492515CD7500B3299C /* TextureHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureHolder.swift; sourceTree = "<group>"; };
 		24229631253585A2003F7F70 /* PotionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionType.swift; sourceTree = "<group>"; };
+		2433B4AB2541BC09008B0B5B /* ZoeSlasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ZoeSlasher.entitlements; sourceTree = "<group>"; };
+		2433B4AD2541BC0A008B0B5B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		243B30B6247959890015CFD1 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpNodeRenderer.swift; sourceTree = "<group>"; };
 		24446497252324DF00D72EFD /* PowerUp.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = PowerUp.metal; sourceTree = "<group>"; };
@@ -159,6 +164,8 @@
 		24981131241820CA00900AE9 /* Potion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Potion.swift; sourceTree = "<group>"; };
 		249811342418271F00900AE9 /* Potion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Potion.metal; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
+		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
+		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
@@ -198,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2433B4AE2541BC0A008B0B5B /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +255,14 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		2433B4AC2541BC0A008B0B5B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2433B4AD2541BC0A008B0B5B /* HealthKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		244464A125235CD100D72EFD /* PowerUp */ = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +304,8 @@
 				2469393023C32C41001A6CAE /* MathLibrary.swift */,
 				24629E66240D6CD4009A465B /* Extensions */,
 				2465E77C2437458E0019CE02 /* GlobalHelpers.swift */,
+				24AF760F2541A43D00F137EA /* Recorder.swift */,
+				24AF76122541AB3300F137EA /* Recorder.metal */,
 			);
 			path = Utlity;
 			sourceTree = "<group>";
@@ -411,6 +429,7 @@
 			children = (
 				24D9E85A23C1C8B500CB6638 /* ZoeSlasher */,
 				24D9E85923C1C8B500CB6638 /* Products */,
+				2433B4AC2541BC0A008B0B5B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -425,6 +444,7 @@
 		24D9E85A23C1C8B500CB6638 /* ZoeSlasher */ = {
 			isa = PBXGroup;
 			children = (
+				2433B4AB2541BC09008B0B5B /* ZoeSlasher.entitlements */,
 				247D705623F0085600480199 /* Resources */,
 				247D704A23E6CD7D00480199 /* Base */,
 				247D704923E6CD3100480199 /* Game */,
@@ -555,9 +575,11 @@
 				24E7D8B824066093007A66D2 /* StageManager.swift in Sources */,
 				2465E77D2437458E0019CE02 /* GlobalHelpers.swift in Sources */,
 				247D706123F531A800480199 /* RendererCommon.swift in Sources */,
+				24AF76102541A43D00F137EA /* Recorder.swift in Sources */,
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,
 				2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */,
+				24AF76132541AB3300F137EA /* Recorder.metal in Sources */,
 				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				2414AB222511E5F400B3299C /* EnemySpawner.swift in Sources */,
@@ -764,6 +786,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
@@ -783,6 +806,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
