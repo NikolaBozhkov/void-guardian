@@ -17,7 +17,8 @@ class Recorder {
         static var padding: simd_float2 = .zero
     }
     
-    var saved = false
+    var isRecording = false
+    var recordingStartTime = TimeInterval(0)
     
     private let vertices: [vector_float4] = [
         // Pos       // Tex
@@ -40,9 +41,6 @@ class Recorder {
     private var captureRect: simd_float4 = .zero
     private var aspectRatio: Float = 1.0
     private var size: simd_int2 = .zero
-    
-    var isRecording = false
-    var recordingStartTime = TimeInterval(0)
     
     private var assetWriter: AVAssetWriter?
     private var assetWriterVideoInput: AVAssetWriterInput?
@@ -136,13 +134,13 @@ class Recorder {
     
     func record(from contentTexture: MTLTexture, commandBuffer: MTLCommandBuffer) {
         guard isRecording,
-              let _ = texture,
+              let texture = texture,
               let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
             return
         }
         
         commandBuffer.addCompletedHandler { _ in
-            self.writeFrame(forTexture: self.texture!)
+            self.writeFrame(forTexture: texture)
         }
         
         renderEncoder.label = "Recorder Render Pass"
@@ -184,7 +182,7 @@ class Recorder {
         assetWriter!.finishWriting(completionHandler: completionHandler)
     }
     
-    func writeFrame(forTexture texture: MTLTexture) {
+    private func writeFrame(forTexture texture: MTLTexture) {
         if !isRecording {
             return
         }

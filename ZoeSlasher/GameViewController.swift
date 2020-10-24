@@ -56,11 +56,11 @@ class GameViewController: UIViewController {
 
         renderer = newRenderer
         
-        mtkView.clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-        renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
-
+        mtkView.clearColor = MTLClearColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
         mtkView.delegate = renderer
         mtkView.isMultipleTouchEnabled = true
+        mtkView.autoResizeDrawable = false
+        mtkView.drawableSize = mtkView.bounds.size * mtkView.contentScaleFactor * 1.0
         
         self.mtkView = mtkView
         

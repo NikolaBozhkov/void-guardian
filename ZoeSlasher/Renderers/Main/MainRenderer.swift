@@ -347,7 +347,7 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio))
         
-        recorder.configure(withResolution: 1024, filePath: "movie")
+//        recorder.configure(withResolution: 1024, filePath: "movie3")
     }
     
     func draw(in view: MTKView) {
@@ -409,11 +409,10 @@ extension MainRenderer: MTKViewDelegate {
         
         updateDynamicBufferState()
         updateGameState()
-        
-        guard
-            let renderPassDescriptor = view.currentRenderPassDescriptor,
-            let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
-                return
+
+        guard let renderPassDescriptor = view.currentRenderPassDescriptor,
+              let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+            return
         }
         
         self.renderEncoder = renderEncoder

@@ -30,10 +30,10 @@ class MainSpawner {
         Recorder.CaptureRect.padding = simd_float2(repeating: 200)
         
         let powerUps = [
-            ShieldPowerUp(duration: 0, type: .instantKill),
-            ShieldPowerUp(duration: 0, type: .doubleDamage),
             ShieldPowerUp(duration: 0, type: .doublePotionRestore),
             ShieldPowerUp(duration: 0, type: .shield),
+            ShieldPowerUp(duration: 0, type: .instantKill),
+            ShieldPowerUp(duration: 0, type: .doubleDamage),
         ]
         
         for row in 0..<2 {
