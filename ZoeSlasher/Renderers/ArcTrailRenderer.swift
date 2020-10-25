@@ -12,20 +12,23 @@ class ArcTrailRenderer {
     
     private let maxVertices = 100
     
+    private let radius: Float
+    
     private let device: MTLDevice
     private let pipelineState: MTLRenderPipelineState
     
-    private let radius: Float
-    private let length: Float
-    
     private var vertices = [Vertex]()
-    private var vertexBuffer: MTLBuffer
+    private var vertexBuffer: MTLBuffer?
+    
+    private var length: Float = 0
+    private var aspectRatio: Float = 0
+    private var xDistanceNormalized: Float = 0
+    private var prevRotation: Float?
     
     init(device: MTLDevice, library: MTLLibrary, fragmentFunction: String,
-         radius: Float, length: Float, width: Float, segments: Int) {
+         radius: Float, angularLength: Float, width: Float, segments: Int) {
         self.device = device
         self.radius = radius
-        self.length = length
         
         // Build pipeline state
         guard let vertexFunction = library.makeFunction(name: "vertexArcTrail"),
@@ -55,21 +58,21 @@ class ArcTrailRenderer {
             fatalError(error.localizedDescription)
         }
         
-        vertices = ArcTrailRenderer.generateVertices(radius: radius, length: length, width: width, segments: segments)
+        vertices = generateVertices(radius: radius, angularLength: angularLength, width: width, segments: segments)
         vertexBuffer = device.makeBuffer(bytes: &vertices,
                                          length: MemoryLayout<Vertex>.stride * vertices.count,
-                                         options: .storageModeShared)!
+                                         options: .storageModeShared)
     }
     
-    private static func getWidth(forNormalizedX x: Float) -> Float {
+    private func getWidth(forNormalizedX x: Float) -> Float {
 //        1.0 - x
         1.0
     }
     
-    private static func generateVertices(radius: Float, length: Float, width: Float, segments: Int) -> [Vertex] {
+    private func generateVertices(radius: Float, angularLength: Float, width: Float, segments: Int) -> [Vertex] {
         var vertices = [Vertex]()
         
-        let angleStep = length / Float(segments)
+        let angleStep = angularLength / Float(segments)
         var currentAngle: Float = 0
         
         for i in 0..<segments {
@@ -93,12 +96,18 @@ class ArcTrailRenderer {
             vertices.append(contentsOf: [a, b, c, a, c, d])
             
             currentAngle -= angleStep
+            
+            let dist = distance(abNormal * radius, dcNormal * radius)
+            length += dist
+            aspectRatio += dist / width
         }
         
         return vertices
     }
     
     func draw(with renderEncoder: MTLRenderCommandEncoder, playerPosition: simd_float2, rotation: Float) {
+        guard let vertexBuffer = vertexBuffer else { return }
+        
         renderEncoder.setRenderPipelineState(pipelineState)
         
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: BufferIndex.vertices.rawValue)
@@ -106,12 +115,26 @@ class ArcTrailRenderer {
         var modelMatrix = simd_float4x4.makeTranslation(simd_float3(playerPosition, 0))
         modelMatrix.rotateAroundZ(by: rotation)
         
+        var xDist: Float = 0
+        if let prevRotation = prevRotation {
+            let currentPoint = simd_float2(cos(rotation), sin(rotation)) * radius
+            let prevPoint = simd_float2(cos(prevRotation), sin(prevRotation)) * radius
+            xDist = distance(currentPoint, prevPoint)
+        }
+        
+        xDistanceNormalized += xDist / length
+        
         renderEncoder.setVertexBytes(&modelMatrix,
                                      length: MemoryLayout<simd_float4x4>.stride,
                                      index: 1)
         
+        renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 0)
+        renderEncoder.setFragmentBytes(&xDistanceNormalized, length: MemoryLayout<Float>.size, index: 1)
+        
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,
                                      vertexCount: vertices.count)
+        
+        prevRotation = rotation
     }
 }

@@ -162,7 +162,7 @@ class MainRenderer: NSObject {
         powerUpOrbRenderer = PowerUpOrbRenderer(device: device, library: library)
         
         arcTrailRenderer = ArcTrailRenderer(device: device, library: library, fragmentFunction: "fragmentArcTrail",
-                                            radius: 330, length: .pi / 3.7, width: 65, segments: 10)
+                                            radius: 290, angularLength: .pi / 3.3, width: 45, segments: 10)
         
         backgroundRenderer = Renderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = Renderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -442,7 +442,7 @@ extension MainRenderer: MTKViewDelegate {
         
         arcTrailRenderer.draw(with: renderEncoder,
                               playerPosition: scene.player.position,
-                              rotation: Float(pausableTimeMetal)  * 0.5)
+                              rotation: Float(pausableTimeMetal) * 0.8)
 //        powerUpOrbRenderer.draw(forPlayer: scene.player,
 //                                powerUps: scene.playerManager.activePowerUps,
 //                                time: Float(pausableTimeMetal),
