@@ -126,6 +126,12 @@ struct TrailVertex
     float aliveness;
 };
 
+struct Vertex
+{
+    simd_float2 position;
+    simd_float2 uv;
+};
+
 //typedef struct
 //{
 //    vector_float2 position;

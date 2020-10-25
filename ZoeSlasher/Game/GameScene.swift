@@ -110,7 +110,7 @@ class GameScene: Scene {
         player.scene = self
         player.particleTrailHandler.scene = self
         
-//        rootNode.add(player)
+        rootNode.add(player)
         
         setToIdle()
     }

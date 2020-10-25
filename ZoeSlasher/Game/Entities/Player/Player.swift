@@ -12,6 +12,7 @@ protocol PlayerDelegate: class {
 
 class Player: Node {
     
+    static let visualRadius: Float = 400
     static let baseChargingDamage: Float = Enemy.baseHealth * 0.5
     static let basePiercingDamage: Float = Enemy.baseHealth
     
@@ -90,7 +91,7 @@ class Player: Node {
         super.init()
         name = "Player"
         zPosition = -5
-        size = vector_float2(repeating: 800)
+        size = vector_float2(repeating: Player.visualRadius * 2)
         physicsSize = vector_float2(repeating: 160)
         
         health = maxHealth

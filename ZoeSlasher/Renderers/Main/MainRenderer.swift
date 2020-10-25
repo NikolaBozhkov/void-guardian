@@ -55,6 +55,7 @@ class MainRenderer: NSObject {
     let mainPotionRenderer: MainPotionRenderer
     let mainPowerUpNodeRenderer: MainPowerUpNodeRenderer
     let powerUpOrbRenderer: PowerUpOrbRenderer
+    let arcTrailRenderer: ArcTrailRenderer
     
     let backgroundRenderer: Renderer
     let playerRenderer: Renderer
@@ -159,6 +160,9 @@ class MainRenderer: NSObject {
         mainPotionRenderer = MainPotionRenderer(device: device, library: library)
         mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
         powerUpOrbRenderer = PowerUpOrbRenderer(device: device, library: library)
+        
+        arcTrailRenderer = ArcTrailRenderer(device: device, library: library, fragmentFunction: "fragmentArcTrail",
+                                            radius: 330, length: .pi / 3.7, width: 65, segments: 10)
         
         backgroundRenderer = Renderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = Renderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -436,10 +440,13 @@ extension MainRenderer: MTKViewDelegate {
             trailRenderer.draw(renderEncoder: renderEncoder)
         }
         
-        powerUpOrbRenderer.draw(forPlayer: scene.player,
-                                powerUps: scene.playerManager.activePowerUps,
-                                time: Float(pausableTimeMetal),
-                                with: renderEncoder)
+        arcTrailRenderer.draw(with: renderEncoder,
+                              playerPosition: scene.player.position,
+                              rotation: Float(pausableTimeMetal)  * 0.5)
+//        powerUpOrbRenderer.draw(forPlayer: scene.player,
+//                                powerUps: scene.playerManager.activePowerUps,
+//                                time: Float(pausableTimeMetal),
+//                                with: renderEncoder)
         
         drawNodes(scene.children)
         

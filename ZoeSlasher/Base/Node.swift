@@ -52,10 +52,6 @@ class Node: Renderable, Hashable {
                 uniformsDirty = false
             }
             
-//            if let parent = parent {
-//                return parent.modelMatrix * _modelMatrix
-//            }
-            
             return _modelMatrix
         }
     }

@@ -17,35 +17,35 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
-        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
-        
-        let startX: Float = SceneConstants.safeLeft + node.size.x
-        let padding: Float = node.size.x / 4
-        
-        var currentX = startX
-        var currentY: Float = -node.size.y / 2 - padding / 2
-        
-        Recorder.CaptureRect.origin = [startX - node.size.x / 2, currentY - node.size.y / 2]
-        Recorder.CaptureRect.size = node.size * 2 + padding
-        Recorder.CaptureRect.padding = simd_float2(repeating: 200)
-        
-        let powerUps = [
-            ShieldPowerUp(duration: 0, type: .doublePotionRestore),
-            ShieldPowerUp(duration: 0, type: .shield),
-            ShieldPowerUp(duration: 0, type: .instantKill),
-            ShieldPowerUp(duration: 0, type: .doubleDamage),
-        ]
-        
-        for row in 0..<2 {
-            for col in 0..<2 {
-                let powerUp = powerUps[row * 2 + col]
-                powerUpSpawner.spawnPowerUp(powerUp, at: [currentX, currentY])
-                currentX += node.size.x + padding
-            }
-            
-            currentX = startX
-            currentY += node.size.y + padding
-        }
+//        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
+//
+//        let startX: Float = SceneConstants.safeLeft + node.size.x
+//        let padding: Float = node.size.x / 4
+//
+//        var currentX = startX
+//        var currentY: Float = -node.size.y / 2 - padding / 2
+//
+//        Recorder.CaptureRect.origin = [startX - node.size.x / 2, currentY - node.size.y / 2]
+//        Recorder.CaptureRect.size = node.size * 2 + padding
+//        Recorder.CaptureRect.padding = simd_float2(repeating: 200)
+//
+//        let powerUps = [
+//            ShieldPowerUp(duration: 0, type: .doublePotionRestore),
+//            ShieldPowerUp(duration: 0, type: .shield),
+//            ShieldPowerUp(duration: 0, type: .instantKill),
+//            ShieldPowerUp(duration: 0, type: .doubleDamage),
+//        ]
+//
+//        for row in 0..<2 {
+//            for col in 0..<2 {
+//                let powerUp = powerUps[row * 2 + col]
+//                powerUpSpawner.spawnPowerUp(powerUp, at: [currentX, currentY])
+//                currentX += node.size.x + padding
+//            }
+//
+//            currentX = startX
+//            currentY += node.size.y + padding
+//        }
     }
     
     func update(deltaTime: TimeInterval) {
