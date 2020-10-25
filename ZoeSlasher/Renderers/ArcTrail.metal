@@ -26,6 +26,12 @@ vertex VertexOut vertexArcTrail(constant Vertex *vertices [[buffer(BufferIndexVe
     return out;
 }
 
+float noise(float x) {
+    float i = floor(x);
+    float f = fract(x);
+    return mix(hash11(i), hash11(i + 1.0), smoothstep(0.0, 1.0, f));
+}
+
 fragment float4 fragmentArcTrail(VertexOut in [[stage_in]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                                  constant float &aspectRatio [[buffer(0)]],
@@ -35,36 +41,42 @@ fragment float4 fragmentArcTrail(VertexOut in [[stage_in]],
     st.y = 2.0 * st.y - 1.0;
     st.x *= 2.0 * aspectRatio;
     
-    // stretch a bit
-//    st.x /= 3.0;
-    
     float f = 0.0;
-//    f += 0.5 + 0.5 * snoise(noisePos);
-//    f = smoothstep(0.3, 0.4, f);
-    
     float aa = 0.05;
-    float d = length(st - float2(1.0, 0.0));
-    float head = 1.0 - smoothstep(1.0 - aa, 1.0, d);
-    f += head;
-
-    // starts from head center and is 1.0 - 1.0 / aspectRatio long
-    float tailProgress = (in.uv.x - 1.0 / aspectRatio) / (1.0 - 1.0 / aspectRatio);
     
-    float tail = 1.0 - smoothstep(1.0 - aa, 1.0, abs(st.y) + tailProgress * 0.5);
+    float xDistScaled = xDistNorm * 2.0 * aspectRatio;
+    
+    float2 headScale = float2(0.4, 1.0);
+    float2 headSt = st * headScale - float2(1.0, 0.0);
+    float d = length(headSt);
+    float head = 1.0 - smoothstep(1.0 - aa, 1.0, d);
+
+    float tailProgress = headSt.x / (2.0 * aspectRatio * headScale.x - 1.0);
+    
+    float tail = 1.0 - smoothstep(1.0 - aa, 1.0, abs(st.y) + tailProgress * 1.0);
     
     // head cutoff
-    tail *= smoothstep(1.0 - aa, 1.0, st.x);
+    head *= 1.0 - smoothstep(-aa, 0, headSt.x);
     
-    // TODO: Derive panning from rotation
-    float3 noisePos = float3(st.x - xDistNorm * 2.0 * aspectRatio, st.y, 3.0);
-    noisePos.xy *= float2(0.4, 1.5);
+    tail *= smoothstep(-aa, 0, headSt.x);
+    
+    float3 noisePos = float3(st.x - xDistScaled, st.y, 3.0);
+    noisePos.xy *= float2(0.4, 2.1);
+    noisePos *= 0.8;
     float n = 0.5 + 0.5 * snoise(noisePos);
     
-    tail *= smoothstep(0.0, 0.1, n - tailProgress);
+    float mesh = min(head + tail, 1.0);
+//    mesh *= smoothstep(0.0, 0.05, n - pow(tailProgress, 1.5) * 0.3 - pow(abs(st.y) + tailProgress * 0.8, 3.0));
+    float meshNoise = smoothstep(0.0, 0.1, n - min(in.uv.x * 0.5, 0.15) - pow(abs(st.y) + tailProgress * 0.8, 3.5));
+    mesh *= meshNoise;
     
-    f += tail;
+    f += mesh;
     
-    float3 color = float3(1.0);
+    float3 base = float3(0.000, 0.851, 1.0);
+    float3 highlight = mix(base, float3(1.0), 0.8);
+    float3 color = mix(highlight, base, in.uv.x * 1.7);
+//    color = mix(float3(1.0, 0.0, 0.0), float3(1.0), tail);
+//    color = mix(color, float3(0.0, 1.0, 0.0), tail * head);
     
     return float4(color, f);
 }
