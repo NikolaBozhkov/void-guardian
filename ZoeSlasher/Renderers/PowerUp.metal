@@ -78,7 +78,7 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
     const float aa = 0.05;
     const float ringWidth = POWERUP_RING_W;
     
-    const float impulseT = fract(in.timeAlive * 0.5) * 3.0;
+    const float impulseT = fract(in.timeAlive * 0.7) * 2.14;
     const float impulse = expImpulse(impulseT, 3.0);
 
     const float ringGlowR = POWERUP_RING_GLOW_R;
@@ -91,18 +91,15 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
     f += ring;
     f += (0.5 + 0.5 * impulse) * ringGlow;
 
-    float iconSize = in.textureScale * (0.5 + 0.08 * impulse) * (1.0 - ringGlowR);
+    float iconSize = 0.53 * (ringEdge + POWERUP_IMPULSE_SCALE * impulse);
 
     constexpr sampler s(filter::linear, address::clamp_to_zero);
     float2 samplePos = 0.5 + (in.uv - 0.5) / iconSize;
-    samplePos -= 0.5;
-    samplePos = rotate2d(in.textureRot) * samplePos;
-    samplePos += 0.5;
     
     float icon = texture.sample(s, samplePos).a;
     f += icon;
 
-    st *= 1.0 + 2.0 * (d - 0.3 - 0.28 * impulse);
+    st *= 1.0 + 2.2 * (d - 0.22 - 0.35 * impulse);
 
     float4 h = hexagon(5.0 * st);
     

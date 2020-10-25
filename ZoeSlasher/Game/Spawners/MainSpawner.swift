@@ -17,6 +17,10 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
+        for _ in 0..<5 {
+            powerUpSpawner.spawnPowerUp()
+        }
+        
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
 //
 //        let startX: Float = SceneConstants.safeLeft + node.size.x
@@ -49,8 +53,8 @@ class MainSpawner {
     }
     
     func update(deltaTime: TimeInterval) {
-        enemySpawner.update(deltaTime: deltaTime)
+//        enemySpawner.update(deltaTime: deltaTime)
 //        potionSpawner.update(deltaTime: deltaTime)
-        powerUpSpawner.update(deltaTime: deltaTime)
+//        powerUpSpawner.update(deltaTime: deltaTime)
     }
 }

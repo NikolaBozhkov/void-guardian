@@ -16,6 +16,9 @@ class Particle: Node {
     var lifetime = TimeInterval.random(in: 1.3...2.3)
     var k: Float = 5.7
     var rotationNoiseFactor: Float = 2.0
+    var fadesIn = false
+    
+    var fadeInDuration: TimeInterval = 0.0
     
     private var timeAlive: TimeInterval = 0
     
@@ -41,6 +44,10 @@ class Particle: Node {
     
     func update(deltaTime: TimeInterval) {
         timeAlive += deltaTime
+        
+        if fadesIn {
+            color.w = min(Float(timeAlive / fadeInDuration), 1.0)
+        }
         
         let impulse = max(minImpulse, expImpulse(Float(timeAlive) + 1 / k, k))
         

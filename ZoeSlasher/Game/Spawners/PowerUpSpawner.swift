@@ -12,7 +12,7 @@ class PowerUpSpawner {
     
     unowned var scene: GameScene!
     
-    private let powerUpIntervalRange: Range<TimeInterval> = 15..<25
+    private let powerUpIntervalRange: Range<TimeInterval> = 3..<5
     
     private var powerUpInterval: TimeInterval = 0
     private var timeSinceLastPowerUp: TimeInterval = 0

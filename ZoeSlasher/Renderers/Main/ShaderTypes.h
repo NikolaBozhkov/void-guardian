@@ -102,7 +102,7 @@ struct AttackData
     float speed;
 };
 
-#define POWERUP_IMPULSE_SCALE 0.05f
+#define POWERUP_IMPULSE_SCALE 0.1f
 #define POWERUP_RING_W 0.125f
 #define POWERUP_RING_GLOW_R 0.2f
 

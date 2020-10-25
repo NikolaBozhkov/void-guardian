@@ -12,6 +12,9 @@ class PowerUpNode: Node {
     
     let powerUp: PowerUp
     
+    private var particleInterval: Float = .random(in: 0.5...0.9)
+    private var timeSinceLastParticle: Float = 0.0
+    
     private(set) var timeAlive: Float = .random(in: 0...5)
     
     private var didSpawnParticles = false
@@ -22,7 +25,7 @@ class PowerUpNode: Node {
         super.init()
     
         physicsSize = [1, 1] * 240
-        size = physicsSize * (1 + POWERUP_RING_GLOW_R + POWERUP_IMPULSE_SCALE)
+        size = physicsSize / (1.0 - POWERUP_IMPULSE_SCALE - POWERUP_RING_GLOW_R)
     }
     
     func activate() {
@@ -31,9 +34,24 @@ class PowerUpNode: Node {
     
     func update(forScene scene: GameScene, deltaTime: Float) {
         timeAlive += deltaTime
+        timeSinceLastParticle += deltaTime
         
-        let impulseTime = simd_fract(timeAlive * 0.5) * 3.0
+        let impulseTime = simd_fract(timeAlive * 0.7) * 2.14
         let triggerTime: Float = 0.01
+        
+        if timeSinceLastParticle >= particleInterval {
+            let particleCount = Int.random(in: 1...2)
+            for _ in 0..<particleCount {
+                let particle = spawnParticle(forScene: scene)
+                particle.position = position + simd_float2.random(in: -physicsSize.x / 2...physicsSize.x / 2)
+                particle.speed = .random(in: 0...20)
+                particle.fadesIn = true
+                particle.fadeInDuration = 0.5
+            }
+            
+            timeSinceLastParticle = 0
+            particleInterval = .random(in: 0.5...0.9)
+        }
         
         if prevImpulseTime > impulseTime {
             didSpawnParticles = false
@@ -43,21 +61,8 @@ class PowerUpNode: Node {
             let particleCount = Int.random(in: 2...4)
             var rotation = Float.random(in: -.pi...(.pi))
             for _ in 0..<particleCount {
-                let particle = Particle()
+                let particle = spawnParticle(forScene: scene)
                 particle.rotation = rotation
-                particle.scale = 0.25
-                particle.speed = .random(in: 170...210)
-                particle.speedMod = 1.0
-                particle.k = 3.0
-                particle.minImpulse = 0.17
-                particle.lifetime = .random(in: 2.8...3.5)
-                particle.rotationNoiseFactor = 0.5
-                particle.position = position
-                particle.color.xyz = powerUp.type.baseColor
-                
-                particle.parent = scene.rootNode
-                scene.particles.insert(particle)
-                
                 rotation += .pi * 2.0 / Float(particleCount) + .random(in: 0...0.8)
             }
             
@@ -65,5 +70,25 @@ class PowerUpNode: Node {
         }
         
         prevImpulseTime = impulseTime
+    }
+    
+    @discardableResult
+    private func spawnParticle(forScene scene: GameScene) -> Particle {
+        let particle = Particle()
+        particle.rotation = .random(in: -.pi...(.pi))
+        particle.scale = 0.25
+        particle.speed = .random(in: 170...210)
+        particle.speedMod = 1.0
+        particle.k = 3.0
+        particle.minImpulse = 0.17
+        particle.lifetime = .random(in: 2.8...3.5)
+        particle.rotationNoiseFactor = 0.5
+        particle.position = position
+        particle.color.xyz = powerUp.type.baseColor
+        
+        particle.parent = scene.rootNode
+        scene.particles.insert(particle)
+        
+        return particle
     }
 }

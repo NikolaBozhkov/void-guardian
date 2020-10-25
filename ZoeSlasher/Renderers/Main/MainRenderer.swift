@@ -442,7 +442,7 @@ extension MainRenderer: MTKViewDelegate {
         
         arcTrailRenderer.draw(with: renderEncoder,
                               playerPosition: scene.player.position,
-                              rotation: Float(pausableTimeMetal) * 0.8)
+                              rotation: Float(pausableTimeMetal) * 1.0)
         
         drawNodes(scene.children)
         
