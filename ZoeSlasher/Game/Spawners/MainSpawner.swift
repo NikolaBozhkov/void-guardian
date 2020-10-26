@@ -17,9 +17,9 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
-        for _ in 0..<5 {
-            powerUpSpawner.spawnPowerUp()
-        }
+//        for _ in 0..<5 {
+//            powerUpSpawner.spawnPowerUp()
+//        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
 //

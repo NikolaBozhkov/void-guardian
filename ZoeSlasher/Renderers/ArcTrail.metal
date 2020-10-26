@@ -77,6 +77,6 @@ fragment float4 fragmentArcTrail(PowerUpTrailOut in [[stage_in]],
     
     f += mesh;
     
-    float3 color = mix(in.brightColor, in.baseColor, in.uv.x * 1.7);
+    float3 color = mix(in.brightColor, in.baseColor, in.uv.x * 2.2);
     return float4(color, f);
 }

@@ -164,32 +164,41 @@ class Recorder {
     }
     
     func startRecording() {
-        guard !isRecording else { return }
+        guard !isRecording,
+              let assetWriter = assetWriter else {
+            return
+        }
         
-        assetWriter!.startWriting()
-        assetWriter!.startSession(atSourceTime: .zero)
+        assetWriter.startWriting()
+        assetWriter.startSession(atSourceTime: .zero)
         
         recordingStartTime = CACurrentMediaTime()
         isRecording = true
     }
     
     func endRecording(_ completionHandler: @escaping () -> ()) {
-        guard isRecording else { return }
-        
-        isRecording = false
-        
-        assetWriterVideoInput!.markAsFinished()
-        assetWriter!.finishWriting(completionHandler: completionHandler)
-    }
-    
-    private func writeFrame(forTexture texture: MTLTexture) {
-        if !isRecording {
+        guard isRecording,
+              let assetWriterVideoInput = assetWriterVideoInput,
+              let assetWriter = assetWriter else {
             return
         }
         
-        while !assetWriterVideoInput!.isReadyForMoreMediaData {}
+        isRecording = false
+        
+        assetWriterVideoInput.markAsFinished()
+        assetWriter.finishWriting(completionHandler: completionHandler)
+    }
     
-        guard let pixelBufferPool = assetWriterPixelBufferInput!.pixelBufferPool else {
+    private func writeFrame(forTexture texture: MTLTexture) {
+        guard isRecording,
+              let assetWriterVideoInput = assetWriterVideoInput,
+              let assetWriterPixelBufferInput = assetWriterPixelBufferInput else {
+            return
+        }
+        
+        while !assetWriterVideoInput.isReadyForMoreMediaData {}
+    
+        guard let pixelBufferPool = assetWriterPixelBufferInput.pixelBufferPool else {
             print("Pixel buffer asset writer input did not have a pixel buffer pool available; cannot retrieve frame")
             return
         }
@@ -214,7 +223,7 @@ class Recorder {
         
         let frameTime = CACurrentMediaTime() - recordingStartTime
         let presentationTime = CMTimeMakeWithSeconds(frameTime, preferredTimescale: 240)
-        assetWriterPixelBufferInput!.append(pixelBuffer, withPresentationTime: presentationTime)
+        assetWriterPixelBufferInput.append(pixelBuffer, withPresentationTime: presentationTime)
         
         CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
     }
