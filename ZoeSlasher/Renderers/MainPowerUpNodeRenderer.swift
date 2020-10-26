@@ -29,8 +29,6 @@ class MainPowerUpNodeRenderer {
                                        size: powerUpNode.size,
                                        baseColor: powerUpNode.powerUp.type.baseColor,
                                        brightColor: powerUpNode.powerUp.type.brightColor,
-                                       textureScale: powerUpNode.powerUp.type.textureScale,
-                                       textureRot: powerUpNode.powerUp.type.textureRot,
                                        timeAlive: powerUpNode.timeAlive)
             
             powerUpTypeToDataMap[powerUpNode.powerUp.type]?.append(data)

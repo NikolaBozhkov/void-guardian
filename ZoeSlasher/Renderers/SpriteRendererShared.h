@@ -85,10 +85,16 @@ typedef struct {
     float2 uv;
     float3 baseColor;
     float3 brightColor;
-    float textureScale;
-    float textureRot;
     float2 worldXY;
     float timeAlive;
 } PowerUpNodeOut;
+
+typedef struct {
+    float4 position [[position]];
+    float2 uv;
+    float3 baseColor;
+    float3 brightColor;
+    float seed;
+} PowerUpTrailOut;
 
 #endif /* SpriteRendererShared_h */

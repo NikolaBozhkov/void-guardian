@@ -26,8 +26,6 @@ vertex PowerUpNodeOut vertexPowerUpNode(constant float4 *vertices [[buffer(Buffe
     out.uv = vertices[vid].zw;
     out.baseColor = powerUpNode.baseColor;
     out.brightColor = powerUpNode.brightColor;
-    out.textureScale = powerUpNode.textureScale;
-    out.textureRot = powerUpNode.textureRot;
     out.worldXY = powerUpNode.worldTransform.columns[3].xy;
     out.timeAlive = powerUpNode.timeAlive;
     

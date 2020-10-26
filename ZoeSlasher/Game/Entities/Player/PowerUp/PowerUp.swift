@@ -9,6 +9,7 @@
 class PowerUp {
     private let uuid = UUID()
     
+    let seed = Float.random(in: 0..<100)
     let duration: Float
     let type: PowerUpType
     private(set) var isActive: Bool = false

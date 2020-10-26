@@ -10,8 +10,6 @@ import Metal
 
 class ArcTrailRenderer {
     
-    private let maxVertices = 100
-    
     private let radius: Float
     
     private let device: MTLDevice
@@ -105,15 +103,30 @@ class ArcTrailRenderer {
         return vertices
     }
     
-    func draw(with renderEncoder: MTLRenderCommandEncoder, playerPosition: simd_float2, rotation: Float) {
-        guard let vertexBuffer = vertexBuffer else { return }
+    func draw(with renderEncoder: MTLRenderCommandEncoder, powerUps: [PowerUp], playerPosition: simd_float2, time: Float) {
+        guard !powerUps.isEmpty,
+              let vertexBuffer = vertexBuffer else {
+            return
+        }
         
         renderEncoder.setRenderPipelineState(pipelineState)
         
         renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: BufferIndex.vertices.rawValue)
         
-        var modelMatrix = simd_float4x4.makeTranslation(simd_float3(playerPosition, 0))
-        modelMatrix.rotateAroundZ(by: rotation)
+        var data = [PowerUpTrailData]()
+        let rotation = time
+        var currentRotation = rotation
+        for powerUp in powerUps {
+            var modelMatrix = simd_float4x4.makeTranslation(simd_float3(playerPosition, 0))
+            modelMatrix.rotateAroundZ(by: currentRotation)
+            
+            data.append(PowerUpTrailData(worldTransform: modelMatrix,
+                                         baseColor: powerUp.type.baseColor,
+                                         brightColor: powerUp.type.brightColor,
+                                         seed: powerUp.seed))
+            
+            currentRotation += .pi * 2.0 / Float(powerUps.count)
+        }
         
         var xDist: Float = 0
         if let prevRotation = prevRotation {
@@ -124,8 +137,8 @@ class ArcTrailRenderer {
         
         xDistanceNormalized += xDist / length
         
-        renderEncoder.setVertexBytes(&modelMatrix,
-                                     length: MemoryLayout<simd_float4x4>.stride,
+        renderEncoder.setVertexBytes(&data,
+                                     length: MemoryLayout<PowerUpTrailData>.stride * data.count,
                                      index: 1)
         
         renderEncoder.setFragmentBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 0)
@@ -133,7 +146,8 @@ class ArcTrailRenderer {
         
         renderEncoder.drawPrimitives(type: .triangle,
                                      vertexStart: 0,
-                                     vertexCount: vertices.count)
+                                     vertexCount: vertices.count,
+                                     instanceCount: data.count)
         
         prevRotation = rotation
     }
