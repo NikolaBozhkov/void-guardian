@@ -9,13 +9,13 @@
 class Potion: Node {
     
     let type: PotionType
-    var amount: Int
+    var amount: Float
     
     private(set) var timeSinceConsumed: Float = -1
     private(set) var timeAlive: Float = 0.0
     private(set) var isConsumed = false
     
-    init(type: PotionType, amount: Int) {
+    init(type: PotionType, amount: Float) {
         self.type = type
         self.amount = amount
         
@@ -25,8 +25,7 @@ class Potion: Node {
         physicsSize = [200, 200]
     }
     
-    func apply(to player: Player, multiplier: Float = 1) {
-        let amount = Float(self.amount) * multiplier
+    func apply(to player: Player) {
         if type == .energy {
             player.energy += amount
         } else if type == .health {

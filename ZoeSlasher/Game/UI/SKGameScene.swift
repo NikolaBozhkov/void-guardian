@@ -222,9 +222,9 @@ class SKGameScene: SKScene {
     func didConsumePotion(_ potion: Potion, withFavor favor: Int = 0) {
         let potionLabel: GainLabel
         if potion.type == .energy {
-            potionLabel = EnergyGainLabel(amount: potion.amount, fontSize: 133)
+            potionLabel = EnergyGainLabel(amount: Int(potion.amount), fontSize: 133)
         } else {
-            potionLabel = HealthGainLabel(amount: potion.amount, fontSize: 133)
+            potionLabel = HealthGainLabel(amount: Int(potion.amount), fontSize: 133)
         }
         
         potionLabel.position = CGPoint(potion.position)

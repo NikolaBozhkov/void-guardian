@@ -351,9 +351,9 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio))
         
-//        Recorder.CaptureRect.size = [1000, 1000]
-//        Recorder.CaptureRect.origin = simd_float2(repeating: -Recorder.CaptureRect.size.x / 2)
-//        recorder.configure(withResolution: 1024, filePath: "movie4")
+        Recorder.CaptureRect.size = [1000, 1000]
+        Recorder.CaptureRect.origin = simd_float2(repeating: -Recorder.CaptureRect.size.x / 2)
+        recorder.configure(withResolution: 1024, filePath: "movie5")
     }
     
     func draw(in view: MTKView) {
@@ -443,13 +443,10 @@ extension MainRenderer: MTKViewDelegate {
         }
         
         arcTrailRenderer.draw(with: renderEncoder,
-                              powerUps: [scene.playerManager.doubleDamagePowerUp,
-                                         scene.playerManager.instantKillPowerUp,
-                                         scene.playerManager.doublePotionRestorePowerUp,
-                                         scene.playerManager.shieldPowerUp],
+                              powerUps: scene.playerManager.activePowerUps,
                               playerPosition: scene.player.position,
                               time: Float(pausableTimeMetal))
-        
+            
         drawNodes(scene.children)
         
         particleRenderer.draw(particles: scene.particles, with: renderEncoder)

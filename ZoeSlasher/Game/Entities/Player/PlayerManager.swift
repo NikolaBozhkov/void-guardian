@@ -53,6 +53,7 @@ class PlayerManager {
             multiplier = doublePotionRestorePowerUp.multiplier
         }
         
-        potion.apply(to: player, multiplier: multiplier)
+        potion.amount *= multiplier
+        potion.apply(to: player)
     }
 }

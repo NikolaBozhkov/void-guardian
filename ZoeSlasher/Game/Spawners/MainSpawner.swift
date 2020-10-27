@@ -53,8 +53,8 @@ class MainSpawner {
     }
     
     func update(deltaTime: TimeInterval) {
-//        enemySpawner.update(deltaTime: deltaTime)
-//        potionSpawner.update(deltaTime: deltaTime)
-//        powerUpSpawner.update(deltaTime: deltaTime)
+        enemySpawner.update(deltaTime: deltaTime)
+        potionSpawner.update(deltaTime: deltaTime)
+        powerUpSpawner.update(deltaTime: deltaTime)
     }
 }
