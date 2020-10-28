@@ -48,7 +48,7 @@ class PowerUpSpawner {
         let spawnIndicator = UtilitySpawnIndicator(size: powerUpNode.physicsSize + [1, 1] * 220)
         spawnIndicator.color.xyz = powerUp.type.baseColor
         spawnIndicator.position = powerUpNode.position
-        scene.utilitySpawnIndicators.insert(spawnIndicator)
+        scene.indicators.insert(spawnIndicator)
     }
     
     private func getRandomPowerUp() -> PowerUp {

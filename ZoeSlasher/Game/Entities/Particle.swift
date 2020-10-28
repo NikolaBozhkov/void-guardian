@@ -10,8 +10,6 @@ import Foundation
 
 class Particle: ProgressNode {
     
-    let defaultDuration = Float.random(in: 1.3...2.3)
-    
     var speedMod = Float.random(in: 0.7...1.2)
     var speed: Float = 750
     var minImpulse = Float.random(in: 0...0.08)
@@ -29,10 +27,12 @@ class Particle: ProgressNode {
     init(constantMovement: Bool = false) {
         self.constantMovement = constantMovement
         
-        super.init(size: [1, 1] * Float.random(in: 580...680), duration: defaultDuration)
+        super.init()
         
         size = [1, 1] * Float.random(in: 580...680)
         rotation = .random(in: -.pi...(.pi))
+        
+        duration = Float.random(in: 1.3...2.3)
     }
     
     override func update(deltaTime: Float) {

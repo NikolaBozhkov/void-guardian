@@ -45,7 +45,7 @@ class GameScene: Scene {
     
     var potions = Set<Potion>()
     var powerUpNodes = Set<PowerUpNode>()
-    var utilitySpawnIndicators = Set<UtilitySpawnIndicator>()
+    var indicators = Set<ProgressNode>()
     
     var particles = Set<Particle>()
     
@@ -225,10 +225,10 @@ class GameScene: Scene {
             }
         }
         
-        utilitySpawnIndicators.forEach {
-            $0.update(deltaTime: Float(deltaTime))
+        indicators.forEach {
+            $0.update(deltaTime: deltaTime)
             if $0.shouldRemove {
-                utilitySpawnIndicators.remove($0)
+                indicators.remove($0)
             }
         }
     }
@@ -394,6 +394,10 @@ extension GameScene {
             let threshold = (player.physicsSize.x + powerUpNode.physicsSize.x) / 2
             if distance(powerUpNode.position, player.position) <= threshold {
                 powerUpNode.activate(forScene: self)
+                
+                let indicator = ShockwaveIndicator(size: player.physicsSize + [1, 1] * 400)
+                indicator.parent = player
+                indicators.insert(indicator)
             }
         }
     }

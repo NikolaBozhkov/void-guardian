@@ -72,7 +72,7 @@
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
 		24D15E8E2549BEE1004DA636 /* Indicators.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E8D2549BEE1004DA636 /* Indicators.metal */; };
 		24D15E912549BF90004DA636 /* ShockwaveIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */; };
-		24D15E942549BFF3004DA636 /* ProgressNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E932549BFF3004DA636 /* ProgressNode.swift */; };
+		24D15E9A2549C9B2004DA636 /* ProgressNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E992549C9B2004DA636 /* ProgressNode.swift */; };
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
 		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
 		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
@@ -174,7 +174,7 @@
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
 		24D15E8D2549BEE1004DA636 /* Indicators.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Indicators.metal; sourceTree = "<group>"; };
 		24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShockwaveIndicator.swift; sourceTree = "<group>"; };
-		24D15E932549BFF3004DA636 /* ProgressNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressNode.swift; sourceTree = "<group>"; };
+		24D15E992549C9B2004DA636 /* ProgressNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressNode.swift; sourceTree = "<group>"; };
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
@@ -481,7 +481,7 @@
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
 				24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */,
 				24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */,
-				24D15E932549BFF3004DA636 /* ProgressNode.swift */,
+				24D15E992549C9B2004DA636 /* ProgressNode.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -583,6 +583,7 @@
 				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
 				2414AB262511E60600B3299C /* PowerUpSpawner.swift in Sources */,
 				24229632253585A2003F7F70 /* PotionType.swift in Sources */,
+				24D15E9A2549C9B2004DA636 /* ProgressNode.swift in Sources */,
 				24D7FF68242B244A007743C6 /* SKAction+Extensions.swift in Sources */,
 				2468E3B7246193F7004042AD /* ReturnHomeConfirmScreen.swift in Sources */,
 				24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */,
@@ -605,7 +606,6 @@
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				2465E7772435E2490019CE02 /* InstanceRenderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
-				24D15E942549BFF3004DA636 /* ProgressNode.swift in Sources */,
 				247F6AEF25447BAD0021D562 /* ArcTrailRenderer.swift in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,

@@ -36,7 +36,7 @@ class PotionSpawner {
         let spawnIndicator = UtilitySpawnIndicator(size: potion.physicsSize + [1, 1] * 200)
         spawnIndicator.color.xyz = potion.type.glowColor
         spawnIndicator.position = potion.position
-        scene.utilitySpawnIndicators.insert(spawnIndicator)
+        scene.indicators.insert(spawnIndicator)
     }
     
     private func trySpawnPotion(type: PotionType, amount: Float, timer: inout Float, interval: Float) {

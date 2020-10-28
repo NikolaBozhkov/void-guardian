@@ -6,26 +6,9 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-import Foundation
-
-class UtilitySpawnIndicator: Node {
-    
-    private(set) var progress: Float = 0
-    private(set) var shouldRemove = false
-    
-    private let duration: Float = 1.5
-    
-    override init(size: vector_float2, textureName: String? = nil) {
-        super.init(size: size, textureName: textureName)
-        
+class UtilitySpawnIndicator: ProgressNode {
+    init(size: simd_float2) {
+        super.init(size: size, duration: 1.5)
         rotation = .random(in: 0.0...(.pi * 2))
-    }
-    
-    func update(deltaTime: Float) {
-        progress = min(progress + deltaTime / duration, 1.0)
-        
-        if progress == 1 {
-            shouldRemove = true
-        }
     }
 }

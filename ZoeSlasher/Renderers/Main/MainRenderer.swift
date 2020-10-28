@@ -458,10 +458,15 @@ extension MainRenderer: MTKViewDelegate {
         
         mainPotionRenderer.draw(potions: scene.potions, renderer: self)
         
-        scene.utilitySpawnIndicators.forEach {
+        scene.indicators.forEach {
             var progress = $0.progress
             renderEncoder.setFragmentBytes(&progress, length: MemoryLayout<Float>.size, index: 0)
-            spawnIndicatorRenderer.draw($0, with: renderEncoder)
+            
+            if $0 is UtilitySpawnIndicator {
+                spawnIndicatorRenderer.draw($0, with: renderEncoder)
+            } else if $0 is ShockwaveIndicator {
+                shockwaveIndicatorRenderer.draw($0, with: renderEncoder)
+            }
         }
         
         mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, renderer: self)

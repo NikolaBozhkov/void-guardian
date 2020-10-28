@@ -7,6 +7,8 @@
 //
 
 class ShockwaveIndicator: ProgressNode {
-    
+    init(size: simd_float2) {
+        super.init(size: size, duration: 1.5)
+        rotation = .random(in: -.pi...(.pi))
+    }
 }
-
