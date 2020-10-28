@@ -45,6 +45,7 @@ class GameScene: Scene {
     
     var potions = Set<Potion>()
     var powerUpNodes = Set<PowerUpNode>()
+    var utilitySpawnIndicators = Set<UtilitySpawnIndicator>()
     
     var particles = Set<Particle>()
     
@@ -218,6 +219,13 @@ class GameScene: Scene {
             $0.update(deltaTime: deltaTime)
             if $0.shouldRemove {
                 particles.remove($0)
+            }
+        }
+        
+        utilitySpawnIndicators.forEach {
+            $0.update(deltaTime: Float(deltaTime))
+            if $0.shouldRemove {
+                utilitySpawnIndicators.remove($0)
             }
         }
     }

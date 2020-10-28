@@ -18,6 +18,7 @@ class MainSpawner {
         powerUpSpawner.scene = scene
         
         potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
+        powerUpSpawner.spawnPowerUp(.init(duration: 0, type: .doubleDamage), at: [600, 0])
         
 //        for _ in 0..<5 {
 //            powerUpSpawner.spawnPowerUp()

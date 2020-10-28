@@ -32,6 +32,11 @@ class PotionSpawner {
         potion.position = position ?? scene.randomPosition(padding: [300, 200])
         potion.parent = scene.rootNode
         scene.potions.insert(potion)
+        
+        let spawnIndicator = UtilitySpawnIndicator(size: potion.physicsSize + [1, 1] * 200)
+        spawnIndicator.color.xyz = potion.type.symbolColor
+        spawnIndicator.position = potion.position
+        scene.utilitySpawnIndicators.insert(spawnIndicator)
     }
     
     private func trySpawnPotion(type: PotionType, amount: Float, timer: inout TimeInterval, interval: TimeInterval) {

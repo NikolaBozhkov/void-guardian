@@ -99,6 +99,7 @@
 		24EBD46B245C725000410D1E /* PauseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46A245C724F00410D1E /* PauseScreen.swift */; };
 		24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */; };
 		24F070BF2522FF7000D2954D /* MainTextureRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F070BE2522FF7000D2954D /* MainTextureRenderer.swift */; };
+		24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -200,6 +201,7 @@
 		24EBD46A245C724F00410D1E /* PauseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseScreen.swift; sourceTree = "<group>"; };
 		24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extensions.swift"; sourceTree = "<group>"; };
 		24F070BE2522FF7000D2954D /* MainTextureRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTextureRenderer.swift; sourceTree = "<group>"; };
+		24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitySpawnIndicator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -470,6 +472,7 @@
 				2414AB1825108F2200B3299C /* Player */,
 				249811332418270F00900AE9 /* Potion */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
+				24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
+				24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */,
 				243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */,
 				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
 				2414AB442515C66700B3299C /* ParticleRenderer.swift in Sources */,

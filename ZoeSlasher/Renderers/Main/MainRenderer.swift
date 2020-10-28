@@ -456,8 +456,11 @@ extension MainRenderer: MTKViewDelegate {
         
         mainPotionRenderer.draw(potions: scene.potions, renderer: self)
         
-        let spawnIndicator = Node(size: simd_float2(repeating: 600))
-        spawnIndicatorRenderer.draw(spawnIndicator, with: renderEncoder)
+        scene.utilitySpawnIndicators.forEach {
+            var progress = $0.progress
+            renderEncoder.setFragmentBytes(&progress, length: MemoryLayout<Float>.size, index: 0)
+            spawnIndicatorRenderer.draw($0, with: renderEncoder)
+        }
         
         mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, with: renderEncoder)
         mainTextureRenderer.draw(with: renderEncoder)

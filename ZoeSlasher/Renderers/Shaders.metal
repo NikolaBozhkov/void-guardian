@@ -395,7 +395,7 @@ float sdRoundedBox(float2 p, float2 b, float r)
 
 fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
                                        constant float4 &color [[buffer(BufferIndexSpriteColor)]],
-                                       constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]])
+                                       constant float &progress [[buffer(0)]])
 {
     float2 st = 2.0 * in.uv - 1.0;
     
@@ -405,18 +405,21 @@ fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
     const float scale = 3.0 / (M_PI_F * 2.0);
     p *= scale;
     
-    float progress = fract(uniforms.time / 1.0);
     float fadeOut = 1.0 - smoothstep(0.2, 1.0, progress);
     
-    p.x += 0.3;
+    const float maxW = 0.032;
+    p.x += maxW + (1.0 - progress) * 0.15;
     
-    float offset = mix(0.0, 1.5, 1.0 - pow(1.0 - progress, 3.0));
-    p.y = fract(p.y - offset) - 0.5;
+    float movement = 1.0 - pow(1.0 - progress, 3.0);
+    float offset = mix(0.0, 1.5, movement);
+    p.y = fract(p.y - offset) * 2.0 - 1.0;
+    p.y = abs(p.y);
     
     float f = 0.0;
-    float w = 0.012 * (1.0 - abs(p.y) * 7.0);
-    float db = sdBox(p, float2(w, 0.2));
-    f += 1.0 - smoothstep(0.0, 0.02, db);
+    float l = 1.0 - 1.0 * movement;
+    float w = maxW * mix(1.0, 0.0, p.y / l);
+    float db = sdBox(p, float2(w, l));
+    f += 1.0 - smoothstep(-0.015, 0.00, db);
     
     f *= fadeOut;
     
@@ -424,5 +427,5 @@ fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
     float3 brightColor = mix(baseColor, float3(1.0), 0.8);
     float3 col = mix(brightColor, baseColor, 0.0);
     
-    return float4(col, f);
+    return float4(color.xyz, f);
 }
