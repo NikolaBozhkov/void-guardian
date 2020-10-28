@@ -84,7 +84,7 @@ struct PotionData
     matrix_float4x4 worldTransform;
     simd_float2 size;
     simd_float2 physicsSizeNorm;
-    simd_float2 worldPos;
+    simd_float2 worldPosNorm;
     simd_float3 symbolColor;
     simd_float3 glowColor;
     float timeSinceConsumed;
@@ -110,9 +110,11 @@ struct PowerUpNodeData
 {
     matrix_float4x4 worldTransform;
     simd_float2 size;
+    simd_float2 worldPosNorm;
     simd_float3 baseColor;
     simd_float3 brightColor;
     float timeAlive;
+    float timeSinceConsumed;
 };
 
 struct PowerUpTrailData

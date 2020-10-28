@@ -34,7 +34,7 @@ class PotionSpawner {
         scene.potions.insert(potion)
         
         let spawnIndicator = UtilitySpawnIndicator(size: potion.physicsSize + [1, 1] * 200)
-        spawnIndicator.color.xyz = potion.type.symbolColor
+        spawnIndicator.color.xyz = potion.type.glowColor
         spawnIndicator.position = potion.position
         scene.utilitySpawnIndicators.insert(spawnIndicator)
     }

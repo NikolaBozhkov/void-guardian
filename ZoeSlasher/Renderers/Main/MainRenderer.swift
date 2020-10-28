@@ -462,9 +462,8 @@ extension MainRenderer: MTKViewDelegate {
             spawnIndicatorRenderer.draw($0, with: renderEncoder)
         }
         
-        mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, with: renderEncoder)
+        mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, renderer: self)
         mainTextureRenderer.draw(with: renderEncoder)
-        
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)
         skRenderer.render(withViewport: viewport, renderCommandEncoder: renderEncoder,

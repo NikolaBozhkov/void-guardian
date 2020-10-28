@@ -12,10 +12,13 @@ class PowerUpNode: Node {
     
     let powerUp: PowerUp
     
+    private(set) var timeAlive: Float = .random(in: 0...5)
+    
+    private(set) var isConsumed = false
+    private(set) var timeSinceConsumed: Float = -1
+    
     private var particleInterval: Float = .random(in: 0.5...0.9)
     private var timeSinceLastParticle: Float = 0.0
-    
-    private(set) var timeAlive: Float = .random(in: 0...5)
     
     private var didSpawnParticles = false
     private var prevImpulseTime: Float = 0.0
@@ -30,9 +33,16 @@ class PowerUpNode: Node {
     
     func activate() {
         powerUp.activate()
+        timeSinceConsumed = 0
+        isConsumed = true
     }
     
     func update(forScene scene: GameScene, deltaTime: Float) {
+        guard !isConsumed else {
+            timeSinceConsumed += deltaTime
+            return
+        }
+        
         timeAlive += deltaTime
         timeSinceLastParticle += deltaTime
         

@@ -24,10 +24,12 @@ vertex PowerUpNodeOut vertexPowerUpNode(constant float4 *vertices [[buffer(Buffe
     PowerUpNodeData powerUpNode = data[iid];
     out.position = uniforms.projectionMatrix * powerUpNode.worldTransform * float4(vertices[vid].xy * powerUpNode.size, 0.0, 1.0);
     out.uv = vertices[vid].zw;
+    out.size = powerUpNode.size;
     out.baseColor = powerUpNode.baseColor;
     out.brightColor = powerUpNode.brightColor;
-    out.worldXY = powerUpNode.worldTransform.columns[3].xy;
+    out.worldPosNorm = powerUpNode.worldPosNorm;
     out.timeAlive = powerUpNode.timeAlive;
+    out.timeSinceConsumed = powerUpNode.timeSinceConsumed;
     
     return out;
 }
@@ -58,9 +60,11 @@ float4 hexagon(float2 p)
 
 fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
                                     constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                    texture2d<float> texture [[texture(TextureIndexSprite)]])
+                                    texture2d<float> texture [[texture(TextureIndexSprite)]],
+                                    texture2d<float> fbmr [[texture(1)]])
 {
     float2 st = in.uv * 2.0 - 1.0;
+    float2 ogSt = st;
     float angle = atan2(st.y, st.x) + in.timeAlive * 0.5;
     angle *= 3.0;
     const float wobble = 0.05;
@@ -120,8 +124,24 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
 //    float glow = (0.37 + 0.08 * sin(uniforms.time * 2.0)) * (1.0 - smoothstep(0.7, 1.0, d));
     float glow = (0.35 + 0.3 * impulse) * (1.0 - smoothstep(iconSize, ringEdge, d));
     f += glow;
+    
+    // Consume fade out
+    float consumed = step(0, in.timeSinceConsumed);
+    
+    float2 stWorldNorm = 0.5 * ogSt * (in.size / uniforms.size);
+    stWorldNorm += in.worldPosNorm;
+    
+    float bg = fbmr.sample(s, stWorldNorm).x;
+    bg = pow(1 - bg, 4.5) * 3.0;
+    
+    const float k = 4;
+    float fadeOut = expImpulse(in.timeSinceConsumed + 1 / k, k);
+    float visibility = 1 - smoothstep(-1 + fadeOut, fadeOut, d);
+    float end = bg * visibility;
+    
+    float combined = f * (1 - consumed) + f * end * consumed;
 
     color = mix(in.baseColor, in.brightColor, min(hexGrid + icon + ring, 1.0));
 
-    return float4(color, f);
+    return float4(color, combined);
 }

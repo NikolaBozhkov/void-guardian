@@ -111,7 +111,7 @@ class GameScene: Scene {
         player.scene = self
         player.particleTrailHandler.scene = self
         
-//        rootNode.add(player)
+        rootNode.add(player)
         
         setToIdle()
     }
@@ -165,8 +165,8 @@ class GameScene: Scene {
         
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
-//        testPlayerPotionCollision()
-//        testPlayerPowerUpCollision()
+        testPlayerPotionCollision()
+        testPlayerPowerUpCollision()
         
         let didPlayerStageChange = player.prevStage != player.stage
         if didPlayerStageChange {
@@ -381,17 +381,16 @@ extension GameScene {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
-                skGameScene.didConsumePotion(potion)
+//                skGameScene.didConsumePotion(potion)
             }
         }
     }
     
     private func testPlayerPowerUpCollision() {
-        for powerUpNode in powerUpNodes {
+        for powerUpNode in powerUpNodes where !powerUpNode.isConsumed {
             let threshold = (player.physicsSize.x + powerUpNode.physicsSize.x) / 2
             if distance(powerUpNode.position, player.position) <= threshold {
                 powerUpNode.activate()
-                powerUpNodes.remove(powerUpNode)
             }
         }
     }

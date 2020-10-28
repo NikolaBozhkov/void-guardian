@@ -55,8 +55,9 @@ typedef struct
 {
     float4 position [[position]];
     float2 uv;
+    float2 size;
     float2 physicsSizeNorm;
-    float2 worldPos;
+    float2 worldPosNorm;
     float3 symbolColor;
     float3 glowColor;
     float timeSinceConsumed;
@@ -83,10 +84,12 @@ typedef struct {
 typedef struct {
     float4 position [[position]];
     float2 uv;
+    float2 size;
     float3 baseColor;
     float3 brightColor;
-    float2 worldXY;
+    float2 worldPosNorm;
     float timeAlive;
+    float timeSinceConsumed;
 } PowerUpNodeOut;
 
 typedef struct {

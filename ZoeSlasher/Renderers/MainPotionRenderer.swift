@@ -24,7 +24,7 @@ class MainPotionRenderer {
             let data = PotionData(worldTransform: potion.worldTransform,
                                   size: potion.size,
                                   physicsSizeNorm: potion.physicsSize / potion.size,
-                                  worldPos: renderer.normalizeWorldPosition(potion.worldPosition),
+                                  worldPosNorm: renderer.normalizeWorldPosition(potion.worldPosition),
                                   symbolColor: potion.type.symbolColor,
                                   glowColor: potion.type.glowColor,
                                   timeSinceConsumed: potion.timeSinceConsumed,

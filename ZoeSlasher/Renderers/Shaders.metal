@@ -411,7 +411,7 @@ fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
     p.x += maxW + (1.0 - progress) * 0.15;
     
     float movement = 1.0 - pow(1.0 - progress, 3.0);
-    float offset = mix(0.0, 1.5, movement);
+    float offset = mix(0.0, 2.5, movement);
     p.y = fract(p.y - offset) * 2.0 - 1.0;
     p.y = abs(p.y);
     
@@ -423,9 +423,8 @@ fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
     
     f *= fadeOut;
     
-    float3 baseColor = float3(0.898, 1.000, 0.000);
-    float3 brightColor = mix(baseColor, float3(1.0), 0.8);
-    float3 col = mix(brightColor, baseColor, 0.0);
+    const float3 brightColor = mix(color.xyz, float3(1.0), 0.8);
+    float3 col = mix(brightColor, color.xyz, smoothstep(-0.015, 0, db + maxW / 5.0));
     
-    return float4(color.xyz, f);
+    return float4(col, f);
 }

@@ -18,7 +18,7 @@ class MainPowerUpNodeRenderer {
         }
     }
     
-    func draw(powerUpNodes: Set<PowerUpNode>, with renderEncoder: MTLRenderCommandEncoder) {
+    func draw(powerUpNodes: Set<PowerUpNode>, renderer: MainRenderer) {
         var powerUpTypeToDataMap = [PowerUpType: [PowerUpNodeData]]()
         PowerUpType.allCases.forEach {
             powerUpTypeToDataMap[$0] = []
@@ -27,15 +27,17 @@ class MainPowerUpNodeRenderer {
         for powerUpNode in powerUpNodes {
             let data = PowerUpNodeData(worldTransform: powerUpNode.worldTransform,
                                        size: powerUpNode.size,
+                                       worldPosNorm: renderer.normalizeWorldPosition(powerUpNode.worldPosition),
                                        baseColor: powerUpNode.powerUp.type.baseColor,
                                        brightColor: powerUpNode.powerUp.type.brightColor,
-                                       timeAlive: powerUpNode.timeAlive)
+                                       timeAlive: powerUpNode.timeAlive,
+                                       timeSinceConsumed: powerUpNode.timeSinceConsumed)
             
             powerUpTypeToDataMap[powerUpNode.powerUp.type]?.append(data)
         }
         
         powerUpTypeToDataMap.forEach {
-            powerUpTypeToRendererMap[$0.key]?.draw(data: $0.value, with: renderEncoder)
+            powerUpTypeToRendererMap[$0.key]?.draw(data: $0.value, with: renderer.renderEncoder)
         }
     }
 }

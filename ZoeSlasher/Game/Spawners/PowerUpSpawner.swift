@@ -45,8 +45,8 @@ class PowerUpSpawner {
         powerUpNode.parent = scene.rootNode
         scene.powerUpNodes.insert(powerUpNode)
         
-        let spawnIndicator = UtilitySpawnIndicator(size: powerUpNode.physicsSize + [1, 1] * 240)
-        spawnIndicator.color.xyz = powerUp.type.brightColor
+        let spawnIndicator = UtilitySpawnIndicator(size: powerUpNode.physicsSize + [1, 1] * 220)
+        spawnIndicator.color.xyz = powerUp.type.baseColor
         spawnIndicator.position = powerUpNode.position
         scene.utilitySpawnIndicators.insert(spawnIndicator)
     }

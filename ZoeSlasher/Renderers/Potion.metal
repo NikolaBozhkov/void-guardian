@@ -24,8 +24,9 @@ vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(BufferIndexVert
     PotionData potion = potions[iid];
     out.position = uniforms.projectionMatrix * potion.worldTransform * float4(vertices[vid].xy * potion.size, 0.0, 1.0);
     out.uv = vertices[vid].zw;
+    out.size = potion.size;
     out.physicsSizeNorm = potion.physicsSizeNorm;
-    out.worldPos = potion.worldPos;
+    out.worldPosNorm = potion.worldPosNorm;
     out.symbolColor = potion.symbolColor;
     out.glowColor = potion.glowColor;
     out.timeSinceConsumed = potion.timeSinceConsumed;
@@ -72,8 +73,8 @@ fragment float4 fragmentPotion(PotionOut in [[stage_in]],
     
     float consumed = step(0, in.timeSinceConsumed);
     
-    float2 stWorldNorm = 0.5 * st * (float2(375) / uniforms.size);
-    stWorldNorm += in.worldPos;
+    float2 stWorldNorm = 0.5 * st * (in.size / uniforms.size);
+    stWorldNorm += in.worldPosNorm;
     
     float bg = fbmr.sample(s, stWorldNorm).x;
     bg = pow(1 - bg, 2.5);
