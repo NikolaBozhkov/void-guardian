@@ -40,11 +40,11 @@ class Potion: Node {
         timeSinceConsumed = 0
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
         if isConsumed {
-            timeSinceConsumed += Float(deltaTime)
+            timeSinceConsumed += deltaTime
         } else {
-            timeAlive += Float(deltaTime)
+            timeAlive += deltaTime
         }
     }
 }

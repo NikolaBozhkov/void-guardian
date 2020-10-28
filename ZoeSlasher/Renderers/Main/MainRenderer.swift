@@ -63,6 +63,7 @@ class MainRenderer: NSObject {
     let clearColorRenderer: Renderer
     let energySymbolRenderer: Renderer
     let spawnIndicatorRenderer: Renderer
+    let shockwaveIndicatorRenderer: Renderer
     
     let skRenderer: SKRenderer
     let overlaySkRenderer: SKRenderer
@@ -174,6 +175,7 @@ class MainRenderer: NSObject {
         energySymbolRenderer = Renderer(device: device, library: library, fragmentFunction: "energySymbolShader")
         
         spawnIndicatorRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentSpawnIndicator")
+        shockwaveIndicatorRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentShockwaveIndicator")
         
         super.init()
     }
@@ -189,7 +191,7 @@ class MainRenderer: NSObject {
         let deltaTime = prevTime == 0 ? 0 : currentTime - prevTime
         runningTime += deltaTime
         
-        scene.update(deltaTime: deltaTime)
+        scene.update(deltaTime: Float(deltaTime))
         
         uniforms[0].projectionMatrix = projectionMatrix
         
@@ -258,9 +260,9 @@ class MainRenderer: NSObject {
 // MARK: - SceneRenderer
 extension MainRenderer {
     
-    func renderBackground(_ node: Node, timeSinceStageCleared: TimeInterval) {
-        var timeSinceStageCleared = Float(timeSinceStageCleared)
-        var timeSinceGameOver = Float(scene.timeSinceGameOver)
+    func renderBackground(_ node: Node, timeSinceStageCleared: Float) {
+        var timeSinceStageCleared = timeSinceStageCleared
+        var timeSinceGameOver = scene.timeSinceGameOver
         var playerHealth = scene.player.health / scene.player.maxHealth
         renderEncoder.setFragmentBytes(&timeSinceStageCleared, length: MemoryLayout<Float>.size, index: 5)
         renderEncoder.setFragmentBytes(&timeSinceGameOver, length: MemoryLayout<Float>.size, index: 6)

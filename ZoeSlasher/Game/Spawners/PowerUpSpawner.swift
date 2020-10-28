@@ -12,19 +12,19 @@ class PowerUpSpawner {
     
     unowned var scene: GameScene!
     
-    private let powerUpIntervalRange: Range<TimeInterval> = 10..<15
+    private let powerUpIntervalRange: Range<Float> = 10..<15
     private let powerUpChanceRange: Range<Float> = 0.4..<0.6
     
-    private var powerUpInterval: TimeInterval = 0
+    private var powerUpInterval: Float = 0
     private var powerUpChance: Float = 0
-    private var timeSinceLastPowerUp: TimeInterval = 0
+    private var timeSinceLastPowerUp: Float = 0
     
     init() {
         powerUpInterval = .random(in: powerUpIntervalRange)
         powerUpChance = .random(in: powerUpChanceRange)
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
         timeSinceLastPowerUp += deltaTime
         
         if timeSinceLastPowerUp >= powerUpInterval {
@@ -38,7 +38,7 @@ class PowerUpSpawner {
         }
     }
     
-    func spawnPowerUp(_ powerUp: PowerUp? = nil, at position: vector_float2? = nil) {
+    func spawnPowerUp(_ powerUp: PowerUp? = nil, at position: simd_float2? = nil) {
         let powerUp = powerUp ?? getRandomPowerUp()
         let powerUpNode = PowerUpNode(powerUp: powerUp)
         powerUpNode.position = position ?? scene.randomPosition(padding: [300, 200])

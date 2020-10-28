@@ -30,4 +30,7 @@ float snoise(float2 p);
 float fbm(float3 q, int octaves);
 float fbmr(float3 q, int octaves);
 
+float sdBox(float2 p, float2 b);
+float sdRoundedBox(float2 p, float2 b, float r);
+
 #endif /* Common_h */

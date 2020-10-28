@@ -66,8 +66,8 @@ class ParticleTrailHandler {
         
         let particle = Particle(constantMovement: true)
         particle.scale = 0.9
-        particle.speed = Float.random(in: 80...160)
-        particle.lifetime = TimeInterval.random(in: 0.5...0.7)
+        particle.speed = .random(in: 80...160)
+        particle.duration = .random(in: 0.5...0.7)
         particle.position = particlePosition
         particle.color.xyz = vector_float3(0.2, 0.8, 0.069)
         particle.parent = scene

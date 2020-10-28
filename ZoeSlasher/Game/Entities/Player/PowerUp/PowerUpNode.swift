@@ -36,15 +36,21 @@ class PowerUpNode: Node {
         timeSinceConsumed = 0
         isConsumed = true
         
-        let particleCount = Int.random(in: 4...6)
-        for _ in 0..<particleCount {
+        var rotation = Float.random(in: -.pi...(.pi))
+        for _ in 0..<3 {
             let particle = Particle()
             particle.position = position
-            particle.scale = 0.62
-            particle.speedMod = 0.62
+            particle.rotation = rotation
+            particle.scale = 0.7
+            particle.speedMod = 1
+            particle.speed = .random(in: 270...350)
+            particle.rotationNoiseFactor = 0.4
+            particle.k = 3
             particle.color.xyz = powerUp.type.baseColor
             particle.parent = scene.rootNode
             scene.particles.insert(particle)
+            
+            rotation += .pi * 2.0 / 3 + .random(in: 0...0.8)
         }
     }
     
@@ -102,7 +108,7 @@ class PowerUpNode: Node {
         particle.speedMod = 1.0
         particle.k = 3.0
         particle.minImpulse = 0.17
-        particle.lifetime = .random(in: 2.8...3.5)
+        particle.duration = .random(in: 2.8...3.5)
         particle.rotationNoiseFactor = 0.5
         particle.position = position
         particle.color.xyz = powerUp.type.baseColor

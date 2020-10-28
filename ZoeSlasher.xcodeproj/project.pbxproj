@@ -70,6 +70,9 @@
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
+		24D15E8E2549BEE1004DA636 /* Indicators.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E8D2549BEE1004DA636 /* Indicators.metal */; };
+		24D15E912549BF90004DA636 /* ShockwaveIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */; };
+		24D15E942549BFF3004DA636 /* ProgressNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D15E932549BFF3004DA636 /* ProgressNode.swift */; };
 		24D7FF55241A700E007743C6 /* CGSize+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */; };
 		24D7FF57241B8191007743C6 /* EnergyGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */; };
 		24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */; };
@@ -169,6 +172,9 @@
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
+		24D15E8D2549BEE1004DA636 /* Indicators.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Indicators.metal; sourceTree = "<group>"; };
+		24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShockwaveIndicator.swift; sourceTree = "<group>"; };
+		24D15E932549BFF3004DA636 /* ProgressNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressNode.swift; sourceTree = "<group>"; };
 		24D7FF54241A700E007743C6 /* CGSize+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extensions.swift"; sourceTree = "<group>"; };
 		24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyGainLabel.swift; sourceTree = "<group>"; };
 		24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavorGainLabel.swift; sourceTree = "<group>"; };
@@ -320,6 +326,7 @@
 				2414AB3F2515C0DA00B3299C /* Base */,
 				247D706223F531AB00480199 /* Main */,
 				24D9E86223C1C8B500CB6638 /* Shaders.metal */,
+				24D15E8D2549BEE1004DA636 /* Indicators.metal */,
 				247D704323E1D2CD00480199 /* Player.metal */,
 				24D9E87423C1D3AE00CB6638 /* BufferFormats.swift */,
 				247D704623E1D4BC00480199 /* SpriteRendererShared.h */,
@@ -473,6 +480,8 @@
 				249811332418270F00900AE9 /* Potion */,
 				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
 				24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */,
+				24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */,
+				24D15E932549BFF3004DA636 /* ProgressNode.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -596,6 +605,7 @@
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				2465E7772435E2490019CE02 /* InstanceRenderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
+				24D15E942549BFF3004DA636 /* ProgressNode.swift in Sources */,
 				247F6AEF25447BAD0021D562 /* ArcTrailRenderer.swift in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
@@ -628,6 +638,7 @@
 				24D9E86123C1C8B500CB6638 /* GameViewController.swift in Sources */,
 				2414AB1D2511E14F00B3299C /* PowerUp.swift in Sources */,
 				24D7FF5F24225970007743C6 /* Colors.swift in Sources */,
+				24D15E912549BF90004DA636 /* ShockwaveIndicator.swift in Sources */,
 				2468E3A5245E99F2004042AD /* OverlayScene.swift in Sources */,
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
@@ -635,6 +646,7 @@
 				24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */,
 				243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */,
 				2468E3AB245FDC02004042AD /* Title.swift in Sources */,
+				24D15E8E2549BEE1004DA636 /* Indicators.metal in Sources */,
 				2414AB442515C66700B3299C /* ParticleRenderer.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
 				2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */,

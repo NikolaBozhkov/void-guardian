@@ -55,10 +55,10 @@ class MainSpawner {
 //        }
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
 //        enemySpawner.update(deltaTime: deltaTime)
         let deltaTime = deltaTime * 20.0
-        potionSpawner.update(deltaTime: deltaTime)
+//        potionSpawner.update(deltaTime: deltaTime)
         powerUpSpawner.update(deltaTime: deltaTime)
     }
 }

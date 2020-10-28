@@ -12,15 +12,15 @@ class EnemySpawner {
     
     unowned var scene: GameScene!
     
-    private let spawnInterval: TimeInterval = 0.1
+    private let spawnInterval: Float = 0.1
     
     // How much allowance there is for the current spawn stage (index) and when can it be activated
-    private var spawnStagesConfig: [(allowance: Float, threshold: TimeInterval)] = []
+    private var spawnStagesConfig: [(allowance: Float, threshold: Float)] = []
     private var spawnStage: Int = 0
     
     // The period of time available for spawning
-    private var spawnPeriod: TimeInterval = 0
-    private var currentPeriodTime: TimeInterval = 0
+    private var spawnPeriod: Float = 0
+    private var currentPeriodTime: Float = 0
     
     // Total budget for the whole stage
     private var budget: Float = 0
@@ -31,7 +31,7 @@ class EnemySpawner {
     
     private var stage: Int = 0
     
-    private var timeSinceLastSpawn: TimeInterval = .infinity
+    private var timeSinceLastSpawn: Float = .infinity
     private var spawnedCount = 0
     
     var availableBudget: Float {
@@ -43,11 +43,11 @@ class EnemySpawner {
         for i in 1...Int(segments) {
             let allowance = (1 / segments) * Float(i)
             let threshold = (1 / segments) * Float(i - 1)
-            spawnStagesConfig.append((allowance, Double(threshold)))
+            spawnStagesConfig.append((allowance, threshold))
         }
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
             currentPeriodTime += deltaTime
             timeSinceLastSpawn += deltaTime
             
@@ -73,7 +73,7 @@ class EnemySpawner {
             }
         }
         
-        func setState(stage: Int, budget: Float, spawnPeriod: TimeInterval) {
+        func setState(stage: Int, budget: Float, spawnPeriod: Float) {
             self.stage = stage
             self.budget = budget
             self.spawnPeriod = spawnPeriod
@@ -85,7 +85,7 @@ class EnemySpawner {
             timeSinceLastSpawn = .infinity
         }
 
-        func spawnEnemy(for config: Ability.Configuration, withPosition position: vector_float2? = nil) {
+        func spawnEnemy(for config: Ability.Configuration, withPosition position: simd_float2? = nil) {
             let enemy = Enemy(position: position ?? scene.randomPosition(padding: [150, 150]),
                               ability: config.createAbility(for: scene))
             enemy.delegate = scene

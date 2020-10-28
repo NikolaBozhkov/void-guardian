@@ -15,27 +15,27 @@ class EnemyAttack: Node {
     
     var speed: Float = 7000
     var aspectRatio: Float = 0
-    var tipPoint: vector_float2 = .zero
+    var tipPoint: simd_float2 = .zero
     var progress: Float = 0.5
     var cutOff: Float = 0
     
     var didReachTarget = false
     
-    var fadeOutTimePassed: TimeInterval = 0
+    var fadeOutTimePassed: Float = 0
     var shouldRemove = false
     var active = true
     
     private let shotSize: Float = 12
-    private let fadeOutDuration: TimeInterval = 1
+    private let fadeOutDuration: Float = 1
     
-    private let delta: vector_float2
-    private let direction: vector_float2
+    private let delta: simd_float2
+    private let direction: simd_float2
     
     var radius: Float {
         shotSize / 2
     }
     
-    init(enemy: Enemy, targetPosition: vector_float2, corruption: Float) {
+    init(enemy: Enemy, targetPosition: simd_float2, corruption: Float) {
         self.enemy = enemy
         self.corruption = corruption
         
@@ -61,8 +61,8 @@ class EnemyAttack: Node {
         position = enemy.position + delta / 2
     }
     
-    func update(deltaTime: TimeInterval) {
-        progress += Float(deltaTime) * speed / size.y
+    func update(deltaTime: Float) {
+        progress += deltaTime * speed / size.y
         
         guard !didReachTarget else {
             fadeOutTimePassed += deltaTime
@@ -73,7 +73,7 @@ class EnemyAttack: Node {
             return
         }
         
-        tipPoint += direction * speed * Float(deltaTime)
+        tipPoint += direction * speed * deltaTime
         
         didReachTarget = distance(tipPoint, enemy.positionBeforeImpact) >= size.x
     }

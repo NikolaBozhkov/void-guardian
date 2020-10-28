@@ -135,7 +135,7 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
     bg = pow(1 - bg, 4.5) * 3.0;
     
     const float k = 4;
-    float fadeOut = expImpulse(in.timeSinceConsumed + 1 / k, k);
+    float fadeOut = expImpulse(in.timeSinceConsumed + 1 / k, k) * 1.5;
     float visibility = 1 - smoothstep(-1 + fadeOut, fadeOut, d);
     float end = bg * visibility;
     

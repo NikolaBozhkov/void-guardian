@@ -15,7 +15,7 @@ class Enemy: Node {
     
     static let baseHealth: Float = 20
     
-    private static let recentlyHitInterval: TimeInterval = 0.5
+    private static let recentlyHitInterval: Float = 0.5
 
     private var _isImmune = false
     var isImmune: Bool {
@@ -45,15 +45,15 @@ class Enemy: Node {
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
-    private let triggerInterval: TimeInterval
+    private let triggerInterval: Float
     private let symbolsAngleVelocityGain: Float
     private let symbolsAngleRecoilImpulse: Float
     
-    private var timeSinceLastSymbolFlash: TimeInterval
-    private var timeSinceLastTrigger: TimeInterval = 0
-    var timeSinceLastHit: TimeInterval = Enemy.recentlyHitInterval
-    private var timeSinceLastImpactLock: TimeInterval = 1000
-    private var impactLockDuration: TimeInterval = 0
+    private var timeSinceLastSymbolFlash: Float
+    private var timeSinceLastTrigger: Float = 0
+    var timeSinceLastHit: Float = Enemy.recentlyHitInterval
+    private var timeSinceLastImpactLock: Float = 1000
+    private var impactLockDuration: Float = 0
     var timeAlive: Float = 0
     
     var positionDelta = vector_float2.zero
@@ -145,7 +145,7 @@ class Enemy: Node {
         }
     }
     
-    func impactLock(with impact: vector_float2, duration: TimeInterval) {
+    func impactLock(with impact: vector_float2, duration: Float) {
         if !isImpactLocked {
             positionBeforeImpact = position
             isImpactLocked = true
@@ -158,8 +158,8 @@ class Enemy: Node {
         impactLockDuration = max(impactLockDuration - timeSinceLastImpactLock, duration)
     }
     
-    func update(deltaTime: TimeInterval) {
-        timeAlive += Float(deltaTime)
+    func update(deltaTime: Float) {
+        timeAlive += deltaTime
         
         timeSinceLastTrigger += deltaTime
         timeSinceLastSymbolFlash += deltaTime

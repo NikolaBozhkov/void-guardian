@@ -8,7 +8,7 @@
 
 private enum Constants {
     static let baseBudget: Float = 10
-    static let baseStageDuration: TimeInterval = 60
+    static let baseStageDuration: Float = 60
 }
 
 protocol StageManagerDelegate {
@@ -29,11 +29,11 @@ class StageManager {
     }
     
     private var budget: Float = Constants.baseBudget
-    private var stageDuration: TimeInterval = Constants.baseStageDuration
-    private var spawnPeriod: TimeInterval = 0
-    private var stageTime: TimeInterval = Constants.baseStageDuration
+    private var stageDuration: Float = Constants.baseStageDuration
+    private var spawnPeriod: Float = 0
+    private var stageTime: Float = Constants.baseStageDuration
     
-    private(set) var timeSinceStageCleared: TimeInterval = 1000
+    private(set) var timeSinceStageCleared: Float = 1000
     
     private(set) var stage = 0
     
@@ -47,7 +47,7 @@ class StageManager {
         return 1
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
         timeSinceStageCleared += deltaTime
         
         guard isActive else { return }

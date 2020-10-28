@@ -12,14 +12,14 @@ class PotionSpawner {
     
     unowned var scene: GameScene!
     
-    private let energyPotionInterval: TimeInterval = 55
-    private let healthPotionInterval: TimeInterval = 40
+    private let energyPotionInterval: Float = 55
+    private let healthPotionInterval: Float = 40
     
-    private var timeSinceLastEnergyPotion: TimeInterval = 0
-    private var timeSinceLastHealthPotion: TimeInterval = 0
+    private var timeSinceLastEnergyPotion: Float = 0
+    private var timeSinceLastHealthPotion: Float = 0
     
-    func update(deltaTime: TimeInterval) {
-        let potionDeltaTime = deltaTime * (1 + pow(0.0173 * Double(scene.favor), 3))
+    func update(deltaTime: Float) {
+        let potionDeltaTime = deltaTime * (1 + pow(0.0173 * scene.favor, 3))
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
@@ -39,7 +39,7 @@ class PotionSpawner {
         scene.utilitySpawnIndicators.insert(spawnIndicator)
     }
     
-    private func trySpawnPotion(type: PotionType, amount: Float, timer: inout TimeInterval, interval: TimeInterval) {
+    private func trySpawnPotion(type: PotionType, amount: Float, timer: inout Float, interval: Float) {
         if timer >= interval {
             spawnPotion(type: type, amount: amount)
             

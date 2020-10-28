@@ -127,12 +127,10 @@ class Player: Node {
         visualData.timeSinceLastHit = 0
     }
     
-    func update(deltaTime: CFTimeInterval) {
+    func update(deltaTime: Float) {
         guard parent != nil else { return }
         
         prevPosition = position
-        
-        let deltaTime = Float(deltaTime)
         
         visualData.timeSinceLastHit += deltaTime
         visualData.timeSinceLastEnergyUse += deltaTime

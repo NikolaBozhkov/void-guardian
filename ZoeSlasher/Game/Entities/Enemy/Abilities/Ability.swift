@@ -17,7 +17,7 @@ class Ability {
     let colorScale: Float
     let impulseSharpness: Float
     
-    let interval: TimeInterval
+    let interval: Float
     let healthModifier: Float
     let damage: Float
     
@@ -57,14 +57,14 @@ extension Ability {
         var symbolVelocityGain: Float = 0
         var symbolVelocityRecoil: Float = -.pi
         
-        var color: vector_float3 = .zero
+        var color: simd_float3 = .zero
         var colorScale: Float = 0
         var impulseSharpness: Float = 0
         
-        var interval: TimeInterval = 0 {
+        var interval: Float = 0 {
             didSet {
-                symbolVelocityGain = Float(12 / interval)
-                impulseSharpness = Float(12 / interval)
+                symbolVelocityGain = 12 / interval
+                impulseSharpness = 12 / interval
             }
         }
         

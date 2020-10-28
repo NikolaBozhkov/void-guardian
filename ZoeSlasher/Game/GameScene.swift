@@ -66,7 +66,7 @@ class GameScene: Scene {
     var isPaused = false
     
     var isGameOver = false
-    var timeSinceGameOver: TimeInterval = 0
+    var timeSinceGameOver: Float = 0
     
     var isStageCleared = false
     
@@ -126,7 +126,7 @@ class GameScene: Scene {
         skGameScene.addGameLabels()
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: Float) {
         if isGameOver {
             timeSinceGameOver += deltaTime
         }
@@ -136,8 +136,8 @@ class GameScene: Scene {
         rootNode.position = vector_float2(skGameScene.shakeNode.position)
         
         if stageManager.isActive {
-            favor -= Float(deltaTime) * (favor / 15)
-            playerManager.activePowerUps.forEach { $0.update(deltaTime: Float(deltaTime)) }
+            favor -= deltaTime * (favor / 15)
+            playerManager.activePowerUps.forEach { $0.update(deltaTime: deltaTime) }
         }
         
         prevPlayerPosition = player.position
@@ -152,15 +152,18 @@ class GameScene: Scene {
             attack.update(deltaTime: deltaTime)
         }
         
-        potions.forEach { potion in
-            potion.update(deltaTime: deltaTime)
-            if potion.timeSinceConsumed >= 2 {
-                potions.remove(potion)
+        potions.forEach {
+            $0.update(deltaTime: deltaTime)
+            if $0.timeSinceConsumed >= 2 {
+                potions.remove($0)
             }
         }
         
         powerUpNodes.forEach {
             $0.update(forScene: self, deltaTime: Float(deltaTime))
+            if $0.timeSinceConsumed >= 2 {
+                powerUpNodes.remove($0)
+            }
         }
         
         testPlayerEnemyCollision()
@@ -381,7 +384,7 @@ extension GameScene {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
-//                skGameScene.didConsumePotion(potion)
+                skGameScene.didConsumePotion(potion)
             }
         }
     }

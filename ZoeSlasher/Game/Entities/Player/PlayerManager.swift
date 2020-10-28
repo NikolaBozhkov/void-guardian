@@ -25,10 +25,10 @@ class PlayerManager {
     }
     
     private let player: Player
-    let instantKillPowerUp = InstantKillPowerUp(duration: 4, type: .instantKill)
-    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 7, type: .doubleDamage)
-    let shieldPowerUp = ShieldPowerUp(duration: 7, type: .shield)
-    let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 10, type: .doublePotionRestore)
+    let instantKillPowerUp = InstantKillPowerUp(duration: 3.5, type: .instantKill)
+    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 5.5, type: .doubleDamage)
+    let shieldPowerUp = ShieldPowerUp(duration: 6, type: .shield)
+    let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 8, type: .doublePotionRestore)
     
     var activePowerUps: [PowerUp] {
         [instantKillPowerUp, doubleDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp].filter { $0.isActive }
