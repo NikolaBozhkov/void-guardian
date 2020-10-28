@@ -31,10 +31,21 @@ class PowerUpNode: Node {
         size = physicsSize / (1.0 - POWERUP_IMPULSE_SCALE - POWERUP_RING_GLOW_R)
     }
     
-    func activate() {
+    func activate(forScene scene: GameScene) {
         powerUp.activate()
         timeSinceConsumed = 0
         isConsumed = true
+        
+        let particleCount = Int.random(in: 4...6)
+        for _ in 0..<particleCount {
+            let particle = Particle()
+            particle.position = position
+            particle.scale = 0.62
+            particle.speedMod = 0.62
+            particle.color.xyz = powerUp.type.baseColor
+            particle.parent = scene.rootNode
+            scene.particles.insert(particle)
+        }
     }
     
     func update(forScene scene: GameScene, deltaTime: Float) {

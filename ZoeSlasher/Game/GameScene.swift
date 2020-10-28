@@ -390,7 +390,7 @@ extension GameScene {
         for powerUpNode in powerUpNodes where !powerUpNode.isConsumed {
             let threshold = (player.physicsSize.x + powerUpNode.physicsSize.x) / 2
             if distance(powerUpNode.position, player.position) <= threshold {
-                powerUpNode.activate()
+                powerUpNode.activate(forScene: self)
             }
         }
     }
