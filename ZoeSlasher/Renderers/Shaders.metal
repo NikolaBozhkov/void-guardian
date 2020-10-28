@@ -408,13 +408,14 @@ fragment float4 fragmentSpawnIndicator(VertexOut in [[stage_in]],
     float progress = fract(uniforms.time / 1.0);
     float fadeOut = 1.0 - smoothstep(0.2, 1.0, progress);
     
-    p.x += 0.4 - 0.1 * progress;
+    p.x += 0.3;
     
     float offset = mix(0.0, 1.5, 1.0 - pow(1.0 - progress, 3.0));
     p.y = fract(p.y - offset) - 0.5;
     
     float f = 0.0;
-    float db = sdRoundedBox(p, float2(0.012, 0.2), 0.012);
+    float w = 0.012 * (1.0 - abs(p.y) * 7.0);
+    float db = sdBox(p, float2(w, 0.2));
     f += 1.0 - smoothstep(0.0, 0.02, db);
     
     f *= fadeOut;
