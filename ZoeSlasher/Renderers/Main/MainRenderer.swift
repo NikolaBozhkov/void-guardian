@@ -54,7 +54,6 @@ class MainRenderer: NSObject {
     let trailRenderer: TrailRenderer
     let mainPotionRenderer: MainPotionRenderer
     let mainPowerUpNodeRenderer: MainPowerUpNodeRenderer
-    let powerUpOrbRenderer: PowerUpOrbRenderer
     let arcTrailRenderer: ArcTrailRenderer
     
     let backgroundRenderer: Renderer
@@ -63,6 +62,7 @@ class MainRenderer: NSObject {
     let anchorRenderer: Renderer
     let clearColorRenderer: Renderer
     let energySymbolRenderer: Renderer
+    let spawnIndicatorRenderer: Renderer
     
     let skRenderer: SKRenderer
     let overlaySkRenderer: SKRenderer
@@ -159,7 +159,6 @@ class MainRenderer: NSObject {
         trailRenderer = TrailRenderer(device: device, library: library)
         mainPotionRenderer = MainPotionRenderer(device: device, library: library)
         mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
-        powerUpOrbRenderer = PowerUpOrbRenderer(device: device, library: library)
         
         arcTrailRenderer = ArcTrailRenderer(device: device, library: library, fragmentFunction: "fragmentArcTrail",
                                             radius: 270, angularLength: .pi / 3.3, width: 45, segments: 10)
@@ -173,6 +172,8 @@ class MainRenderer: NSObject {
         clearColorRenderer.currentPipelineState = clearColorRenderer.overlayPipelineState
         
         energySymbolRenderer = Renderer(device: device, library: library, fragmentFunction: "energySymbolShader")
+        
+        spawnIndicatorRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentSpawnIndicator")
         
         super.init()
     }
@@ -452,7 +453,12 @@ extension MainRenderer: MTKViewDelegate {
         particleRenderer.draw(particles: scene.particles, with: renderEncoder)
         enemyAttackRenderer.draw(attacks: scene.attacks, with: renderEncoder)
         enemyRenderer.draw(enemies: scene.enemies, renderer: self)
+        
         mainPotionRenderer.draw(potions: scene.potions, renderer: self)
+        
+        let spawnIndicator = Node(size: simd_float2(repeating: 600))
+        spawnIndicatorRenderer.draw(spawnIndicator, with: renderEncoder)
+        
         mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, with: renderEncoder)
         mainTextureRenderer.draw(with: renderEncoder)
         

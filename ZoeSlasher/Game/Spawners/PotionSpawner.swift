@@ -27,9 +27,9 @@ class PotionSpawner {
         trySpawnPotion(type: .health, amount: 10, timer: &timeSinceLastHealthPotion, interval: healthPotionInterval)
     }
     
-    func spawnPotion(type: PotionType, amount: Float = 0) {
+    func spawnPotion(type: PotionType, amount: Float = 0, position: simd_float2? = nil) {
         let potion = Potion(type: type, amount: amount)
-        potion.position = scene.randomPosition(padding: [300, 200])
+        potion.position = position ?? scene.randomPosition(padding: [300, 200])
         potion.parent = scene.rootNode
         scene.potions.insert(potion)
     }

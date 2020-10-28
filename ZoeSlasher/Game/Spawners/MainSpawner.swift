@@ -17,6 +17,8 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
+        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
+        
 //        for _ in 0..<5 {
 //            powerUpSpawner.spawnPowerUp()
 //        }
@@ -53,8 +55,8 @@ class MainSpawner {
     }
     
     func update(deltaTime: TimeInterval) {
-        enemySpawner.update(deltaTime: deltaTime)
-        potionSpawner.update(deltaTime: deltaTime)
-        powerUpSpawner.update(deltaTime: deltaTime)
+//        enemySpawner.update(deltaTime: deltaTime)
+//        potionSpawner.update(deltaTime: deltaTime)
+//        powerUpSpawner.update(deltaTime: deltaTime)
     }
 }

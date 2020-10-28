@@ -110,7 +110,7 @@ class GameScene: Scene {
         player.scene = self
         player.particleTrailHandler.scene = self
         
-        rootNode.add(player)
+//        rootNode.add(player)
         
         setToIdle()
     }
@@ -164,8 +164,8 @@ class GameScene: Scene {
         
         testPlayerEnemyCollision()
         testPlayerEnemyAttackCollision()
-        testPlayerPotionCollision()
-        testPlayerPowerUpCollision()
+//        testPlayerPotionCollision()
+//        testPlayerPowerUpCollision()
         
         let didPlayerStageChange = player.prevStage != player.stage
         if didPlayerStageChange {

@@ -125,28 +125,3 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
 
     return float4(color, f);
 }
-
-vertex PowerUpNodeOut vertexPowerUpOrb(constant float4 *vertices [[buffer(BufferIndexVertices)]],
-                                       constant PowerUpNodeData *data [[buffer(BufferIndexData)]],
-                                       constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                                       uint vid [[vertex_id]],
-                                       uint iid [[instance_id]])
-{
-    PowerUpNodeOut out;
-    
-    PowerUpNodeData powerUpNode = data[iid];
-    out.position = uniforms.projectionMatrix * powerUpNode.worldTransform * float4(vertices[vid].xy * powerUpNode.size, 0.0, 1.0);
-    out.uv = vertices[vid].zw;
-    out.baseColor = powerUpNode.baseColor;
-    out.brightColor = powerUpNode.brightColor;
-    
-    return out;
-}
-
-fragment float4 fragmentPowerUpOrb(PowerUpNodeOut in [[stage_in]])
-{
-    float2 st = in.uv * 2.0 - 1.0;
-    float f = 1.0 - smoothstep(0.95, 1.0, length(st));
-    
-    return float4(in.baseColor, f);
-}
