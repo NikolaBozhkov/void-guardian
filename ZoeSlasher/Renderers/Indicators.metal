@@ -64,13 +64,16 @@ fragment float4 fragmentShockwaveIndicator(VertexOut in [[stage_in]],
     n *= noiseRange;
     
     float wave = 0.0;
-    float edge = min(0.5 + 0.5 * (1.0 - pow(1.0 - progress, 5.0)), 1.0);
+    float edge = min(0.5 + 0.5 * (1.0 - pow(1.0 - progress, 5.0)), 10.0);
     wave = 1.0 - smoothstep(0.0, edge - noiseRange + n, d);
     
     float innerClear = progress * 0.4;
-    float edgeClear = max(progress + n * 0.1, innerClear);
-    wave -= 1.0 - smoothstep(innerClear, edgeClear, d);
-    wave += 2.0 * (1.0 - smoothstep(0.0, 0.5, d)) * max(1.0 - progress * 2.0, 0.0);
+    float edgeClear = max(progress + n * 0.15, innerClear);
+    float waveClear = 1.0 - smoothstep(innerClear, edgeClear, d);
+    wave -= waveClear;
+    
+    wave += (1.0 - smoothstep(-0.3, 0.5 + progress * 0.5, d));
+    wave -= 1.0 - smoothstep(innerClear - 0.3, edgeClear, d);
     
     float3 brightColor = mix(color.xyz, float3(1.0), 0.8);
     float3 col = mix(brightColor, color.xyz, (1.0 - pow(1.0 - d, 1.5)));

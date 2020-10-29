@@ -17,8 +17,11 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
-//        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1200)
+//        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
 //        scene.indicators.insert(shockwaveIndicator)
+        
+//        let spawnIndicator = UtilitySpawnIndicator(size: [1, 1] * 500)
+//        scene.indicators.insert(spawnIndicator)
         
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
 //        powerUpSpawner.spawnPowerUp(.init(duration: 0, type: .doubleDamage), at: [600, 0])
@@ -62,6 +65,6 @@ class MainSpawner {
 //        enemySpawner.update(deltaTime: deltaTime)
         let deltaTime = deltaTime * 20.0
 //        potionSpawner.update(deltaTime: deltaTime)
-        powerUpSpawner.update(deltaTime: deltaTime)
+//        powerUpSpawner.update(deltaTime: deltaTime)
     }
 }
