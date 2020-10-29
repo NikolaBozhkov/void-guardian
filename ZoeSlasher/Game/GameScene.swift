@@ -395,8 +395,9 @@ extension GameScene {
             if distance(powerUpNode.position, player.position) <= threshold {
                 powerUpNode.activate(forScene: self)
                 
-                let indicator = ShockwaveIndicator(size: player.physicsSize + [1, 1] * 400)
+                let indicator = ShockwaveIndicator(size: player.physicsSize + [1, 1] * 1100)
                 indicator.parent = player
+                indicator.color.xyz = powerUpNode.powerUp.type.baseColor
                 indicators.insert(indicator)
             }
         }

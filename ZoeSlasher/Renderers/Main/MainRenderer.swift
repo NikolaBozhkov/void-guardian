@@ -459,8 +459,7 @@ extension MainRenderer: MTKViewDelegate {
         mainPotionRenderer.draw(potions: scene.potions, renderer: self)
         
         scene.indicators.forEach {
-            var progress = $0.progress
-            renderEncoder.setFragmentBytes(&progress, length: MemoryLayout<Float>.size, index: 0)
+            renderEncoder.setFragmentBytes(&$0.progress, length: MemoryLayout<Float>.size, index: 0)
             
             if $0 is UtilitySpawnIndicator {
                 spawnIndicatorRenderer.draw($0, with: renderEncoder)

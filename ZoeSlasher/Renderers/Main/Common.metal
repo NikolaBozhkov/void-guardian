@@ -80,3 +80,10 @@ float sdRoundedBox(float2 p, float2 b, float r)
     float2 q = abs(p)-b+r;
     return min(max(q.x,q.y),0.0) + length(max(q,0.0)) - r;
 }
+
+/// Domain is [0; 1]
+float noise(float x) {
+    float i = floor(x);
+    float f = fract(x);
+    return mix(hash11(i), hash11(i + 1.0), smoothstep(0.0, 1.0, f));
+}

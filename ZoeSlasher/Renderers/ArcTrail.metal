@@ -31,12 +31,6 @@ vertex PowerUpTrailOut vertexArcTrail(constant Vertex *vertices [[buffer(BufferI
     return out;
 }
 
-float noise(float x) {
-    float i = floor(x);
-    float f = fract(x);
-    return mix(hash11(i), hash11(i + 1.0), smoothstep(0.0, 1.0, f));
-}
-
 fragment float4 fragmentArcTrail(PowerUpTrailOut in [[stage_in]],
                                  constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
                                  constant float &aspectRatio [[buffer(0)]],

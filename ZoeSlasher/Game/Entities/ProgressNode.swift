@@ -11,9 +11,8 @@ import Foundation
 class ProgressNode: Node {
     
     var duration: Float
-    
-    private(set) var progress: Float = 0.0
-    private(set) var shouldRemove = false
+    var progress: Float = 0.0
+    var shouldRemove = false
     
     init(size: simd_float2 = .zero, duration: Float = 0) {
         self.duration = duration

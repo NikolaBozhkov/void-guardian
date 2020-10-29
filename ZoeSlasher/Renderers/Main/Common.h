@@ -27,10 +27,12 @@ float2x2 rotate2d(float angle);
 float entity(float2 st, float radius, float2 stWorldNorm, Uniforms uniforms, float clockwise, texture2d<float> fbmr, float2 positionDelta);
 float snoise(float3 v);
 float snoise(float2 p);
+float noise(float2 p);
 float fbm(float3 q, int octaves);
 float fbmr(float3 q, int octaves);
 
 float sdBox(float2 p, float2 b);
 float sdRoundedBox(float2 p, float2 b, float r);
+float noise(float x);
 
 #endif /* Common_h */

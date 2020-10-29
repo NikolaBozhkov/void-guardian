@@ -17,6 +17,9 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
+//        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1200)
+//        scene.indicators.insert(shockwaveIndicator)
+        
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
 //        powerUpSpawner.spawnPowerUp(.init(duration: 0, type: .doubleDamage), at: [600, 0])
         

@@ -89,6 +89,20 @@ float snoise(float3 v){
                                    dot(p2,x2), dot(p3,x3) ) );
 }
 
+// Value Noise by Inigo Quilez - iq/2013
+// https://www.shadertoy.com/view/lsf3WH
+float noise(float2 p) {
+    float2 i = floor(p);
+    float2 f = fract(p);
+
+    float2 u = f*f*(3.0-2.0*f);
+
+    return mix( mix( dot( hash22(i + float2(0.0,0.0) ), f - float2(0.0,0.0) ),
+                     dot( hash22(i + float2(1.0,0.0) ), f - float2(1.0,0.0) ), u.x),
+                mix( dot( hash22(i + float2(0.0,1.0) ), f - float2(0.0,1.0) ),
+                     dot( hash22(i + float2(1.0,1.0) ), f - float2(1.0,1.0) ), u.x), u.y);
+}
+
 float snoise(float2 p)
 {
     const float K1 = 0.366025404; // (sqrt(3)-1)/2;
