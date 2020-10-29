@@ -64,7 +64,7 @@ fragment float4 fragmentShockwaveIndicator(VertexOut in [[stage_in]],
     n *= noiseRange;
     
     float wave = 0.0;
-    float edge = min(0.5 + 0.5 * (1.0 - pow(1.0 - progress, 5.0)), 10.0);
+    float edge = 0.5 + 0.5 * (1.0 - pow(1.0 - progress, 5.0));
     wave = 1.0 - smoothstep(0.0, edge - noiseRange + n, d);
     
     float innerClear = progress * 0.4;

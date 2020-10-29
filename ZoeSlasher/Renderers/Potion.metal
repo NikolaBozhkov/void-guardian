@@ -37,6 +37,7 @@ vertex PotionOut vertexPotion(constant float4 *vertices [[buffer(BufferIndexVert
 
 fragment float4 fragmentPotion(PotionOut in [[stage_in]],
                                constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                               constant float &isPotionRestoreActive [[buffer(0)]],
                                texture2d<float> symbol [[texture(TextureIndexSprite)]],
                                texture2d<float> fbmr [[texture(1)]])
 {
@@ -61,9 +62,18 @@ fragment float4 fragmentPotion(PotionOut in [[stage_in]],
     float outerGlow = 1.0 - smoothstep(totalW, 1.0 - 3.5 * (breath), r);
     float innerGlow = 1.0 - smoothstep(totalW * 0.7, totalW * 1.2, r);
     
+    const float kGlow = 2.0;
+    const float kGlow1 = 4.0;
+    float glowDur = 3.0, glowSpeed = 3.5;
+    float progress = fract(in.timeAlive * glowSpeed / glowDur) * glowDur;
+    float progress1 = fract((in.timeAlive * glowSpeed + 0.8) / glowDur) * glowDur;
+    float extraGlow = max(expImpulse(progress + 1 / kGlow, kGlow), expImpulse(progress1 + 1 / kGlow1, kGlow1));
+    
+    innerGlow *= 1.0 + 2.5 * extraGlow * isPotionRestoreActive;
+    
     outerGlow -= innerGlow;
     
-    float f = 0.25 * outerGlow + innerGlow * (0.5 + breath * 3);
+    float f = 0.25 * outerGlow + innerGlow * (0.5 + breath * 3 * (1.0 - isPotionRestoreActive));
     f += tex;
     
     float ringStart = textureSize.x + margin;
@@ -71,6 +81,7 @@ fragment float4 fragmentPotion(PotionOut in [[stage_in]],
     - smoothstep(ringStart + circleW - 0.05, ringStart + circleW, r);
     f += ring;
     
+    // Consume effect
     float consumed = step(0, in.timeSinceConsumed);
     
     float2 stWorldNorm = 0.5 * st * (in.size / uniforms.size);

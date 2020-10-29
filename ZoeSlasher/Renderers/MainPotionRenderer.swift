@@ -37,6 +37,9 @@ class MainPotionRenderer {
             }
         }
         
+        var isPotionRestoreActive: Float = renderer.scene.playerManager.doublePotionRestorePowerUp.isActive ? 1 : 0
+        renderer.renderEncoder.setFragmentBytes(&isPotionRestoreActive, length: MemoryLayout<Float>.size, index: 0)
+        
         potionTypeToRendererMap[.energy]!.draw(data: energyPotionsData, with: renderer.renderEncoder)
         potionTypeToRendererMap[.health]!.draw(data: healthPotionsData, with: renderer.renderEncoder)
     }
