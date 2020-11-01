@@ -174,7 +174,7 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     
     float h = 1 - (in.dmgReceived + 0.08);
     float dmgCurve = 1 - h*h*h;
-    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1 * dmgCurve;
+    enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1.0 * dmgCurve;
     
     // Spawning
     float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;
@@ -196,12 +196,7 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
         enemy *= destroy;
     }
     
-    //    enemy = visible;
-    
     f = min(f, 1.0);
-    
-    v = min(v, 1.0);
-    
     
     float3 healthColor = mix(in.baseColor, float3(1, 1, 1), damagedPart * 0.5);
     return float4(mix(in.color.xyz, healthColor, f), enemy);

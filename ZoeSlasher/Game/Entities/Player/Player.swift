@@ -68,7 +68,7 @@ class Player: Node {
         if stage == .charging || prevStage == .charging {
             return chargingDamage
         } else if stage == .piercing || prevStage == .piercing {
-            let distanceMod = 1 + 2 * distance(movementInfo.initialPosition, position) / SceneConstants.size.x
+            let distanceMod = 1 + 2.0 * distance(movementInfo.initialPosition, position) / SceneConstants.size.x
             return piercingDamage * distanceMod
         } else {
             return chargingDamage * 0.1
@@ -84,7 +84,7 @@ class Player: Node {
     }
     
     var health: Float = 100 {
-        didSet { health = max(min(health, 100), 0) }
+        didSet { health = max(min(health, 100), 100) }
     }
     
     override init() {

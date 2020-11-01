@@ -112,6 +112,7 @@ class GameScene: Scene {
         player.particleTrailHandler.scene = self
         
         rootNode.add(player)
+        player.setPosition([-500, 0])
         
         setToIdle()
     }
@@ -216,7 +217,7 @@ class GameScene: Scene {
             stageManager.clearStage()
         }
         
-        skGameScene.update()
+        skGameScene.update(deltaTime: deltaTime)
         
         particles.forEach {
             $0.update(deltaTime: deltaTime)
@@ -239,12 +240,8 @@ class GameScene: Scene {
 //        player.health = 0
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
-//        player.move(to: location)
-        playerManager.shieldPowerUp.activate()
-        let indicator = ShockwaveIndicator(size: player.physicsSize + [1, 1] * 1100)
-        indicator.parent = player
-        indicator.color.xyz = Colors.shield
-        indicators.insert(indicator)
+        
+        player.move(to: location)
     }
     
     func pause() {
@@ -429,7 +426,7 @@ extension GameScene: EnemyDelegate {
         let powerFactor = min(damage / enemy.maxHealth, 1.0)
         skGameScene.didDmg(damage,
                            powerFactor: powerFactor,
-                           at: CGPoint(enemy.positionBeforeImpact + [0, 170]),
+                           at: CGPoint(enemy.positionBeforeImpact + [0, 85]),
                            color: .white)
         
         if enemy.health < 1 {

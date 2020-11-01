@@ -66,10 +66,10 @@ class GameViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(resetTouchState), name: .willResignActive, object: nil)
         
-        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
-        tripleTouch.numberOfTouchesRequired = 3
-        tripleTouch.delaysTouchesBegan = true
-        mtkView.addGestureRecognizer(tripleTouch)
+//        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
+//        tripleTouch.numberOfTouchesRequired = 3
+//        tripleTouch.delaysTouchesBegan = true
+//        mtkView.addGestureRecognizer(tripleTouch)
     }
     
     override func viewSafeAreaInsetsDidChange() {

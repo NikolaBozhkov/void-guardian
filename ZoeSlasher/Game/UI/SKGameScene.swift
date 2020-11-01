@@ -102,7 +102,7 @@ class SKGameScene: SKScene {
 //        }
     }
     
-    func update() {
+    func update(deltaTime: Float) {
         followPlayerNode.position = CGPoint(gameScene.player.position)
         
         for indicator in indicatorToEnemyMap.keys {
@@ -110,6 +110,10 @@ class SKGameScene: SKScene {
                 let delta = enemy.position - gameScene.player.position
                 indicator.zRotation = CGFloat(atan2(delta.y, delta.x)) - .pi / 2
             }
+        }
+        
+        for damageLabel in children.compactMap({ $0 as? DamageLabel }) {
+            damageLabel.update(deltaTime: deltaTime)
         }
     }
     
@@ -136,17 +140,6 @@ class SKGameScene: SKScene {
         addChild(favorSymbol)
     }
     
-    func update(playerPosition: vector_float2) {
-        followPlayerNode.position = CGPoint(playerPosition)
-        
-        for indicator in indicatorToEnemyMap.keys {
-            if let enemy = indicatorToEnemyMap[indicator] {
-                let delta = enemy.position - playerPosition
-                indicator.zRotation = CGFloat(atan2(delta.y, delta.x)) - .pi / 2
-            }
-        }
-    }
-    
     func didCombo(multiplier: Int, energy: Int, favor: Int) {
         let comboLabel = ComboLabel(multiplier: multiplier, energy: energy, favor: favor)
         
@@ -169,54 +162,6 @@ class SKGameScene: SKScene {
         ]))
         
         addChild(comboLabel)
-    }
-    
-    func createLossGainLabel(prefix: String = "",
-                             amount: Int,
-                             at position: CGPoint,
-                             xRange: ClosedRange<CGFloat> = -25...25,
-                             yRange: ClosedRange<CGFloat> = 0...25,
-                             color: SKColor,
-                             symbol: SKSpriteNode? = nil,
-                             symbolSizeFactor: CGFloat = 0) -> SKLabelNode {
-        let dmgLabel = makeLabel(text: prefix + "\(amount)", fontSize: 105, fontName: UIConstants.sanosFont)
-        dmgLabel.position = position
-        dmgLabel.fontColor = color
-        dmgLabel.setScale(0.7)
-        
-        let randomX = CGFloat.random(in: xRange)
-        let randomY = CGFloat.random(in: yRange)
-        
-        dmgLabel.position.offset(dx: randomX, dy: randomY)
-        
-        let fadeOut = SKAction.fadeOut(withDuration: 1.2)
-        fadeOut.timingMode = .easeIn
-        
-        let scaleUp = SKAction.scale(to: 1.0, duration: 0.15)
-        scaleUp.timingMode = .easeOut
-        
-        let scaleDown = SKAction.scale(to: 0.8, duration: 1.55)
-        
-        let moveBy = SKAction.moveBy(x: 0,
-                                     y: 34,
-                                     duration: 1.7)
-        moveBy.timingMode = .easeOut
-        
-        dmgLabel.run(SKAction.sequence([
-            scaleUp,
-            scaleDown
-        ]))
-        
-        dmgLabel.run(moveBy)
-        
-        let fadeOutSequence = SKAction.sequence([
-            SKAction.wait(forDuration: 0.5),
-            fadeOut,
-            SKAction.removeFromParent()
-        ])
-        dmgLabel.run(fadeOutSequence)
-        
-        return dmgLabel
     }
     
     func didConsumePotion(_ potion: Potion, withFavor favor: Int = 0) {
@@ -245,17 +190,15 @@ class SKGameScene: SKScene {
     }
     
     func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
-        let label = createLossGainLabel(amount: Int(dmg), at: position, color: color)
+        let label = DamageLabel(amount: dmg, color: color, spawnPosition: position)
         addChild(label)
         shake(powerFactor)
     }
     
     func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
-        let label = createLossGainLabel(amount: Int(damage),
-                                        at: CGPoint(gameScene.player.position + [0, 240]),
-                                        xRange: -40...40,
-                                        yRange: 0...30,
-                                        color: SKColor(vector_float3(1.0, 0.3, 0.3)))
+        let label = DamageLabel(amount: damage,
+                                color: UIColor(simd_float3(1.0, 0.3, 0.3)),
+                                spawnPosition: CGPoint(gameScene.player.position + [0, 150]))
         addGlow(to: label, color: label.fontColor!)
         
         let power = min(damage / gameScene.player.maxHealth * 0.5, 1.0)

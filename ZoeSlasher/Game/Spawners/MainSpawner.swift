@@ -17,6 +17,12 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
+        
+        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[7], withPosition: [0, -500])
+        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [300, -300])
+        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[10], withPosition: [800, 0])
+        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[5], withPosition: [1800, 0])
+        
 //        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
 //        scene.indicators.insert(shockwaveIndicator)
         
