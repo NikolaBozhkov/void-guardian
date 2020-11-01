@@ -10,7 +10,7 @@ import SpriteKit
 
 class PlayerDamageLabel: PopLabel {
     init(damageInfo: DamageInfo, spawnPosition: CGPoint) {
-        super.init(spawnPosition: spawnPosition, extraScale: damageInfo.amount / 20)
+        super.init(spawnPosition: spawnPosition, extraScale: damageInfo.amount / 20 + 0.8)
         
         if damageInfo.isCrit {
             baseScale = 1.2

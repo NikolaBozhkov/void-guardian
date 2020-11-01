@@ -74,7 +74,8 @@ class Enemy: Node {
         lastHealth = health
         
         triggerInterval = ability.interval
-        timeSinceLastSymbolFlash = -triggerInterval / 2
+        timeSinceLastTrigger = .random(in: 0...triggerInterval)
+        timeSinceLastSymbolFlash = timeSinceLastTrigger - triggerInterval / 2
         
         symbolsAngleVelocityGain = ability.symbolVelocityGain
         symbolsAngleRecoilImpulse = ability.symbolVelocityRecoil

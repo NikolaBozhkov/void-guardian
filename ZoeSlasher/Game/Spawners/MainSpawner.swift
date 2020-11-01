@@ -18,10 +18,9 @@ class MainSpawner {
         powerUpSpawner.scene = scene
         
         
-        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[7], withPosition: [0, -500])
-        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [300, -300])
-        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[10], withPosition: [800, 0])
-        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[5], withPosition: [1800, 0])
+        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-300, -200])
+        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [0, -50])
+        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [500, 200])
         
 //        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
 //        scene.indicators.insert(shockwaveIndicator)
@@ -30,8 +29,8 @@ class MainSpawner {
 //        scene.indicators.insert(spawnIndicator)
         
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [600, 600])
-        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [0, 600])
+        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [500, -400])
+        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [-300, 400])
         
 //        for _ in 0..<5 {
 //            potionSpawner.spawnPotion(type: PotionType.allCases.randomElement()!)
@@ -71,7 +70,7 @@ class MainSpawner {
     
     func update(deltaTime: Float) {
 //        enemySpawner.update(deltaTime: deltaTime)
-        let deltaTime = deltaTime * 20.0
+//        let deltaTime = deltaTime * 20.0
 //        potionSpawner.update(deltaTime: deltaTime)
 //        powerUpSpawner.update(deltaTime: deltaTime)
     }

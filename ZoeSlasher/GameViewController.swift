@@ -60,7 +60,7 @@ class GameViewController: UIViewController {
         mtkView.delegate = renderer
         mtkView.isMultipleTouchEnabled = true
         mtkView.autoResizeDrawable = false
-        mtkView.drawableSize = mtkView.bounds.size * mtkView.contentScaleFactor * 2.0
+        mtkView.drawableSize = mtkView.bounds.size * mtkView.contentScaleFactor * 1.0
         
         self.mtkView = mtkView
         

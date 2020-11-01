@@ -25,7 +25,7 @@ class PopLabel: SKLabelNode {
     
     init(spawnPosition: CGPoint, extraScale: Float) {
         self.spawnPosition = spawnPosition
-        self.extraScale = min(extraScale + 0.7, 5.0)
+        self.extraScale = min(extraScale, 5.0)
         
         super.init()
         
