@@ -137,7 +137,7 @@ class GameScene: Scene {
         
         if stageManager.isActive {
             favor -= deltaTime * (favor / 15)
-            playerManager.activePowerUps.forEach { $0.update(deltaTime: deltaTime) }
+            playerManager.powerUps.forEach { $0.update(deltaTime: deltaTime) }
         }
         
         prevPlayerPosition = player.position
@@ -239,7 +239,12 @@ class GameScene: Scene {
 //        player.health = 0
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
-        player.move(to: location)
+//        player.move(to: location)
+        playerManager.shieldPowerUp.activate()
+        let indicator = ShockwaveIndicator(size: player.physicsSize + [1, 1] * 1100)
+        indicator.parent = player
+        indicator.color.xyz = Colors.shield
+        indicators.insert(indicator)
     }
     
     func pause() {

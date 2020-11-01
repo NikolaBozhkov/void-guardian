@@ -26,10 +26,10 @@ class MainSpawner {
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
 //        powerUpSpawner.spawnPowerUp(.init(duration: 0, type: .doubleDamage), at: [600, 0])
         
-        for _ in 0..<5 {
-            potionSpawner.spawnPotion(type: PotionType.allCases.randomElement()!)
-            powerUpSpawner.spawnPowerUp()
-        }
+//        for _ in 0..<5 {
+//            potionSpawner.spawnPotion(type: PotionType.allCases.randomElement()!)
+//            powerUpSpawner.spawnPowerUp()
+//        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
 //

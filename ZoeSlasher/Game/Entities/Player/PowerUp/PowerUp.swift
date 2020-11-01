@@ -15,6 +15,7 @@ class PowerUp {
     private(set) var isActive: Bool = false
     
     var timeSinceActivated: Float = 0
+    var timeSinceDeactivated: Float = -1
     
     init(duration: Float, type: PowerUpType) {
         self.duration = duration
@@ -22,16 +23,22 @@ class PowerUp {
     }
     
     func update(deltaTime: Float) {
-        timeSinceActivated += deltaTime
-        
-        if timeSinceActivated > duration {
-            isActive = false
+        if isActive {
+            timeSinceActivated += deltaTime
+            if timeSinceActivated > duration {
+                isActive = false
+                timeSinceDeactivated = 0
+                timeSinceActivated = -1
+            }
+        } else {
+            timeSinceDeactivated += deltaTime
         }
     }
     
     func activate() {
         isActive = true
         timeSinceActivated = 0
+        timeSinceDeactivated = -1
     }
 }
 

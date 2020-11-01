@@ -64,6 +64,7 @@ class MainRenderer: NSObject {
     let energySymbolRenderer: Renderer
     let spawnIndicatorRenderer: Renderer
     let shockwaveIndicatorRenderer: Renderer
+    let shieldRenderer: Renderer
     
     let skRenderer: SKRenderer
     let overlaySkRenderer: SKRenderer
@@ -162,7 +163,7 @@ class MainRenderer: NSObject {
         mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
         
         arcTrailRenderer = ArcTrailRenderer(device: device, library: library, fragmentFunction: "fragmentArcTrail",
-                                            radius: 270, angularLength: .pi / 3.3, width: 45, segments: 10)
+                                            radius: 290, angularLength: .pi / 3.3, width: 45, segments: 10)
         
         backgroundRenderer = Renderer(device: device, library: library, fragmentFunction: "backgroundShader")
         playerRenderer = Renderer(device: device, library: library, fragmentFunction: "playerShader")
@@ -176,6 +177,8 @@ class MainRenderer: NSObject {
         
         spawnIndicatorRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentSpawnIndicator")
         shockwaveIndicatorRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentShockwaveIndicator")
+        
+        shieldRenderer = Renderer(device: device, library: library, fragmentFunction: "fragmentShield")
         
         super.init()
     }
@@ -354,9 +357,9 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio))
         
-//        Recorder.CaptureRect.size = [1, 1] * 700
-//        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
-//        recorder.configure(withResolution: 1024, filePath: "movie5")
+        Recorder.CaptureRect.size = [1, 1] * 1000
+        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
+        recorder.configure(withResolution: 1024, filePath: "movie5")
     }
     
     func draw(in view: MTKView) {
@@ -437,6 +440,25 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
+        
+        let shieldPowerUp = scene.playerManager.shieldPowerUp
+        if shieldPowerUp.isActive || shieldPowerUp.timeSinceDeactivated < 1.0 {
+            let shield = Node(size: [1, 1] * 530)
+            shield.position = scene.player.position
+            renderEncoder.setFragmentBytes(&shieldPowerUp.timeSinceActivated,
+                                           length: MemoryLayout<Float>.size,
+                                           index: 0)
+            renderEncoder.setFragmentBytes(&shieldPowerUp.timeSinceDeactivated,
+                                           length: MemoryLayout<Float>.size,
+                                           index: 1)
+            shieldRenderer.draw(shield, with: renderEncoder)
+        }
+        
+        arcTrailRenderer.draw(with: renderEncoder,
+                              powerUps: scene.playerManager.activePowerUps,
+                              playerPosition: scene.player.position,
+                              time: Float(pausableTimeMetal))
+        
         // Player needs to be rendered on top of the trail
         if scene.player.parent != nil {
             scene.player.draw(self)
@@ -444,11 +466,6 @@ extension MainRenderer: MTKViewDelegate {
             trailRenderer.generateVertices(from: scene.player.trailManager.points)
             trailRenderer.draw(renderEncoder: renderEncoder)
         }
-        
-        arcTrailRenderer.draw(with: renderEncoder,
-                              powerUps: scene.playerManager.activePowerUps,
-                              playerPosition: scene.player.position,
-                              time: Float(pausableTimeMetal))
             
         drawNodes(scene.children)
         
@@ -469,6 +486,7 @@ extension MainRenderer: MTKViewDelegate {
         }
         
         mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, renderer: self)
+        
         mainTextureRenderer.draw(with: renderEncoder)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)

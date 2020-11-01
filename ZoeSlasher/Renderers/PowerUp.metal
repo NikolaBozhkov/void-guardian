@@ -145,3 +145,52 @@ fragment float4 fragmentPowerUpNode(PowerUpNodeOut in [[stage_in]],
 
     return float4(color, combined);
 }
+
+fragment float4 fragmentShield(VertexOut in [[stage_in]],
+                               constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                               constant float &timeSinceActivated [[buffer(0)]],
+                               constant float &timeSinceDeactivated [[buffer(1)]],
+                               texture2d<float> dynamicNoise [[texture(0)]],
+                               texture2d<float> fbmr [[texture(1)]])
+{
+    float2 st = in.uv * 2.0 - 1.0;
+    float d = length(st);
+    
+    float f = 0.0;
+    
+    float s = 0.5 + 0.5 * sin(uniforms.time * M_PI_F);
+    d += 0.045 * s;
+    
+    constexpr sampler samp;
+    float2 samplePos = in.uv / float2(uniforms.aspectRatio, 1.0);
+    float n = dynamicNoise.sample(samp, samplePos).x;
+    
+    f += (0.2 + pow(d, 2.0) * 0.8) * n * 0.8;
+    float fd = pow(d, 5.0 + s * 2.0);
+    
+    float progress = fract(uniforms.time * 0.8);
+    float wd = d - progress * 1.7;
+    float wave = smoothstep(-0.7, -0.2, wd) - smoothstep(-0.2, 0.0, wd);
+    f += wave * n;
+    
+    f += smoothstep(0.0, 1.0, fd);
+    f *= 1.0 - smoothstep(0.98, 1.0, d);
+    f *= 1.0 + (1.0 - s) * 0.15;
+    
+    // Spawn & Despawn
+    float isActivated = step(0.0, timeSinceActivated);
+    float isDeactivated = step(0.0, timeSinceDeactivated);
+    
+    float rd = d + 1.0 - timeSinceActivated * 4.0;
+    float reveal = 1.0 - smoothstep(0.0, 1.0, rd);
+    
+    float hide = 1.0 - timeSinceDeactivated * 3.0;
+    
+    f *= (1.0 - isActivated) + isActivated * reveal;
+    f *= (1.0 - isDeactivated) + isDeactivated * hide;
+    
+    const float3 baseColor = float3(0.000, 0.851, 1.000);
+    const float3 brightColor = mix(baseColor, float3(1.0), 0.85);
+    float3 color = mix(baseColor, brightColor, fd);
+    return float4(color, f);
+}

@@ -30,8 +30,12 @@ class PlayerManager {
     let shieldPowerUp = ShieldPowerUp(duration: 6, type: .shield)
     let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 8, type: .doublePotionRestore)
     
+    lazy var powerUps: [PowerUp] = {
+        [instantKillPowerUp, doubleDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp]
+    }()
+    
     var activePowerUps: [PowerUp] {
-        [instantKillPowerUp, doubleDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp].filter { $0.isActive }
+        powerUps.filter { $0.isActive }
     }
     
     init(player: Player) {
