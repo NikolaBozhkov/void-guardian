@@ -305,4 +305,5 @@ extension Player {
 struct DamageInfo {
     var amount: Float = 0
     var isCrit: Bool = false
+    var isLethal: Bool = false
 }

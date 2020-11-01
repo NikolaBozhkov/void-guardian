@@ -25,7 +25,7 @@ class PopLabel: SKLabelNode {
     
     init(spawnPosition: CGPoint, extraScale: Float) {
         self.spawnPosition = spawnPosition
-        self.extraScale = min(extraScale, 5.0)
+        self.extraScale = min(extraScale + 0.7, 5.0)
         
         super.init()
         
@@ -40,9 +40,10 @@ class PopLabel: SKLabelNode {
     func update(deltaTime: Float) {
         timeAlive += deltaTime
         
-        let k: Float = 16
+        let k: Float = 15
         let impulse = expImpulse(timeAlive + 1 / k, k)
         
+        alpha = 0.5 + 0.5 * CGFloat(1.0 - impulse)
         setScale(CGFloat(baseScale + impulse * extraScale))
         position = spawnPosition + targetOffset * CGFloat(1.0 - impulse)
         

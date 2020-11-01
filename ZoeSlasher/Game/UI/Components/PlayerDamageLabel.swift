@@ -17,7 +17,15 @@ class PlayerDamageLabel: PopLabel {
         }
         
         text = "\(Int(damageInfo.amount))"
-        fontColor = damageInfo.isCrit ? UIColor([1.0, 0.612, 0.369]) : .white
+        fontColor = .white
+        
+        if damageInfo.isCrit {
+            fontColor = UIColor([1.0, 0.612, 0.369])
+        }
+        
+        if damageInfo.isLethal {
+            fontColor = UIColor([1.0, 0.365, 0.435])
+        }
         
         horizontalAlignmentMode = .center
         verticalAlignmentMode = .center

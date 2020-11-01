@@ -39,7 +39,7 @@ class PlayerManager {
     
     func getDamageInfo() -> DamageInfo {
         if instantKillPowerUp.isActive {
-            return DamageInfo(amount: instantKillPowerUp.damage, isCrit: true)
+            return DamageInfo(amount: instantKillPowerUp.damage, isCrit: true, isLethal: true)
         }
         
         var damageInfo = player.getDamageInfo(forCritChance: Player.baseCritChance)
