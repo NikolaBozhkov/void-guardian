@@ -103,7 +103,9 @@
 		24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */; };
 		24F070BF2522FF7000D2954D /* MainTextureRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F070BE2522FF7000D2954D /* MainTextureRenderer.swift */; };
 		24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */; };
-		24FB6A02254EBBB600A1007C /* DamageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FB6A01254EBBB600A1007C /* DamageLabel.swift */; };
+		24FB6A02254EBBB600A1007C /* PlayerDamageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FB6A01254EBBB600A1007C /* PlayerDamageLabel.swift */; };
+		24FB6A06254EF0A100A1007C /* PopLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FB6A05254EF0A100A1007C /* PopLabel.swift */; };
+		24FB6A0A254EF1B900A1007C /* EnemyDamageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FB6A09254EF1B900A1007C /* EnemyDamageLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -209,7 +211,9 @@
 		24EBD46C245D780000410D1E /* NotificationName+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+Extensions.swift"; sourceTree = "<group>"; };
 		24F070BE2522FF7000D2954D /* MainTextureRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTextureRenderer.swift; sourceTree = "<group>"; };
 		24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitySpawnIndicator.swift; sourceTree = "<group>"; };
-		24FB6A01254EBBB600A1007C /* DamageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DamageLabel.swift; sourceTree = "<group>"; };
+		24FB6A01254EBBB600A1007C /* PlayerDamageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDamageLabel.swift; sourceTree = "<group>"; };
+		24FB6A05254EF0A100A1007C /* PopLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopLabel.swift; sourceTree = "<group>"; };
+		24FB6A09254EF1B900A1007C /* EnemyDamageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyDamageLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -364,7 +368,9 @@
 				2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */,
 				2468E3AA245FDC01004042AD /* Title.swift */,
 				2468E3B424617529004042AD /* TitleLineShader.fsh */,
-				24FB6A01254EBBB600A1007C /* DamageLabel.swift */,
+				24FB6A01254EBBB600A1007C /* PlayerDamageLabel.swift */,
+				24FB6A09254EF1B900A1007C /* EnemyDamageLabel.swift */,
+				24FB6A05254EF0A100A1007C /* PopLabel.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -602,7 +608,7 @@
 				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
 				2414AB222511E5F400B3299C /* EnemySpawner.swift in Sources */,
-				24FB6A02254EBBB600A1007C /* DamageLabel.swift in Sources */,
+				24FB6A02254EBBB600A1007C /* PlayerDamageLabel.swift in Sources */,
 				2465E77B24360EF10019CE02 /* PotionRenderer.swift in Sources */,
 				2414AB482515C85900B3299C /* MainPotionRenderer.swift in Sources */,
 				2468E3A9245FD85F004042AD /* Button.swift in Sources */,
@@ -658,11 +664,13 @@
 				24E65F512483BF50004EE053 /* TutorialScreen.swift in Sources */,
 				24E65F4D247CF28A004EE053 /* AttackAbility.swift in Sources */,
 				2414AB17250D34B000B3299C /* ParticleTrailHandler.swift in Sources */,
+				24FB6A06254EF0A100A1007C /* PopLabel.swift in Sources */,
 				24D7FF59241B86AB007743C6 /* FavorGainLabel.swift in Sources */,
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
 				2468E3B124613D63004042AD /* Screen.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
 				24EBD46B245C725000410D1E /* PauseScreen.swift in Sources */,
+				24FB6A0A254EF1B900A1007C /* EnemyDamageLabel.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
 			);

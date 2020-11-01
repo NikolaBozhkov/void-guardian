@@ -14,7 +14,9 @@ class Player: Node {
     
     static let visualRadius: Float = 400
     static let baseChargingDamage: Float = Enemy.baseHealth * 0.5
-    static let basePiercingDamage: Float = Enemy.baseHealth
+    static let basePiercingDamage: Float = Enemy.baseHealth * 0.98
+    static let baseCritChance: Float = 0.1
+    static let baseCritMulti: Float = 1.5
     
     unowned var delegate: PlayerDelegate!
     unowned var scene: GameSceneInput!
@@ -42,38 +44,27 @@ class Player: Node {
     
     let chargeSpeed: Float = 1000 // 1k
     let pierceSpeed: Float = 12000 // 12k
-    private let energyRechargePerSecond: Float = 6
-    private let energyUsagePerShot: Float = 25
+    
+    var maxHealth: Float = 100
     
     private(set) var desiredPosition = vector_float2.zero
     private(set) var force = vector_float2.zero
     
-    private var movementInfo: MovementInfo!
-    
     private(set) var moveFinished = true
-    private var positionDelta = vector_float2.zero
     private(set) var prevPosition = vector_float2.zero
     
-    private var chargingDamage = Player.baseChargingDamage
-    private var piercingDamage = Player.basePiercingDamage
+    private let energyRechargePerSecond: Float = 6
+    private let energyUsagePerShot: Float = 25
+    
+    private let chargingDamageRange: ClosedRange<Float> = -Player.baseChargingDamage...Player.baseChargingDamage
+    private let piercingDamageRange: ClosedRange<Float> = -Player.basePiercingDamage...Player.basePiercingDamage
+    
+    private var movementInfo: MovementInfo!
+    private var positionDelta = vector_float2.zero
     
     private var energySymbols = Set<EnergySymbol>()
     
-    var maxHealth: Float = 100
-    
     private var visualData = VisualData()
-    
-    // Retuns the correct damage for the stage (idle is 0.5 of charging damage)
-    var damage: Float {
-        if stage == .charging || prevStage == .charging {
-            return chargingDamage
-        } else if stage == .piercing || prevStage == .piercing {
-            let distanceMod = 1 + 2.0 * distance(movementInfo.initialPosition, position) / SceneConstants.size.x
-            return piercingDamage * distanceMod
-        } else {
-            return chargingDamage * 0.1
-        }
-    }
     
     var hasEnoughEnergy: Bool {
         return energy >= energyUsagePerShot
@@ -125,6 +116,29 @@ class Player: Node {
         visualData.dmgReceivedNormalized = damage / maxHealth
         visualData.lastHealth = visualData.healthDmgIndicator
         visualData.timeSinceLastHit = 0
+    }
+    
+    func getDamageInfo(forCritChance critChance: Float) -> DamageInfo {
+        let chargingDamage = Player.baseChargingDamage + .random(in: chargingDamageRange) * 0.2
+        let piercingDamage = Player.basePiercingDamage + .random(in: piercingDamageRange) * 0.12
+        
+        var damageInfo = DamageInfo()
+        
+        if stage == .charging || prevStage == .charging {
+            damageInfo.amount = chargingDamage
+        } else if stage == .piercing || prevStage == .piercing {
+            let distanceMod = 1 + 2.0 * distance(movementInfo.initialPosition, position) / SceneConstants.size.x
+            damageInfo.amount = piercingDamage * distanceMod
+        } else {
+            damageInfo.amount = 1
+        }
+        
+        if Float.random(in: 0..<1) < critChance {
+            damageInfo.amount *= Player.baseCritMulti
+            damageInfo.isCrit = true
+        }
+        
+        return damageInfo
     }
     
     func update(deltaTime: Float) {
@@ -286,4 +300,9 @@ extension Player {
         var dmgReceivedNormalized: Float = 0
         var timeSinceLastEnergyUse: Float = 100
     }
+}
+
+struct DamageInfo {
+    var amount: Float = 0
+    var isCrit: Bool = false
 }

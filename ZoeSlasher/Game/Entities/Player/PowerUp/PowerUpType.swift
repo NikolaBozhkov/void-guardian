@@ -19,7 +19,7 @@ enum PowerUpType: String, CaseIterable {
     
     case instantKill = "instant-kill-powerup"
     case shield = "shield-powerup"
-    case doubleDamage = "dmg-powerup"
+    case increasedDamage = "dmg-powerup"
     case doublePotionRestore = "regen-powerup"
     
     private static let dmgTextureScale: Float = 1.0
@@ -34,8 +34,8 @@ enum PowerUpType: String, CaseIterable {
         .doublePotionRestore: PowerUpVisualData(baseColor: Colors.doublePotionRestorePowerUp,
                                                 brightColor: mix(Colors.doublePotionRestorePowerUp, .one, t: 0.85)),
         
-        .doubleDamage: PowerUpVisualData(baseColor: Colors.doubleDamagePowerUp,
-                                         brightColor: mix(Colors.doubleDamagePowerUp, .one, t: 0.85)),
+        .increasedDamage: PowerUpVisualData(baseColor: Colors.doubleDamagePowerUp,
+                                            brightColor: mix(Colors.doubleDamagePowerUp, .one, t: 0.85)),
     ]
     
     var baseColor: vector_float3 { PowerUpType.typeToDataMap[self]!.baseColor }

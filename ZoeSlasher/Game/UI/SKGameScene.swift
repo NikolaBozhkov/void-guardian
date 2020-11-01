@@ -112,7 +112,7 @@ class SKGameScene: SKScene {
             }
         }
         
-        for damageLabel in children.compactMap({ $0 as? DamageLabel }) {
+        for damageLabel in children.compactMap({ $0 as? PopLabel }) {
             damageLabel.update(deltaTime: deltaTime)
         }
     }
@@ -189,16 +189,18 @@ class SKGameScene: SKScene {
         }
     }
     
-    func didDmg(_ dmg: Float, powerFactor: Float, at position: CGPoint, color: SKColor) {
-        let label = DamageLabel(amount: dmg, color: color, spawnPosition: position)
+    func didEnemyReceiveDamage(enemy: Enemy, damageInfo: DamageInfo, powerFactor: Float) {
+        var damageInfo = damageInfo
+//        damageInfo.isCrit = true
+        let spawnPosition = CGPoint(enemy.positionBeforeImpact + [0, 95])
+        let label = PlayerDamageLabel(damageInfo: damageInfo, spawnPosition: spawnPosition)
         addChild(label)
         shake(powerFactor)
     }
     
-    func didPlayerReceivedDamage(_ damage: Float, from enemy: Node) {
-        let label = DamageLabel(amount: damage,
-                                color: UIColor(simd_float3(1.0, 0.3, 0.3)),
-                                spawnPosition: CGPoint(gameScene.player.position + [0, 150]))
+    func didPlayerReceiveDamage(_ damage: Float, from enemy: Node) {
+        let spawnPosition = CGPoint(gameScene.player.position + [0, 150])
+        let label = EnemyDamageLabel(damage: damage, spawnPosition: spawnPosition)
         addGlow(to: label, color: label.fontColor!)
         
         let power = min(damage / gameScene.player.maxHealth * 0.5, 1.0)

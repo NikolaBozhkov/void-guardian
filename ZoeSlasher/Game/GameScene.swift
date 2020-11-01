@@ -335,8 +335,10 @@ extension GameScene {
                 // Intersection logic
                 let r = player.physicsSize.x / 2 + enemy.physicsSize.x / 2
                 if d - 0.1 <= r {
-                    let impactMod = 210 * min(playerManager.damage / enemy.maxHealth, 1.0)
-                    enemy.receiveDamage(playerManager.damage, impact: direction * impactMod)
+                    let damageInfo = playerManager.getDamageInfo()
+                    let impactMod = 140 * min(damageInfo.amount / enemy.maxHealth, 1.0)
+                    enemy.receiveDamage(damageInfo.amount, impact: direction * impactMod)
+                    didEnemyReceiveDamage(enemy: enemy, damageInfo: damageInfo)
                     
                     if player.stage != .idle || player.prevStage == .piercing {
                         hitEnemies.insert(enemy)
@@ -366,7 +368,7 @@ extension GameScene {
                     
                     let attackInfo = playerManager.receiveDamage(attack.corruption)
                     if attackInfo.didHit {
-                        skGameScene.didPlayerReceivedDamage(attackInfo.hitDamage, from: attack.enemy)
+                        skGameScene.didPlayerReceiveDamage(attackInfo.hitDamage, from: attack.enemy)
                     }
                 }
                 
@@ -417,17 +419,15 @@ extension GameScene: PlayerDelegate {
 // MARK: - EnemyDelegate
 
 extension GameScene: EnemyDelegate {
-    
     func didDestroy(_ enemy: Enemy) {
         enemies.remove(enemy)
     }
-    
-    func didReceiveDmg(_ enemy: Enemy, damage: Float) {
-        let powerFactor = min(damage / enemy.maxHealth, 1.0)
-        skGameScene.didDmg(damage,
-                           powerFactor: powerFactor,
-                           at: CGPoint(enemy.positionBeforeImpact + [0, 85]),
-                           color: .white)
+}
+
+extension GameScene {
+    func didEnemyReceiveDamage(enemy: Enemy, damageInfo: DamageInfo) {
+        let powerFactor = min(damageInfo.amount / enemy.maxHealth, 1.0)
+        skGameScene.didEnemyReceiveDamage(enemy: enemy, damageInfo: damageInfo, powerFactor: powerFactor)
         
         if enemy.health < 1 {
             return

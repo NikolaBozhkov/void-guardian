@@ -30,7 +30,8 @@ class MainSpawner {
 //        scene.indicators.insert(spawnIndicator)
         
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
-//        powerUpSpawner.spawnPowerUp(.init(duration: 0, type: .doubleDamage), at: [600, 0])
+        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [600, 600])
+        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [0, 600])
         
 //        for _ in 0..<5 {
 //            potionSpawner.spawnPotion(type: PotionType.allCases.randomElement()!)

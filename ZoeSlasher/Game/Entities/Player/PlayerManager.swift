@@ -10,28 +10,14 @@
 /// Provides an interface to what the player can do and what it's current stats are
 class PlayerManager {
     
-    var damage: Float {
-        guard !instantKillPowerUp.isActive else {
-            return instantKillPowerUp.damage
-        }
-        
-        var modifiedDamage = player.damage
-        
-        if doubleDamagePowerUp.isActive {
-            modifiedDamage *= doubleDamagePowerUp.multiplier
-        }
-        
-        return modifiedDamage
-    }
-    
     private let player: Player
     let instantKillPowerUp = InstantKillPowerUp(duration: 3.5, type: .instantKill)
-    let doubleDamagePowerUp = MultiplierPowerUp(multiplier: 2, duration: 5.5, type: .doubleDamage)
+    let increasedDamagePowerUp = MultiplierPowerUp(multiplier: 1.5, duration: 5.5, type: .increasedDamage)
     let shieldPowerUp = ShieldPowerUp(duration: 6, type: .shield)
     let doublePotionRestorePowerUp = MultiplierPowerUp(multiplier: 2, duration: 8, type: .doublePotionRestore)
     
     lazy var powerUps: [PowerUp] = {
-        [instantKillPowerUp, doubleDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp]
+        [instantKillPowerUp, increasedDamagePowerUp, shieldPowerUp, doublePotionRestorePowerUp]
     }()
     
     var activePowerUps: [PowerUp] {
@@ -49,6 +35,20 @@ class PlayerManager {
         
         player.receiveDamage(damage)
         return (true, damage)
+    }
+    
+    func getDamageInfo() -> DamageInfo {
+        if instantKillPowerUp.isActive {
+            return DamageInfo(amount: instantKillPowerUp.damage, isCrit: true)
+        }
+        
+        var damageInfo = player.getDamageInfo(forCritChance: Player.baseCritChance)
+        
+        if increasedDamagePowerUp.isActive {
+            damageInfo.amount *= increasedDamagePowerUp.multiplier
+        }
+        
+        return damageInfo
     }
     
     func consumePotion(_ potion: Potion) {

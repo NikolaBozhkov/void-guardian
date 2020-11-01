@@ -55,7 +55,7 @@ class PowerUpSpawner {
         let random = Float.random(in: 0..<1)
         
         let powerUpChances: [PowerUp: Float] = [
-            scene.playerManager.doubleDamagePowerUp: 0.35,
+            scene.playerManager.increasedDamagePowerUp: 0.35,
             scene.playerManager.doublePotionRestorePowerUp: 0.35,
             scene.playerManager.shieldPowerUp: 0.2,
             scene.playerManager.instantKillPowerUp: 0.1
@@ -77,6 +77,6 @@ class PowerUpSpawner {
         }
         
         assert(false, "No power up was chosen at random, chance ranges don't fill 0..<1")
-        return scene.playerManager.doubleDamagePowerUp
+        return scene.playerManager.increasedDamagePowerUp
     }
 }

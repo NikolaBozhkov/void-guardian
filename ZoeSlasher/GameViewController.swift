@@ -82,7 +82,7 @@ class GameViewController: UIViewController {
         
         let currentTime = CACurrentMediaTime()
         if touches.count == 2
-            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.02 {
+            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.018 {
             
             didTwoFingerTap()
             touchState = .doubleTap

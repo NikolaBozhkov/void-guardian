@@ -7,7 +7,6 @@
 //
 
 protocol EnemyDelegate {
-    func didReceiveDmg(_ enemy: Enemy, damage: Float)
     func didDestroy(_ enemy: Enemy)
 }
 
@@ -117,19 +116,17 @@ class Enemy: Node {
         }
     }
     
-    func receiveDamage(_ damage: Float, impact: vector_float2) {
+    func receiveDamage(_ damage: Float, impact: simd_float2) {
         guard !isImmune else { return }
         
         lastHealth = health
         health -= damage
-        dmgReceivedNormalized = min(damage / maxHealth, 1.0)
+        dmgReceivedNormalized = min(damage / health, 1.0)
         
-        impactLock(with: impact, duration: 0.13)
+        impactLock(with: impact, duration: 0.09)
         
         timeSinceLastHit = 0
         isImmune = true
-        
-        delegate?.didReceiveDmg(self, damage: damage)
     }
     
     func resetHitImmunity() {
@@ -145,7 +142,7 @@ class Enemy: Node {
         }
     }
     
-    func impactLock(with impact: vector_float2, duration: Float) {
+    func impactLock(with impact: simd_float2, duration: Float) {
         if !isImpactLocked {
             positionBeforeImpact = position
             isImpactLocked = true
