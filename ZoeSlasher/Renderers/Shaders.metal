@@ -117,6 +117,7 @@ vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(BufferIndexVertic
 
 fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
                               constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
+                              constant float &isDamagePowerUpActive [[buffer(0)]],
                               texture2d<float> fbmr [[texture(1)]],
                               texture2d<float> simplex [[texture(3)]])
 {
@@ -176,6 +177,26 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float dmgCurve = 1 - h*h*h;
     enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1.0 * dmgCurve;
     
+    float2 p = float2(log(r), atan2(st.y, st.x));
+    
+    const float scale = 3.0 / (M_PI_F * 2.0);
+    p *= scale;
+    
+    float dfk = 15;
+    float dfi = expImpulse(in.timeSinceHit + 1 / dfk, dfk);
+    p.x += 0.21 + 0.1 * (1.0 - dfi);
+    p.y = fract(p.y) * 2.0 - 1.0;
+    p.y = abs(p.y);
+    
+    float dfaa = 0.01;
+    float dfw = 0.2;
+    float dfh = 0.05 * pow(1.0 - p.y / dfw, 1.0);
+    float dfx1 = 0.1 * pow(1.0 - p.y / dfw, 1.0);
+    float df = 1.0 - smoothstep(dfw - dfaa, dfw, p.y);
+    df *= smoothstep(dfx1 - dfaa, dfx1, p.x) - smoothstep(dfx1 + dfh, dfx1 + dfh + dfaa, p.x);
+    df *= impulse;
+    enemy += df;
+    
     // Spawning
     float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;
     r += fbmrSample;
@@ -199,7 +220,9 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     f = min(f, 1.0);
     
     float3 healthColor = mix(in.baseColor, float3(1, 1, 1), damagedPart * 0.5);
-    return float4(mix(in.color.xyz, healthColor, f), enemy);
+    float3 color = mix(in.color.xyz, healthColor, f);
+    color = mix(color, float3(1.000, 0.251, 0.851), df);
+    return float4(color, enemy);
 }
 
 vertex AttackOut vertexAttack(constant float4 *vertices [[buffer(BufferIndexVertices)]],

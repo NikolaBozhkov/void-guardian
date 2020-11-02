@@ -41,6 +41,7 @@ class Enemy: Node {
     var abilityReady = false
     
     let seed = Float.random(in: 0..<1000)
+    var hitSeed: Float = 0
     var angle = Float.random(in: -.pi...(.pi))
     var speed = Float.random(in: 80...200)
     
@@ -128,6 +129,7 @@ class Enemy: Node {
         
         timeSinceLastHit = 0
         isImmune = true
+        hitSeed = .random(in: 0...1.0)
     }
     
     func resetHitImmunity() {

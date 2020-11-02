@@ -46,6 +46,9 @@ class EnemyRenderer: InstanceRenderer<EnemyData> {
             }
         }
         
+        var isDamagePowerUpActive = renderer.scene.playerManager.increasedDamagePowerUp.isActive ? 1 : 0
+        renderer.renderEncoder.setFragmentBytes(&isDamagePowerUpActive, length: MemoryLayout<Float>.size, index: 0)
+        
         draw(data: enemyDataArr, with: renderer.renderEncoder)
     }
 }
