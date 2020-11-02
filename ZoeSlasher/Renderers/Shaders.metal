@@ -197,7 +197,7 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float dfx2 = dfxr * pow(1.0 - p.y / dfw, 1.2);
     float df = 1.0 - smoothstep(dfw, dfw + dfaa, p.y);
     df *= smoothstep(dfx1, dfx1 + dfaa, p.x) - smoothstep(dfx2 + dfh, dfx2 + dfh + dfaa, p.x);
-    df *= impulse;
+    df *= impulse * isDamagePowerUpActive;
     df = max(df, 0.0);
     enemy += df;
     
