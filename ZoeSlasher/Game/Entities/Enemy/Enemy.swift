@@ -52,6 +52,7 @@ class Enemy: Node {
     private var timeSinceLastSymbolFlash: Float
     private var timeSinceLastTrigger: Float = 0
     var timeSinceLastHit: Float = Enemy.recentlyHitInterval
+    var timeSinceLastHitDmgPower: Float = Enemy.recentlyHitInterval
     private var timeSinceLastImpactLock: Float = 1000
     private var impactLockDuration: Float = 0
     var timeAlive: Float = 0
@@ -118,7 +119,7 @@ class Enemy: Node {
         }
     }
     
-    func receiveDamage(_ damage: Float, impact: simd_float2) {
+    func receiveDamage(_ damage: Float, impact: simd_float2, isDamagePowerUpActive: Bool) {
         guard !isImmune else { return }
         
         lastHealth = health
@@ -130,6 +131,10 @@ class Enemy: Node {
         timeSinceLastHit = 0
         isImmune = true
         hitSeed = .random(in: 0...1.0)
+        
+        if isDamagePowerUpActive {
+            timeSinceLastHitDmgPower = 0
+        }
     }
     
     func resetHitImmunity() {
@@ -164,6 +169,7 @@ class Enemy: Node {
         timeSinceLastTrigger += deltaTime
         timeSinceLastSymbolFlash += deltaTime
         timeSinceLastHit += deltaTime
+        timeSinceLastHitDmgPower += deltaTime
         timeSinceLastImpactLock += deltaTime
         
         if isImpactLocked && timeSinceLastImpactLock > impactLockDuration {

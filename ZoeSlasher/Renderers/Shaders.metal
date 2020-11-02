@@ -109,6 +109,8 @@ vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(BufferIndexVertic
     out.health = enemy.health;
     out.lastHealth = enemy.lastHealth;
     out.timeSinceHit = enemy.timeSinceHit;
+    out.dmgPowerUpImpulse1 = enemy.dmgPowerUpImpulse1;
+    out.dmgPowerUpImpulse2 = enemy.dmgPowerUpImpulse2;
     out.dmgReceived = enemy.dmgReceived;
     out.seed = enemy.seed;
     
@@ -117,7 +119,6 @@ vertex EnemyOut vertexEnemy(constant float4 *vertices [[buffer(BufferIndexVertic
 
 fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
                               constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]],
-                              constant float &isDamagePowerUpActive [[buffer(0)]],
                               texture2d<float> fbmr [[texture(1)]],
                               texture2d<float> simplex [[texture(3)]])
 {
@@ -177,15 +178,14 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float dmgCurve = 1 - h*h*h;
     enemy += impulse * (1.0 - smoothstep(0.0, 1.0, r)) * 1.0 * dmgCurve;
     
+    // Increased dmg indicator start
     float2 p = float2(log(r), atan2(st.y, st.x));
     
     const float scale = 3.0 / (M_PI_F * 2.0);
     p *= scale;
     
-    float dfk = 15;
-    float dfi = expImpulse(in.timeSinceHit + 1 / dfk, dfk);
     float dfxr = 0.17, dfhr = 0.1, dfaa = 0.01;
-    p.x += dfxr + dfhr + dfaa + 0.05 * (1.0 - dfi);
+    p.x += dfxr + dfhr + dfaa + 0.05 * (1.0 - in.dmgPowerUpImpulse2);
     p.y = fract(p.y) * 2.0 - 1.0;
     p.y = abs(p.y);
     
@@ -197,9 +197,10 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float dfx2 = dfxr * pow(1.0 - p.y / dfw, 1.2);
     float df = 1.0 - smoothstep(dfw, dfw + dfaa, p.y);
     df *= smoothstep(dfx1, dfx1 + dfaa, p.x) - smoothstep(dfx2 + dfh, dfx2 + dfh + dfaa, p.x);
-    df *= impulse * isDamagePowerUpActive;
-    df = max(df, 0.0);
+    df = max(df * in.dmgPowerUpImpulse1, 0.0);
     enemy += df;
+    
+    // end
     
     // Spawning
     float fbmrSample = 0.5 * fbmr.sample(s, stWorldNorm).x;

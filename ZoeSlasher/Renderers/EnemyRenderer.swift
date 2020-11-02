@@ -20,6 +20,10 @@ class EnemyRenderer: InstanceRenderer<EnemyData> {
     func draw(enemies: Set<Enemy>, renderer: MainRenderer) {
         var enemyDataArr = [EnemyData]()
         for enemy in enemies {
+            let k1: Float = 7, k2: Float = 15
+            let dmgPowerUpImpulse1 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k1, k1)
+            let dmgPowerUpImpulse2 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k2, k2)
+            
             let enemyData = EnemyData(worldTransform: enemy.worldTransform,
                                       size: enemy.size,
                                       color: enemy.color,
@@ -31,6 +35,8 @@ class EnemyRenderer: InstanceRenderer<EnemyData> {
                                       health: enemy.health / enemy.maxHealth,
                                       lastHealth: enemy.lastHealth / enemy.maxHealth,
                                       timeSinceHit: Float(enemy.timeSinceLastHit),
+                                      dmgPowerUpImpulse1: dmgPowerUpImpulse1,
+                                      dmgPowerUpImpulse2: dmgPowerUpImpulse2,
                                       dmgReceived: enemy.dmgReceivedNormalized,
                                       seed: enemy.seed)
             enemyDataArr.append(enemyData)
@@ -45,9 +51,6 @@ class EnemyRenderer: InstanceRenderer<EnemyData> {
                 }
             }
         }
-        
-        var isDamagePowerUpActive: Float = renderer.scene.playerManager.increasedDamagePowerUp.isActive ? 1 : 0
-        renderer.renderEncoder.setFragmentBytes(&isDamagePowerUpActive, length: MemoryLayout<Float>.size, index: 0)
         
         draw(data: enemyDataArr, with: renderer.renderEncoder)
     }

@@ -337,7 +337,9 @@ extension GameScene {
                 if d - 0.1 <= r {
                     let damageInfo = playerManager.getDamageInfo()
                     let impactMod = 140 * min(damageInfo.amount / enemy.maxHealth, 1.0)
-                    enemy.receiveDamage(damageInfo.amount, impact: direction * impactMod)
+                    enemy.receiveDamage(damageInfo.amount,
+                                        impact: direction * impactMod,
+                                        isDamagePowerUpActive: playerManager.increasedDamagePowerUp.isActive)
                     didEnemyReceiveDamage(enemy: enemy, damageInfo: damageInfo)
                     
                     if player.stage != .idle || player.prevStage == .piercing {

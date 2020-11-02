@@ -40,6 +40,8 @@ typedef struct
     float health;
     float lastHealth;
     float timeSinceHit;
+    float dmgPowerUpImpulse1;
+    float dmgPowerUpImpulse2;
     float dmgReceived;
     float seed;
 } EnemyOut;
