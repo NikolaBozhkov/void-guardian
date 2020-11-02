@@ -190,8 +190,8 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     
     float dfaa = 0.01;
     float dfw = 0.2;
-    float dfh = 0.05 * pow(1.0 - p.y / dfw, 1.0);
-    float dfx1 = 0.1 * pow(1.0 - p.y / dfw, 1.0);
+    float dfh = 0.1 * pow(1.0 - p.y / dfw, 1.5);
+    float dfx1 = 0.1 * pow(1.0 - p.y / dfw, 1.2);
     float df = 1.0 - smoothstep(dfw - dfaa, dfw, p.y);
     df *= smoothstep(dfx1 - dfaa, dfx1, p.x) - smoothstep(dfx1 + dfh, dfx1 + dfh + dfaa, p.x);
     df *= impulse;
