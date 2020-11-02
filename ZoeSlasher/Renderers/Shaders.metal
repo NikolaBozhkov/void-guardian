@@ -184,17 +184,21 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     
     float dfk = 15;
     float dfi = expImpulse(in.timeSinceHit + 1 / dfk, dfk);
-    p.x += 0.21 + 0.1 * (1.0 - dfi);
+    float dfxr = 0.17, dfhr = 0.1, dfaa = 0.01;
+    p.x += dfxr + dfhr + dfaa + 0.05 * (1.0 - dfi);
     p.y = fract(p.y) * 2.0 - 1.0;
     p.y = abs(p.y);
     
-    float dfaa = 0.01;
+    p.x /= r;
+    
     float dfw = 0.2;
-    float dfh = 0.1 * pow(1.0 - p.y / dfw, 1.5);
-    float dfx1 = 0.1 * pow(1.0 - p.y / dfw, 1.2);
-    float df = 1.0 - smoothstep(dfw - dfaa, dfw, p.y);
-    df *= smoothstep(dfx1 - dfaa, dfx1, p.x) - smoothstep(dfx1 + dfh, dfx1 + dfh + dfaa, p.x);
+    float dfh = dfhr * (1.0 - p.y / dfw);
+    float dfx1 = dfxr * (1.0 - p.y / dfw);
+    float dfx2 = dfxr * pow(1.0 - p.y / dfw, 1.2);
+    float df = 1.0 - smoothstep(dfw, dfw + dfaa, p.y);
+    df *= smoothstep(dfx1, dfx1 + dfaa, p.x) - smoothstep(dfx2 + dfh, dfx2 + dfh + dfaa, p.x);
     df *= impulse;
+    df = max(df, 0.0);
     enemy += df;
     
     // Spawning
