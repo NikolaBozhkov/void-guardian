@@ -186,7 +186,7 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     
     float dfxr = 0.17, dfhr = 0.1, dfaa = 0.01;
     p.x += dfxr + dfhr + dfaa + 0.05 * (1.0 - in.dmgPowerUpImpulse2);
-    p.y = fract(p.y) * 2.0 - 1.0;
+    p.y = fract(p.y + in.seed) * 2.0 - 1.0;
     p.y = abs(p.y);
     
     p.x /= r;
