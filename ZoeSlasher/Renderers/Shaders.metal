@@ -214,14 +214,8 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float destroy = 1.0 - smoothstep(destroyProgress, destroyProgress + 1.0, r);
     destroy = mix(destroy, 1.0, step(0.001, df));
     
-    if (in.timeAlive >= 0)
-    {
-        enemy *= visible;
-    }
-    else
-    {
-        enemy *= destroy;
-    }
+    float isAlive = step(0.0, in.timeAlive);
+    enemy = enemy * visible * isAlive + enemy * destroy * (1.0 - isAlive);
     
     f = min(f, 1.0);
     
