@@ -48,6 +48,7 @@ class GameScene: Scene {
     var indicators = Set<ProgressNode>()
     
     var particles = Set<Particle>()
+    var instantKillFxNodes = Set<InstantKillFxNode>()
     
     var hitEnemies = Set<Enemy>()
     var enemyHitsForMove = 0
@@ -232,6 +233,13 @@ class GameScene: Scene {
                 indicators.remove($0)
             }
         }
+        
+        instantKillFxNodes.forEach {
+            $0.update(deltaTime: deltaTime)
+            if $0.shouldRemove {
+                instantKillFxNodes.remove($0)
+            }
+        }
     }
     
     func didTap(at location: vector_float2) {
@@ -264,6 +272,13 @@ class GameScene: Scene {
         // Remove attack related to enemy
         if let attack = attacks.first(where: { $0.enemy === enemy }) {
             removeEnemyAttack(attack)
+        }
+        
+        if playerManager.instantKillPowerUp.isActive {
+            let fxNode = InstantKillFxNode(size: [800, 800])
+            fxNode.parent = rootNode
+            fxNode.position = enemy.positionBeforeImpact
+            instantKillFxNodes.insert(fxNode)
         }
         
         // Particles

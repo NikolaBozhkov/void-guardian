@@ -67,6 +67,9 @@
 		2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112F24156A1500900AE9 /* Muli-Regular.ttf */; };
 		24981132241820CA00900AE9 /* Potion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24981131241820CA00900AE9 /* Potion.swift */; };
 		249811352418271F00900AE9 /* Potion.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249811342418271F00900AE9 /* Potion.metal */; };
+		249DA5E92555264F006A8047 /* InstantKillFxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5E82555264F006A8047 /* InstantKillFxNode.swift */; };
+		249DA5ED255529AF006A8047 /* InstantKillFxRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5EC255529AF006A8047 /* InstantKillFxRenderer.swift */; };
+		249DA5F0255E622E006A8047 /* InstantKillFx.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5EF255E622E006A8047 /* InstantKillFx.metal */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
@@ -172,6 +175,9 @@
 		2498112F24156A1500900AE9 /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
 		24981131241820CA00900AE9 /* Potion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Potion.swift; sourceTree = "<group>"; };
 		249811342418271F00900AE9 /* Potion.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Potion.metal; sourceTree = "<group>"; };
+		249DA5E82555264F006A8047 /* InstantKillFxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantKillFxNode.swift; sourceTree = "<group>"; };
+		249DA5EC255529AF006A8047 /* InstantKillFxRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantKillFxRenderer.swift; sourceTree = "<group>"; };
+		249DA5EF255E622E006A8047 /* InstantKillFx.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = InstantKillFx.metal; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
@@ -344,6 +350,8 @@
 				249811342418271F00900AE9 /* Potion.metal */,
 				2414AB472515C85900B3299C /* MainPotionRenderer.swift */,
 				2414AB492515CD7500B3299C /* TextureHolder.swift */,
+				249DA5EC255529AF006A8047 /* InstantKillFxRenderer.swift */,
+				249DA5EF255E622E006A8047 /* InstantKillFx.metal */,
 				2465E7782435F20D0019CE02 /* TextureRenderer.swift */,
 				24F070BE2522FF7000D2954D /* MainTextureRenderer.swift */,
 				24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */,
@@ -393,6 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				2464427A24127BEA004CF697 /* UI */,
+				249DA5E725552621006A8047 /* FX */,
 				24E7D8A324050A47007A66D2 /* Entities */,
 				2414AB202511E56A00B3299C /* Spawners */,
 				247D704723E6B20B00480199 /* GameScene.swift */,
@@ -445,6 +454,18 @@
 			path = Potion;
 			sourceTree = "<group>";
 		};
+		249DA5E725552621006A8047 /* FX */ = {
+			isa = PBXGroup;
+			children = (
+				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
+				24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */,
+				24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */,
+				24D15E992549C9B2004DA636 /* ProgressNode.swift */,
+				249DA5E82555264F006A8047 /* InstantKillFxNode.swift */,
+			);
+			path = FX;
+			sourceTree = "<group>";
+		};
 		24D9E84F23C1C8B500CB6638 = {
 			isa = PBXGroup;
 			children = (
@@ -487,10 +508,6 @@
 				2414AB1925108F3600B3299C /* Enemy */,
 				2414AB1825108F2200B3299C /* Player */,
 				249811332418270F00900AE9 /* Potion */,
-				24AEB5112430A8BF00EC37F4 /* Particle.swift */,
-				24F6BAFB25497486009C6170 /* UtilitySpawnIndicator.swift */,
-				24D15E902549BF90004DA636 /* ShockwaveIndicator.swift */,
-				24D15E992549C9B2004DA636 /* ProgressNode.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -618,6 +635,7 @@
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
 				247F6AEF25447BAD0021D562 /* ArcTrailRenderer.swift in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
+				249DA5ED255529AF006A8047 /* InstantKillFxRenderer.swift in Sources */,
 				24D9E86323C1C8B500CB6638 /* Shaders.metal in Sources */,
 				2414AB462515C72400B3299C /* EnemyAttackRenderer.swift in Sources */,
 				2469393723C4A544001A6CAE /* Node.swift in Sources */,
@@ -659,6 +677,7 @@
 				24D15E8E2549BEE1004DA636 /* Indicators.metal in Sources */,
 				2414AB442515C66700B3299C /* ParticleRenderer.swift in Sources */,
 				24981132241820CA00900AE9 /* Potion.swift in Sources */,
+				249DA5E92555264F006A8047 /* InstantKillFxNode.swift in Sources */,
 				2414AB15250D091000B3299C /* EnergySymbol.swift in Sources */,
 				2414AB242511E5FB00B3299C /* PotionSpawner.swift in Sources */,
 				24E65F512483BF50004EE053 /* TutorialScreen.swift in Sources */,
@@ -669,6 +688,7 @@
 				2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */,
 				2468E3B124613D63004042AD /* Screen.swift in Sources */,
 				2469393923C5D126001A6CAE /* Player.swift in Sources */,
+				249DA5F0255E622E006A8047 /* InstantKillFx.metal in Sources */,
 				24EBD46B245C725000410D1E /* PauseScreen.swift in Sources */,
 				24FB6A0A254EF1B900A1007C /* EnemyDamageLabel.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,

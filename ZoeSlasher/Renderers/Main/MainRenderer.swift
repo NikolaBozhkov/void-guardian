@@ -55,6 +55,7 @@ class MainRenderer: NSObject {
     let mainPotionRenderer: MainPotionRenderer
     let mainPowerUpNodeRenderer: MainPowerUpNodeRenderer
     let arcTrailRenderer: ArcTrailRenderer
+    let instantKillFxRenderer: InstantKillFxRenderer
     
     let backgroundRenderer: Renderer
     let playerRenderer: Renderer
@@ -161,6 +162,7 @@ class MainRenderer: NSObject {
         trailRenderer = TrailRenderer(device: device, library: library)
         mainPotionRenderer = MainPotionRenderer(device: device, library: library)
         mainPowerUpNodeRenderer = MainPowerUpNodeRenderer(device: device, library: library)
+        instantKillFxRenderer = InstantKillFxRenderer(device: device, library: library)
         
         arcTrailRenderer = ArcTrailRenderer(device: device, library: library, fragmentFunction: "fragmentArcTrail",
                                             radius: 290, angularLength: .pi / 3.3, width: 45, segments: 10)
@@ -310,8 +312,8 @@ extension MainRenderer {
     }
     
     func renderEnergySymbol(_ node: EnergySymbol) {
-        renderEncoder.setFragmentTexture(TextureHolder.shared.energy, index: 2)
-        renderEncoder.setFragmentTexture(TextureHolder.shared.energyGlow, index: 4)
+        renderEncoder.setFragmentTexture(TextureHolder.shared[TextureNames.energy], index: 2)
+        renderEncoder.setFragmentTexture(TextureHolder.shared[TextureNames.energyGlow], index: 4)
         
         renderEncoder.setFragmentBytes(&node.timeSinceNoEnergy,
                                        length: MemoryLayout<Float>.size,
@@ -440,7 +442,6 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(gradientFbmrTexture, index: 1)
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
-        
         let shieldPowerUp = scene.playerManager.shieldPowerUp
         if shieldPowerUp.isActive || shieldPowerUp.timeSinceDeactivated < 1.0 {
             let shield = Node(size: [1, 1] * 530)
@@ -470,6 +471,9 @@ extension MainRenderer: MTKViewDelegate {
         drawNodes(scene.children)
         
         particleRenderer.draw(particles: scene.particles, with: renderEncoder)
+        
+        instantKillFxRenderer.draw(instantKillFxNodes: scene.instantKillFxNodes, with: renderEncoder)
+        
         enemyAttackRenderer.draw(attacks: scene.attacks, with: renderEncoder)
         enemyRenderer.draw(enemies: scene.enemies, renderer: self)
         
@@ -486,7 +490,7 @@ extension MainRenderer: MTKViewDelegate {
         }
         
         mainPowerUpNodeRenderer.draw(powerUpNodes: scene.powerUpNodes, renderer: self)
-        
+
         mainTextureRenderer.draw(with: renderEncoder)
         
         let viewport = CGRect(x: 0, y: 0, width: view.drawableSize.width, height: view.drawableSize.height)

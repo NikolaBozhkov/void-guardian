@@ -12,8 +12,12 @@ class MainPotionRenderer {
     var potionTypeToRendererMap: [PotionType: PotionRenderer] = [:]
     
     init(device: MTLDevice, library: MTLLibrary) {
-        potionTypeToRendererMap[.energy] = PotionRenderer(device: device, library: library, texture: TextureHolder.shared.energy)
-        potionTypeToRendererMap[.health] = PotionRenderer(device: device, library: library, texture: TextureHolder.shared.balance)
+        potionTypeToRendererMap[.energy] = PotionRenderer(device: device,
+                                                          library: library,
+                                                          texture: TextureHolder.shared[TextureNames.energy])
+        potionTypeToRendererMap[.health] = PotionRenderer(device: device,
+                                                          library: library,
+                                                          texture: TextureHolder.shared[TextureNames.balance])
     }
     
     func draw(potions: Set<Potion>, renderer: MainRenderer) {

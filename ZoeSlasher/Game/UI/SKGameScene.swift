@@ -190,8 +190,6 @@ class SKGameScene: SKScene {
     }
     
     func didEnemyReceiveDamage(enemy: Enemy, damageInfo: DamageInfo, powerFactor: Float) {
-        var damageInfo = damageInfo
-//        damageInfo.isCrit = true
         let spawnPosition = CGPoint(enemy.positionBeforeImpact + [0, 95])
         let label = PlayerDamageLabel(damageInfo: damageInfo, spawnPosition: spawnPosition)
         addChild(label)

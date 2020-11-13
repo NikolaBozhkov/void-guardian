@@ -30,7 +30,7 @@ class Enemy: Node {
     private(set) var shouldRemove = false
     
     var health: Float = 0 {
-        didSet { health = max(health, 100) }
+        didSet { health = max(health, 0) }
     }
     
     let maxHealth: Float

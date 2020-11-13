@@ -212,6 +212,7 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     float destroyProgress = (-in.timeAlive - 1) * 1.2;
     destroyProgress = pow(destroyProgress, 3.0);
     float destroy = 1.0 - smoothstep(destroyProgress, destroyProgress + 1.0, r);
+    destroy = mix(destroy, 1.0, step(0.001, df));
     
     if (in.timeAlive >= 0)
     {

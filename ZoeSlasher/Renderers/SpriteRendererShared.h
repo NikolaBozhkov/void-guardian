@@ -102,4 +102,11 @@ typedef struct {
     float seed;
 } PowerUpTrailOut;
 
+typedef struct {
+    float4 position [[position]];
+    float2 uv;
+    float alpha;
+    float brightness;
+} InstantKillFxOut;
+
 #endif /* SpriteRendererShared_h */

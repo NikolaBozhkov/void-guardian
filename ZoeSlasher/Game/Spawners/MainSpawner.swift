@@ -18,9 +18,14 @@ class MainSpawner {
         powerUpSpawner.scene = scene
         
         
-        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-300, -200])
+        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-600, -200])
+//        let fxNode = InstantKillFxNode()
+//        fxNode.position = [-600, -200] + [5, -2]
+//        fxNode.color.xyz = [0.0, 0.0, 0.0]
+//        fxNode.size = [800, 800]
+//        scene.instantKillFxNodes.insert(fxNode)
         enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [0, -50])
-        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [500, 200])
+        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [600, 200])
         
 //        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
 //        scene.indicators.insert(shockwaveIndicator)

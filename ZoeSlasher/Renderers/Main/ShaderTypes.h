@@ -127,6 +127,14 @@ struct PowerUpTrailData
     float seed;
 };
 
+struct InstantKillFxData
+{
+    matrix_float4x4 worldTransform;
+    simd_float2 size;
+    float alpha;
+    float brightness;
+};
+
 struct EmptyData {};
 
 struct TrailVertex
