@@ -43,7 +43,7 @@ extension BasicAttackAbility {
     private static func getConfig(forStage stage: Int) -> BasicAttackAbilityConfig {
         let config = BasicAttackAbilityConfig()
         
-        config.symbol = "basic"
+        config.symbol = TextureNames.basicEnemySymbol
         config.color = vector_float3(1.0, 0.048, 0.061)
         config.colorScale = 0.9
         config.stage = stage

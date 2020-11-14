@@ -48,7 +48,7 @@ extension MachineGunAbility {
     private static func getConfig(forStage stage: Int) -> MachineGunAbilityConfig {
         let config = MachineGunAbilityConfig()
         
-        config.symbol = "machine-gun"
+        config.symbol = TextureNames.machineGunEnemySymbol
         config.color = vector_float3(1.000, 0.537, 0.047)
         config.colorScale = 0.9
         config.stage = stage

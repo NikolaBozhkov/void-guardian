@@ -53,6 +53,8 @@ class SKGameScene: SKScene {
     private var favorSymbol: SKSpriteNode!
     private var scoreLabel: SKLabelNode!
     
+    private var activePowerUpLabels = 0
+    
     private var score = 0 {
         didSet {
             scoreLabel.text = "\(score)"
@@ -138,6 +140,40 @@ class SKGameScene: SKScene {
         addChild(scoreLabel)
         addChild(favorLabel)
         addChild(favorSymbol)
+    }
+    
+    func didConsumePowerUp(type: PowerUpType) {
+        let text: String
+        switch type {
+        case .shield:
+            text = "Shield"
+        case .doublePotionRestore:
+            text = "2x Potion Restore"
+        case .increasedDamage:
+            text = "Increased Damage"
+        case .instantKill:
+            text = "Instant Kill"
+        }
+        
+        let label = makeAnnouncementLabel(text: text, fontSize: 220)
+        label.position.offset(dx: 0, dy: 50 - label.frame.height * CGFloat(activePowerUpLabels))
+        label.alpha = 0.0
+        
+        activePowerUpLabels += 1
+        
+        label.run(SKAction.fadeIn(withDuration: 0.5, timingMode: .easeOut))
+        label.run(SKAction.move(by: CGVector(dx: 0, dy: 350), duration: 1.0, timingMode: .linear))
+        
+        label.run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.5),
+            SKAction.run {
+                self.activePowerUpLabels -= 1
+            },
+            SKAction.fadeOut(withDuration: 0.5, timingMode: .easeIn),
+            SKAction.removeFromParent()
+        ]))
+        
+        addChild(label)
     }
     
     func didCombo(multiplier: Int, energy: Int, favor: Int) {
@@ -235,34 +271,6 @@ class SKGameScene: SKScene {
         followPlayerNode.addChild(indicator)
     }
     
-    func getPositionInfoAroundPlayer(withOffset offset: CGFloat,
-                                     forSize size: CGSize,
-                                     padding: CGPoint) -> (position: CGPoint, direction: CGPoint) {
-        let topEdge = gameScene.player.position.y + Float(size.height + offset + padding.y)
-        let doesFitTop = topEdge < gameScene.size.y / 2
-        
-        let leftEdge = gameScene.player.position.x - Float(size.width / 2 + padding.x)
-        let rightEdge = gameScene.player.position.x + Float(size.width / 2 + padding.x)
-        let doesFitSideways = leftEdge > gameScene.safeLeft && rightEdge < gameScene.size.x / 2
-        
-        let doesFitRight = gameScene.player.position.x + Float(size.width + offset + padding.x) < gameScene.size.x / 2
-        
-        let direction: CGPoint
-        if doesFitTop && doesFitSideways {
-            direction = CGPoint(x: 0, y: 1)
-        } else if !doesFitTop && doesFitSideways {
-            direction = CGPoint(x: 0, y: -1)
-        } else if doesFitRight {
-            direction = CGPoint(x: 1, y: 0)
-        } else {
-            direction = CGPoint(x: -1, y: 0)
-        }
-        
-        let positionOffset = CGPoint(x: direction.x * (offset + size.width / 2),
-                                     y: direction.y * (offset + size.height / 2))
-        return (CGPoint(gameScene.player.position) + positionOffset, direction)
-    }
-    
     func showNoEnergyLabel() {
         let label = makeLabel(text: "Not enough energy", fontSize: 100, fontName: UIConstants.muliFont)
         label.fontColor = SKColor(red: 1.0, green: 0.2, blue: 0.2, alpha: 1.0)
@@ -293,7 +301,35 @@ class SKGameScene: SKScene {
         favorLabel.text = "\(Int(newValue))"
     }
     
-    func shake(_ powerFactor: Float) {
+    private func getPositionInfoAroundPlayer(withOffset offset: CGFloat,
+                                             forSize size: CGSize,
+                                             padding: CGPoint) -> (position: CGPoint, direction: CGPoint) {
+        let topEdge = gameScene.player.position.y + Float(size.height + offset + padding.y)
+        let doesFitTop = topEdge < gameScene.size.y / 2
+        
+        let leftEdge = gameScene.player.position.x - Float(size.width / 2 + padding.x)
+        let rightEdge = gameScene.player.position.x + Float(size.width / 2 + padding.x)
+        let doesFitSideways = leftEdge > gameScene.safeLeft && rightEdge < gameScene.size.x / 2
+        
+        let doesFitRight = gameScene.player.position.x + Float(size.width + offset + padding.x) < gameScene.size.x / 2
+        
+        let direction: CGPoint
+        if doesFitTop && doesFitSideways {
+            direction = CGPoint(x: 0, y: 1)
+        } else if !doesFitTop && doesFitSideways {
+            direction = CGPoint(x: 0, y: -1)
+        } else if doesFitRight {
+            direction = CGPoint(x: 1, y: 0)
+        } else {
+            direction = CGPoint(x: -1, y: 0)
+        }
+        
+        let positionOffset = CGPoint(x: direction.x * (offset + size.width / 2),
+                                     y: direction.y * (offset + size.height / 2))
+        return (CGPoint(gameScene.player.position) + positionOffset, direction)
+    }
+    
+    private func shake(_ powerFactor: Float) {
         let f = 1 - powerFactor
         let powerFactor = 1 - f*f*f
         
@@ -317,8 +353,6 @@ class SKGameScene: SKScene {
         
         shakeNode.run(SKAction.sequence(actions))
     }
-    
-    
     
     private func makeLabel(text: String, fontSize: CGFloat, fontName: String = UIConstants.fontName) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: fontName)

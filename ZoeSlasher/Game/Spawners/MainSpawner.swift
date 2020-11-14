@@ -19,11 +19,6 @@ class MainSpawner {
         
         
         enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-600, -200])
-//        let fxNode = InstantKillFxNode()
-//        fxNode.position = [-600, -200] + [5, -2]
-//        fxNode.color.xyz = [0.0, 0.0, 0.0]
-//        fxNode.size = [800, 800]
-//        scene.instantKillFxNodes.insert(fxNode)
         enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [0, -50])
         enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [600, 200])
         
@@ -34,13 +29,12 @@ class MainSpawner {
 //        scene.indicators.insert(spawnIndicator)
         
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [500, -400])
+        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [-1000, -400])
         powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [-300, 400])
         
-//        for _ in 0..<5 {
-//            potionSpawner.spawnPotion(type: PotionType.allCases.randomElement()!)
-//            powerUpSpawner.spawnPowerUp()
-//        }
+        for _ in 0..<5 {
+            powerUpSpawner.spawnPowerUp()
+        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
 //

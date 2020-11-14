@@ -21,8 +21,13 @@ class EnemyRenderer: InstanceRenderer<EnemyData> {
         var enemyDataArr = [EnemyData]()
         for enemy in enemies {
             let k1: Float = 7, k2: Float = 15
-            let dmgPowerUpImpulse1 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k1, k1)
-            let dmgPowerUpImpulse2 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k2, k2)
+            var dmgPowerUpImpulse1 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k1, k1)
+            var dmgPowerUpImpulse2 = expImpulse(enemy.timeSinceLastHitDmgPower + 1 / k2, k2)
+            
+            if renderer.scene.playerManager.instantKillPowerUp.isActive && enemy.timeAlive < 0 {
+                dmgPowerUpImpulse1 = 0
+                dmgPowerUpImpulse2 = 0
+            }
             
             let enemyData = EnemyData(worldTransform: enemy.worldTransform,
                                       size: enemy.size,

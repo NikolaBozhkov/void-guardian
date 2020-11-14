@@ -46,7 +46,7 @@ extension CannonAbility {
     private static func getConfig(forStage stage: Int) -> CannonAbilityConfig {
         let config = CannonAbilityConfig()
         
-        config.symbol = "cannon"
+        config.symbol = TextureNames.cannonEnemySymbol
         config.color = vector_float3(0.898, 0.016, 0.929)
         config.colorScale = 0.9
         config.stage = stage

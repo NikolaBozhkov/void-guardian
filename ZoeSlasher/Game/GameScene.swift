@@ -113,7 +113,7 @@ class GameScene: Scene {
         player.particleTrailHandler.scene = self
         
         rootNode.add(player)
-        player.setPosition([-500, 0])
+        player.setPosition([500, -400])
         
         setToIdle()
     }
@@ -420,6 +420,8 @@ extension GameScene {
                 indicator.parent = player
                 indicator.color.xyz = powerUpNode.powerUp.type.baseColor
                 indicators.insert(indicator)
+                
+                skGameScene.didConsumePowerUp(type: powerUpNode.powerUp.type)
             }
         }
     }
