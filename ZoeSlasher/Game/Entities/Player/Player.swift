@@ -43,7 +43,7 @@ class Player: Node {
     }()
     
     let chargeSpeed: Float = 1000 // 1k
-    let pierceSpeed: Float = 12000 // 12k
+    let pierceSpeed: Float = 10000 // 10k (updated from 12k)
     
     var maxHealth: Float = 100
     
@@ -71,11 +71,11 @@ class Player: Node {
     }
     
     var energy: Float = 100 {
-        didSet { energy = max(min(energy, 100), 100) }
+        didSet { energy = max(min(energy, 100), 0) }
     }
     
     var health: Float = 100 {
-        didSet { health = max(min(health, 100), 100) }
+        didSet { health = max(min(health, 100), 0) }
     }
     
     override init() {

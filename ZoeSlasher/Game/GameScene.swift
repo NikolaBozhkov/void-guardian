@@ -113,7 +113,6 @@ class GameScene: Scene {
         player.particleTrailHandler.scene = self
         
         rootNode.add(player)
-        player.setPosition([500, -400])
         
         setToIdle()
     }

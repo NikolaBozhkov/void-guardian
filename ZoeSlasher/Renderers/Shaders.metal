@@ -245,7 +245,8 @@ vertex AttackOut vertexAttack(constant float4 *vertices [[buffer(BufferIndexVert
     return out;
 }
 
-fragment float4 fragmentAttack(AttackOut in [[stage_in]])
+fragment float4 fragmentAttack(AttackOut in [[stage_in]],
+                               constant Uniforms &uniforms [[buffer(BufferIndexUniforms)]])
 {
     float2 st = in.uv;
     st.x *= in.aspectRatio;
@@ -253,8 +254,8 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     float stretch = 0.4;
     float2 headSt = float2(st.x * stretch, st.y);
     float r = distance(float2(in.progress * stretch, 0.5), headSt);
-    float a = 0.47;
-    float f = 1 - smoothstep(a, 0.5, r);
+    float a = 0.4;
+    float f = (1 - smoothstep(a, 0.5, r));
     
     float tail = in.progress - in.speed * 0.02;
     float localX = clamp(st.x - in.progress, 0.0, 0.5);
@@ -265,12 +266,12 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     float wf = 1 - smoothstep(smoothstep(tail, in.progress, st.x) * a, 0.5, localY);
     
     float w = 0.0;
-    float ww = 0.12, aa = 0.05;
+    float ww = 0.1, aa = 0.05;
     
     float offsetRange = 0.5 * (1.0 - ww - aa);
     float offset = offsetRange * sin(st.x * 0.15);
     float offset1 = offsetRange * sin(st.x * 0.15 + M_PI_F);
-    float offset2 = offsetRange * cos(st.x * 0.09);
+    float offset2 = offsetRange * cos(st.x * 0.1);
     float offsetStr = xIntensity;
     float s = 0.5 + offset * offsetStr;
     float s1 = 0.5 + offset1 * offsetStr;
@@ -280,7 +281,7 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     w += smoothstep(s1 - ww - aa, s1 - ww, st.y) - smoothstep(s1 + ww, s1 + ww + aa, st.y);
     w += smoothstep(s2 - ww - aa, s2 - ww, st.y) - smoothstep(s2 + ww, s2 + ww + aa, st.y);
     
-    w += smoothstep(in.progress - in.speed * 0.008, in.progress, st.x) * 0.7;
+    w += smoothstep(in.progress - in.aspectRatio * 0.05, in.progress, st.x) * 1.0 * (1.0 - smoothstep(a, 0.5, localY));
     w *= wf;
     
     w *= xIntensity;

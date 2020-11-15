@@ -17,10 +17,22 @@ class MainSpawner {
         potionSpawner.scene = scene
         powerUpSpawner.scene = scene
         
+//        let enemy1 = Enemy(position: [-2000, 0], ability: MachineGunAbility.configManager.configs[4].createAbility(for: scene))
+//        attacks.append(EnemyAttack(enemy: enemy1, targetPosition: .zero, corruption: 0))
+//        scene.attacks.insert(attacks[0])
+//
+//        let enemy2 = Enemy(position: [-2000, -100], ability: CannonAbility.configManager.configs[2].createAbility(for: scene))
+//        attacks.append(EnemyAttack(enemy: enemy2, targetPosition: [0, -100], corruption: 40))
+//        scene.attacks.insert(attacks[1])
+//
+//        let enemy3 = Enemy(position: [-2000, -200], ability: BasicAttackAbility.configManager.configs[7].createAbility(for: scene))
+//        attacks.append(EnemyAttack(enemy: enemy3, targetPosition: [0, -200], corruption: 20))
+//        scene.attacks.insert(attacks[2])
         
-        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-600, -200])
-        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [0, -50])
-        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [600, 200])
+//        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-1200, 0])
+//        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [-1200, 600])
+//        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[7], withPosition: [1200, -600])
+//        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [-1200, -600])
         
 //        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
 //        scene.indicators.insert(shockwaveIndicator)
@@ -68,9 +80,9 @@ class MainSpawner {
     }
     
     func update(deltaTime: Float) {
-//        enemySpawner.update(deltaTime: deltaTime)
+        enemySpawner.update(deltaTime: deltaTime)
 //        let deltaTime = deltaTime * 20.0
-//        potionSpawner.update(deltaTime: deltaTime)
-//        powerUpSpawner.update(deltaTime: deltaTime)
+        potionSpawner.update(deltaTime: deltaTime)
+        powerUpSpawner.update(deltaTime: deltaTime)
     }
 }
