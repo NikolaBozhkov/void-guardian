@@ -29,12 +29,12 @@ class MainSpawner {
 //        scene.indicators.insert(spawnIndicator)
         
 //        potionSpawner.spawnPotion(type: .energy, amount: 0, position: .zero)
-        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [-1000, -400])
-        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [-300, 400])
-        
-        for _ in 0..<5 {
-            powerUpSpawner.spawnPowerUp()
-        }
+//        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [-1000, -400])
+//        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [-300, 400])
+//
+//        for _ in 0..<5 {
+//            powerUpSpawner.spawnPowerUp()
+//        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
 //

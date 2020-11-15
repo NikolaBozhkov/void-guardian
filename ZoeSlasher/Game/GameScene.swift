@@ -270,9 +270,9 @@ class GameScene: Scene {
         enemy.destroy()
         
         // Remove attack related to enemy
-        if let attack = attacks.first(where: { $0.enemy === enemy }) {
-            removeEnemyAttack(attack)
-        }
+//        if let attack = attacks.first(where: { $0.enemy === enemy }) {
+//            removeEnemyAttack(attack)
+//        }
         
         if playerManager.instantKillPowerUp.isActive {
             let fxNode = InstantKillFxNode(size: [800, 800])

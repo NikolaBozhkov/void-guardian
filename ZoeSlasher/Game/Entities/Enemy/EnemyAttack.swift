@@ -25,10 +25,10 @@ class EnemyAttack: Node {
     var shouldRemove = false
     var active = true
     
-    private let shotSize: Float = 12
+    let shotSize: Float = 24
     private let fadeOutDuration: Float = 1
     
-    private let delta: simd_float2
+    private var delta: simd_float2
     private let direction: simd_float2
     
     var radius: Float {
@@ -43,7 +43,16 @@ class EnemyAttack: Node {
 //        speed = 2000
         
         delta = targetPosition - enemy.position
+        
+        let closestDistance: Float
+        if abs(delta.x) > abs(delta.y) {
+            closestDistance = SceneConstants.size.x / 2 - abs(targetPosition.x)
+        } else {
+            closestDistance = SceneConstants.size.y / 2 - abs(targetPosition.y)
+        }
+        
         direction = normalize(delta)
+        delta += closestDistance * direction
         
         super.init()
         

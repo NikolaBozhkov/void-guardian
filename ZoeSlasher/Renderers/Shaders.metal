@@ -250,23 +250,47 @@ fragment float4 fragmentAttack(AttackOut in [[stage_in]])
     float2 st = in.uv;
     st.x *= in.aspectRatio;
     
-    float r = distance(float2(in.progress, 0.5), st);
+    float stretch = 0.4;
+    float2 headSt = float2(st.x * stretch, st.y);
+    float r = distance(float2(in.progress * stretch, 0.5), headSt);
     float a = 0.47;
     float f = 1 - smoothstep(a, 0.5, r);
     
-    float tail = in.progress - in.speed * 0.034;
+    float tail = in.progress - in.speed * 0.02;
     float localX = clamp(st.x - in.progress, 0.0, 0.5);
     float localY = abs(st.y - 0.5);
     float shotHalf = 0.5 * max(0.0, cos(atan2(localY, localX)));
     float xIntensity = smoothstep(tail, in.progress, st.x) - step(in.progress + shotHalf, st.x);
-    float w = 1 - smoothstep(smoothstep(tail, in.progress, st.x) * a, 0.5, localY);
+    
+    float wf = 1 - smoothstep(smoothstep(tail, in.progress, st.x) * a, 0.5, localY);
+    
+    float w = 0.0;
+    float ww = 0.12, aa = 0.05;
+    
+    float offsetRange = 0.5 * (1.0 - ww - aa);
+    float offset = offsetRange * sin(st.x * 0.15);
+    float offset1 = offsetRange * sin(st.x * 0.15 + M_PI_F);
+    float offset2 = offsetRange * cos(st.x * 0.09);
+    float offsetStr = xIntensity;
+    float s = 0.5 + offset * offsetStr;
+    float s1 = 0.5 + offset1 * offsetStr;
+    float s2 = 0.5 + offset2 * offsetStr;
+    
+    w += smoothstep(s - ww - aa, s - ww, st.y) - smoothstep(s + ww, s + ww + aa, st.y);
+    w += smoothstep(s1 - ww - aa, s1 - ww, st.y) - smoothstep(s1 + ww, s1 + ww + aa, st.y);
+    w += smoothstep(s2 - ww - aa, s2 - ww, st.y) - smoothstep(s2 + ww, s2 + ww + aa, st.y);
+    
+    w += smoothstep(in.progress - in.speed * 0.008, in.progress, st.x) * 0.7;
+    w *= wf;
+    
     w *= xIntensity;
     f += w;
     
     f *= 1 - smoothstep(in.cutOff - 1, in.cutOff, st.x);
     f *= smoothstep(0, 7, st.x);
     
-    return float4(in.color.xyz, f);
+    float3 col = mix(in.color.xyz, mix(in.color.xyz, float3(1.0), 0.7), smoothstep(in.progress - in.speed * 0.008, in.progress, st.x));
+    return float4(col, f);
 }
 
 vertex TrailOut vertexTrail(constant TrailVertex *vertices [[buffer(BufferIndexVertices)]],
