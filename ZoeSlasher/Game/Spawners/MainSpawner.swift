@@ -31,7 +31,7 @@ class MainSpawner {
         
 //        enemySpawner.spawnEnemy(for: CannonAbility.configManager.configs[3], withPosition: [-1200, 0])
 //        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[4], withPosition: [-1200, 600])
-//        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[7], withPosition: [1200, -600])
+        enemySpawner.spawnEnemy(for: MachineGunAbility.configManager.configs[7], withPosition: [1200, -600])
 //        enemySpawner.spawnEnemy(for: BasicAttackAbility.configManager.configs[6], withPosition: [-1200, -600])
         
 //        let shockwaveIndicator = ShockwaveIndicator(size: [1, 1] * 1100)
@@ -80,7 +80,7 @@ class MainSpawner {
     }
     
     func update(deltaTime: Float) {
-        enemySpawner.update(deltaTime: deltaTime)
+//        enemySpawner.update(deltaTime: deltaTime)
 //        let deltaTime = deltaTime * 20.0
         potionSpawner.update(deltaTime: deltaTime)
         powerUpSpawner.update(deltaTime: deltaTime)
