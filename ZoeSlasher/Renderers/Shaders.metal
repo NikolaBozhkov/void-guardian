@@ -184,17 +184,20 @@ fragment float4 fragmentEnemy(EnemyOut in [[stage_in]],
     const float scale = 3.0 / (M_PI_F * 2.0);
     p *= scale;
     
+    // dfxr is the bound of the segment, dfhr is the width of the segment
     float dfxr = 0.17, dfhr = 0.1, dfaa = 0.01;
     p.x += dfxr + dfhr + dfaa + 0.05 * (1.0 - in.dmgPowerUpImpulse2);
     p.y = fract(p.y + in.seed) * 2.0 - 1.0;
     p.y = abs(p.y);
     
+    // Fix distortion
     p.x /= r;
     
     float dfw = 0.2;
-    float dfh = dfhr * (1.0 - p.y / dfw);
-    float dfx1 = dfxr * (1.0 - p.y / dfw);
-    float dfx2 = dfxr * pow(1.0 - p.y / dfw, 1.2);
+    float dfScale = max(1.0 - p.y / dfw, 0.0);
+    float dfh = dfhr * dfScale;
+    float dfx1 = dfxr * dfScale;
+    float dfx2 = dfxr * pow(dfScale, 1.2); // slight curve
     float df = 1.0 - smoothstep(dfw, dfw + dfaa, p.y);
     df *= smoothstep(dfx1, dfx1 + dfaa, p.x) - smoothstep(dfx2 + dfh, dfx2 + dfh + dfaa, p.x);
     df = max(df * in.dmgPowerUpImpulse1, 0.0);

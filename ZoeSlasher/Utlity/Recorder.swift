@@ -222,7 +222,7 @@ class Recorder {
         texture.getBytes(pixelBufferBytes, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
         
         let frameTime = CACurrentMediaTime() - recordingStartTime
-        let presentationTime = CMTimeMakeWithSeconds(frameTime, preferredTimescale: 240)
+        let presentationTime = CMTimeMakeWithSeconds(frameTime, preferredTimescale: 600)
         assetWriterPixelBufferInput.append(pixelBuffer, withPresentationTime: presentationTime)
         
         CVPixelBufferUnlockBaseAddress(pixelBuffer, [])

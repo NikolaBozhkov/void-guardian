@@ -61,15 +61,16 @@ class GameViewController: UIViewController {
         mtkView.isMultipleTouchEnabled = true
         mtkView.autoResizeDrawable = false
         mtkView.drawableSize = mtkView.bounds.size * mtkView.contentScaleFactor * 1.0
+        renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
         
         self.mtkView = mtkView
         
         NotificationCenter.default.addObserver(self, selector: #selector(resetTouchState), name: .willResignActive, object: nil)
         
-//        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
-//        tripleTouch.numberOfTouchesRequired = 3
-//        tripleTouch.delaysTouchesBegan = true
-//        mtkView.addGestureRecognizer(tripleTouch)
+        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
+        tripleTouch.numberOfTouchesRequired = 3
+        tripleTouch.delaysTouchesBegan = true
+        mtkView.addGestureRecognizer(tripleTouch)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -82,7 +83,7 @@ class GameViewController: UIViewController {
         
         let currentTime = CACurrentMediaTime()
         if touches.count == 2
-            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.018 {
+            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.0186 {
             
             didTwoFingerTap()
             touchState = .doubleTap

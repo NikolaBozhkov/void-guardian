@@ -26,9 +26,7 @@ class PowerUp {
         if isActive {
             timeSinceActivated += deltaTime
             if timeSinceActivated > duration {
-                isActive = false
-                timeSinceDeactivated = 0
-                timeSinceActivated = -1
+                deactivate()
             }
         } else {
             timeSinceDeactivated += deltaTime
@@ -39,6 +37,12 @@ class PowerUp {
         isActive = true
         timeSinceActivated = 0
         timeSinceDeactivated = -1
+    }
+    
+    func deactivate() {
+        isActive = false
+        timeSinceDeactivated = 0
+        timeSinceActivated = -1
     }
 }
 

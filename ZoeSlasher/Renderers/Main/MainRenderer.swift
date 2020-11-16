@@ -72,16 +72,19 @@ class MainRenderer: NSObject {
     
     var backgroundFbmPipelineState: MTLComputePipelineState!
     var backgroundFbmThreadsPerGroup: MTLSize!
+    var backgroundFbmThreadGroupsPerGrid: MTLSize!
     var backgroundFbmThreadsPerGrid: MTLSize!
     var backgroundFbmTexture: MTLTexture!
     
     var gradientFbmrPipelineState: MTLComputePipelineState!
     var gradFbmrThreadsPerGroup: MTLSize!
+    var gradFbmrThreadGroupsPerGrid: MTLSize!
     var gradFbmrThreadsPerGrid: MTLSize!
     var gradientFbmrTexture: MTLTexture!
     
     var simplexPipelineState: MTLComputePipelineState!
     var entitySimplexThreadsPerGroup: MTLSize!
+    var entitySimplexThreadGroupsPerGrid: MTLSize!
     var entitySimplexThreadsPerGrid: MTLSize!
     var entitySimplexTexture: MTLTexture!
     
@@ -218,12 +221,12 @@ class MainRenderer: NSObject {
         prevTime = currentTime
     }
     
-    private func loadNoiseTextures(forAspectRatio aspectRatio: Float) {
-        var res = 128
+    private func loadNoiseTextures(forAspectRatio aspectRatio: Float, resolution: Float) {
+        let lowRes = 128
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.pixelFormat = .bgra8Unorm
-        textureDescriptor.width = Int(Float(res) * aspectRatio)
-        textureDescriptor.height = res
+        textureDescriptor.width = Int(Float(lowRes) * aspectRatio)
+        textureDescriptor.height = lowRes
         textureDescriptor.usage = [.shaderWrite, .shaderRead]
         backgroundFbmTexture = device.makeTexture(descriptor: textureDescriptor)!
 
@@ -234,9 +237,12 @@ class MainRenderer: NSObject {
         var h = backgroundFbmPipelineState.maxTotalThreadsPerThreadgroup / w
         backgroundFbmThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
         
-        res = 1024
-        textureDescriptor.width = Int(Float(res) * aspectRatio)
-        textureDescriptor.height = res
+        backgroundFbmThreadGroupsPerGrid = MTLSize(width: (backgroundFbmTexture.width + w - 1) / w,
+                                                   height: (backgroundFbmTexture.height + h - 1) / h,
+                                                   depth: 1)
+        
+        textureDescriptor.width = Int(resolution * aspectRatio)
+        textureDescriptor.height = Int(resolution)
         
         gradientFbmrTexture = device.makeTexture(descriptor: textureDescriptor)!
 
@@ -247,9 +253,12 @@ class MainRenderer: NSObject {
         h = gradientFbmrPipelineState.maxTotalThreadsPerThreadgroup / w
         gradFbmrThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
         
-        res = 1024
-        textureDescriptor.width = res
-        textureDescriptor.height = res
+        gradFbmrThreadGroupsPerGrid = MTLSize(width: (gradientFbmrTexture.width + w - 1) / w,
+                                              height: (gradientFbmrTexture.height + h - 1) / h,
+                                              depth: 1)
+        
+        textureDescriptor.width = Int(resolution)
+        textureDescriptor.height = Int(resolution)
         
         entitySimplexTexture = device.makeTexture(descriptor: textureDescriptor)!
 
@@ -259,6 +268,10 @@ class MainRenderer: NSObject {
         w = simplexPipelineState.threadExecutionWidth
         h = simplexPipelineState.maxTotalThreadsPerThreadgroup / w
         entitySimplexThreadsPerGroup = MTLSize(width: w, height: h, depth: 1)
+        
+        entitySimplexThreadGroupsPerGrid = MTLSize(width: (entitySimplexTexture.width + w - 1) / w,
+                                                   height: (entitySimplexTexture.height + h - 1) / h,
+                                                   depth: 1)
     }
 }
 
@@ -357,11 +370,11 @@ extension MainRenderer: MTKViewDelegate {
                                               top:   scene.size.y / 2, bottom: -scene.size.y / 2,
                                               near: -100, far: 100)
         
-        loadNoiseTextures(forAspectRatio: Float(aspectRatio))
+        loadNoiseTextures(forAspectRatio: Float(aspectRatio), resolution: Float(size.height))
         
-        Recorder.CaptureRect.size = sceneSize
-        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
-//        recorder.configure(withResolution: 1024, filePath: "movie6")
+//        Recorder.CaptureRect.size = sceneSize
+//        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
+//        recorder.configure(withResolution: Int32(size.height), filePath: "demo1")
     }
     
     func draw(in view: MTKView) {
@@ -390,8 +403,13 @@ extension MainRenderer: MTKViewDelegate {
         
         computeEncoder.setTexture(backgroundFbmTexture, index: 0)
         
-        computeEncoder.dispatchThreads(backgroundFbmThreadsPerGrid,
-                                       threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
+        if device.supportsFamily(.common3) {
+            computeEncoder.dispatchThreads(backgroundFbmThreadsPerGrid,
+                                           threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
+        } else {
+            computeEncoder.dispatchThreadgroups(backgroundFbmThreadGroupsPerGrid,
+                                                threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
+        }
         
         if noiseNeedsComputing {
             computeEncoder.setComputePipelineState(gradientFbmrPipelineState)
@@ -403,8 +421,13 @@ extension MainRenderer: MTKViewDelegate {
             
             computeEncoder.setTexture(gradientFbmrTexture, index: 0)
 
-            computeEncoder.dispatchThreads(gradFbmrThreadsPerGrid,
-                                           threadsPerThreadgroup: gradFbmrThreadsPerGroup)
+            if device.supportsFamily(.common3) {
+                computeEncoder.dispatchThreads(gradFbmrThreadsPerGrid,
+                                               threadsPerThreadgroup: gradFbmrThreadsPerGroup)
+            } else {
+                computeEncoder.dispatchThreadgroups(gradFbmrThreadGroupsPerGrid,
+                                                    threadsPerThreadgroup: gradFbmrThreadsPerGroup)
+            }
             
             computeEncoder.setComputePipelineState(simplexPipelineState)
             
@@ -413,8 +436,13 @@ extension MainRenderer: MTKViewDelegate {
             
             computeEncoder.setTexture(entitySimplexTexture, index: 0)
 
-            computeEncoder.dispatchThreads(entitySimplexThreadsPerGrid,
-                                           threadsPerThreadgroup: entitySimplexThreadsPerGroup)
+            if device.supportsFamily(.common3) {
+                computeEncoder.dispatchThreads(entitySimplexThreadsPerGrid,
+                                               threadsPerThreadgroup: entitySimplexThreadsPerGroup)
+            } else {
+                computeEncoder.dispatchThreadgroups(entitySimplexThreadGroupsPerGrid,
+                                                    threadsPerThreadgroup: entitySimplexThreadsPerGroup)
+            }
             
             noiseNeedsComputing = false
         }
@@ -443,7 +471,8 @@ extension MainRenderer: MTKViewDelegate {
         renderEncoder.setFragmentTexture(entitySimplexTexture, index: 3)
         
         let shieldPowerUp = scene.playerManager.shieldPowerUp
-        if shieldPowerUp.isActive || shieldPowerUp.timeSinceDeactivated < 1.0 {
+        let isShieldVisible = shieldPowerUp.isActive || shieldPowerUp.timeSinceDeactivated < 1.0
+        if !scene.isGameOver && isShieldVisible {
             let shield = Node(size: [1, 1] * 530)
             shield.position = scene.player.position
             renderEncoder.setFragmentBytes(&shieldPowerUp.timeSinceActivated,

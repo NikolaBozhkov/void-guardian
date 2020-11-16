@@ -205,6 +205,8 @@ class GameScene: Scene {
 
             enemies.forEach(removeEnemy)
             
+            playerManager.powerUps.forEach { $0.deactivate() }
+            
             isGameOver = true
             skGameScene.didGameOver()
 
@@ -244,11 +246,11 @@ class GameScene: Scene {
     func didTap(at location: vector_float2) {
         guard !isGameOver else { return }
 
-        player.health = 0
+//        player.health = 0
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
         
-//        player.move(to: location)
+        player.move(to: location)
     }
     
     func pause() {
@@ -267,11 +269,6 @@ class GameScene: Scene {
     
     func removeEnemy(_ enemy: Enemy) {
         enemy.destroy()
-        
-        // Remove attack related to enemy
-//        if let attack = attacks.first(where: { $0.enemy === enemy }) {
-//            removeEnemyAttack(attack)
-//        }
         
         if playerManager.instantKillPowerUp.isActive {
             let fxNode = InstantKillFxNode(size: [800, 800])
@@ -375,6 +372,8 @@ extension GameScene {
     }
     
     private func testPlayerEnemyAttackCollision() {
+        guard !isGameOver else { return }
+        
         for attack in attacks {
             if attack.active {
                 var shouldRemoveAttack = false
