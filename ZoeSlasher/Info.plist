@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
+	<false/>
 	<key>UIFileSharingEnabled</key>
-	<true/>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Arber-Vintage-Extended.otf</string>
