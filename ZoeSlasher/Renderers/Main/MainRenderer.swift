@@ -372,7 +372,7 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio), resolution: Float(size.height))
         
-//        Recorder.CaptureRect.size = sceneSize
+//        Recorder.CaptureRect.size = [700, 700]
 //        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
 //        recorder.configure(withResolution: Int32(size.height), filePath: "demo1")
     }
