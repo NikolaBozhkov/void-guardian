@@ -377,6 +377,29 @@ extension MainRenderer: MTKViewDelegate {
 //        recorder.configure(withResolution: Int32(size.height), filePath: "demo1")
     }
     
+    func dispatchThreadsWithAvailability(for computeEncoder: MTLComputeCommandEncoder,
+                                         threadsPerGrid: MTLSize,
+                                         threadGroupsPerGrid: MTLSize,
+                                         threadsPerThreadgroup: MTLSize) {
+        if #available(iOS 13, *) {
+            if device.supportsFamily(.common3) {
+                computeEncoder.dispatchThreads(threadsPerGrid,
+                                               threadsPerThreadgroup: threadsPerThreadgroup)
+            } else {
+                computeEncoder.dispatchThreadgroups(threadGroupsPerGrid,
+                                                    threadsPerThreadgroup: threadsPerThreadgroup)
+            }
+        } else {
+            if device.supportsFeatureSet(.iOS_GPUFamily3_v3) {
+                computeEncoder.dispatchThreads(threadsPerGrid,
+                                               threadsPerThreadgroup: threadsPerThreadgroup)
+            } else {
+                computeEncoder.dispatchThreadgroups(threadGroupsPerGrid,
+                                                    threadsPerThreadgroup: threadsPerThreadgroup)
+            }
+        }
+    }
+    
     func draw(in view: MTKView) {
         _ = semaphore.wait(timeout: .distantFuture)
         
@@ -403,13 +426,10 @@ extension MainRenderer: MTKViewDelegate {
         
         computeEncoder.setTexture(backgroundFbmTexture, index: 0)
         
-        if device.supportsFamily(.common3) {
-            computeEncoder.dispatchThreads(backgroundFbmThreadsPerGrid,
-                                           threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
-        } else {
-            computeEncoder.dispatchThreadgroups(backgroundFbmThreadGroupsPerGrid,
-                                                threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
-        }
+        dispatchThreadsWithAvailability(for: computeEncoder,
+                                        threadsPerGrid: backgroundFbmThreadsPerGrid,
+                                        threadGroupsPerGrid: backgroundFbmThreadGroupsPerGrid,
+                                        threadsPerThreadgroup: backgroundFbmThreadsPerGroup)
         
         if noiseNeedsComputing {
             computeEncoder.setComputePipelineState(gradientFbmrPipelineState)
@@ -420,14 +440,11 @@ extension MainRenderer: MTKViewDelegate {
             computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 1)
             
             computeEncoder.setTexture(gradientFbmrTexture, index: 0)
-
-            if device.supportsFamily(.common3) {
-                computeEncoder.dispatchThreads(gradFbmrThreadsPerGrid,
-                                               threadsPerThreadgroup: gradFbmrThreadsPerGroup)
-            } else {
-                computeEncoder.dispatchThreadgroups(gradFbmrThreadGroupsPerGrid,
-                                                    threadsPerThreadgroup: gradFbmrThreadsPerGroup)
-            }
+            
+            dispatchThreadsWithAvailability(for: computeEncoder,
+                                            threadsPerGrid: gradFbmrThreadsPerGrid,
+                                            threadGroupsPerGrid: gradFbmrThreadGroupsPerGrid,
+                                            threadsPerThreadgroup: gradFbmrThreadsPerGroup)
             
             computeEncoder.setComputePipelineState(simplexPipelineState)
             
@@ -436,13 +453,10 @@ extension MainRenderer: MTKViewDelegate {
             
             computeEncoder.setTexture(entitySimplexTexture, index: 0)
 
-            if device.supportsFamily(.common3) {
-                computeEncoder.dispatchThreads(entitySimplexThreadsPerGrid,
-                                               threadsPerThreadgroup: entitySimplexThreadsPerGroup)
-            } else {
-                computeEncoder.dispatchThreadgroups(entitySimplexThreadGroupsPerGrid,
-                                                    threadsPerThreadgroup: entitySimplexThreadsPerGroup)
-            }
+            dispatchThreadsWithAvailability(for: computeEncoder,
+                                            threadsPerGrid: entitySimplexThreadsPerGrid,
+                                            threadGroupsPerGrid: entitySimplexThreadGroupsPerGrid,
+                                            threadsPerThreadgroup: entitySimplexThreadsPerGroup)
             
             noiseNeedsComputing = false
         }

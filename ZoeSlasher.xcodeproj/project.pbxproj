@@ -21,7 +21,6 @@
 		2414AB482515C85900B3299C /* MainPotionRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB472515C85900B3299C /* MainPotionRenderer.swift */; };
 		2414AB4A2515CD7500B3299C /* TextureHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB492515CD7500B3299C /* TextureHolder.swift */; };
 		24229632253585A2003F7F70 /* PotionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24229631253585A2003F7F70 /* PotionType.swift */; };
-		2433B4AE2541BC0A008B0B5B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2433B4AD2541BC0A008B0B5B /* HealthKit.framework */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */; };
 		24446498252324DF00D72EFD /* PowerUp.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24446497252324DF00D72EFD /* PowerUp.metal */; };
@@ -227,7 +226,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2433B4AE2541BC0A008B0B5B /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,7 +767,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -824,7 +822,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -843,6 +841,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -865,6 +864,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
