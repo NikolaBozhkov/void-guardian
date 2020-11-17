@@ -386,15 +386,15 @@ fragment float4 backgroundShader(VertexOut in [[stage_in]],
     float n = pow(1. - fbmr.sample(s, st).x, 2.5);
 //    f += n*0.01;
     
-    float k = 2.5;
+    float k = 3.0;
     float animationTime = timeSinceStageCleared - 0.5;
     float h = expImpulse(animationTime + 1 / k, k) * step(0, animationTime);
     
-    float health = smoothstep(0.0, 0.75, playerHealth);
-    float3 baseCol = mix(float3(1.0, 0.18, 0.16), color.xyz, health);
+    float health = smoothstep(0.15, 0.8, playerHealth);
+    float3 baseCol = mix(float3(1.0, 0.1, 0.0), color.xyz, health);
     float3 col = mix(baseCol, float3(0.345, 1.000, 0.129), h);
     
-    f = 0.04 + f*n*n*n*(0.25 + 0.25 * (1.0 - health) + max(0.65 * h, 0.0));
+    f = 0.04 + f*n*n*n*(0.25 + 0.25 * (1.0 - health) + max(1.5 * h, 0.0));
     
     return float4(col, f);
 }
