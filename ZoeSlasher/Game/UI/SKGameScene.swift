@@ -438,12 +438,12 @@ extension SKGameScene: StageManagerDelegate {
         
         label.run(SKAction.sequence([
             SKAction.scale(to: 1.3, duration: 0.5, timingMode: .easeIn),
-            SKAction.scale(to: 0.96, duration: 0.07, timingMode: .easeInEaseOut),
+            SKAction.scale(to: 0.98, duration: 0.07, timingMode: .easeInEaseOut),
             SKAction.run {
                 self.shake(0.7)
                 self.gameScene.didFinishClearStageImpactAnimation()
             },
-            SKAction.scale(to: 1, duration: 0.04, timingMode: .easeIn),
+            SKAction.scale(to: 1, duration: 0.03, timingMode: .easeIn),
             SKAction.wait(forDuration: 0.5),
             SKAction.fadeOut(withDuration: 0.5, timingMode: .easeIn),
             SKAction.removeFromParent(),
