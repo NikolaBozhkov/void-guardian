@@ -63,8 +63,14 @@ class EnemySpawner {
             
             if availableBudget > 0 && timeSinceLastSpawn >= spawnInterval {
                 
-                let configManager = AbilityConfigManager.all.randomElement()!
-                if let config = configManager.getConfig(forStage: stage, budget: availableBudget) {
+                var availableConfigManagers = [AbilityConfigManager]()
+                for configManager in AbilityConfigManager.all {
+                    if Float.random(in: 0..<1) < configManager.spawnChanceFunction(stage) {
+                        availableConfigManagers.append(configManager)
+                    }
+                }
+                
+                if let config = availableConfigManagers.randomElement()!.getConfig(forStage: stage, budget: availableBudget) {
                     spawnEnemy(for: config)
                     spent += config.cost
                     timeSinceLastSpawn = 0

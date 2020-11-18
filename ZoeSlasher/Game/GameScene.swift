@@ -125,6 +125,10 @@ class GameScene: Scene {
     func startGame() {
         stageManager.reset()
         skGameScene.addGameLabels()
+        
+        if stageManager.stage == 1 {
+            favor = 100
+        }
     }
     
     func update(deltaTime: Float) {
@@ -202,10 +206,11 @@ class GameScene: Scene {
             }
             
             potions.forEach { $0.consume() }
+            
+            powerUpNodes.forEach { $0.activate(forScene: self) }
+            playerManager.powerUps.forEach { $0.deactivate() }
 
             enemies.forEach(removeEnemy)
-            
-            playerManager.powerUps.forEach { $0.deactivate() }
             
             isGameOver = true
             skGameScene.didGameOver()
@@ -247,10 +252,10 @@ class GameScene: Scene {
         guard !isGameOver else { return }
 
 //        player.health = 0
-        enemies.forEach(removeEnemy)
-        stageManager.clearStage()
+//        enemies.forEach(removeEnemy)
+//        stageManager.clearStage()
         
-//        player.move(to: location)
+        player.move(to: location)
     }
     
     func pause() {

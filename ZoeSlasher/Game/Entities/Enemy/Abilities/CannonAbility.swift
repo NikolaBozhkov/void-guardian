@@ -37,9 +37,9 @@ extension CannonAbility {
         
         let configManager = AbilityConfigManager(withConfigs: configs)
         configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
-                                                                   baseChance: 0.05,
-                                                                   chanceGrowth: 0.05,
-                                                                   max: 0.49)
+                                                                   baseChance: 0.2,
+                                                                   chanceGrowth: 0.2,
+                                                                   max: 1.0)
         return configManager
     }()
     
@@ -53,7 +53,7 @@ extension CannonAbility {
         
         config.interval = 10.5
         config.healthModifier = 5.7
-        config.damage = 15 + Float(stage - 1) * 3.5
+        config.damage = 10 + Float(stage - 1) * 3
         
         return config
     }

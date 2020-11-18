@@ -7,7 +7,7 @@
 //
 
 private enum Constants {
-    static let baseBudget: Float = 10
+    static let baseBudget: Float = 8
     static let baseStageDuration: Float = 60
 }
 
@@ -32,6 +32,8 @@ class StageManager {
     private var stageDuration: Float = Constants.baseStageDuration
     private var spawnPeriod: Float = 0
     private var stageTime: Float = Constants.baseStageDuration
+    
+    private var numStarterPotionsSpawned = 0
     
     private(set) var timeSinceStageCleared: Float = 1000
     
@@ -59,6 +61,12 @@ class StageManager {
         }
         
         spawner.update(deltaTime: deltaTime)
+        
+        let nextStarterPotionSpawnTime = Float(numStarterPotionsSpawned * 3)
+        if stage == 1 && numStarterPotionsSpawned <= 3 && stageTime >= nextStarterPotionSpawnTime {
+            spawner.potionSpawner.spawnPotion(type: .energy, amount: PotionSpawner.defaultEnergyAmount)
+            numStarterPotionsSpawned += 1
+        }
     }
     
     func advanceStage() {
@@ -83,7 +91,7 @@ class StageManager {
         // Every 3 stages experience 7 stages up
         let prevStage = stage
         let prevBudget = budget
-        if stage % 3 == 0 {
+        if stage % 8 == 0 {
             for _ in stage..<stage + 21 {
                 stage += 1
                 budget += budgetGrowth
@@ -102,7 +110,7 @@ class StageManager {
         budget = Constants.baseBudget
         isActive = true
         
-        let toStage = ProgressManager.shared.currentStage - 1
+        let toStage = 0 // ProgressManager.shared.currentStage - 1
         stage = 0
         for _ in 0..<toStage {
             budget += budgetGrowth

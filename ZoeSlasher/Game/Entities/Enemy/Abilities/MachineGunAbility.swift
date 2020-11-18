@@ -38,10 +38,10 @@ extension MachineGunAbility {
         configs.reverse()
         
         let configManager = AbilityConfigManager(withConfigs: configs)
-        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 5,
-                                                                   baseChance: 0.05,
-                                                                   chanceGrowth: 0.05,
-                                                                   max: 0.33)
+        configManager.spawnChanceFunction = getSpawnChanceFunction(startStage: 3,
+                                                                   baseChance: 0.2,
+                                                                   chanceGrowth: 0.2,
+                                                                   max: 1.0)
         return configManager
     }()
     
@@ -55,7 +55,7 @@ extension MachineGunAbility {
         
         config.interval = 2
         config.healthModifier = 1.7
-        config.damage = 5 + Float(stage - 1) * 1.5
+        config.damage = 2 + Float(stage - 1) * 1.2
         
         return config
     }

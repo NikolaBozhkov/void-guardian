@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<false/>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Arber-Vintage-Extended.otf</string>
@@ -32,7 +32,7 @@
 		<string>Muli-Regular.ttf</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
-	<false/>
+	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

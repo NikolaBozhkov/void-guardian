@@ -10,6 +10,9 @@ import Foundation
 
 class PotionSpawner {
     
+    static let defaultEnergyAmount: Float = 25
+    static let defaultHealthAmount: Float = 10
+    
     unowned var scene: GameScene!
     
     private let energyPotionInterval: Float = 55
@@ -23,8 +26,10 @@ class PotionSpawner {
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
-        trySpawnPotion(type: .energy, amount: 25, timer: &timeSinceLastEnergyPotion, interval: energyPotionInterval)
-        trySpawnPotion(type: .health, amount: 10, timer: &timeSinceLastHealthPotion, interval: healthPotionInterval)
+        trySpawnPotion(type: .energy, amount: PotionSpawner.defaultEnergyAmount,
+                       timer: &timeSinceLastEnergyPotion, interval: energyPotionInterval)
+        trySpawnPotion(type: .health, amount: PotionSpawner.defaultHealthAmount,
+                       timer: &timeSinceLastHealthPotion, interval: healthPotionInterval)
     }
     
     func spawnPotion(type: PotionType, amount: Float = 0, position: simd_float2? = nil) {
