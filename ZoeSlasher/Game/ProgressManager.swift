@@ -129,6 +129,10 @@ class ProgressManager {
         gameScene.favor = UserDefaults.standard.float(forKey: Key.voidFavor)
         
         // When the state is loaded it is no longer needed
+        clearState()
+    }
+    
+    func clearState() {
         UserDefaults.standard.removeObject(forKey: Key.potions)
         UserDefaults.standard.removeObject(forKey: Key.powerUpNodes)
         UserDefaults.standard.removeObject(forKey: Key.playerPosition)

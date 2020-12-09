@@ -65,12 +65,15 @@ class GameViewController: UIViewController {
         
         self.mtkView = mtkView
         
-        NotificationCenter.default.addObserver(self, selector: #selector(resetTouchState), name: .willResignActive, object: nil)
+        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(didThreeFingerTap))
+        tripleTouch.numberOfTouchesRequired = 3
+        tripleTouch.delaysTouchesBegan = true
+        mtkView.addGestureRecognizer(tripleTouch)
         
-//        let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
-//        tripleTouch.numberOfTouchesRequired = 3
-//        tripleTouch.delaysTouchesBegan = true
-//        mtkView.addGestureRecognizer(tripleTouch)
+//        let quadrupleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
+//        quadrupleTouch.numberOfTouchesRequired = 4
+//        quadrupleTouch.delaysTouchesBegan = true
+//        mtkView.addGestureRecognizer(quadrupleTouch)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -79,52 +82,24 @@ class GameViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        activeTouchCount += touches.count
-        
-        let currentTime = CACurrentMediaTime()
-        if touches.count == 2
-            || lastTouchTime != -1 && currentTime - lastTouchTime <= 0.0186 {
-            
-            didTwoFingerTap()
-            touchState = .doubleTap
-            
-        } else if touches.count == 1 && touchState == .none {
-            let touch = touches.first!
-            let point = normalizeTouchLocation(touch)
-            renderer.coordinator.touchBegan(at: point)
-            
-            lastTouchTime = currentTime
-            touchState = .singleTap
-        }
+        let touch = touches.first!
+        let point = normalizeTouchLocation(touch)
+        renderer.coordinator.touchBegan(at: point)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard touchState == .singleTap else { return }
-        
         let touch = touches.first!
         let point = normalizeTouchLocation(touch)
         renderer.coordinator.touchMoved(at: point)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        defer {
-            activeTouchCount -= touches.count
-        }
-        
-        guard activeTouchCount == 1 && touchState == .singleTap else { return }
-        
         let touch = touches.first!
         let point = normalizeTouchLocation(touch)
         renderer.coordinator.touchEnded(at: point)
-        touchState = .none
     }
     
-    @objc func resetTouchState() {
-        activeTouchCount = 0
-        touchState = .none
-    }
-    
-    @objc func didTwoFingerTap() {
+    @objc func didThreeFingerTap() {
         renderer.coordinator.didPause()
     }
     

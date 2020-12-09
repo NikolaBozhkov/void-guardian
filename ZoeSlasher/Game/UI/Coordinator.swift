@@ -192,6 +192,8 @@ extension Coordinator: StageConfirmScreenDelegate {
     func didConfirmNextStage() {
         gameScene.advanceStage()
         
+        ProgressManager.shared.clearState()
+        
         confirmNextStageScreen.run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 0.15, timingMode: .easeIn),
             SKAction.removeFromParent()
