@@ -47,11 +47,14 @@ class Player: Node {
     
     var maxHealth: Float = 100
     
-    private(set) var desiredPosition = vector_float2.zero
-    private(set) var force = vector_float2.zero
+    var positionLoadCompletionHandler: (() -> Void)?
+    private(set) var isLoadingPosition = false
+    
+    private(set) var desiredPosition = simd_float2.zero
+    private(set) var force = simd_float2.zero
     
     private(set) var moveFinished = true
-    private(set) var prevPosition = vector_float2.zero
+    private(set) var prevPosition = simd_float2.zero
     
     private let energyRechargePerSecond: Float = 7
     private let energyUsagePerShot: Float = 25
@@ -60,7 +63,7 @@ class Player: Node {
     private let piercingDamageRange: ClosedRange<Float> = -Player.basePiercingDamage...Player.basePiercingDamage
     
     private var movementInfo: MovementInfo!
-    private var positionDelta = vector_float2.zero
+    private var positionDelta = simd_float2.zero
     
     private var energySymbols = Set<EnergySymbol>()
     
@@ -161,6 +164,11 @@ class Player: Node {
             
             if stage == .piercing && moveFinished {
                 stage = .idle
+                
+                if isLoadingPosition {
+                    positionLoadCompletionHandler?()
+                    isLoadingPosition = false
+                }
             }
         }
         
@@ -221,12 +229,12 @@ class Player: Node {
         }
     }
     
-    func setPosition(_ position: vector_float2) {
+    func setPosition(_ position: simd_float2) {
         self.position = position
         desiredPosition = position
     }
     
-    func move(to target: vector_float2) {
+    func move(to target: simd_float2) {
         if stage == .idle && hasEnoughEnergy {
             anchor.position = target
             scene.addRootChild(anchor)
@@ -263,6 +271,12 @@ class Player: Node {
         }
     }
     
+    func loadPosition(_ position: simd_float2) {
+        stage = .charging
+        move(to: position)
+        isLoadingPosition = true
+    }
+    
     func destroy() {
         anchor.removeFromParent()
         removeFromParent()
@@ -282,7 +296,7 @@ extension Player {
         let direction: vector_float2
         let distance: Float
         
-        init(position: vector_float2, target: vector_float2, speed: Float) {
+        init(position: simd_float2, target: simd_float2, speed: Float) {
             self.target = target
             self.speed = speed
             initialPosition = position

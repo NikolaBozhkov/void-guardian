@@ -51,6 +51,22 @@ class PowerUpSpawner {
         scene.indicators.insert(spawnIndicator)
     }
     
+    func spawnPowerUp(ofType type: PowerUpType, at position: simd_float2) {
+        let powerUp: PowerUp
+        switch type {
+        case .doublePotionRestore:
+            powerUp = scene.playerManager.doublePotionRestorePowerUp
+        case .increasedDamage:
+            powerUp = scene.playerManager.increasedDamagePowerUp
+        case .instantKill:
+            powerUp = scene.playerManager.instantKillPowerUp
+        case .shield:
+            powerUp = scene.playerManager.shieldPowerUp
+        }
+        
+        spawnPowerUp(powerUp, at: position)
+    }
+    
     private func getRandomPowerUp() -> PowerUp {
         let random = Float.random(in: 0..<1)
         

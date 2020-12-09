@@ -63,7 +63,7 @@ class StageManager {
         
         let nextStarterPotionSpawnTime = Float(numStarterPotionsSpawned * 3)
         if stage == 1 && numStarterPotionsSpawned <= 3 && stageTime >= nextStarterPotionSpawnTime {
-            spawner.potionSpawner.spawnPotion(type: .energy, amount: PotionSpawner.defaultEnergyAmount)
+            spawner.potionSpawner.spawnPotion(ofType: .energy, amount: PotionSpawner.defaultEnergyAmount)
             numStarterPotionsSpawned += 1
         }
     }

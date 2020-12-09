@@ -203,8 +203,6 @@ extension Coordinator: StageConfirmScreenDelegate {
     func didCancelNextStage() {
         activeScreen?.removeFromParent()
         
-        ProgressManager.shared.bestStage = max(ProgressManager.shared.bestStage, gameScene.stageManager.stage)
-        ProgressManager.shared.currentStage = gameScene.stageManager.stage + 1
         recreateGameScene()
         
         overlayScene.addChild(homeScreen)
@@ -227,7 +225,12 @@ extension Coordinator: HomeScreenDelegate {
                 self.gameScene.startGame()
             }
         } else {
-            gameScene.startGame()
+            // Loads the saved game state and starts the game when the player is in the proper position
+            ProgressManager.shared.loadState(for: gameScene)
+            gameScene.startGame(isLoading: true)
+            gameScene.player.positionLoadCompletionHandler = { [unowned self] in
+                self.gameScene.stageManager.reset()
+            }
         }
     }
     

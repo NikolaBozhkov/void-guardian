@@ -66,10 +66,10 @@ class GameScene: Scene {
     
     var isPaused = false
     
+    var isMovementLocked = false
+    
     var isGameOver = false
     var timeSinceGameOver: Float = 0
-    
-    var isStageCleared = false
     
     var prevPlayerPosition: vector_float2 = .zero
     
@@ -122,8 +122,11 @@ class GameScene: Scene {
         stageManager.isActive = false
     }
     
-    func startGame() {
-        stageManager.reset()
+    func startGame(isLoading: Bool = false) {
+        if !isLoading {
+            stageManager.reset()
+        }
+        
         skGameScene.addGameLabels()
         
         if stageManager.stage == 1 {
@@ -248,14 +251,16 @@ class GameScene: Scene {
         }
     }
     
-    func didTap(at location: vector_float2) {
+    func didTap(at location: simd_float2) {
         guard !isGameOver else { return }
 
 //        player.health = 0
 //        enemies.forEach(removeEnemy)
 //        stageManager.clearStage()
         
-        player.move(to: location)
+        if !isMovementLocked && !player.isLoadingPosition {
+            player.move(to: location)
+        }
     }
     
     func pause() {
@@ -270,6 +275,7 @@ class GameScene: Scene {
     
     func advanceStage() {
         stageManager.advanceStage()
+        isMovementLocked = false
     }
     
     func removeEnemy(_ enemy: Enemy) {
@@ -404,6 +410,8 @@ extension GameScene {
     }
     
     private func testPlayerPotionCollision() {
+        guard !player.isLoadingPosition else { return }
+        
         for potion in potions where !potion.isConsumed {
             let threshold = (player.physicsSize.x + potion.physicsSize.x) / 2
             if distance(potion.position, player.position) <= threshold {
@@ -414,6 +422,8 @@ extension GameScene {
     }
     
     private func testPlayerPowerUpCollision() {
+        guard !player.isLoadingPosition else { return }
+        
         for powerUpNode in powerUpNodes where !powerUpNode.isConsumed {
             let threshold = (player.physicsSize.x + powerUpNode.physicsSize.x) / 2
             if distance(powerUpNode.position, player.position) <= threshold {
@@ -474,6 +484,11 @@ extension GameScene: UIDelegate {
     func didFinishClearStageImpactAnimation() {
         player.health = 100
         player.energy = 100
+        
+        // Save state and lock movement when the health and energy are restored
+        // and the stage cleared label animation is finished
+        isMovementLocked = true
+        ProgressManager.shared.saveState(for: self)
     }
 }
 

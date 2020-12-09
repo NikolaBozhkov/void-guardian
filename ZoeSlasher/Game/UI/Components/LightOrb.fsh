@@ -34,10 +34,12 @@ void main() {
     float glow = 1.0 - smoothstep(0.0, 1.0, d);
     c += glow * 0.6;
     
-    float r = 0.6 + 0.2 * noise(vec3(st * 3.0, time * 2.0));
-    c += 1.0 - smoothstep(r - 0.5, r, max(d, 0.5));
-    r = 0.5 + 0.2 * noise(vec3(st * 4.0 + vec2(7.0, 3.1), time * 3.0));
-    c += 1.0 - smoothstep(r - 1.0, r, max(d, 0.0));
+    float n = noise(vec3(st * 3.0, time * 3.0));
+    float r = 0.6 + 0.2 * n;
+    c += 1.0 - smoothstep(r - 0.5 + 0.2 * n, r, max(d, 0.5));
+    r = 0.5 + 0.2 * noise(vec3(st * 4.0 + vec2(7.0, 3.1), time * 4.0));
+    c += 1.0 - smoothstep(r - 0.8 + 0.3 * n, r, max(d, 0.0));
+    c *= 1.0 + n * 0.3;
     
     gl_FragColor = vec4(v_color_mix.xyz * v_color_mix.a * c, c);
 }

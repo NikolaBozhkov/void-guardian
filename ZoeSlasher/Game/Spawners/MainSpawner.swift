@@ -44,8 +44,10 @@ class MainSpawner {
 //        powerUpSpawner.spawnPowerUp(scene.playerManager.increasedDamagePowerUp, at: [-1000, -400])
 //        powerUpSpawner.spawnPowerUp(scene.playerManager.instantKillPowerUp, at: [-300, 400])
 //
-//        for _ in 0..<5 {
+//        for _ in 0..<3 {
 //            powerUpSpawner.spawnPowerUp()
+//            potionSpawner.spawnPotion(type: .energy)
+//            potionSpawner.spawnPotion(type: .health)
 //        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
@@ -81,7 +83,7 @@ class MainSpawner {
     
     func update(deltaTime: Float) {
         enemySpawner.update(deltaTime: deltaTime)
-//        let deltaTime = deltaTime * 20.0
+//        let deltaTime = deltaTime * 5.0
         potionSpawner.update(deltaTime: deltaTime)
         powerUpSpawner.update(deltaTime: deltaTime)
     }

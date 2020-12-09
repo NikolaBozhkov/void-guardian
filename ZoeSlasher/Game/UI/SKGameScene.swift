@@ -443,18 +443,18 @@ extension SKGameScene: StageManagerDelegate {
         ])
         
         if stage % StageManager.bossStageInterval == 0 {
-            label.fontColor = UIColor([1.0, 0.8, 0.02])
+            label.fontColor = UIColor(mix([1.0, 0.8, 0.02], .one, t: 0.4))
             
             let orbDiameter: CGFloat = 240
             let margin: CGFloat = 50
             
             let leftOrb = LightOrb(diameter: orbDiameter)
-            leftOrb.color = label.fontColor!
+            leftOrb.color = label.fontColor!.lighten(byPercent: 0.1)
             let leftOrbX = -label.frame.width / 2 - orbDiameter / 2 - margin
             leftOrb.position = CGPoint(x: leftOrbX, y: 0)
             
             let rightOrb = LightOrb(diameter: orbDiameter)
-            rightOrb.color = label.fontColor!
+            rightOrb.color = leftOrb.color
             rightOrb.position = -leftOrb.position
             
             label.addChild(leftOrb)

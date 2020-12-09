@@ -26,13 +26,13 @@ class PotionSpawner {
         timeSinceLastEnergyPotion += potionDeltaTime
         timeSinceLastHealthPotion += potionDeltaTime
         
-        trySpawnPotion(type: .energy, amount: PotionSpawner.defaultEnergyAmount,
+        trySpawnPotion(ofType: .energy, amount: PotionSpawner.defaultEnergyAmount,
                        timer: &timeSinceLastEnergyPotion, interval: energyPotionInterval)
-        trySpawnPotion(type: .health, amount: PotionSpawner.defaultHealthAmount,
+        trySpawnPotion(ofType: .health, amount: PotionSpawner.defaultHealthAmount,
                        timer: &timeSinceLastHealthPotion, interval: healthPotionInterval)
     }
     
-    func spawnPotion(type: PotionType, amount: Float = 0, position: simd_float2? = nil) {
+    func spawnPotion(ofType type: PotionType, amount: Float = 0, at position: simd_float2? = nil) {
         let potion = Potion(type: type, amount: amount)
         potion.position = position ?? scene.randomPosition(padding: [300, 200])
         potion.parent = scene.rootNode
@@ -44,9 +44,14 @@ class PotionSpawner {
         scene.indicators.insert(spawnIndicator)
     }
     
-    private func trySpawnPotion(type: PotionType, amount: Float, timer: inout Float, interval: Float) {
+    func spawnPotion(ofType type: PotionType, at position: simd_float2) {
+        let amount = type == .energy ? PotionSpawner.defaultEnergyAmount : PotionSpawner.defaultHealthAmount
+        spawnPotion(ofType: type, amount: amount, at: position)
+    }
+    
+    private func trySpawnPotion(ofType type: PotionType, amount: Float, timer: inout Float, interval: Float) {
         if timer >= interval {
-            spawnPotion(type: type, amount: amount)
+            spawnPotion(ofType: type, amount: amount)
             
             timer = 0
         }
