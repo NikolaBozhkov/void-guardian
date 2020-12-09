@@ -55,6 +55,9 @@ class SKGameScene: SKScene {
     
     private var activePowerUpLabels = 0
     
+    private var preloadNodes = [SKNode]()
+    private var preloadTime: Float = 0
+    
     private var score = 0 {
         didSet {
             scoreLabel.text = "\(score)"
@@ -102,9 +105,26 @@ class SKGameScene: SKScene {
 //                print(font)
 //            }
 //        }
+        
+        preload()
+    }
+    
+    func preload() {
+        let lightOrb = LightOrb(diameter: 0)
+        addChild(lightOrb)
+        preloadNodes.append(lightOrb)
     }
     
     func update(deltaTime: Float) {
+        // TODO: Come up with better preload solution
+        preloadTime += deltaTime
+        if preloadTime > 0.1 && !preloadNodes.isEmpty {
+            for (i, node) in preloadNodes.enumerated() {
+                node.removeFromParent()
+                preloadNodes.remove(at: i)
+            }
+        }
+        
         followPlayerNode.position = CGPoint(gameScene.player.position)
         
         for indicator in indicatorToEnemyMap.keys {
