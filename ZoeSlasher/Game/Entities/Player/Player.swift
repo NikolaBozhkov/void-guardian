@@ -53,7 +53,7 @@ class Player: Node {
     private(set) var moveFinished = true
     private(set) var prevPosition = vector_float2.zero
     
-    private let energyRechargePerSecond: Float = 6
+    private let energyRechargePerSecond: Float = 7
     private let energyUsagePerShot: Float = 25
     
     private let chargingDamageRange: ClosedRange<Float> = -Player.baseChargingDamage...Player.baseChargingDamage

@@ -69,6 +69,8 @@
 		249DA5E92555264F006A8047 /* InstantKillFxNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5E82555264F006A8047 /* InstantKillFxNode.swift */; };
 		249DA5ED255529AF006A8047 /* InstantKillFxRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5EC255529AF006A8047 /* InstantKillFxRenderer.swift */; };
 		249DA5F0255E622E006A8047 /* InstantKillFx.metal in Sources */ = {isa = PBXBuildFile; fileRef = 249DA5EF255E622E006A8047 /* InstantKillFx.metal */; };
+		249FE7852580A97D00326396 /* LightOrb.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7842580A97D00326396 /* LightOrb.fsh */; };
+		249FE7882580A9CB00326396 /* LightOrb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7872580A9CB00326396 /* LightOrb.swift */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
@@ -177,6 +179,8 @@
 		249DA5E82555264F006A8047 /* InstantKillFxNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantKillFxNode.swift; sourceTree = "<group>"; };
 		249DA5EC255529AF006A8047 /* InstantKillFxRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantKillFxRenderer.swift; sourceTree = "<group>"; };
 		249DA5EF255E622E006A8047 /* InstantKillFx.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = InstantKillFx.metal; sourceTree = "<group>"; };
+		249FE7842580A97D00326396 /* LightOrb.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = LightOrb.fsh; sourceTree = "<group>"; };
+		249FE7872580A9CB00326396 /* LightOrb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightOrb.swift; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
@@ -377,6 +381,8 @@
 				24FB6A01254EBBB600A1007C /* PlayerDamageLabel.swift */,
 				24FB6A09254EF1B900A1007C /* EnemyDamageLabel.swift */,
 				24FB6A05254EF0A100A1007C /* PopLabel.swift */,
+				249FE7872580A9CB00326396 /* LightOrb.swift */,
+				249FE7842580A97D00326396 /* LightOrb.fsh */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -588,6 +594,7 @@
 				2468E3B524617529004042AD /* TitleLineShader.fsh in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,
 				2468E3A7245EDA58004042AD /* ButtonBorderShader.fsh in Resources */,
+				249FE7852580A97D00326396 /* LightOrb.fsh in Resources */,
 				24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -668,6 +675,7 @@
 				2468E3A5245E99F2004042AD /* OverlayScene.swift in Sources */,
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
+				249FE7882580A9CB00326396 /* LightOrb.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
 				24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */,
 				243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */,

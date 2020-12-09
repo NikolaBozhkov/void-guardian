@@ -24,6 +24,7 @@ class OverlayScene: SKScene {
         
         Button.borderShader.uniforms[0].floatValue = time
         Title.lineShader.uniforms[0].floatValue = time
+        LightOrb.lightOrbShader.uniforms[0].floatValue = time
         
         lastSystemTime = currentTime
     }

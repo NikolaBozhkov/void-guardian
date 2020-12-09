@@ -415,14 +415,34 @@ extension SKGameScene: StageManagerDelegate {
         
         let label = makeAnnouncementLabel(text: "Stage \(stage)", fontSize: 350)
         
-        label.alpha = 0
-        
-        label.run(SKAction.sequence([
+        let fadeInOutAction = SKAction.sequence([
             SKAction.fadeIn(withDuration: 0.5, timingMode: .easeIn),
             SKAction.wait(forDuration: 0.5),
             SKAction.fadeOut(withDuration: 0.5, timingMode: .easeOut),
             SKAction.removeFromParent()
-        ]))
+        ])
+        
+        if stage % StageManager.bossStageInterval == 0 {
+            label.fontColor = UIColor([1.0, 0.8, 0.02])
+            
+            let orbDiameter: CGFloat = 240
+            let margin: CGFloat = 50
+            
+            let leftOrb = LightOrb(diameter: orbDiameter)
+            leftOrb.color = label.fontColor!
+            let leftOrbX = -label.frame.width / 2 - orbDiameter / 2 - margin
+            leftOrb.position = CGPoint(x: leftOrbX, y: 0)
+            
+            let rightOrb = LightOrb(diameter: orbDiameter)
+            rightOrb.color = label.fontColor!
+            rightOrb.position = -leftOrb.position
+            
+            label.addChild(leftOrb)
+            label.addChild(rightOrb)
+        }
+        
+        label.alpha = 0
+        label.run(fadeInOutAction)
         
         addChild(label)
     }

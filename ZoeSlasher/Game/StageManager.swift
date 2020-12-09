@@ -6,11 +6,6 @@
 //  Copyright © 2020 Nikola Bozhkov. All rights reserved.
 //
 
-private enum Constants {
-    static let baseBudget: Float = 8
-    static let baseStageDuration: Float = 60
-}
-
 protocol StageManagerDelegate {
     func didAdvanceStage(to stage: Int)
     func didClearStage()
@@ -18,6 +13,10 @@ protocol StageManagerDelegate {
 
 class StageManager {
     
+    static let baseBudget: Float = 8
+    static let baseStageDuration: Float = 60
+    static let bossStageInterval = 8
+    static let bossStageGrowth = 21
     static let thresholdToBudgetGrowthMap = [0: 0, 1: 0.9, 75: 0.2].sorted(by: { $0.key > $1.key })
     
     let spawner = MainSpawner()
@@ -28,10 +27,10 @@ class StageManager {
         stageTime >= spawnPeriod
     }
     
-    private var budget: Float = Constants.baseBudget
-    private var stageDuration: Float = Constants.baseStageDuration
+    private var budget: Float = StageManager.baseBudget
+    private var stageDuration: Float = StageManager.baseStageDuration
     private var spawnPeriod: Float = 0
-    private var stageTime: Float = Constants.baseStageDuration
+    private var stageTime: Float = StageManager.baseStageDuration
     
     private var numStarterPotionsSpawned = 0
     
@@ -72,7 +71,7 @@ class StageManager {
     func advanceStage() {
         isActive = true
         
-        stageDuration = Constants.baseStageDuration
+        stageDuration = StageManager.baseStageDuration
         stageTime = 0
         
         stage += 1
@@ -88,11 +87,11 @@ class StageManager {
         
         spawnPeriod = stageDuration * 0.34
         
-        // Every 3 stages experience 7 stages up
+        // Every 8 stages experience 21 stages up
         let prevStage = stage
         let prevBudget = budget
-        if stage % 8 == 0 {
-            for _ in stage..<stage + 21 {
+        if stage % StageManager.bossStageInterval == 0 {
+            for _ in stage..<stage + StageManager.bossStageGrowth {
                 stage += 1
                 budget += budgetGrowth
             }
@@ -107,10 +106,10 @@ class StageManager {
     }
     
     func reset() {
-        budget = Constants.baseBudget
+        budget = StageManager.baseBudget
         isActive = true
         
-        let toStage = 0 // ProgressManager.shared.currentStage - 1
+        let toStage = 7 // ProgressManager.shared.currentStage - 1
         stage = 0
         for _ in 0..<toStage {
             budget += budgetGrowth
