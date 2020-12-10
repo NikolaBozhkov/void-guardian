@@ -23,6 +23,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
         
         NotificationCenter.default.post(name: .willResignActive, object: nil)
+        
+        guard let currentTime = AudioManager.shared.bgLoopPlayers[0]?.currentTime else { return }
+        
+        for player in AudioManager.shared.bgLoopPlayers {
+            player?.pause()
+            player?.currentTime = currentTime
+        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -34,6 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        guard let deviceCurrentTime = AudioManager.shared.bgLoopPlayers[0]?.deviceCurrentTime else { return }
+        
+        for player in AudioManager.shared.bgLoopPlayers {
+            player?.play(atTime: deviceCurrentTime + 0.01)
+        }
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 

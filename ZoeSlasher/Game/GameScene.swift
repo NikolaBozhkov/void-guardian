@@ -89,6 +89,7 @@ class GameScene: Scene {
         SceneConstants.set(size: size, safeAreaInsets: safeAreaInsets)
         
         skGameScene = SKGameScene(size: CGSize(size))
+        AudioManager.shared.skScene = skGameScene
         
         stageManager.spawner.setScene(self)
         stageManager.delegate = skGameScene
@@ -129,12 +130,16 @@ class GameScene: Scene {
         
         skGameScene.addGameLabels()
         
+        AudioManager.shared.enterPlayMode()
+        
         if stageManager.stage == 1 {
             favor = 100
         }
     }
     
     func update(deltaTime: Float) {
+        AudioManager.shared.update(deltaTime: deltaTime)
+        
         if isGameOver {
             timeSinceGameOver += deltaTime
         }
@@ -181,14 +186,17 @@ class GameScene: Scene {
         
         let didPlayerStageChange = player.prevStage != player.stage
         if didPlayerStageChange {
+            // Removes the ability to double hit right after landing on top of an enemy
+            if player.stage != .idle {
+                enemies.forEach { $0.resetHitImmunity() }
+            }
+            
             enemyHitsForMove += hitEnemies.count
-            enemies.forEach { $0.resetHitImmunity() }
             hitEnemies.removeAll()
-        }
-        
-        let didPlayerStageChangeToIdle = player.prevStage == .piercing && player.stage == .idle
-        if didPlayerStageChangeToIdle {
-            handleCombo()
+            
+            if player.stage == .idle {
+                handleCombo()
+            }
         }
         
         player.prevStage = player.stage
@@ -417,6 +425,7 @@ extension GameScene {
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
                 skGameScene.didConsumePotion(potion)
+//                AudioManager.shared.powerUpPickup.play()
             }
         }
     }
@@ -435,6 +444,7 @@ extension GameScene {
                 indicators.insert(indicator)
                 
                 skGameScene.didConsumePowerUp(type: powerUpNode.powerUp.type)
+//                AudioManager.shared.powerUpPickup.play()
             }
         }
     }
@@ -461,9 +471,12 @@ extension GameScene {
         let powerFactor = min(damageInfo.amount / enemy.maxHealth, 1.0)
         skGameScene.didEnemyReceiveDamage(enemy: enemy, damageInfo: damageInfo, powerFactor: powerFactor)
         
-        if enemy.health < 1 {
+        guard enemy.health >= 1 else {
+            AudioManager.shared.enemyDeathImpact.play()
             return
         }
+        
+        AudioManager.shared.enemyImpact.play()
         
         // Particles
         let count = 2 + Int(powerFactor * 2.5)

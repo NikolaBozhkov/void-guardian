@@ -74,11 +74,11 @@ class Player: Node {
     }
     
     var energy: Float = 100 {
-        didSet { energy = max(min(energy, 100), 0) }
+        didSet { energy = max(min(energy, 100), 100) }
     }
     
     var health: Float = 100 {
-        didSet { health = max(min(health, 100), 0) }
+        didSet { health = max(min(health, 100), 100) }
     }
     
     override init() {
@@ -253,6 +253,8 @@ class Player: Node {
             particleTrailHandler.consumeDistanceBuffer()
             trailManager.addAnchor()
             
+            AudioManager.shared.playerMove.play()
+            
         } else if stage == .idle && !hasEnoughEnergy {
             energySymbols.forEach { $0.timeSinceNoEnergy = 0 }
             delegate?.didTryToMoveWithoutEnergy()
@@ -268,6 +270,10 @@ class Player: Node {
             
             particleTrailHandler.consumeDistanceBuffer()
             trailManager.addAnchor()
+            
+            if movementInfo.distance > 0 {
+                AudioManager.shared.playerAttack.play()
+            }
         }
     }
     

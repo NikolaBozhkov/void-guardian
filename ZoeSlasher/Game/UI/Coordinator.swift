@@ -25,6 +25,10 @@ class Coordinator {
             } else if let oldScreen = oldValue {
                 oldScreen.hide()
             }
+            
+            if activeScreen == homeScreen {
+                AudioManager.shared.exitPlayMode()
+            }
         }
     }
     
