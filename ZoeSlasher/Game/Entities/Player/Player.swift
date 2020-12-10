@@ -74,11 +74,11 @@ class Player: Node {
     }
     
     var energy: Float = 100 {
-        didSet { energy = max(min(energy, 100), 100) }
+        didSet { energy = max(min(energy, 100), 0) }
     }
     
     var health: Float = 100 {
-        didSet { health = max(min(health, 100), 100) }
+        didSet { health = max(min(health, 100), 0) }
     }
     
     override init() {
