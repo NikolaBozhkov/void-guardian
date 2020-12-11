@@ -19,18 +19,6 @@ class GameViewController: UIViewController {
     var renderer: MainRenderer!
     var coordinator: Coordinator!
     var mtkView: MTKView!
-    
-    var lastTouchTime: TimeInterval = -1
-    
-    var activeTouchCount = 0 {
-        didSet {
-            if activeTouchCount == 0 {
-                touchState = .none
-            }
-        }
-    }
-    
-    var touchState: TouchState = .none
 
     override func viewDidLoad() {
         super.viewDidLoad()
