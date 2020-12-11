@@ -67,7 +67,6 @@ class GameViewController: UIViewController {
         
         let tripleTouch = UITapGestureRecognizer(target: self, action: #selector(didThreeFingerTap))
         tripleTouch.numberOfTouchesRequired = 3
-        tripleTouch.delaysTouchesBegan = true
         mtkView.addGestureRecognizer(tripleTouch)
         
         AudioManager.shared.startBackgroundLoops()
