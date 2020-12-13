@@ -28,7 +28,7 @@ class EnergyGainLabel: SKNode, GainLabel {
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKSymbol.energyBaseColor
+        amountLabel.fontColor = UIColor(mix(Colors.energy, .one, t: 0.9))
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         

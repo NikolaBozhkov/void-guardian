@@ -16,7 +16,14 @@ extension TutorialScreen {
         let maxWidth: CGFloat
         let horizontalAlignment: SKLabelHorizontalAlignmentMode
         
-        init(text: String, horizontalAlignment: SKLabelHorizontalAlignmentMode, maxWidth: CGFloat) {
+        private(set) var height: CGFloat = 0
+        
+        private var isPadded: Bool = true
+        
+        init(text: String,
+             horizontalAlignment: SKLabelHorizontalAlignmentMode,
+             verticalAlignment: SKLabelVerticalAlignmentMode = .top,
+             maxWidth: CGFloat) {
             self.maxWidth = maxWidth
             self.horizontalAlignment = horizontalAlignment
             super.init()
@@ -32,6 +39,11 @@ extension TutorialScreen {
             var paragraph = SKNode()
             
             func finalizeParagraph() {
+                if isPadded {
+                    currentX -= 40
+                    currentWidth -= 40
+                }
+                
                 currentLabel.position.x = currentX
                 paragraph.addChild(currentLabel)
                 
@@ -41,15 +53,30 @@ extension TutorialScreen {
                     paragraph.position.x -= currentWidth
                 }
                 
+                var yAdvance = lineHeight
+                if verticalAlignment == .center {
+                    yAdvance = lineHeight / 2
+                    children.forEach {
+                        $0.position.y += lineHeight / 2
+                    }
+                } else if verticalAlignment == .bottom {
+                    yAdvance = 0
+                    children.forEach {
+                        $0.position.y += lineHeight
+                    }
+                }
+                
                 paragraph.position.y = currentY
                 addChild(paragraph)
                 
                 paragraph = SKNode()
                 
-                currentY -= lineHeight
+                currentY -= yAdvance
                 
                 currentX = 0
                 currentWidth = 0
+                
+                height += lineHeight
             }
             
             for word in words {
@@ -59,7 +86,7 @@ extension TutorialScreen {
                     let parts = word.split(separator: ":")
                     let type = parts[1] == "e" ? SKSymbolType.energy : parts[1] == "h" ? .health : .favor
                     let alignment = parts[2] == "l" ? SymbolLabel.Alignment.left : .right
-                    let text = String(parts[3])
+                    let text = String(parts[3]).replacingOccurrences(of: "@", with: " ")
                     
                     let symbolLabel = SymbolLabel(type: type, text: text, alignment: alignment, sizeMulti: 1.2)
                     
@@ -77,10 +104,26 @@ extension TutorialScreen {
                     
                     currentLabel = createLabel()
                     
+                    if alignment == .left {
+                        currentX -= 40
+                        currentWidth -= 40
+                    }
+                    
                     symbolLabel.position.x = currentX + symbolLabel.width / 2
                     paragraph.addChild(symbolLabel)
                     currentWidth += symbolLabel.width
                     currentX += symbolLabel.width
+                    
+                    if parts.count > 4 && parts[4] == "ns" {
+                        currentX -= 40
+                        currentWidth -= 40
+                    } else if alignment == .left {
+                        currentX += 40
+                        currentWidth += 40
+                        isPadded = true
+                    }
+                } else if word == "\n" {
+                    finalizeParagraph()
                 } else {
                     let nextLabel = createLabel(text: "\(currentLabel.text ?? "") \(word)")
                     let nextWidth = currentWidth + nextLabel.frame.width - currentLabel.frame.width
@@ -102,6 +145,8 @@ extension TutorialScreen {
                         currentLabel = nextLabel
                         currentWidth = nextWidth
                     }
+                    
+                    isPadded = false
                 }
             }
             

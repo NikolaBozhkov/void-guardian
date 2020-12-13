@@ -21,9 +21,9 @@ class TutorialScreen: SKNode, Screen {
     private let nextButton: Button
     private let doneButton: Button
     
-    private let pages = [MovementPage()]
+    private let pages = [HealthAndEnergyPage(), MovementPage(), ComboSystemPage(), PowerUpPage()]
     private var currentPageIndex = 0
-    private lazy var currentPage: Page = { pages[0] }()
+    private var currentPage: Page { pages[currentPageIndex] }
     
     override init() {
         let fontSize: CGFloat = 170

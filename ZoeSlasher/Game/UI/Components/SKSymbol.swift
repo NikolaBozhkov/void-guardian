@@ -28,14 +28,14 @@ class SKSymbol: SKSpriteNode {
     
     private let glow: SKSpriteNode
     
-    init(baseTexture: SKTexture, baseColor: SKColor,
+    init(baseTexture: SKTexture, baseColor: simd_float3,
          glowTexture: SKTexture, glowColor: SKColor,
          glowAlpha: CGFloat, size: CGSize, rightAligned: Bool = true) {
-        self.baseColor = baseColor
+        self.baseColor = UIColor(mix(baseColor, .one, t: 0.6))
         
         glow = SKSpriteNode(texture: glowTexture)
         
-        super.init(texture: baseTexture, color: baseColor, size: size)
+        super.init(texture: baseTexture, color: SKColor(mix(baseColor, .one, t: 0.9)), size: size)
         
         anchorPoint = CGPoint(x: rightAligned ? 1 : 0, y: 0.5)
         colorBlendFactor = 1
@@ -58,7 +58,7 @@ class SKSymbol: SKSpriteNode {
 class SKHealthSymbol: SKSymbol {
     init(size: CGSize) {
         super.init(baseTexture: SKGameScene.balanceSymbolTexture,
-                   baseColor: SKSymbol.healthBaseColor,
+                   baseColor: Colors.player,
                    glowTexture: SKGameScene.balanceSymbolGlowTexture,
                    glowColor: SKColor(Colors.player),
                    glowAlpha: 1,
@@ -73,7 +73,7 @@ class SKHealthSymbol: SKSymbol {
 class SKEnergySymbol: SKSymbol {
     init(size: CGSize) {
         super.init(baseTexture: SKGameScene.energySymbolTexture,
-                   baseColor: SKSymbol.energyBaseColor,
+                   baseColor: Colors.energy,
                    glowTexture: SKGameScene.energySymbolGlowTexture,
                    glowColor: SKColor(Colors.energy),
                    glowAlpha: 0.85,
@@ -88,7 +88,7 @@ class SKEnergySymbol: SKSymbol {
 class SKFavorSymbol: SKSymbol {
     init(size: CGSize, rightAligned: Bool = false) {
         super.init(baseTexture: SKGameScene.voidFavorTexture,
-                   baseColor: SKSymbol.favorBaseColor,
+                   baseColor: Colors.voidFavor,
                    glowTexture: SKGameScene.voidFavorGlowTexture,
                    glowColor: SKColor(Colors.voidFavor),
                    glowAlpha: 0.8,

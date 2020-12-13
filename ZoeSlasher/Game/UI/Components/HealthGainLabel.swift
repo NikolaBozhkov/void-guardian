@@ -28,7 +28,7 @@ class HealthGainLabel: SKNode, GainLabel {
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKSymbol.healthBaseColor
+        amountLabel.fontColor = UIColor(mix(Colors.player, .one, t: 0.9))
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         

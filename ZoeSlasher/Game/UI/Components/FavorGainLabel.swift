@@ -29,7 +29,7 @@ class FavorGainLabel: SKNode, GainLabel {
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKSymbol.favorBaseColor
+        amountLabel.fontColor = UIColor(mix(Colors.voidFavor, .one, t: 0.9))
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         
