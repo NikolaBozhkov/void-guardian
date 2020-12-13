@@ -26,25 +26,24 @@ extension TutorialScreen {
                                            horizontalAlignment: .left,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.4))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 500)
-                addWithPop(label, scale: 0.7)
-                
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 250)
+                addWithPop(label, scale: Constants.midPopScale)
             } else if currentStep == 2 {
                 let label = MultilineLabel(text: "The first part is slow and deals low damage",
                                            horizontalAlignment: .right,
-                                           maxWidth: CGFloat(SceneConstants.size.x * 0.4))
+                                           maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 500)
+                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 310)
                 
-                addWithPop(label)
+                addWithPop(label, scale: Constants.midPopScale)
             } else if currentStep == 3 {
                 let label = MultilineLabel(text: "The second is fast and deals more damage, scaling with distance",
                                            horizontalAlignment: .right,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 0)
+                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: -200)
                 
-                addWithPop(label)
+                addWithPop(label, scale: Constants.midPopScale)
             }
         }
     }

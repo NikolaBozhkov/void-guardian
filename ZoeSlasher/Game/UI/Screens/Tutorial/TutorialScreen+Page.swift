@@ -13,14 +13,18 @@ extension TutorialScreen {
     enum Constants {
         static let symbolMultiplier: CGFloat = 1.5
         static let lineSpacing: CGFloat = 30
-        static let fontSize: CGFloat = 160
+        static let fontSize: CGFloat = 180
         static let symbolMultiText: CGFloat = 1.2
+        static let font = UIConstants.monlyBoldFont
+        static let midPopScale: CGFloat = 0.7
     }
     
     class SymbolLabel: SKNode {
         enum Alignment {
             case left, right
         }
+        
+        static let font = UIFont(name: Constants.font, size: Constants.fontSize)!
         
         let width: CGFloat
         let height: CGFloat
@@ -38,11 +42,13 @@ extension TutorialScreen {
                 margin = -21
             }
             
-            let label = SKLabelNode(fontNamed: UIConstants.fontName)
-            label.verticalAlignmentMode = .center
+            let label = SKLabelNode(fontNamed: Constants.font)
+            label.verticalAlignmentMode = .baseline
             label.text = text
             label.fontSize = Constants.fontSize
             label.fontColor = symbol.baseColor
+            
+            symbol.position.y += SymbolLabel.font.capHeight / 2
             
             let maxW = label.frame.width + symbol.frame.width + margin
             
@@ -97,7 +103,7 @@ extension TutorialScreen {
         func handleCurrentStep() { }
         
         static func createLabel(text: String) -> SKLabelNode {
-            let label = SKLabelNode(fontNamed: UIConstants.fontName)
+            let label = SKLabelNode(fontNamed: Constants.font)
             label.horizontalAlignmentMode = .center
             label.verticalAlignmentMode = .center
             label.text = text

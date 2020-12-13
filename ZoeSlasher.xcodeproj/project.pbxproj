@@ -91,6 +91,7 @@
 		249FE7C82586327800326396 /* MultilineLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7C72586327800326396 /* MultilineLabel.swift */; };
 		249FE7CB2586564D00326396 /* ComboSystemPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7CA2586564D00326396 /* ComboSystemPage.swift */; };
 		249FE7CE25865E9800326396 /* PowerUpPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7CD25865E9800326396 /* PowerUpPage.swift */; };
+		249FE7D42586858400326396 /* Monly-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7D02586858300326396 /* Monly-Bold.otf */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
@@ -221,6 +222,7 @@
 		249FE7C72586327800326396 /* MultilineLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineLabel.swift; sourceTree = "<group>"; };
 		249FE7CA2586564D00326396 /* ComboSystemPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboSystemPage.swift; sourceTree = "<group>"; };
 		249FE7CD25865E9800326396 /* PowerUpPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpPage.swift; sourceTree = "<group>"; };
+		249FE7D02586858300326396 /* Monly-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Monly-Bold.otf"; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 				2498112D24129E2700900AE9 /* Besom-extended.otf */,
 				247D705723F0086D00480199 /* Arber-Vintage-Extended.otf */,
 				24629E62240D6A87009A465B /* Sanos-Extended.ttf */,
+				249FE7D02586858300326396 /* Monly-Bold.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -672,6 +675,7 @@
 			files = (
 				24D9E86B23C1C8B600CB6638 /* LaunchScreen.storyboard in Resources */,
 				2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */,
+				249FE7D42586858400326396 /* Monly-Bold.otf in Resources */,
 				249FE79C2582000300326396 /* bg-loop-4.wav in Resources */,
 				2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */,
 				249FE7A3258202A700326396 /* enemy-death-impact.wav in Resources */,

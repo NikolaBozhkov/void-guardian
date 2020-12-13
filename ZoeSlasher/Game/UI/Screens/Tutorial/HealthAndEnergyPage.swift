@@ -23,7 +23,7 @@ extension TutorialScreen {
             if currentStep == 1 {
                 let node = SKNode()
                 let label = SymbolLabel(type: .health, text: "Health", alignment: .left)
-                label.position = CGPoint(x: -225, y: 235)
+                label.position = CGPoint(x: -225, y: 190)
                 
                 let arrow = SKSpriteNode(imageNamed: "health-arrow")
                 arrow.size = CGSize(repeating: 350)
@@ -36,11 +36,10 @@ extension TutorialScreen {
                 node.position = CGPoint(x: -225, y: 235)
                 
                 addWithPop(node)
-                
             } else if currentStep == 2 {
                 let node = SKNode()
                 let energyLabel = SymbolLabel(type: .energy, text: "Energy", alignment: .left)
-                energyLabel.position = CGPoint(x: -125, y: -250)
+                energyLabel.position = CGPoint(x: -125, y: -300)
                 
                 let arrow = SKSpriteNode(imageNamed: "energy-arrow")
                 arrow.size = CGSize(repeating: 350)
@@ -58,12 +57,11 @@ extension TutorialScreen {
                 
             
                 label.position = energyLabel.position.offsetted(dx: -energyLabel.width / 2,
-                                                                dy: -energyLabel.height / 2 - label.height / 2 - Constants.lineSpacing * 1.8)
+                                                                dy: -energyLabel.height / 2 - label.height / 2)
                 
                 node.addChild(label)
                 
-                addWithPop(node)
-                
+                addWithPop(node)  
             } else {
                 let label = MultilineLabel(text: "s:h:l:Health & s:e:l:Energy \n are maximum 100",
                                            horizontalAlignment: .center,
@@ -71,7 +69,7 @@ extension TutorialScreen {
                                            maxWidth: .greatestFiniteMagnitude)
                 
                 label.position = CGPoint(x: CGFloat(SceneConstants.maxX / 2), y: 0)
-                addWithPop(label, scale: 0.65)
+                addWithPop(label, scale: Constants.midPopScale)
             }
         }
     }

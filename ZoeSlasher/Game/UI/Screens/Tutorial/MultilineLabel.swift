@@ -11,7 +11,7 @@ import SpriteKit
 extension TutorialScreen {
     class MultilineLabel: SKNode {
         
-        let lineHeight: CGFloat = Constants.fontSize * 0.9
+        let lineHeight: CGFloat = Constants.fontSize * 1.0
         
         let maxWidth: CGFloat
         let horizontalAlignment: SKLabelHorizontalAlignmentMode
@@ -160,11 +160,11 @@ extension TutorialScreen {
         }
         
         private func createLabel(text: String = "") -> SKLabelNode {
-            let label = SKLabelNode(fontNamed: UIConstants.fontName)
+            let label = SKLabelNode(fontNamed: Constants.font)
             label.text = text
             label.fontSize = Constants.fontSize
             label.horizontalAlignmentMode = .left
-            label.verticalAlignmentMode = .center
+            label.verticalAlignmentMode = .baseline
             return label
         }
     }

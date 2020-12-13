@@ -14,6 +14,8 @@ enum UIConstants {
     static let besomFont = "Besom"
     static let muliFont = "Muli-Regular"
     
+    static let monlyBoldFont = "MonlyExtended-Bold"
+    
     static let announcementTopOffset: CGFloat = 600
 }
 
@@ -38,6 +40,11 @@ class SKGameScene: SKScene {
     static let voidFavorGlowTexture = SKTexture(imageNamed: "void-favor-glow-image")
     static let oilBackgroundTexture = SKTexture(imageNamed: "oil-background-image")
     
+    static let allTextures = [SKGameScene.energySymbolTexture, SKGameScene.energySymbolGlowTexture,
+                              SKGameScene.balanceSymbolTexture, SKGameScene.balanceSymbolGlowTexture,
+                              SKGameScene.dmgTexture, SKGameScene.glowTexture, SKGameScene.voidFavorTexture,
+                              SKGameScene.voidFavorGlowTexture, SKGameScene.oilBackgroundTexture]
+    
     static var canStartNextStage = true
     static private(set) var clearStageLabelDuration: TimeInterval = 1.5
     
@@ -55,7 +62,7 @@ class SKGameScene: SKScene {
     
     private var activePowerUpLabels = 0
     
-    private var preloadNodes = [SKNode]()
+    private var preloadNodes = Set<SKNode>()
     private var preloadTime: Float = 0
     
     private var score = 0 {
@@ -112,16 +119,22 @@ class SKGameScene: SKScene {
     func preload() {
         let lightOrb = LightOrb(diameter: 0)
         addChild(lightOrb)
-        preloadNodes.append(lightOrb)
+        preloadNodes.insert(lightOrb)
+        
+        for texture in SKGameScene.allTextures {
+            let sprite = SKSpriteNode(texture: texture, size: .zero)
+            addChild(sprite)
+            preloadNodes.insert(sprite)
+        }
     }
     
     func update(deltaTime: Float) {
         // TODO: Come up with better preload solution
         preloadTime += deltaTime
         if preloadTime > 0.1 && !preloadNodes.isEmpty {
-            for (i, node) in preloadNodes.enumerated() {
+            for node in preloadNodes {
                 node.removeFromParent()
-                preloadNodes.remove(at: i)
+                preloadNodes.remove(node)
             }
         }
         

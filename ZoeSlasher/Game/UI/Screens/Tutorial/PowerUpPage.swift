@@ -27,17 +27,16 @@ extension TutorialScreen {
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
                 label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 0)
-                addWithPop(label, scale: 0.7)
-                
+                addWithPop(label, scale: Constants.midPopScale) 
             } else if currentStep == 2 {
                 let label = MultilineLabel(text: "You can pause the game with 3 fingers",
                                            horizontalAlignment: .right,
                                            verticalAlignment: .center,
-                                           maxWidth: CGFloat(SceneConstants.size.x * 0.4))
+                                           maxWidth: CGFloat(SceneConstants.size.x * 0.3))
                 
                 label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 200, y: 0)
                 
-                addWithPop(label, scale: 0.7)
+                addWithPop(label, scale: Constants.midPopScale)
             }
         }
     }
