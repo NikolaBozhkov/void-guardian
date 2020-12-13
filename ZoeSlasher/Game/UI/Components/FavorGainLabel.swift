@@ -24,43 +24,27 @@ class FavorGainLabel: SKNode, GainLabel {
     
     init(amount: Int, fontSize: CGFloat, rightAligned: Bool = false) {
 //        let color = vector_float3(0.259, 0.541, 1.000) ICY COLOR
-        let color = Colors.voidFavor
         margin = -fontSize * 0.2
         
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKColor(mix(color, .one, t: 0.9))
+        amountLabel.fontColor = SKSymbol.favorBaseColor
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         
-        symbol = SKSpriteNode(texture: SKGameScene.voidFavorTexture)
-        symbol.anchorPoint = CGPoint(x: rightAligned ? 1 : 0, y: 0.5)
-        symbol.colorBlendFactor = 1
-        symbol.color = amountLabel.fontColor!
-        symbol.zPosition = 1
-        symbol.size = CGSize(repeating: amountLabel.fontSize) * 2
+        symbol = SKFavorSymbol(size: CGSize(repeating: amountLabel.fontSize) * 2.0, rightAligned: rightAligned)
         
         super.init()
         
-        let glowColor = SKColor(mix(color, .one, t: 0.0))
         let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
         glow.size = amountLabel.frame.size + .one * 240
         glow.position.offset(dx: amountLabel.frame.width / 2, dy: 0)
         glow.alpha = 0.8
-        glow.color = glowColor
+        glow.color = SKColor(mix(Colors.voidFavor, .one, t: 0.0))
         glow.colorBlendFactor = 1.0
         glow.zPosition = -1
         amountLabel.addChild(glow)
-        
-        let energySymbolGlow = SKSpriteNode(texture: SKGameScene.voidFavorGlowTexture)
-        energySymbolGlow.size = symbol.size
-        energySymbolGlow.alpha = 1
-        energySymbolGlow.colorBlendFactor = 1
-        energySymbolGlow.color = glowColor
-        energySymbolGlow.anchorPoint = symbol.anchorPoint
-        energySymbolGlow.zPosition = -1
-        symbol.addChild(energySymbolGlow)
         
         addChild(amountLabel)
         addChild(symbol)

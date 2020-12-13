@@ -7,19 +7,6 @@
 //
 
 import UIKit
-import GameplayKit
-
-enum SceneConstants {
-    static var size: vector_float2 = .zero
-    static var safeAreaInsets: UIEdgeInsets = .zero
-    static var safeLeft: Float = .zero
-    
-    static func set(size: vector_float2, safeAreaInsets: UIEdgeInsets) {
-        self.size = size
-        self.safeAreaInsets = safeAreaInsets
-        safeLeft = -size.x / 2 + Float(safeAreaInsets.left)
-    }
-}
 
 protocol GameSceneInput: class {
     func addChild(_ node: Node)

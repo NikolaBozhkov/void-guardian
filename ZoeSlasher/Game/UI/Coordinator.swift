@@ -244,6 +244,7 @@ extension Coordinator: HomeScreenDelegate {
         activeScreen?.removeFromParent()
         activeScreen = tutorialScreen
         overlayScene.addChild(tutorialScreen)
+        tutorialScreen.start()
         
         tutorialScreen.dismissHandler = { [unowned self] in
             self.overlayScene.addChild(self.homeScreen)

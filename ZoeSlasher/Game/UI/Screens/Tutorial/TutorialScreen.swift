@@ -21,13 +21,9 @@ class TutorialScreen: SKNode, Screen {
     private let nextButton: Button
     private let doneButton: Button
     
-    private let pages = [Page(page: 0), Page(page: 1), Page(page: 2)]
-    private var currentPageIndex = 0 {
-        didSet {
-            pages[oldValue].removeFromParent()
-            setPage(pages[currentPageIndex])
-        }
-    }
+    private let pages = [MovementPage()]
+    private var currentPageIndex = 0
+    private lazy var currentPage: Page = { pages[0] }()
     
     override init() {
         let fontSize: CGFloat = 170
@@ -59,8 +55,6 @@ class TutorialScreen: SKNode, Screen {
         prevButton.position = CGPoint(x: -nextButton.position.x, y: nextButton.position.y)
         
         addChild(title)
-        
-        setPage(pages[currentPageIndex])
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -71,33 +65,49 @@ class TutorialScreen: SKNode, Screen {
         if prevButton.consumeTap(at: point) && currentPageIndex > 0 {
             currentPageIndex -= 1
         } else if nextButton.consumeTap(at: point) && currentPageIndex < pages.count {
-            currentPageIndex += 1
+            advanceProgress()
+            
+            if currentPage.currentStep > currentPage.numSteps {
+                advancePage()
+            }
         } else if doneButton.consumeTap(at: point) && currentPageIndex == pages.count - 1 {
             delegate?.dismissTutorial()
             dismissHandler?()
             dismissHandler = nil
-            currentPageIndex = 0
+            reset()
             ProgressManager.shared.tutorialPlayed = true
         }
     }
     
-    private func setPage(_ page: Page) {
-        addChild(page)
-        
-        if currentPageIndex == 0 {
+    func start() {
+        addChild(currentPage)
+        advanceProgress()
+    }
+    
+    private func reset() {
+        currentPage.removeFromParent()
+        currentPageIndex = 0
+        pages.forEach { $0.reset() }
+    }
+    
+    private func updateButtons() {
+        // First step of first page
+        if currentPageIndex == 0 && currentPage.currentStep == 1 {
             prevButton.removeFromParent()
             doneButton.removeFromParent()
             
             if nextButton.parent == nil {
                 addChild(nextButton)
             }
-        } else if currentPageIndex == pages.count - 1 {
+        } else if currentPageIndex == pages.count - 1 && currentPage.currentStep == currentPage.numSteps {
+            // Last step of last page
             nextButton.removeFromParent()
             
             if doneButton.parent == nil {
                 addChild(doneButton)
             }
         } else {
+            // Anything in the middle
             doneButton.removeFromParent()
             
             if prevButton.parent == nil {
@@ -109,27 +119,17 @@ class TutorialScreen: SKNode, Screen {
             }
         }
     }
-}
-
-extension TutorialScreen {
     
-    class Page: SKNode {
+    private func advanceProgress() {
+        currentPage.advanceProgress()
+        updateButtons()
+    }
+    
+    private func advancePage() {
+        currentPage.removeFromParent()
+        currentPageIndex += 1
         
-        init(page: Int) {
-            super.init()
-            
-            let label = SKLabelNode(fontNamed: UIConstants.fontName)
-            label.text = "page \(page)"
-            label.fontSize = 250
-            label.verticalAlignmentMode = .center
-            label.horizontalAlignmentMode = .center
-            label.position = CGPoint(x: 0, y: 500)
-            
-            addChild(label)
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+        addChild(currentPage)
+        advanceProgress()
     }
 }

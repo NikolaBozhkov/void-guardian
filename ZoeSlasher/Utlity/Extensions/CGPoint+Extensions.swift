@@ -39,8 +39,12 @@ public extension CGPoint {
         self.init(x: cos(angle), y: sin(angle))
     }
     
-    init(_ size: CGSize) {
+    init(size: CGSize) {
         self.init(x: size.width, y: size.height)
+    }
+    
+    init(point: simd_float2) {
+        self.init(x: CGFloat(point.x), y: CGFloat(point.y))
     }
     
     func offsetted(dx: CGFloat, dy: CGFloat) -> CGPoint {

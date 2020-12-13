@@ -28,37 +28,22 @@ class HealthGainLabel: SKNode, GainLabel {
         amountLabel = SKLabelNode(fontNamed: UIConstants.sanosFont)
         amountLabel.text = "\(amount)"
         amountLabel.fontSize = fontSize
-        amountLabel.fontColor = SKColor(mix(Colors.player, .one, t: 0.8))
+        amountLabel.fontColor = SKSymbol.healthBaseColor
         amountLabel.verticalAlignmentMode = .center
         amountLabel.horizontalAlignmentMode = .left
         
-        symbol = SKSpriteNode(texture: SKGameScene.balanceSymbolTexture)
-        symbol.anchorPoint = CGPoint(x: 1, y: 0.5)
-        symbol.colorBlendFactor = 1
-        symbol.color = amountLabel.fontColor!
-        symbol.zPosition = 1
-        symbol.size = CGSize(repeating: amountLabel.fontSize) * 2
+        symbol = SKHealthSymbol(size: CGSize(repeating: amountLabel.fontSize) * 2.0)
         
         super.init()
         
-        let glowColor = SKColor(mix(Colors.player, .one, t: 0.0))
         let glow = SKSpriteNode(texture: SKGameScene.glowTexture)
         glow.size = amountLabel.frame.size + .one * 240
         glow.position.offset(dx: amountLabel.frame.width / 2, dy: 0)
         glow.alpha = 0.5
-        glow.color = glowColor
+        glow.color = SKColor(Colors.player)
         glow.colorBlendFactor = 1.0
         glow.zPosition = -1
         amountLabel.addChild(glow)
-        
-        let balanceSymbolGlow = SKSpriteNode(texture: SKGameScene.balanceSymbolGlowTexture)
-        balanceSymbolGlow.size = symbol.size
-        balanceSymbolGlow.alpha = 1
-        balanceSymbolGlow.colorBlendFactor = 1
-        balanceSymbolGlow.color = SKColor(mix(Colors.player, .one, t: 0.0))
-        balanceSymbolGlow.anchorPoint = symbol.anchorPoint
-        balanceSymbolGlow.zPosition = -1
-        symbol.addChild(balanceSymbolGlow)
         
         addChild(amountLabel)
         addChild(symbol)

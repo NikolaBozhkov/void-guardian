@@ -61,7 +61,7 @@ class GameOverScreen: SKNode, Screen {
             newBestLabel.horizontalAlignmentMode = .center
             newBestLabel.zRotation = -.pi / 6
             newBestLabel.fontColor = UIColor(hex: "f9b42a")
-            newBestLabel.position = CGPoint(message.frame.size / 2 + 50)
+            newBestLabel.position = CGPoint(size: message.frame.size / 2 + 50)
             message.addChild(newBestLabel)
         }
         

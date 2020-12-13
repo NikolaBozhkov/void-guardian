@@ -83,6 +83,12 @@
 		249FE7A8258202C000326396 /* power-up-pickup.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A5258202C000326396 /* power-up-pickup.wav */; };
 		249FE7A9258202C000326396 /* player-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A6258202C000326396 /* player-move.wav */; };
 		249FE7AA258202C100326396 /* player-attack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A7258202C000326396 /* player-attack.wav */; };
+		249FE7B42584879A00326396 /* SceneConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7B32584879A00326396 /* SceneConstants.swift */; };
+		249FE7B82584CC1100326396 /* SKSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7B72584CC1100326396 /* SKSymbol.swift */; };
+		249FE7BD2584D78100326396 /* TutorialScreen+Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7BC2584D78100326396 /* TutorialScreen+Page.swift */; };
+		249FE7C12586108C00326396 /* HealthAndEnergyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7C02586108C00326396 /* HealthAndEnergyPage.swift */; };
+		249FE7C52586113C00326396 /* MovementPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7C42586113C00326396 /* MovementPage.swift */; };
+		249FE7C82586327800326396 /* MultilineLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7C72586327800326396 /* MultilineLabel.swift */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
@@ -205,6 +211,12 @@
 		249FE7A5258202C000326396 /* power-up-pickup.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "power-up-pickup.wav"; sourceTree = "<group>"; };
 		249FE7A6258202C000326396 /* player-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-move.wav"; sourceTree = "<group>"; };
 		249FE7A7258202C000326396 /* player-attack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-attack.wav"; sourceTree = "<group>"; };
+		249FE7B32584879A00326396 /* SceneConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneConstants.swift; sourceTree = "<group>"; };
+		249FE7B72584CC1100326396 /* SKSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSymbol.swift; sourceTree = "<group>"; };
+		249FE7BC2584D78100326396 /* TutorialScreen+Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TutorialScreen+Page.swift"; sourceTree = "<group>"; };
+		249FE7C02586108C00326396 /* HealthAndEnergyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthAndEnergyPage.swift; sourceTree = "<group>"; };
+		249FE7C42586113C00326396 /* MovementPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementPage.swift; sourceTree = "<group>"; };
+		249FE7C72586327800326396 /* MultilineLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineLabel.swift; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
@@ -392,6 +404,7 @@
 		247C40F4246FC76F00CC1888 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				249FE7B72584CC1100326396 /* SKSymbol.swift */,
 				2464427B24127BFB004CF697 /* ComboLabel.swift */,
 				24D7FF56241B8191007743C6 /* EnergyGainLabel.swift */,
 				24D7FF58241B86AB007743C6 /* FavorGainLabel.swift */,
@@ -414,12 +427,12 @@
 		247C40F5246FC79200CC1888 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				249FE7BF2586104500326396 /* Tutorial */,
 				24EBD46A245C724F00410D1E /* PauseScreen.swift */,
 				2468E3B6246193F7004042AD /* ReturnHomeConfirmScreen.swift */,
 				2468E3B82462AAA1004042AD /* GameOverScreen.swift */,
 				2468E3BA24651C42004042AD /* StageConfirmScreen.swift */,
 				243B30B6247959890015CFD1 /* HomeScreen.swift */,
-				24E65F502483BF50004EE053 /* TutorialScreen.swift */,
 				2468E3B024613D63004042AD /* Screen.swift */,
 			);
 			path = Screens;
@@ -433,6 +446,7 @@
 				24E7D8A324050A47007A66D2 /* Entities */,
 				2414AB202511E56A00B3299C /* Spawners */,
 				247D704723E6B20B00480199 /* GameScene.swift */,
+				249FE7B32584879A00326396 /* SceneConstants.swift */,
 				24E7D8B724066093007A66D2 /* StageManager.swift */,
 				249FE78C2581F7D100326396 /* AudioManager.swift */,
 				24E65F4E247D1F43004EE053 /* ProgressManager.swift */,
@@ -520,6 +534,18 @@
 				249FE7992582000300326396 /* bg-loop-6.wav */,
 			);
 			path = Audio;
+			sourceTree = "<group>";
+		};
+		249FE7BF2586104500326396 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				24E65F502483BF50004EE053 /* TutorialScreen.swift */,
+				249FE7BC2584D78100326396 /* TutorialScreen+Page.swift */,
+				249FE7C02586108C00326396 /* HealthAndEnergyPage.swift */,
+				249FE7C42586113C00326396 /* MovementPage.swift */,
+				249FE7C72586327800326396 /* MultilineLabel.swift */,
+			);
+			path = Tutorial;
 			sourceTree = "<group>";
 		};
 		24D9E84F23C1C8B500CB6638 = {
@@ -675,6 +701,7 @@
 				24D7FF61242511A7007743C6 /* PotionConsumer.swift in Sources */,
 				2414AB1F2511E18500B3299C /* PowerUpNode.swift in Sources */,
 				24EBD46D245D780000410D1E /* NotificationName+Extensions.swift in Sources */,
+				249FE7C82586327800326396 /* MultilineLabel.swift in Sources */,
 				2414AB262511E60600B3299C /* PowerUpSpawner.swift in Sources */,
 				24229632253585A2003F7F70 /* PotionType.swift in Sources */,
 				24D15E9A2549C9B2004DA636 /* ProgressNode.swift in Sources */,
@@ -698,9 +725,11 @@
 				2414AB482515C85900B3299C /* MainPotionRenderer.swift in Sources */,
 				2468E3A9245FD85F004042AD /* Button.swift in Sources */,
 				2468E3BB24651C42004042AD /* StageConfirmScreen.swift in Sources */,
+				249FE7B82584CC1100326396 /* SKSymbol.swift in Sources */,
 				24E7D8B6240588CF007A66D2 /* Ability.swift in Sources */,
 				2465E7772435E2490019CE02 /* InstanceRenderer.swift in Sources */,
 				247D704423E1D2CD00480199 /* Player.metal in Sources */,
+				249FE7B42584879A00326396 /* SceneConstants.swift in Sources */,
 				247F6AEF25447BAD0021D562 /* ArcTrailRenderer.swift in Sources */,
 				2469393123C32C41001A6CAE /* MathLibrary.swift in Sources */,
 				249DA5ED255529AF006A8047 /* InstantKillFxRenderer.swift in Sources */,
@@ -716,6 +745,7 @@
 				2469393523C465B0001A6CAE /* Renderer.swift in Sources */,
 				24DCFD382474FC4200FE2FC1 /* TrailManager.swift in Sources */,
 				24E7D8B224057DC3007A66D2 /* MachineGunAbility.swift in Sources */,
+				249FE7C52586113C00326396 /* MovementPage.swift in Sources */,
 				2468E3B92462AAA1004042AD /* GameOverScreen.swift in Sources */,
 				2444649E25232C1700D72EFD /* MainPowerUpNodeRenderer.swift in Sources */,
 				2414AB1B251090A400B3299C /* PlayerManager.swift in Sources */,
@@ -739,6 +769,7 @@
 				2465E7792435F20D0019CE02 /* TextureRenderer.swift in Sources */,
 				247D705323E70FAA00480199 /* Enemy.swift in Sources */,
 				249FE7882580A9CB00326396 /* LightOrb.swift in Sources */,
+				249FE7C12586108C00326396 /* HealthAndEnergyPage.swift in Sources */,
 				249FE78D2581F7D100326396 /* AudioManager.swift in Sources */,
 				24629E65240D6CCF009A465B /* CGPoint+Extensions.swift in Sources */,
 				24F6BAFC25497486009C6170 /* UtilitySpawnIndicator.swift in Sources */,
@@ -763,6 +794,7 @@
 				24FB6A0A254EF1B900A1007C /* EnemyDamageLabel.swift in Sources */,
 				24D9E85C23C1C8B500CB6638 /* AppDelegate.swift in Sources */,
 				2469393D23C5EB1E001A6CAE /* Scene.swift in Sources */,
+				249FE7BD2584D78100326396 /* TutorialScreen+Page.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
