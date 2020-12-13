@@ -21,51 +21,28 @@ extension TutorialScreen {
         
         override func handleCurrentStep() {
             if currentStep == 1 {
-                let node = SKNode()
-                let line1 = Page.createLabel(text: "Moving consists of 2 parts")
-                line1.horizontalAlignmentMode = .left
-                let line2 = Page.createLabel(text: "and costs 1 symbol(")
-                line2.horizontalAlignmentMode = .left
                 
-                let symbolLabel = SymbolLabel(type: .energy, text: "25", alignment: .right, sizeMulti: Constants.symbolMultiText)
-                let bracketLabel = Page.createLabel(text: ")")
+                let label = MultilineLabel(text: "Moving consists of 2 parts and costs 1 symbol or s:e:r:25",
+                                           horizontalAlignment: .left,
+                                           maxWidth: CGFloat(SceneConstants.size.x * 0.4))
                 
-                line2.addChild(symbolLabel)
-                symbolLabel.addChild(bracketLabel)
-                symbolLabel.position.x = line2.frame.width + symbolLabel.width / 2 + 15
-                bracketLabel.position.x = symbolLabel.width / 2 + bracketLabel.frame.width / 2 - 35
-                
-                let lineSpacing = Constants.lineSpacing * 1
-                line1.position.y += line1.frame.height / 2 + lineSpacing
-                line2.position.y -= line2.frame.height / 2 + lineSpacing
-                
-                line1.position.x -= line1.frame.width / 2
-                line2.position.x = line1.position.x
-                
-                node.addChild(line1)
-                node.addChild(line2)
-                
-                node.position = CGPoint(x: -line1.frame.width / 2 - 200, y: 300)
-                
-                addWithPop(node)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 500)
+                addWithPop(label, scale: 0.7)
                 
             } else if currentStep == 2 {
-                let attributedText = NSMutableAttributedString(string: "The first part is slow and deals low damage")
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.lineSpacing = Constants.lineSpacing
+                let label = MultilineLabel(text: "The first part is slow and deals low damage",
+                                           horizontalAlignment: .right,
+                                           maxWidth: CGFloat(SceneConstants.size.x * 0.4))
                 
-                attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(0..<attributedText.length))
+                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 500)
                 
-                let label = Page.createLabel(text: "")
-                label.attributedText = attributedText
-//                label.numberOfLines = 0
-//                label.lineBreakMode = .byWordWrapping
-//                label.preferredMaxLayoutWidth = CGFloat(SceneConstants.size.x * 0.4)
+                addWithPop(label)
+            } else if currentStep == 3 {
+                let label = MultilineLabel(text: "The second is fast and deals more damage, scaling with distance",
+                                           horizontalAlignment: .right,
+                                           maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.horizontalAlignmentMode = .left
-                label.verticalAlignmentMode = .top
-                
-                label.position = CGPoint(x: 200, y: 400)
+                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 0)
                 
                 addWithPop(label)
             }

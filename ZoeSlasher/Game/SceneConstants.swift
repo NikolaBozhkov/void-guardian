@@ -11,7 +11,8 @@ import UIKit
 enum SceneConstants {
     static var size: vector_float2 = .zero
     static var safeAreaInsets: UIEdgeInsets = .zero
-    static var safeLeft: Float = .zero
+    static var safeLeft: Float = 0
+    static var safeRight: Float = 0
     static var maxY: Float = 0
     static var minY: Float = 0
     static var maxX: Float = 0
@@ -21,6 +22,7 @@ enum SceneConstants {
         self.size = size
         self.safeAreaInsets = safeAreaInsets
         safeLeft = -size.x / 2 + Float(safeAreaInsets.left)
+        safeRight = size.x / 2 - Float(safeAreaInsets.right)
         maxY = size.y / 2
         minY = -maxY
         maxX = size.x / 2
