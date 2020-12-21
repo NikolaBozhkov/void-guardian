@@ -29,7 +29,9 @@ class AudioManager {
     let playerAttack = SoundEffect(fileNamed: "player-attack.wav")
     let enemyImpact = SoundEffect(fileNamed: "enemy-impact.wav")
     let enemyDeathImpact = SoundEffect(fileNamed: "enemy-death-impact.wav")
-    let powerUpPickup = SoundEffect(fileNamed: "power-up-pickup.wav")
+    let powerUpPickup = SoundEffect(fileNamed: "power-up.wav")
+    let enemyAttack = SoundEffect(fileNamed: "enemy-shot.wav")
+    let menuClick = SoundEffect(fileNamed: "menu-click.wav")
     
     var skScene: SKScene?
     

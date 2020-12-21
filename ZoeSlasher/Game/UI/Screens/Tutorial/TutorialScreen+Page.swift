@@ -81,11 +81,15 @@ extension TutorialScreen {
     class Page: SKNode {
         
         let numSteps: Int
+        let isPlayable: Bool
         
+        var isPlaying = false
         var currentStep = 0
+        unowned var gameScene: GameScene?
         
-        init(numSteps: Int) {
+        init(numSteps: Int, isPlayable: Bool) {
             self.numSteps = numSteps
+            self.isPlayable = isPlayable
             super.init()
         }
         
@@ -123,7 +127,12 @@ extension TutorialScreen {
         
         func reset() {
             currentStep = 0
+            isPlaying = false
             removeAllChildren()
+        }
+        
+        func startPlayMode() {
+            
         }
     }
 }

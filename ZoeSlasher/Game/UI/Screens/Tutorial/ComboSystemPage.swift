@@ -12,7 +12,7 @@ extension TutorialScreen {
     class ComboSystemPage: Page {
         
         init() {
-            super.init(numSteps: 3)
+            super.init(numSteps: 3, isPlayable: true)
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -45,6 +45,24 @@ extension TutorialScreen {
                 
                 addWithPop(label, scale: Constants.midPopScale)
             }
+        }
+        
+        override func startPlayMode() {
+            guard let gameScene = gameScene else { return }
+            
+            isPlaying = true
+            removeAllChildren()
+            
+            let redConfigs = BasicAttackAbility.configManager.configs
+            gameScene.stageManager.spawner.enemySpawner.spawnEnemy(for: redConfigs.last!,
+                                                                   withPosition: [SceneConstants.maxX * 0.5, SceneConstants.maxY * 0.4])
+            gameScene.stageManager.spawner.enemySpawner.spawnEnemy(for: redConfigs.last!,
+                                                                   withPosition: [SceneConstants.maxX * 0.55, SceneConstants.maxY * 0.45])
+            
+            gameScene.stageManager.spawner.enemySpawner.spawnEnemy(for: redConfigs.last!,
+                                                                   withPosition: [-SceneConstants.maxX * 0.5, -SceneConstants.maxY * 0.3])
+            gameScene.stageManager.spawner.enemySpawner.spawnEnemy(for: redConfigs.last!,
+                                                                   withPosition: [-SceneConstants.maxX * 0.55, -SceneConstants.maxY * 0.4])
         }
     }
 }

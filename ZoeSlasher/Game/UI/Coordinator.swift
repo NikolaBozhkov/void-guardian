@@ -43,6 +43,8 @@ class Coordinator {
         self.gameScene = gameScene
         self.overlayScene = overlayScene
         
+        tutorialScreen.gameScene = gameScene
+        
         overlayBackground = SKSpriteNode(color: .black, size: CGSize(SceneConstants.size))
         overlayBackground.alpha = 0.9
         overlayBackground.zPosition = 100
@@ -58,6 +60,7 @@ class Coordinator {
     func recreateGameScene() {
         gameScene = GameScene(size: gameScene.size, safeAreaInsets: gameScene.safeAreaInsets)
         gameScene.skGameScene.sceneDelegate = self
+        tutorialScreen.gameScene = gameScene
         delegate?.didRecreateGameScene()
     }
     
@@ -226,6 +229,7 @@ extension Coordinator: HomeScreenDelegate {
         if !ProgressManager.shared.tutorialPlayed {
             activeScreen = tutorialScreen
             overlayScene.addChild(tutorialScreen)
+            tutorialScreen.start()
             
             tutorialScreen.dismissHandler = { [unowned self] in
                 self.gameScene.startGame()

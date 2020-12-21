@@ -14,12 +14,18 @@ protocol TutorialScreenDelegate: class {
 
 class TutorialScreen: SKNode, Screen {
     
+    unowned var gameScene: GameScene? {
+        didSet {
+            pages.forEach { $0.gameScene = gameScene }
+        }
+    }
+    
     weak var delegate: TutorialScreenDelegate?
     var dismissHandler: (() -> Void)?
     
-    private let prevButton: Button
     private let nextButton: Button
     private let doneButton: Button
+    private let tryButton: Button
     
     private let pages = [HealthAndEnergyPage(), MovementPage(), ComboSystemPage(), PowerUpPage()]
     private var currentPageIndex = 0
@@ -29,9 +35,9 @@ class TutorialScreen: SKNode, Screen {
         let fontSize: CGFloat = 170
         let color = Button.tutorialColor
         let lightenPercent: CGFloat = 0.25
-        prevButton = Button(text: "prev", fontSize: fontSize, color: color, lightenPercent: lightenPercent)
         nextButton = Button(text: "next", fontSize: fontSize, color: color, lightenPercent: lightenPercent)
         doneButton = Button(text: "done", fontSize: fontSize, color: Button.yesColor)
+        tryButton = Button(text: "try it", fontSize: fontSize, color: UIColor([0.3, 0.9, 0.7]))
         
         super.init()
         
@@ -51,8 +57,7 @@ class TutorialScreen: SKNode, Screen {
         nextButton.position = CGPoint(x: halfSceneX - nextButton.size.width / 2 - margin,
                                       y: -halfSceneY + doneButton.size.height / 2 + margin)
         doneButton.position = nextButton.position
-        
-        prevButton.position = CGPoint(x: -nextButton.position.x, y: nextButton.position.y)
+        tryButton.position = CGPoint(x: 0, y: nextButton.position.y)
         
         addChild(title)
     }
@@ -62,20 +67,35 @@ class TutorialScreen: SKNode, Screen {
     }
     
     func handleTap(at point: CGPoint) {
-        if prevButton.consumeTap(at: point) && currentPageIndex > 0 {
-            currentPageIndex -= 1
-        } else if nextButton.consumeTap(at: point) && currentPageIndex < pages.count {
+        if nextButton.consumeTap(at: point) && currentPageIndex < pages.count {
+            if currentPage.isPlaying {
+                gameScene?.player.loadPosition(.zero)
+                gameScene?.enemies.forEach { gameScene?.removeEnemy($0) }
+                gameScene?.player.health = 100
+                gameScene?.player.energy = 100
+            }
+            
             advanceProgress()
             
             if currentPage.currentStep > currentPage.numSteps {
                 advancePage()
             }
         } else if doneButton.consumeTap(at: point) && currentPageIndex == pages.count - 1 {
+            // Remove power ups from power up page
+            gameScene?.powerUpNodes.forEach { $0.removeFromParent() }
+            gameScene?.powerUpNodes.removeAll()
+            
             delegate?.dismissTutorial()
             dismissHandler?()
             dismissHandler = nil
             reset()
             ProgressManager.shared.tutorialPlayed = true
+        } else if tryButton.consumeTap(at: point) {
+            currentPage.startPlayMode()
+            tryButton.removeFromParent()
+            addChild(nextButton)
+        } else if currentPage.isPlaying {
+            gameScene?.didTap(at: point.vectorFloat2)
         }
     }
     
@@ -91,9 +111,18 @@ class TutorialScreen: SKNode, Screen {
     }
     
     private func updateButtons() {
+        if currentPage.currentStep == currentPage.numSteps && currentPage.isPlayable {
+            nextButton.removeFromParent()
+            
+            if tryButton.parent == nil {
+                addChild(tryButton)
+            }
+            
+            return
+        }
+        
         // First step of first page
         if currentPageIndex == 0 && currentPage.currentStep == 1 {
-            prevButton.removeFromParent()
             doneButton.removeFromParent()
             
             if nextButton.parent == nil {
@@ -109,10 +138,6 @@ class TutorialScreen: SKNode, Screen {
         } else {
             // Anything in the middle
             doneButton.removeFromParent()
-            
-            if prevButton.parent == nil {
-                addChild(prevButton)
-            }
             
             if nextButton.parent == nil {
                 addChild(nextButton)

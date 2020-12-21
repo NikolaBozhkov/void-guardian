@@ -80,9 +80,6 @@
 		249FE79E2582000300326396 /* bg-loop-6.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7992582000300326396 /* bg-loop-6.wav */; };
 		249FE7A2258202A700326396 /* enemy-impact.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A0258202A700326396 /* enemy-impact.wav */; };
 		249FE7A3258202A700326396 /* enemy-death-impact.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A1258202A700326396 /* enemy-death-impact.wav */; };
-		249FE7A8258202C000326396 /* power-up-pickup.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A5258202C000326396 /* power-up-pickup.wav */; };
-		249FE7A9258202C000326396 /* player-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A6258202C000326396 /* player-move.wav */; };
-		249FE7AA258202C100326396 /* player-attack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7A7258202C000326396 /* player-attack.wav */; };
 		249FE7B42584879A00326396 /* SceneConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7B32584879A00326396 /* SceneConstants.swift */; };
 		249FE7B82584CC1100326396 /* SKSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7B72584CC1100326396 /* SKSymbol.swift */; };
 		249FE7BD2584D78100326396 /* TutorialScreen+Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7BC2584D78100326396 /* TutorialScreen+Page.swift */; };
@@ -92,6 +89,11 @@
 		249FE7CB2586564D00326396 /* ComboSystemPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7CA2586564D00326396 /* ComboSystemPage.swift */; };
 		249FE7CE25865E9800326396 /* PowerUpPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249FE7CD25865E9800326396 /* PowerUpPage.swift */; };
 		249FE7D42586858400326396 /* Monly-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7D02586858300326396 /* Monly-Bold.otf */; };
+		249FE7F2258E371900326396 /* power-up.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7ED258E371900326396 /* power-up.wav */; };
+		249FE7F3258E371900326396 /* player-move.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7EE258E371900326396 /* player-move.wav */; };
+		249FE7F4258E371900326396 /* enemy-shot.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7EF258E371900326396 /* enemy-shot.wav */; };
+		249FE7F5258E371900326396 /* player-attack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7F0258E371900326396 /* player-attack.wav */; };
+		249FE7F6258E371900326396 /* menu-click.wav in Resources */ = {isa = PBXBuildFile; fileRef = 249FE7F1258E371900326396 /* menu-click.wav */; };
 		24AEB5122430A8BF00EC37F4 /* Particle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AEB5112430A8BF00EC37F4 /* Particle.swift */; };
 		24AF76102541A43D00F137EA /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF760F2541A43D00F137EA /* Recorder.swift */; };
 		24AF76132541AB3300F137EA /* Recorder.metal in Sources */ = {isa = PBXBuildFile; fileRef = 24AF76122541AB3300F137EA /* Recorder.metal */; };
@@ -211,9 +213,6 @@
 		249FE7992582000300326396 /* bg-loop-6.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "bg-loop-6.wav"; sourceTree = "<group>"; };
 		249FE7A0258202A700326396 /* enemy-impact.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "enemy-impact.wav"; sourceTree = "<group>"; };
 		249FE7A1258202A700326396 /* enemy-death-impact.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "enemy-death-impact.wav"; sourceTree = "<group>"; };
-		249FE7A5258202C000326396 /* power-up-pickup.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "power-up-pickup.wav"; sourceTree = "<group>"; };
-		249FE7A6258202C000326396 /* player-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-move.wav"; sourceTree = "<group>"; };
-		249FE7A7258202C000326396 /* player-attack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-attack.wav"; sourceTree = "<group>"; };
 		249FE7B32584879A00326396 /* SceneConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneConstants.swift; sourceTree = "<group>"; };
 		249FE7B72584CC1100326396 /* SKSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSymbol.swift; sourceTree = "<group>"; };
 		249FE7BC2584D78100326396 /* TutorialScreen+Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TutorialScreen+Page.swift"; sourceTree = "<group>"; };
@@ -223,6 +222,11 @@
 		249FE7CA2586564D00326396 /* ComboSystemPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboSystemPage.swift; sourceTree = "<group>"; };
 		249FE7CD25865E9800326396 /* PowerUpPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerUpPage.swift; sourceTree = "<group>"; };
 		249FE7D02586858300326396 /* Monly-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Monly-Bold.otf"; sourceTree = "<group>"; };
+		249FE7ED258E371900326396 /* power-up.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "power-up.wav"; sourceTree = "<group>"; };
+		249FE7EE258E371900326396 /* player-move.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-move.wav"; sourceTree = "<group>"; };
+		249FE7EF258E371900326396 /* enemy-shot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "enemy-shot.wav"; sourceTree = "<group>"; };
+		249FE7F0258E371900326396 /* player-attack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-attack.wav"; sourceTree = "<group>"; };
+		249FE7F1258E371900326396 /* menu-click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "menu-click.wav"; sourceTree = "<group>"; };
 		24AEB5112430A8BF00EC37F4 /* Particle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Particle.swift; sourceTree = "<group>"; };
 		24AF760F2541A43D00F137EA /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		24AF76122541AB3300F137EA /* Recorder.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Recorder.metal; sourceTree = "<group>"; };
@@ -528,9 +532,11 @@
 		249FE7912581FBFF00326396 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				249FE7A7258202C000326396 /* player-attack.wav */,
-				249FE7A6258202C000326396 /* player-move.wav */,
-				249FE7A5258202C000326396 /* power-up-pickup.wav */,
+				249FE7EF258E371900326396 /* enemy-shot.wav */,
+				249FE7F1258E371900326396 /* menu-click.wav */,
+				249FE7F0258E371900326396 /* player-attack.wav */,
+				249FE7EE258E371900326396 /* player-move.wav */,
+				249FE7ED258E371900326396 /* power-up.wav */,
 				249FE7A1258202A700326396 /* enemy-death-impact.wav */,
 				249FE7A0258202A700326396 /* enemy-impact.wav */,
 				249FE7922581FC0E00326396 /* bg-loop-1.wav */,
@@ -677,24 +683,26 @@
 				2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */,
 				249FE7D42586858400326396 /* Monly-Bold.otf in Resources */,
 				249FE79C2582000300326396 /* bg-loop-4.wav in Resources */,
+				249FE7F3258E371900326396 /* player-move.wav in Resources */,
 				2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */,
 				249FE7A3258202A700326396 /* enemy-death-impact.wav in Resources */,
-				249FE7A8258202C000326396 /* power-up-pickup.wav in Resources */,
 				249FE79A2582000300326396 /* bg-loop-5.wav in Resources */,
 				24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */,
-				249FE7A9258202C000326396 /* player-move.wav in Resources */,
 				247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */,
+				249FE7F6258E371900326396 /* menu-click.wav in Resources */,
 				2468E3B524617529004042AD /* TitleLineShader.fsh in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,
+				249FE7F2258E371900326396 /* power-up.wav in Resources */,
 				249FE79D2582000300326396 /* bg-loop-3.wav in Resources */,
 				2468E3A7245EDA58004042AD /* ButtonBorderShader.fsh in Resources */,
-				249FE7AA258202C100326396 /* player-attack.wav in Resources */,
+				249FE7F4258E371900326396 /* enemy-shot.wav in Resources */,
 				249FE79B2582000300326396 /* bg-loop-2.wav in Resources */,
 				249FE79E2582000300326396 /* bg-loop-6.wav in Resources */,
 				249FE7852580A97D00326396 /* LightOrb.fsh in Resources */,
 				249FE7A2258202A700326396 /* enemy-impact.wav in Resources */,
 				249FE7932581FC0E00326396 /* bg-loop-1.wav in Resources */,
 				24629E63240D6A87009A465B /* Sanos-Extended.ttf in Resources */,
+				249FE7F5258E371900326396 /* player-attack.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

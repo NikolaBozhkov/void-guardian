@@ -18,5 +18,6 @@ class AttackAbility: Ability {
         scene.attacks.insert(attack)
         
         enemy.impactLock(with: normalize(enemy.position - scene.player.position) * kickbackForce, duration: 0.09)
+        AudioManager.shared.enemyAttack.play()
     }
 }

@@ -88,6 +88,7 @@ class Button: SKNode {
         
         if contains(point) {
             reset()
+            AudioManager.shared.menuClick.play()
             return true
         }
         

@@ -12,7 +12,7 @@ extension TutorialScreen {
     class HealthAndEnergyPage: Page {
         
         init() {
-            super.init(numSteps: 3)
+            super.init(numSteps: 3, isPlayable: false)
         }
         
         required init?(coder aDecoder: NSCoder) {

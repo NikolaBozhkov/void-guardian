@@ -12,7 +12,7 @@ extension TutorialScreen {
     class PowerUpPage: Page {
         
         init() {
-            super.init(numSteps: 2)
+            super.init(numSteps: 2, isPlayable: false)
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -27,7 +27,19 @@ extension TutorialScreen {
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
                 label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 0)
-                addWithPop(label, scale: Constants.midPopScale) 
+                addWithPop(label, scale: Constants.midPopScale)
+                
+                if let gameScene = gameScene {
+                    let powerUpSpawner = gameScene.stageManager.spawner.powerUpSpawner
+                    let powerUpNode = PowerUpNode(powerUp: InstantKillPowerUp(duration: 0, type: .instantKill))
+                    
+                    var currentPosition = simd_float2(SceneConstants.safeLeft + powerUpNode.size.x / 2, -400)
+                    for powerUp in gameScene.playerManager.powerUps {
+                        powerUpSpawner.spawnPowerUp(powerUp, at: currentPosition)
+                        currentPosition.x += powerUpNode.size.x + 50
+                    }
+                }
+                
             } else if currentStep == 2 {
                 let label = MultilineLabel(text: "You can pause the game with 3 fingers",
                                            horizontalAlignment: .right,

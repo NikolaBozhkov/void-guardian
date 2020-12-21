@@ -55,6 +55,8 @@ class GameScene: Scene {
     
     var isMovementLocked = false
     
+    var isTutorial = false
+    
     var isGameOver = false
     var timeSinceGameOver: Float = 0
     
@@ -111,6 +113,8 @@ class GameScene: Scene {
     }
     
     func startGame(isLoading: Bool = false) {
+        isTutorial = false
+        
         if !isLoading {
             stageManager.reset()
         }
@@ -187,6 +191,10 @@ class GameScene: Scene {
         }
         
         player.prevStage = player.stage
+        
+        if isTutorial && player.health < 1 {
+            player.health = 1
+        }
         
         // Check for game over
         if player.health == 0 && !isGameOver {
@@ -412,7 +420,7 @@ extension GameScene {
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
                 skGameScene.didConsumePotion(potion)
-//                AudioManager.shared.powerUpPickup.play()
+                AudioManager.shared.powerUpPickup.play()
             }
         }
     }
@@ -431,7 +439,7 @@ extension GameScene {
                 indicators.insert(indicator)
                 
                 skGameScene.didConsumePowerUp(type: powerUpNode.powerUp.type)
-//                AudioManager.shared.powerUpPickup.play()
+                AudioManager.shared.powerUpPickup.play()
             }
         }
     }
