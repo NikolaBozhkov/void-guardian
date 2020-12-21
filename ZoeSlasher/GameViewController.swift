@@ -60,7 +60,7 @@ class GameViewController: UIViewController {
         AudioManager.shared.startBackgroundLoops()
         
 //        let quadrupleTouch = UITapGestureRecognizer(target: self, action: #selector(toggleRecorder))
-//        quadrupleTouch.numberOfTouchesRequired = 4
+//        quadrupleTouch.numberOfTouchesRequired = 2
 //        quadrupleTouch.delaysTouchesBegan = true
 //        mtkView.addGestureRecognizer(quadrupleTouch)
     }

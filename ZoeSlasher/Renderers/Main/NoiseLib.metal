@@ -150,11 +150,11 @@ float fbmr(float3 q, int octaves) {
 kernel void backgroundFbmKernel(texture2d<half, access::write> outTexture [[texture(0)]],
                                 constant int &octaves [[buffer(0)]],
                                 constant float &scale [[buffer(1)]],
+                                constant float &aspectRatio [[buffer(3)]],
                                 constant Uniforms &uniforms [[buffer(2)]],
                                 uint2 gid [[thread_position_in_grid]],
                                 uint2 tpg [[threads_per_grid]])
 {
-    float aspectRatio = outTexture.get_width() / outTexture.get_height();
     float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
     
     float3 q = float3(0);
@@ -170,10 +170,10 @@ kernel void backgroundFbmKernel(texture2d<half, access::write> outTexture [[text
 kernel void gradientFbmrKernel(texture2d<half, access::write> outTexture [[texture(0)]],
                                constant int &octaves [[buffer(0)]],
                                constant float &scale [[buffer(1)]],
+                               constant float &aspectRatio [[buffer(3)]],
                                uint2 gid [[thread_position_in_grid]],
                                uint2 tpg [[threads_per_grid]])
 {
-    float aspectRatio = outTexture.get_width() / outTexture.get_height();
     float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
     float value = fbmr(float3(st * 10., 2.0), 4.0);
     outTexture.write(half4(half3(value), 1.0), gid);
@@ -181,10 +181,10 @@ kernel void gradientFbmrKernel(texture2d<half, access::write> outTexture [[textu
 
 kernel void simplexKernel(texture2d<half, access::write> outTexture [[texture(0)]],
                           constant float &scale [[buffer(0)]],
+                          constant float &aspectRatio [[buffer(3)]],
                           uint2 gid [[thread_position_in_grid]],
                           uint2 tpg [[threads_per_grid]])
 {
-    float aspectRatio = outTexture.get_width() / outTexture.get_height();
     float2 st = float2(gid.x * aspectRatio, gid.y) / float2(tpg);
     float value = 0.5 + 0.5 * snoise(float3(st * scale, 3.0));
     outTexture.write(half4(half3(value), 1.0), gid);

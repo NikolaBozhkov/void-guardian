@@ -372,9 +372,9 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio), resolution: Float(size.height))
         
-//        Recorder.CaptureRect.size = scene.size
+//        Recorder.CaptureRect.size = sceneSize
 //        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
-//        recorder.configure(withResolution: Int32(size.height), filePath: "demo2")
+//        recorder.configure(withResolution: Int32(1242), filePath: "demo4")
     }
     
     func dispatchThreadsWithAvailability(for computeEncoder: MTLComputeCommandEncoder,
@@ -424,6 +424,9 @@ extension MainRenderer: MTKViewDelegate {
         computeEncoder.setBytes(&octaves, length: MemoryLayout<Int>.size, index: 0)
         computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 1)
         
+        var aspectRatio = Float(backgroundFbmTexture.width) / Float(backgroundFbmTexture.height)
+        computeEncoder.setBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 3)
+        
         computeEncoder.setTexture(backgroundFbmTexture, index: 0)
         
         dispatchThreadsWithAvailability(for: computeEncoder,
@@ -441,6 +444,9 @@ extension MainRenderer: MTKViewDelegate {
             
             computeEncoder.setTexture(gradientFbmrTexture, index: 0)
             
+            var aspectRatio = Float(gradientFbmrTexture.width) / Float(gradientFbmrTexture.height)
+            computeEncoder.setBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 3)
+            
             dispatchThreadsWithAvailability(for: computeEncoder,
                                             threadsPerGrid: gradFbmrThreadsPerGrid,
                                             threadGroupsPerGrid: gradFbmrThreadGroupsPerGrid,
@@ -452,6 +458,9 @@ extension MainRenderer: MTKViewDelegate {
             computeEncoder.setBytes(&scale, length: MemoryLayout<Float>.size, index: 0)
             
             computeEncoder.setTexture(entitySimplexTexture, index: 0)
+            
+            aspectRatio = Float(entitySimplexTexture.width) / Float(entitySimplexTexture.height)
+            computeEncoder.setBytes(&aspectRatio, length: MemoryLayout<Float>.size, index: 3)
 
             dispatchThreadsWithAvailability(for: computeEncoder,
                                             threadsPerGrid: entitySimplexThreadsPerGrid,

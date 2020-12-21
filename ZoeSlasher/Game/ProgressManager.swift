@@ -60,8 +60,6 @@ class ProgressManager {
         currentStage = UserDefaults.standard.integer(forKey: Key.currentStage)
         bestStage = UserDefaults.standard.integer(forKey: Key.bestStage)
         tutorialPlayed = UserDefaults.standard.bool(forKey: Key.tutorialPlayed)
-        
-//        currentStage = 15
     }
     
     func saveState(for gameScene: GameScene) {
