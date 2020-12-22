@@ -26,7 +26,7 @@ extension TutorialScreen {
                                            verticalAlignment: .center,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 0)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + Constants.safeMargin, y: 0)
                 addWithPop(label, scale: Constants.midPopScale)
                 
                 if let gameScene = gameScene {
@@ -46,7 +46,7 @@ extension TutorialScreen {
                                            verticalAlignment: .center,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.3))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 200, y: 0)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeRight) - Constants.safeMargin, y: 0)
                 
                 addWithPop(label, scale: Constants.midPopScale)
             }

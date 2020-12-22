@@ -17,6 +17,7 @@ extension TutorialScreen {
         static let symbolMultiText: CGFloat = 1.2
         static let font = UIConstants.monlyBoldFont
         static let midPopScale: CGFloat = 0.7
+        static var safeMargin: CGFloat = 150
     }
     
     class SymbolLabel: SKNode {

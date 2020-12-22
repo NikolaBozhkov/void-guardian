@@ -36,7 +36,7 @@ class Scene: Node {
     
     func randomPosition(padding: vector_float2 = [0, 0]) -> vector_float2 {
         let lowX = -size.x / 2 + padding.x + Float(safeAreaInsets.left)
-        let highX = size.x / 2 - padding.x //- Float(safeAreaInsets.right)
+        let highX = size.x / 2 - padding.x - Float(safeAreaInsets.right)
         let lowY = -size.y / 2 + padding.y + Float(safeAreaInsets.bottom)
         let highY = size.y / 2 - padding.y - Float(safeAreaInsets.top)
         

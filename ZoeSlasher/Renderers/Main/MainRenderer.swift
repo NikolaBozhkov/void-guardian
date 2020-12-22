@@ -372,9 +372,9 @@ extension MainRenderer: MTKViewDelegate {
         
         loadNoiseTextures(forAspectRatio: Float(aspectRatio), resolution: Float(size.height))
         
-//        Recorder.CaptureRect.size = sceneSize
+//        Recorder.CaptureRect.size = [600, 600]
 //        Recorder.CaptureRect.origin = -Recorder.CaptureRect.size / 2
-//        recorder.configure(withResolution: Int32(1242), filePath: "demo4")
+//        recorder.configure(withResolution: Int32(2048), filePath: "demo4")
     }
     
     func dispatchThreadsWithAvailability(for computeEncoder: MTLComputeCommandEncoder,

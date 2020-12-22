@@ -68,6 +68,10 @@ class GameViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         renderer.safeAreaInsets = view.safeAreaInsets
         renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
+        
+        if view.safeAreaInsets.left != 0 || view.safeAreaInsets.right != 0 {
+            TutorialScreen.Constants.safeMargin = 50
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

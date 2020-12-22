@@ -26,14 +26,14 @@ extension TutorialScreen {
                                            horizontalAlignment: .left,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: 330)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + Constants.safeMargin, y: 330)
                 addWithPop(label, scale: Constants.midPopScale)
             } else if currentStep == 2 {
                 let label = MultilineLabel(text: "Combos restore s:e:l:Energy and grant s:f:l:Void@Favor",
                                            horizontalAlignment: .left,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + 100, y: -250)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeLeft) + Constants.safeMargin, y: -250)
                 
                 addWithPop(label, scale: Constants.midPopScale)
             } else if currentStep == 3 {
@@ -41,7 +41,7 @@ extension TutorialScreen {
                                            horizontalAlignment: .right,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.4))
                 
-                label.position = CGPoint(x: CGFloat(SceneConstants.maxX) - 150, y: 100)
+                label.position = CGPoint(x: CGFloat(SceneConstants.safeRight) - Constants.safeMargin, y: 100)
                 
                 addWithPop(label, scale: Constants.midPopScale)
             }
