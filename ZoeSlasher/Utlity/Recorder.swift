@@ -99,8 +99,6 @@ class Recorder {
         url.appendPathComponent(filePath)
         url.appendPathExtension("mp4")
         
-        url = URL(fileURLWithPath: "/Users/nikolabozhkov/Downloads/void-guardian/demo.mp4")
-        
         do {
             try FileManager.default.removeItem(at: url)
         } catch {

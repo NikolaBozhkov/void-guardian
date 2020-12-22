@@ -200,6 +200,11 @@ class GameScene: Scene {
         if player.health == 0 && !isGameOver {
             player.destroy()
             
+            AudioManager.shared.gameOver.play()
+            AudioManager.shared.heartbeatLoop?.volume = 1
+            AudioManager.shared.exitPlayMode()
+            AudioManager.shared.muteBackgroundLoops()
+            
             // Particles
             let count = Int.random(in: 25...30)
             for _ in 0..<count {
@@ -398,6 +403,7 @@ extension GameScene {
                     let attackInfo = playerManager.receiveDamage(attack.corruption)
                     if attackInfo.didHit {
                         skGameScene.didPlayerReceiveDamage(attackInfo.hitDamage, from: attack.enemy)
+                        AudioManager.shared.playerHit.play()
                     }
                 }
                 
@@ -420,7 +426,7 @@ extension GameScene {
             if distance(potion.position, player.position) <= threshold {
                 playerManager.consumePotion(potion)
                 skGameScene.didConsumePotion(potion)
-                AudioManager.shared.powerUpPickup.play()
+                AudioManager.shared.potionPickup.play()
             }
         }
     }

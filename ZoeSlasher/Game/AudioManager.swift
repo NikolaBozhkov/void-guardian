@@ -32,6 +32,11 @@ class AudioManager {
     let powerUpPickup = SoundEffect(fileNamed: "power-up.wav")
     let enemyAttack = SoundEffect(fileNamed: "enemy-shot.wav")
     let menuClick = SoundEffect(fileNamed: "menu-click.wav")
+    let potionPickup = SoundEffect(fileNamed: "potion.wav")
+    let playerHit = SoundEffect(fileNamed: "player-hit.wav")
+    let gameOver = SoundEffect(fileNamed: "game-over.wav")
+    
+    let heartbeatLoop: AVAudioPlayer?
     
     var skScene: SKScene?
     
@@ -54,6 +59,10 @@ class AudioManager {
             let player = AudioManager.loadPlayer(fileName: "bg-loop-\(i)", isLooping: true)
             bgLoopPlayers.append(player)
         }
+        
+        heartbeatLoop = AudioManager.loadPlayer(fileName: "heartbeat", isLooping: true)
+        heartbeatLoop?.volume = 0
+        heartbeatLoop?.play()
     }
     
     private static func loadPlayer(fileName: String, isLooping: Bool) -> AVAudioPlayer? {
@@ -102,6 +111,10 @@ class AudioManager {
         bgLoopPlayers[nextLoopIndex]?.volume = 0
         bgLoopPlayers[0]?.volume = 1
         currentLoopIndex = 0
+    }
+    
+    func muteBackgroundLoops() {
+        bgLoopPlayers.forEach { $0?.volume = 0 }
     }
     
     func update(deltaTime: Float) {

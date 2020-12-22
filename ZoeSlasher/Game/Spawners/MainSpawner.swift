@@ -46,8 +46,8 @@ class MainSpawner {
 //
 //        for _ in 0..<3 {
 //            powerUpSpawner.spawnPowerUp()
-//            potionSpawner.spawnPotion(type: .energy)
-//            potionSpawner.spawnPotion(type: .health)
+//            potionSpawner.spawnPotion(ofType: .energy)
+//            potionSpawner.spawnPotion(ofType: .health)
 //        }
         
 //        let node = PowerUpNode(powerUp: .init(duration: 0, type: .shield))
