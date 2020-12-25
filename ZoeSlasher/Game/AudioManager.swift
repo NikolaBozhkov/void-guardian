@@ -66,8 +66,8 @@ class AudioManager {
         heartbeatLoop?.play()
     }
     
-    private static func loadPlayer(fileName: String, isLooping: Bool) -> AVAudioPlayer? {
-        guard let path = Bundle.main.path(forResource: fileName, ofType: "wav") else {
+    private static func loadPlayer(fileName: String, isLooping: Bool, type: String = "mp3") -> AVAudioPlayer? {
+        guard let path = Bundle.main.path(forResource: fileName, ofType: type) else {
             assert(false, "Path for \(fileName) could not be found in the main bundle")
             return nil
         }

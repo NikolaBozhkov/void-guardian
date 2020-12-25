@@ -109,7 +109,7 @@ class StageManager {
         budget = StageManager.baseBudget
         isActive = true
         
-        let toStage = 25// ProgressManager.shared.currentStage - 1
+        let toStage = ProgressManager.shared.currentStage - 1
         stage = 0
         for _ in 0..<toStage {
             budget += budgetGrowth
