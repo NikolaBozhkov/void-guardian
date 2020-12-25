@@ -11,10 +11,6 @@ import MetalKit
 
 // Our iOS specific view controller
 class GameViewController: UIViewController {
-    
-    enum TouchState {
-        case doubleTap, singleTap, none
-    }
 
     var renderer: MainRenderer!
     var coordinator: Coordinator!

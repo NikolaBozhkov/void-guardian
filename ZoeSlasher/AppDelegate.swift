@@ -30,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             player?.pause()
             player?.currentTime = currentTime
         }
+        
+        AudioManager.shared.heartbeatLoop?.pause()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -46,6 +48,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         for player in AudioManager.shared.bgLoopPlayers {
             player?.play(atTime: deviceCurrentTime + 0.01)
         }
+        
+        AudioManager.shared.heartbeatLoop?.play()
+        
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 

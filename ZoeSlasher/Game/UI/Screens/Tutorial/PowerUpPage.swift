@@ -21,7 +21,7 @@ extension TutorialScreen {
         
         override func handleCurrentStep() {
             if currentStep == 1 {
-                let label = MultilineLabel(text: "Temporary powers ups can spawn randomly",
+                let label = MultilineLabel(text: "Temporary power-ups can spawn randomly",
                                            horizontalAlignment: .left,
                                            verticalAlignment: .center,
                                            maxWidth: CGFloat(SceneConstants.size.x * 0.35))

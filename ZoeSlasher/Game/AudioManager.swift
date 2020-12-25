@@ -35,6 +35,7 @@ class AudioManager {
     let potionPickup = SoundEffect(fileNamed: "potion.wav")
     let playerHit = SoundEffect(fileNamed: "player-hit.wav")
     let gameOver = SoundEffect(fileNamed: "game-over.wav")
+    let stageComplete = SoundEffect(fileNamed: "stage-complete.wav")
     
     let heartbeatLoop: AVAudioPlayer?
     

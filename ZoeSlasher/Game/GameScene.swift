@@ -499,6 +499,8 @@ extension GameScene: UIDelegate {
         player.health = 100
         player.energy = 100
         
+        AudioManager.shared.stageComplete.play()
+        
         // Save state and lock movement when the health and energy are restored
         // and the stage cleared label animation is finished
         isMovementLocked = true

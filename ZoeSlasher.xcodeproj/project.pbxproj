@@ -22,10 +22,11 @@
 		2414AB4A2515CD7500B3299C /* TextureHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414AB492515CD7500B3299C /* TextureHolder.swift */; };
 		2419B1DD25912A1600C334D8 /* enemy-shot.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1DB25912A1600C334D8 /* enemy-shot.wav */; };
 		2419B1EA25912D5900C334D8 /* menu-click.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1E925912D5900C334D8 /* menu-click.wav */; };
-		2419B1F52591CA5D00C334D8 /* heartbeat.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1F12591CA5C00C334D8 /* heartbeat.wav */; };
 		2419B1F62591CA5D00C334D8 /* potion.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1F22591CA5D00C334D8 /* potion.wav */; };
 		2419B1F72591CA5D00C334D8 /* game-over.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1F32591CA5D00C334D8 /* game-over.wav */; };
 		2419B1F82591CA5D00C334D8 /* player-hit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1F42591CA5D00C334D8 /* player-hit.wav */; };
+		2419B1FD2595C52E00C334D8 /* heartbeat.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1FB2595C52E00C334D8 /* heartbeat.wav */; };
+		2419B1FE2595C52E00C334D8 /* stage-complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2419B1FC2595C52E00C334D8 /* stage-complete.wav */; };
 		24229632253585A2003F7F70 /* PotionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24229631253585A2003F7F70 /* PotionType.swift */; };
 		243B30B7247959890015CFD1 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B30B6247959890015CFD1 /* HomeScreen.swift */; };
 		24446495252323A000D72EFD /* PowerUpNodeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24446494252323A000D72EFD /* PowerUpNodeRenderer.swift */; };
@@ -155,10 +156,11 @@
 		2414AB492515CD7500B3299C /* TextureHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureHolder.swift; sourceTree = "<group>"; };
 		2419B1DB25912A1600C334D8 /* enemy-shot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "enemy-shot.wav"; sourceTree = "<group>"; };
 		2419B1E925912D5900C334D8 /* menu-click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "menu-click.wav"; sourceTree = "<group>"; };
-		2419B1F12591CA5C00C334D8 /* heartbeat.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = heartbeat.wav; sourceTree = "<group>"; };
 		2419B1F22591CA5D00C334D8 /* potion.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = potion.wav; sourceTree = "<group>"; };
 		2419B1F32591CA5D00C334D8 /* game-over.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "game-over.wav"; sourceTree = "<group>"; };
 		2419B1F42591CA5D00C334D8 /* player-hit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "player-hit.wav"; sourceTree = "<group>"; };
+		2419B1FB2595C52E00C334D8 /* heartbeat.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = heartbeat.wav; sourceTree = "<group>"; };
+		2419B1FC2595C52E00C334D8 /* stage-complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "stage-complete.wav"; sourceTree = "<group>"; };
 		24229631253585A2003F7F70 /* PotionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotionType.swift; sourceTree = "<group>"; };
 		2433B4AB2541BC09008B0B5B /* ZoeSlasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ZoeSlasher.entitlements; sourceTree = "<group>"; };
 		2433B4AD2541BC0A008B0B5B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -540,8 +542,9 @@
 		249FE7912581FBFF00326396 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				2419B1FB2595C52E00C334D8 /* heartbeat.wav */,
+				2419B1FC2595C52E00C334D8 /* stage-complete.wav */,
 				2419B1F32591CA5D00C334D8 /* game-over.wav */,
-				2419B1F12591CA5C00C334D8 /* heartbeat.wav */,
 				2419B1F42591CA5D00C334D8 /* player-hit.wav */,
 				2419B1F22591CA5D00C334D8 /* potion.wav */,
 				2419B1E925912D5900C334D8 /* menu-click.wav */,
@@ -699,6 +702,7 @@
 				249FE79C2582000300326396 /* bg-loop-4.wav in Resources */,
 				249FE7F3258E371900326396 /* player-move.wav in Resources */,
 				2498113024156A1500900AE9 /* Muli-Regular.ttf in Resources */,
+				2419B1FE2595C52E00C334D8 /* stage-complete.wav in Resources */,
 				249FE7A3258202A700326396 /* enemy-death-impact.wav in Resources */,
 				249FE79A2582000300326396 /* bg-loop-5.wav in Resources */,
 				24D9E86823C1C8B600CB6638 /* Assets.xcassets in Resources */,
@@ -708,9 +712,9 @@
 				247D705823F0086D00480199 /* Arber-Vintage-Extended.otf in Resources */,
 				2468E3B524617529004042AD /* TitleLineShader.fsh in Resources */,
 				24D9E86623C1C8B500CB6638 /* Main.storyboard in Resources */,
+				2419B1FD2595C52E00C334D8 /* heartbeat.wav in Resources */,
 				249FE7F2258E371900326396 /* power-up.wav in Resources */,
 				249FE79D2582000300326396 /* bg-loop-3.wav in Resources */,
-				2419B1F52591CA5D00C334D8 /* heartbeat.wav in Resources */,
 				2468E3A7245EDA58004042AD /* ButtonBorderShader.fsh in Resources */,
 				249FE79B2582000300326396 /* bg-loop-2.wav in Resources */,
 				249FE79E2582000300326396 /* bg-loop-6.wav in Resources */,
