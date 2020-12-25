@@ -123,7 +123,9 @@ class GameScene: Scene {
         
         AudioManager.shared.enterPlayMode()
         
-        if stageManager.stage == 1 {
+        // If the game is not being loaded the stage manager won't be reset and the stage will be 0
+        // so we check both 0 and 1 for the starting favor
+        if stageManager.stage <= 1 {
             favor = 100
         }
     }

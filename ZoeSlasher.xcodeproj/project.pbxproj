@@ -983,7 +983,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1007,7 +1007,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
