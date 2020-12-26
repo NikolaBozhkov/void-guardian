@@ -10,7 +10,7 @@ import SpriteKit
 
 class SoundButton: Button {
     
-    static let baseColor = UIColor([0.129, 0.922, 0.776])
+    static let baseColor = UIColor([0.129, 0.855, 0.922])
     
     let soundOnNode: SKSpriteNode
     let soundOffNode: SKSpriteNode
