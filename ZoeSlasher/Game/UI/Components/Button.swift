@@ -79,6 +79,17 @@ class Button: SKNode {
         addChild(border)
     }
     
+    init(repeatingSize size: CGFloat, color: UIColor) {
+        super.init()
+        
+        border.shader = Button.borderShader
+        border.color = color
+        border.size = CGSize(repeating: size)
+        border.setValue(SKAttributeValue(float: 1), forAttribute: "a_aspectRatio")
+        border.setValue(SKAttributeValue(float: Float(20 / size)), forAttribute: "a_innerWidth")
+        addChild(border)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

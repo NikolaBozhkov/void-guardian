@@ -20,6 +20,7 @@ private enum Key {
     static let powerUpType = "powerUpType"
     static let powerUpNodePosition = "powerUpNodePosition"
     static let voidFavor = "voidFavor"
+    static let isMuted = "isMuted"
 }
 
 class ProgressManager {
@@ -48,6 +49,12 @@ class ProgressManager {
         }
     }
     
+    var isMuted = false {
+        didSet {
+            UserDefaults.standard.set(isMuted, forKey: Key.isMuted)
+        }
+    }
+    
     private init() {
 //        UserDefaults.standard.removeObject(forKey: Key.currentStage)
 //        UserDefaults.standard.removeObject(forKey: Key.bestStage)
@@ -60,6 +67,7 @@ class ProgressManager {
         currentStage = UserDefaults.standard.integer(forKey: Key.currentStage)
         bestStage = UserDefaults.standard.integer(forKey: Key.bestStage)
         tutorialPlayed = UserDefaults.standard.bool(forKey: Key.tutorialPlayed)
+        isMuted = UserDefaults.standard.bool(forKey: Key.isMuted)
     }
     
     func saveState(for gameScene: GameScene) {

@@ -21,6 +21,7 @@ class HomeScreen: SKNode, Screen {
     
     let playButton: Button
     let tutorialButton: Button
+    let soundButton: SoundButton
     let currentStageLabel: SKLabelNode
     let bestStageLabel: SKLabelNode
     
@@ -28,6 +29,7 @@ class HomeScreen: SKNode, Screen {
         
         playButton = Button(text: "play", fontSize: 250, color: Button.yesColor)
         tutorialButton = Button(questionMarkWithSize: 300)
+        soundButton = SoundButton()
         
         currentStageLabel = HomeScreen.createStageLabel(text: "current stage:")
         bestStageLabel = HomeScreen.createStageLabel(text: "best stage:")
@@ -62,12 +64,16 @@ class HomeScreen: SKNode, Screen {
         tutorialButton.position = CGPoint(x: CGFloat(SceneConstants.size.x / 2) - tutorialButton.size.width / 2 - margin,
                                           y: -halfSceneY + tutorialButton.size.height / 2 + margin)
         
+        let soundButtonXOffset = -tutorialButton.size.width / 2 - soundButton.size.width / 2
+        soundButton.position = tutorialButton.position.offsetted(dx: soundButtonXOffset, dy: 0)
+        
         addChild(title)
         addChild(playButton)
         addChild(stageLabelsAnchorLine)
         addChild(currentStageLabel)
         addChild(bestStageLabel)
         addChild(tutorialButton)
+        addChild(soundButton)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -109,6 +115,9 @@ class HomeScreen: SKNode, Screen {
             delegate?.startGame()
         } else if tutorialButton.consumeTap(at: point) {
             delegate?.showTutorial()
+        } else if soundButton.consumeTap(at: point) {
+            AudioManager.shared.isMuted = !AudioManager.shared.isMuted
+            soundButton.updateState(isMuted: AudioManager.shared.isMuted)
         }
     }
 }

@@ -73,6 +73,7 @@
 		247D706123F531A800480199 /* RendererCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D706023F531A800480199 /* RendererCommon.swift */; };
 		247F6AEF25447BAD0021D562 /* ArcTrailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247F6AEE25447BAD0021D562 /* ArcTrailRenderer.swift */; };
 		247F6AF2254567B10021D562 /* ArcTrail.metal in Sources */ = {isa = PBXBuildFile; fileRef = 247F6AF1254567B10021D562 /* ArcTrail.metal */; };
+		2491896F259735BF003D244D /* SoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2491896E259735BF003D244D /* SoundButton.swift */; };
 		2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112724127D2C00900AE9 /* UIColor+Extensions.swift */; };
 		2498112C2412880600900AE9 /* SKColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498112B2412880600900AE9 /* SKColor+Extensions.swift */; };
 		2498112E24129E2700900AE9 /* Besom-extended.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2498112D24129E2700900AE9 /* Besom-extended.otf */; };
@@ -211,6 +212,7 @@
 		247D706023F531A800480199 /* RendererCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RendererCommon.swift; sourceTree = "<group>"; };
 		247F6AEE25447BAD0021D562 /* ArcTrailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcTrailRenderer.swift; sourceTree = "<group>"; };
 		247F6AF1254567B10021D562 /* ArcTrail.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ArcTrail.metal; sourceTree = "<group>"; };
+		2491896E259735BF003D244D /* SoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundButton.swift; sourceTree = "<group>"; };
 		2498112724127D2C00900AE9 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		2498112B2412880600900AE9 /* SKColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKColor+Extensions.swift"; sourceTree = "<group>"; };
 		2498112D24129E2700900AE9 /* Besom-extended.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Besom-extended.otf"; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				24D7FF5C242150A9007743C6 /* HealthGainLabel.swift */,
 				24D7FF5E24225970007743C6 /* Colors.swift */,
 				2468E3A8245FD85F004042AD /* Button.swift */,
+				2491896E259735BF003D244D /* SoundButton.swift */,
 				2468E3A6245EDA58004042AD /* ButtonBorderShader.fsh */,
 				2468E3AA245FDC01004042AD /* Title.swift */,
 				2468E3B424617529004042AD /* TitleLineShader.fsh */,
@@ -755,6 +758,7 @@
 				24D9E87523C1D3AE00CB6638 /* BufferFormats.swift in Sources */,
 				247D705E23F52D8B00480199 /* Common.metal in Sources */,
 				2498112824127D2C00900AE9 /* UIColor+Extensions.swift in Sources */,
+				2491896F259735BF003D244D /* SoundButton.swift in Sources */,
 				24AF76132541AB3300F137EA /* Recorder.metal in Sources */,
 				24D7FF5B241BC2F7007743C6 /* GainLabel.swift in Sources */,
 				247D705523E7173500480199 /* EnemyAttack.swift in Sources */,
@@ -983,7 +987,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1007,7 +1011,7 @@
 				CODE_SIGN_ENTITLEMENTS = ZoeSlasher/ZoeSlasher.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XZT6P8DQ87;
 				INFOPLIST_FILE = ZoeSlasher/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;

@@ -18,6 +18,7 @@ class SoundEffect {
     }
     
     func play() {
+        guard !AudioManager.shared.isMuted else { return }
         AudioManager.shared.skScene?.run(action)
     }
 }
@@ -40,6 +41,13 @@ class AudioManager {
     let heartbeatLoop: AVAudioPlayer?
     
     var skScene: SKScene?
+    
+    var isMuted = false {
+        didSet {
+            bgLoopPlayers[0]?.volume = isMuted ? 0.0 : 1.0
+            ProgressManager.shared.isMuted = isMuted
+        }
+    }
     
     private(set) var bgLoopPlayers = [AVAudioPlayer?]()
     
@@ -64,6 +72,8 @@ class AudioManager {
         heartbeatLoop = AudioManager.loadPlayer(fileName: "heartbeat", isLooping: true)
         heartbeatLoop?.volume = 0
         heartbeatLoop?.play()
+        
+        isMuted = ProgressManager.shared.isMuted
     }
     
     private static func loadPlayer(fileName: String, isLooping: Bool, type: String = "mp3") -> AVAudioPlayer? {
@@ -92,13 +102,15 @@ class AudioManager {
         for i in 0..<bgLoopPlayers.count {
             bgLoopPlayers[i]?.play(atTime: currentTime + 0.01)
             
-            if i != 0 {
+            if i != 0 || isMuted {
                 bgLoopPlayers[i]?.volume = 0
             }
         }
     }
     
     func enterPlayMode() {
+        guard !isMuted else { return }
+        
         playModeOn = true
         currentTransitionDuration = Float.random(in: transitionDurationRange)
         currentLoopDuration = 0
@@ -107,6 +119,8 @@ class AudioManager {
     }
     
     func exitPlayMode() {
+        guard !isMuted else { return }
+        
         playModeOn = false
         bgLoopPlayers[currentLoopIndex]?.volume = 0
         bgLoopPlayers[nextLoopIndex]?.volume = 0
@@ -119,7 +133,7 @@ class AudioManager {
     }
     
     func update(deltaTime: Float) {
-        guard playModeOn else { return }
+        guard playModeOn, !isMuted else { return }
         
         currentTime += deltaTime
         
